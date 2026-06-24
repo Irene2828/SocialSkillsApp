@@ -14,12 +14,14 @@ import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useNavigation } from '@react-navigation/native';
 import { StreakCard } from '../components/StreakCard';
+import { QuickStartButton } from '../components/QuickStartButton';
+import { SimpleLockScreen } from '../components/SimpleLockScreen';
 
 type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
-  const { addCoins } = useRewards();
-  const { streak, recordQuizCompletion } = useProgress();
+  const { addCoins, coinBalance } = useRewards();
+  const { streak, recordQuizCompletion, quizzesTakenToday, dailyLimit } = useProgress();
   const navigation = useNavigation<any>();
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
@@ -27,6 +29,18 @@ export const NewQuizScreen = () => {
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+
+  const handleStartQuickQuiz = () => {
+    // Shuffle all questions regardless of category
+    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    const selected = shuffled.slice(0, 10);
+    
+    setSelectedCategory(null);
+    setCurrentQuestions(selected);
+    setCurrentIndex(0);
+    setScore(0);
+    setQuizState('in-progress');
+  };
 
   const handleStartQuiz = (category: Category) => {
     // Filter questions by category
@@ -73,21 +87,39 @@ export const NewQuizScreen = () => {
     setScore(0);
   };
 
-  const renderSelection = () => (
-    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-      <StreakCard streak={streak} />
-      <View style={styles.bentoGrid}>
-        {QUIZ_CATEGORIES.map(category => (
-          <View key={category.id} style={styles.bentoItem}>
-            <QuizCard 
-              category={category} 
-              onPressStart={() => handleStartQuiz(category.id)} 
-            />
+  const renderSelection = () => {
+    if (quizzesTakenToday >= dailyLimit) {
+      return <SimpleLockScreen />;
+    }
+
+    return (
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={styles.topSection}>
+          <View style={styles.greetingRow}>
+            <Text style={styles.greetingText}>Ready for today's challenge?</Text>
+            <View style={styles.coinBadge}>
+              <Text style={styles.coinBadgeText}>{coinBalance} 🪙</Text>
+            </View>
           </View>
-        ))}
-      </View>
-    </ScrollView>
-  );
+          <StreakCard streak={streak} />
+        </View>
+
+        <QuickStartButton onPress={handleStartQuickQuiz} />
+
+        <Text style={styles.sectionTitle}>Or choose a topic:</Text>
+        <View style={styles.bentoGrid}>
+          {QUIZ_CATEGORIES.map(category => (
+            <View key={category.id} style={styles.bentoItem}>
+              <QuizCard 
+                category={category} 
+                onPressStart={() => handleStartQuiz(category.id)} 
+              />
+            </View>
+          ))}
+        </View>
+      </ScrollView>
+    );
+  };
 
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
@@ -178,6 +210,41 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
+  },
+  topSection: {
+    marginBottom: theme.spacing.md,
+  },
+  greetingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+    marginTop: theme.spacing.sm,
+  },
+  greetingText: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    flex: 1,
+  },
+  coinBadge: {
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.full,
+    borderColor: theme.colors.accent,
+    borderWidth: 1,
+  },
+  coinBadgeText: {
+    ...theme.typography.heading,
+    fontSize: 16,
+    color: theme.colors.accent,
+  },
+  sectionTitle: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    marginBottom: theme.spacing.md,
+    marginTop: theme.spacing.sm,
   },
   bentoGrid: {
     flexDirection: 'row',

@@ -6,10 +6,12 @@ import { CoinBalanceCard } from '../components/CoinBalanceCard';
 import { RewardList } from '../components/RewardList';
 import { AddRewardForm } from '../components/AddRewardForm';
 import { useRewards } from '../context/RewardsContext';
+import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards } = useRewards();
+  const { isParentModeUnlocked } = useProgress();
 
   return (
     <ScreenWrapper>
@@ -19,7 +21,7 @@ export const MyRewardsScreen = () => {
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         <View style={styles.topSection}>
           <CoinBalanceCard balance={coinBalance} />
-          <AddRewardForm />
+          {isParentModeUnlocked && <AddRewardForm />}
         </View>
 
         {/* Bottom Section: Bento Grid (Choice mode for redemption) */}

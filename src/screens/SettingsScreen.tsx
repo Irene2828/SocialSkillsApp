@@ -4,12 +4,14 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
 import { AchievementList } from '../components/AchievementList';
+import { ParentLockToggle } from '../components/ParentLockToggle';
+import { Button } from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
-  const { achievements } = useProgress();
+  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit } = useProgress();
 
   return (
     <ScreenWrapper>
@@ -17,18 +19,45 @@ export const SettingsScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Child Profile (Stack) */}
+        <Text style={styles.sectionHeader}>Child Section</Text>
         <Card style={styles.profileCard}>
           <View style={styles.avatarPlaceholder}>
             <Ionicons name="person" size={32} color={theme.colors.white} />
           </View>
-          <View>
-            <Text style={styles.profileName}>Child Profile</Text>
-            <Text style={styles.profileAge}>Age: 7-10</Text>
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>Social Explorer</Text>
+            <Text style={styles.profileAge}>Level: Learner</Text>
           </View>
         </Card>
 
         {/* Achievements (Light Bento Mix) */}
         <AchievementList unlockedIds={achievements} />
+
+        {/* Parent Section */}
+        <Text style={styles.sectionHeader}>Parent Section</Text>
+        <ParentLockToggle />
+
+        {isParentModeUnlocked && (
+          <Card style={styles.parentControlsCard}>
+            <Text style={styles.controlTitle}>Daily Quiz Limit</Text>
+            <Text style={styles.controlDescription}>Prevent burnout by limiting quizzes per day.</Text>
+            <View style={styles.limitRow}>
+              {[1, 2, 3, 5, 10].map(limit => (
+                <Button 
+                  key={limit}
+                  title={`${limit}`}
+                  variant={dailyLimit === limit ? 'primary' : 'secondary'}
+                  onPress={() => setDailyLimit(limit)}
+                  style={styles.limitButton}
+                />
+              ))}
+            </View>
+          </Card>
+        )}
+
+        {/* System Section */}
+        <Text style={styles.sectionHeader}>System</Text>
+        <Text style={styles.versionText}>Social Quest v1.0.0 (Offline Mode Active)</Text>
 
       </ScrollView>
     </ScreenWrapper>
@@ -54,6 +83,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: theme.spacing.md,
   },
+  profileInfo: {
+    flex: 1,
+  },
   profileName: {
     ...theme.typography.heading,
     fontSize: 20,
@@ -62,5 +94,40 @@ const styles = StyleSheet.create({
   profileAge: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
+  },
+  sectionHeader: {
+    ...theme.typography.heading,
+    fontSize: 22,
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.sm,
+    color: theme.colors.text,
+  },
+  parentControlsCard: {
+    marginBottom: theme.spacing.lg,
+  },
+  controlTitle: {
+    ...theme.typography.heading,
+    fontSize: 18,
+    marginBottom: theme.spacing.xs,
+  },
+  controlDescription: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    marginBottom: theme.spacing.md,
+  },
+  limitRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  limitButton: {
+    marginRight: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
+    minWidth: 50,
+  },
+  versionText: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+    marginTop: theme.spacing.md,
   },
 });

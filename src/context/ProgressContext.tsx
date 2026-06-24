@@ -7,6 +7,14 @@ interface ProgressContextType {
   totalQuizzesCompleted: number;
   totalCorrectAnswers: number;
   achievements: string[];
+  quizzesTakenToday: number;
+  dailyLimit: number;
+  parentPin: string | null;
+  isParentModeUnlocked: boolean;
+  setDailyLimit: (limit: number) => void;
+  setParentPin: (pin: string) => void;
+  unlockParentMode: (pin: string) => boolean;
+  lockParentMode: () => void;
   recordQuizCompletion: (correctAnswersCount: number, earnedCoins: number) => void;
 }
 
@@ -18,7 +26,15 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [totalQuizzesCompleted, setTotalQuizzesCompleted] = useState(0);
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState(0);
   const [achievements, setAchievements] = useState<string[]>([]);
+  
+  const [quizzesTakenToday, setQuizzesTakenToday] = useState(0);
+  const [dailyLimit, setDailyLimitState] = useState(3);
+  const [parentPin, setParentPinState] = useState<string | null>(null);
+  const [isParentModeUnlocked, setIsParentModeUnlocked] = useState(false);
+
   const [isLoaded, setIsLoaded] = useState(false);
+
+  const getTodayString = () => new Date().toISOString().split('T')[0];
 
   useEffect(() => {
     const loadData = async () => {
@@ -37,6 +53,20 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         const storedAchievements = await AsyncStorage.getItem('@achievements');
         if (storedAchievements !== null) setAchievements(JSON.parse(storedAchievements));
+
+        const storedLimit = await AsyncStorage.getItem('@dailyLimit');
+        if (storedLimit !== null) setDailyLimitState(parseInt(storedLimit, 10));
+
+        const storedPin = await AsyncStorage.getItem('@parentPin');
+        if (storedPin !== null) setParentPinState(storedPin);
+
+        const storedQuizzesToday = await AsyncStorage.getItem('@quizzesTakenToday');
+        if (storedDate === getTodayString() && storedQuizzesToday !== null) {
+          setQuizzesTakenToday(parseInt(storedQuizzesToday, 10));
+        } else {
+          setQuizzesTakenToday(0);
+        }
+
       } catch (e) {
         console.error('Failed to load progress data', e);
       } finally {
@@ -54,8 +84,6 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  const getTodayString = () => new Date().toISOString().split('T')[0];
-  
   const getYesterdayString = () => {
     const d = new Date();
     d.setDate(d.getDate() - 1);
@@ -67,10 +95,16 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const yesterday = getYesterdayString();
 
     let newStreak = streak;
+    let newQuizzesToday = quizzesTakenToday;
+
     if (lastQuizDate === yesterday) {
       newStreak += 1;
+      newQuizzesToday = 1;
     } else if (lastQuizDate !== today) {
       newStreak = 1;
+      newQuizzesToday = 1;
+    } else {
+      newQuizzesToday += 1;
     }
 
     const newQuizzes = totalQuizzesCompleted + 1;
@@ -78,11 +112,13 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     setStreak(newStreak);
     setLastQuizDate(today);
+    setQuizzesTakenToday(newQuizzesToday);
     setTotalQuizzesCompleted(newQuizzes);
     setTotalCorrectAnswers(newCorrect);
 
     saveData('@streak', newStreak.toString());
     saveData('@lastQuizDate', today);
+    saveData('@quizzesTakenToday', newQuizzesToday.toString());
     saveData('@totalQuizzesCompleted', newQuizzes.toString());
     saveData('@totalCorrectAnswers', newCorrect.toString());
 
@@ -102,6 +138,28 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const setDailyLimit = (limit: number) => {
+    setDailyLimitState(limit);
+    saveData('@dailyLimit', limit.toString());
+  };
+
+  const setParentPin = (pin: string) => {
+    setParentPinState(pin);
+    saveData('@parentPin', pin);
+  };
+
+  const unlockParentMode = (pin: string) => {
+    if (parentPin === null || pin === parentPin) {
+      setIsParentModeUnlocked(true);
+      return true;
+    }
+    return false;
+  };
+
+  const lockParentMode = () => {
+    setIsParentModeUnlocked(false);
+  };
+
   if (!isLoaded) return null;
 
   return (
@@ -111,6 +169,14 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       totalQuizzesCompleted,
       totalCorrectAnswers,
       achievements,
+      quizzesTakenToday,
+      dailyLimit,
+      parentPin,
+      isParentModeUnlocked,
+      setDailyLimit,
+      setParentPin,
+      unlockParentMode,
+      lockParentMode,
       recordQuizCompletion
     }}>
       {children}
