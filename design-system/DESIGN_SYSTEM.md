@@ -1,349 +1,319 @@
-# 📄 DESIGN_SYSTEM.md — Social Quest
+# 📄 DESIGN_SYSTEM.md — Social Quest (Bento + Scandinavian Hybrid)
 
-## Product Design Direction
+## 🧠 Product Design Direction
 
-Social Quest is a **premium, calm, Scandinavian-inspired learning app for children (7–10 years old)**.
+Social Quest is a **premium calm learning app for children (7–10)**.
 
-It combines:
+It blends:
 
-* IKEA / JYSK simplicity (structure, whitespace, clarity)
-* Modern Apple-level UI polish (typography, spacing, motion)
-* Child-friendly warmth (not childish visuals)
-
-The goal is:
-
-> Calm confidence, not gamified chaos.
+* Scandinavian clarity (IKEA / JYSK logic)
+* Modern UI structure (bento layouts where appropriate)
+* Apple-level polish (spacing + motion)
+* Child-readable simplicity
 
 ---
 
-# 🎨 Visual Philosophy
+# ⚖️ CORE DESIGN RULE
 
-## Core Principles
+> **Clarity always wins over aesthetics.**
 
-* Minimal, never cluttered
-* One primary action per screen
-* High readability over decoration
-* Emotion through spacing, not noise
-* “Quiet confidence” design tone
-
-Avoid:
-
-* Cartoon UI
-* Overly bright colors
-* Busy backgrounds
-* Excess badges, stars, sparkles
+If a visual decision reduces understanding → it is wrong.
 
 ---
 
-# 🧱 Layout System
+# 🧩 1. LAYOUT SYSTEM (HYBRID RULE)
 
-## Grid
+## 🟦 STACK LAYOUT (FOCUS MODE)
 
-* Base spacing unit: **8px**
-* Common spacing:
+Use stack layout for:
 
-  * 8 / 16 / 24 / 32 / 48
-* Screen padding:
+* Quiz questions
+* Answer selection screens
+* Completion screens (results)
+* Explanations
+* Any step-by-step flow
 
-  * 20px horizontal minimum
+### Stack rules:
 
-## Cards
+* vertical flow only
+* one primary action
+* no competing cards
+* maximum focus
 
-* Border radius: **20px**
-* Soft shadow only:
-
-  * low opacity, large blur
-* No hard borders unless needed for structure
-
----
-
-# ✍️ Typography
-
-## Font Choice
-
-Primary:
-
-* **Inter** (or SF Pro fallback)
-
-Optional upgrade direction:
-
-* SF Pro Rounded (for slightly softer child feel)
+👉 Goal: “Think clearly”
 
 ---
 
-## Type Scale
+## 🟪 BENTO LAYOUT (CHOICE MODE)
 
-### H1 (Screen Titles)
+Use bento grid ONLY for:
 
-* 28px / SemiBold
-* Calm, short, max 1 line preferred
+* quiz category selection
+* rewards store
+* settings overview
+* dashboard/home overview
 
-### H2 (Sections)
+### Bento rules:
 
-* 20–22px / SemiBold
+* 2-column grid preferred
+* cards must be visually equal weight
+* no dense text inside tiles
+* each tile = one concept only
 
-### Body Text
-
-* 16–18px / Regular
-* MUST be readable for children without zooming
-
-### Buttons
-
-* 16px / Medium
+👉 Goal: “Choose quickly”
 
 ---
 
-## Typography Rules
+## 🚫 FORBIDDEN
 
-* No ALL CAPS text
-* No decorative fonts
-* No playful “comic” fonts
-* No excessive bolding
+* bento inside quiz flow
+* stacked clutter on home screen
+* mixed layouts on same screen without reason
 
 ---
 
-# 🎨 Color System
+# 🎨 2. COLOR SYSTEM (REFINED)
 
-## Base Palette
+## Base palette (unchanged core)
 
 Background:
 
-* `#FAFAF8` (warm off-white)
+* `#FAFAF8`
 
-Primary Blue:
+Text:
+
+* `#222222`
+* `#6B7280`
+
+Primary:
 
 * `#4F8EF7`
 
-Success Green:
+Success:
 
 * `#48C78E`
 
-Reward Gold:
+Reward:
 
 * `#FFC857`
 
-Text Primary:
+---
 
-* `#222222`
+## 🌫️ NEW: GRADIENT SYSTEM (CONTROLLED)
 
-Text Secondary:
+### Gradient Rule
 
-* `#6B7280`
+Gradients are allowed ONLY in:
+
+* primary CTA buttons
+* streak highlight cards
+* reward highlight states
 
 ---
 
-## Color Rules
+### Gradient A (Primary Action)
 
-* Color only used for meaning
-* Never use color for decoration
-* Green = correct / success only
-* Gold = rewards only
-* Blue = actions only
+Use for:
+
+* “Start Quick Quiz”
+* “Continue”
+* “Redeem”
+
+```css
+#4F8EF7 → #7AA7FF
+```
 
 ---
 
-# 🧩 Components Style
+### Gradient B (Soft Premium Accent)
+
+Use for:
+
+* streak cards
+* highlight states
+
+```css
+#A5B4FC → #60A5FA
+```
+
+---
+
+## 🚫 Forbidden gradient usage
+
+* quiz answers
+* backgrounds
+* full-screen fills
+* decorative UI elements
+
+---
+
+# ✍️ 3. TYPOGRAPHY SYSTEM (UNCHANGED BUT STRICTER)
+
+Font:
+
+* Inter (or SF Pro fallback)
+
+### Type scale:
+
+* H1: 28px / SemiBold
+* H2: 22px / SemiBold
+* Body: 16–18px / Regular
+* Secondary: 14px max
+
+---
+
+### Typography rule:
+
+> If text is not necessary for decision-making → remove it
+
+---
+
+# 🧱 4. COMPONENT DESIGN RULES
 
 ## Buttons
 
-* Height: 48–56px minimum
-* Radius: 16–20px
-* Primary button = solid blue
-* Secondary = soft grey background
-
-Interaction:
-
-* Press scale: 0.98
-* Soft fade transition
+* height: 48–56px
+* radius: 18–20px
+* primary = gradient allowed
+* secondary = flat
 
 ---
 
 ## Cards
 
-Used for:
-
-* quizzes
-* rewards
-* progress
-
-Style:
-
+* radius: 20px
+* soft shadow only
 * white background
-* soft shadow
-* generous padding (16–20px)
+* no heavy borders
 
 ---
 
-## Answer Buttons (Quiz)
+## Bento Cards
 
-* Large tap targets (min 44px height)
-* Full-width cards
-* Clear spacing between options
-* Selected state = soft blue highlight
+Rules:
 
----
-
-# 🎯 Icons
-
-## Style Direction
-
-Use:
-
-* Minimal line icons
-* Rounded edges preferred
-* Consistent stroke width (1.5–2px)
-
-Avoid:
-
-* Filled emoji-style icons everywhere
-* Cartoon icons
-* Mixed icon styles
+* equal sizing grid
+* icon + title only
+* max 1–2 lines text
+* no complex UI inside card
 
 ---
 
-## Icon Sources
+# 🎮 5. SCREEN DESIGN LOGIC
 
-Preferred:
+## HOME / NEW QUIZ → BENTO SCREEN
 
-* Lucide icons
-* Feather icons style
-* Simple SVG system icons
+Structure:
 
----
-
-## Icon Tone
-
-Icons should feel:
-
-* calm
-* structured
-* functional
-* not playful or noisy
+* Streak card (top highlight)
+* Quick Start button (primary CTA)
+* Category bento grid
 
 ---
 
-# 🎬 Animation System
+## QUIZ FLOW → STACK SCREEN
 
-## Principles
+Structure:
 
-* Subtle only
-* Purpose-driven only
-* Never distracting
-
----
-
-## Allowed Animations
-
-### 1. Button Press
-
-* scale: 0.98
-
-### 2. Screen Transition
-
-* fade + slight slide (8–12px max)
-
-### 3. Coin Earned
-
-* gentle float up + fade out
-
-### 4. Correct Answer
-
-* soft green highlight fade in
+* progress bar
+* scenario card
+* answers (stacked buttons)
+* explanation section
 
 ---
 
-## Forbidden Animations
+## REWARDS → BENTO HYBRID
 
-* confetti explosions (default)
+* wallet at top (stack)
+* reward grid (bento)
+
+---
+
+## SETTINGS → BENTO LIGHT
+
+* grouped options in small cards
+* no deep nesting
+
+---
+
+# 🎬 6. ANIMATION SYSTEM (REFINED)
+
+Allowed:
+
+* fade
+* soft slide (max 12px)
+* button press scale (0.98)
+* coin float up (very subtle)
+
+---
+
+## Forbidden:
+
+* confetti explosions
 * bouncing UI
-* spinning elements
-* heavy gamification effects
+* flashy reward effects
+* game-like transitions
 
 ---
 
-# 🧠 UX Tone
+# 🧒 7. CHILD UX RULES (UNCHANGED)
 
-Microcopy should feel:
-
-* calm
-* encouraging
-* non-judgmental
-
-Examples:
-
-✔ “Great job!”
-✔ “Let’s try another one”
-✔ “You’re building a strong skill”
-
-Avoid:
-
-❌ “Wrong answer!”
-❌ “Try harder!”
-❌ “Game over”
+* understand in <5 seconds
+* no dense text blocks
+* one action per screen
+* immediate feedback
 
 ---
 
-# 🧒 Child UX Rules
+# 🧠 8. UX PRINCIPLE PRIORITY
 
-* Everything must be understandable in <5 seconds
-* No reading-heavy screens
-* One task per screen
-* Immediate feedback after actions
-* No confusion loops
-
----
-
-# 🧭 Interaction Rules
-
-* Always show next step clearly
-* No hidden navigation
-* No deep menus
-* No multi-step forms without guidance
+1. Clarity
+2. Cognitive simplicity
+3. Emotional calm
+4. Visual polish
+5. Gamification (minimal)
 
 ---
 
-# 🏁 Product Feel Target
+# 🧭 9. PRODUCT FEEL TARGET
 
 The app should feel like:
 
-* IKEA simplicity in structure
-* JYSK calm retail clarity
-* Headspace emotional softness
-* Duolingo clarity of learning flow
-* Apple-level polish in motion and spacing
+* IKEA structure (clarity, no clutter)
+* JYSK calm retail layout logic
+* Headspace emotional calmness
+* Duolingo learning clarity (not gamification overload)
 
 ---
 
-# 🚫 Anti-Patterns (DO NOT DO)
+# 🚫 ANTI-PATTERNS (IMPORTANT)
 
-* No gamified clutter UI
-* No noisy reward systems
-* No childish cartoon branding
-* No competing colors
-* No dense dashboards
-* No tiny text blocks
-
----
-
-# 🧩 How Codex should use this file
-
-Every screen must:
-
-* follow spacing rules
-* follow typography scale
-* use defined colors only
-* use approved animation types
-* use minimal icon system
-
-If anything conflicts → this file wins.
+* no full-bento apps
+* no full-stack apps
+* no gradient everywhere
+* no decorative UI noise
+* no mixed visual systems on same screen
 
 ---
 
-# RESULT GOAL
+# 🏁 FINAL RULE
 
-When applied correctly:
+> Bento is for decisions.
+> Stack is for thinking.
 
-👉 App feels calm, premium, and trustworthy
-👉 Child can understand UI instantly
-👉 Parent feels safe using it daily
-👉 Product feels “designed”, not “generated”
+---
+
+# 🔥 WHAT THIS FIXES FOR YOU
+
+This version prevents:
+
+* Codex overusing bento everywhere
+* gradient chaos
+* “game app” look
+* inconsistent UI direction
+
+And enforces:
+
+👉 premium Scandinavian product design discipline
+👉 clear UX hierarchy
+👉 real App Store-level structure thinking
