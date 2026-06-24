@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Reward } from '../data/types';
 import { RewardCard } from './RewardCard';
 import { useRewards } from '../context/RewardsContext';
@@ -20,6 +20,15 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
     }
   };
 
+  if (rewards.length === 0) {
+    return (
+      <View style={styles.emptyContainer}>
+        <Text style={styles.emptyText}>No rewards added yet.</Text>
+        <Text style={styles.emptySubText}>Ask a parent to set up some goals!</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.gridContainer}>
       {rewards.map(reward => (
@@ -32,6 +41,22 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
 };
 
 const styles = StyleSheet.create({
+  emptyContainer: {
+    padding: theme.spacing.xl,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyText: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  emptySubText: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+  },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',

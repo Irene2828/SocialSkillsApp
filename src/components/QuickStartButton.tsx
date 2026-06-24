@@ -1,7 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme';
+import { ScalePressable } from './ScalePressable';
 
 interface QuickStartButtonProps {
   onPress: () => void;
@@ -9,10 +10,10 @@ interface QuickStartButtonProps {
 
 export const QuickStartButton: React.FC<QuickStartButtonProps> = ({ onPress }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress} activeOpacity={0.8}>
+    <ScalePressable style={styles.button} onPress={onPress}>
       <Ionicons name="play-circle" size={32} color={theme.colors.white} style={styles.icon} />
       <Text style={styles.text}>Start Quick Quiz</Text>
-    </TouchableOpacity>
+    </ScalePressable>
   );
 };
 

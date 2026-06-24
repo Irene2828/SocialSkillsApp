@@ -1,6 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet } from 'react-native';
 import { theme } from '../theme';
+import { ScalePressable } from './ScalePressable';
 
 interface AnswerButtonProps {
   text: string;
@@ -28,14 +29,13 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
   }
 
   return (
-    <TouchableOpacity
+    <ScalePressable
       style={[styles.button, buttonStyle]}
       onPress={onPress}
       disabled={disabled}
-      activeOpacity={0.8}
     >
       <Text style={[styles.text, textStyle]}>{text}</Text>
-    </TouchableOpacity>
+    </ScalePressable>
   );
 };
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -14,10 +14,28 @@ interface QuestionViewProps {
 
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(10)).current;
 
-  // Reset state when question changes
+  // Reset state and trigger animation when question changes
   useEffect(() => {
     setSelectedIndex(null);
+    fadeAnim.setValue(0);
+    slideAnim.setValue(10);
+    
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      })
+    ]).start();
   }, [question.id]);
 
   const handleSelect = (index: number) => {
@@ -30,7 +48,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   const isCorrect = selectedIndex === question.correctAnswerIndex;
 
   return (
-    <View style={styles.container}>
+    <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
       <Card style={styles.scenarioCard}>
         <Text style={styles.scenarioText}>{question.scenario}</Text>
       </Card>
@@ -80,7 +98,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
           />
         </View>
       )}
-    </View>
+    </Animated.View>
   );
 };
 

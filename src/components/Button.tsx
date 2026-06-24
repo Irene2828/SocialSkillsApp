@@ -1,29 +1,30 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, TouchableOpacityProps } from 'react-native';
+import { Text, StyleSheet, PressableProps } from 'react-native';
+import { ScalePressable } from './ScalePressable';
 import { theme } from '../theme';
 
-interface ButtonProps extends TouchableOpacityProps {
+interface ButtonProps extends Omit<PressableProps, 'style'> {
   title: string;
   variant?: 'primary' | 'secondary';
+  style?: any;
 }
 
 export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, ...props }) => {
   const isPrimary = variant === 'primary';
 
   return (
-    <TouchableOpacity
+    <ScalePressable
       style={[
         styles.button,
         isPrimary ? styles.primaryButton : styles.secondaryButton,
         style,
       ]}
-      activeOpacity={0.8}
       {...props}
     >
       <Text style={[styles.text, isPrimary ? styles.primaryText : styles.secondaryText]}>
         {title}
       </Text>
-    </TouchableOpacity>
+    </ScalePressable>
   );
 };
 

@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
 import { Ionicons } from '@expo/vector-icons';
+import { ScalePressable } from './ScalePressable';
 
 interface QuizCardProps {
   category: QuizCategory;
@@ -23,12 +24,12 @@ const getCategoryIcon = (id: string): any => {
 
 export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) => {
   return (
-    <TouchableOpacity onPress={onPressStart} activeOpacity={0.8} style={styles.container}>
+    <ScalePressable onPress={onPressStart} style={styles.container}>
       <Card style={styles.card}>
         <Ionicons name={getCategoryIcon(category.id)} size={32} color={theme.colors.primary} style={styles.icon} />
         <Text style={styles.title} numberOfLines={2}>{category.title}</Text>
       </Card>
-    </TouchableOpacity>
+    </ScalePressable>
   );
 };
 

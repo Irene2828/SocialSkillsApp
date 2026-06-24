@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
@@ -29,6 +29,30 @@ export const NewQuizScreen = () => {
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+
+  const completionFadeAnim = useRef(new Animated.Value(0)).current;
+  const completionSlideAnim = useRef(new Animated.Value(20)).current;
+
+  useEffect(() => {
+    if (quizState === 'completed') {
+      Animated.parallel([
+        Animated.timing(completionFadeAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.spring(completionSlideAnim, {
+          toValue: 0,
+          friction: 8,
+          tension: 40,
+          useNativeDriver: true,
+        })
+      ]).start();
+    } else {
+      completionFadeAnim.setValue(0);
+      completionSlideAnim.setValue(20);
+    }
+  }, [quizState]);
 
   const handleStartQuickQuiz = () => {
     // Shuffle all questions regardless of category
@@ -166,13 +190,15 @@ export const NewQuizScreen = () => {
             <Text style={styles.scoreText}>{score} / {total}</Text>
           </View>
           
-          {coinsEarned > 0 && (
-            <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
-          )}
+          <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
+            {coinsEarned > 0 && (
+              <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
+            )}
 
-          <Text style={styles.streakProgressText}>{streakMessage}</Text>
-          <Text style={styles.messageText}>{message}</Text>
-          
+            <Text style={styles.streakProgressText}>{streakMessage}</Text>
+            <Text style={styles.messageText}>{message}</Text>
+          </Animated.View>
+
           <Button 
             title="Take Another Quiz" 
             onPress={handleBackToHome} 
