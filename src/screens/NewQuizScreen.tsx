@@ -11,12 +11,15 @@ import { theme } from '../theme';
 import { QUIZ_CATEGORIES, Category, Question } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
+import { useProgress } from '../context/ProgressContext';
 import { useNavigation } from '@react-navigation/native';
+import { StreakCard } from '../components/StreakCard';
 
 type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
   const { addCoins } = useRewards();
+  const { streak, recordQuizCompletion } = useProgress();
   const navigation = useNavigation<any>();
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
@@ -57,6 +60,7 @@ export const NewQuizScreen = () => {
       if (coinsEarned > 0) {
         addCoins(coinsEarned);
       }
+      recordQuizCompletion(finalScore, coinsEarned);
       setQuizState('completed');
     }
   };
@@ -71,6 +75,7 @@ export const NewQuizScreen = () => {
 
   const renderSelection = () => (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <StreakCard streak={streak} />
       <View style={styles.bentoGrid}>
         {QUIZ_CATEGORIES.map(category => (
           <View key={category.id} style={styles.bentoItem}>
@@ -110,6 +115,11 @@ export const NewQuizScreen = () => {
     else if (score >= total * 0.7) message = "Great job, Social Explorer!";
     else if (score >= total * 0.5) message = "You're learning fast!";
 
+    let streakMessage = "Great start!";
+    if (streak >= 14) streakMessage = "Habit master!";
+    else if (streak >= 7) streakMessage = "Amazing consistency!";
+    else if (streak >= 3) streakMessage = "You're on fire 🔥";
+
     let coinsEarned = 0;
     if (score >= 8) coinsEarned = 1;
     else if (score >= 6) coinsEarned = 0.5;
@@ -128,6 +138,7 @@ export const NewQuizScreen = () => {
             <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
           )}
 
+          <Text style={styles.streakProgressText}>{streakMessage}</Text>
           <Text style={styles.messageText}>{message}</Text>
           
           <Button 
@@ -224,6 +235,12 @@ const styles = StyleSheet.create({
     color: theme.colors.accent,
     fontSize: 24,
     marginBottom: theme.spacing.md,
+  },
+  streakProgressText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.success,
+    marginBottom: theme.spacing.sm,
   },
   actionButton: {
     width: '100%',
