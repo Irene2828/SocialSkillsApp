@@ -21,7 +21,7 @@ type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
-  const { streak, recordQuizCompletion, quizzesTakenToday, dailyLimit } = useProgress();
+  const { streak, quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const navigation = useNavigation<any>();
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
@@ -126,11 +126,16 @@ export const NewQuizScreen = () => {
       return <SimpleLockScreen />;
     }
 
+    const hour = new Date().getHours();
+    let timeGreeting = 'Good morning';
+    if (hour >= 12 && hour < 17) timeGreeting = 'Good afternoon';
+    else if (hour >= 17) timeGreeting = 'Good evening';
+
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <View style={styles.topSection}>
           <View style={styles.greetingRow}>
-            <Text style={styles.greetingText}>Ready for today's challenge?</Text>
+            <Text style={styles.greetingText}>{timeGreeting}, {childName} 👋</Text>
             <View style={styles.coinBadge}>
               <Text style={styles.coinBadgeText}>{coinBalance} 🪙</Text>
             </View>

@@ -12,6 +12,11 @@ interface ProgressContextType {
   dailyLimit: number;
   parentPin: string | null;
   isParentModeUnlocked: boolean;
+  hasOnboarded: boolean;
+  childName: string;
+  childAge: number;
+  setChildProfile: (name: string, age: number) => Promise<void>;
+  setOnboarded: () => Promise<void>;
   setDailyLimit: (limit: number) => void;
   setParentPin: (pin: string) => void;
   unlockParentMode: (pin: string) => boolean;
@@ -33,6 +38,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [dailyLimit, setDailyLimitState] = useState(3);
   const [parentPin, setParentPinState] = useState<string | null>(null);
   const [isParentModeUnlocked, setIsParentModeUnlocked] = useState(false);
+
+  const [hasOnboarded, setHasOnboardedState] = useState(false);
+  const [childName, setChildNameState] = useState('Explorer');
+  const [childAge, setChildAgeState] = useState(7);
 
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -61,6 +70,15 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         const storedPin = await safeStorage.get<string | null>('@parentPin', null);
         setParentPinState(storedPin);
+
+        const storedOnboarded = await safeStorage.get<boolean>('@hasOnboarded', false);
+        setHasOnboardedState(storedOnboarded);
+
+        const storedName = await safeStorage.get<string>('@childName', 'Explorer');
+        setChildNameState(storedName);
+
+        const storedAge = await safeStorage.get<number>('@childAge', 7);
+        setChildAgeState(storedAge);
 
         const storedQuizzesToday = await safeStorage.get<number>('@quizzesTakenToday', 0);
         if (storedDate === getTodayString()) {
@@ -157,6 +175,20 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     saveData('@dailyLimit', safeLimit);
   };
 
+  const setChildProfile = async (name: string, age: number) => {
+    setChildNameState(name);
+    setChildAgeState(age);
+    await safeStorage.multiSet([
+      ['@childName', name],
+      ['@childAge', age]
+    ]);
+  };
+
+  const setOnboarded = async () => {
+    setHasOnboardedState(true);
+    await safeStorage.set('@hasOnboarded', true);
+  };
+
   const setParentPin = (pin: string) => {
     setParentPinState(pin);
     saveData('@parentPin', pin);
@@ -182,7 +214,10 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ['@totalQuizzesCompleted', 0],
       ['@totalCorrectAnswers', 0],
       ['@achievements', []],
-      ['@coin_balance', 0], // Optional: if we want to reset coins too, but it's loaded in RewardsContext. Better to do it via AsyncStorage directly here.
+      ['@coin_balance', 0], 
+      ['@hasOnboarded', false],
+      ['@childName', 'Explorer'],
+      ['@childAge', 7]
     ]);
     if (success) {
       setStreak(0);
@@ -191,8 +226,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setTotalQuizzesCompleted(0);
       setTotalCorrectAnswers(0);
       setAchievements([]);
-      // We would ideally tell RewardsContext to reset too, but for simplicity, the next reload will pick it up or we can just leave coins intact.
-      // Let's ensure a full safe wipe.
+      setHasOnboardedState(false);
+      setChildNameState('Explorer');
+      setChildAgeState(7);
     }
   };
 
@@ -209,6 +245,11 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       dailyLimit,
       parentPin,
       isParentModeUnlocked,
+      hasOnboarded,
+      childName,
+      childAge,
+      setChildProfile,
+      setOnboarded,
       setDailyLimit,
       setParentPin,
       unlockParentMode,

@@ -3,7 +3,18 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { RewardsProvider } from './src/context/RewardsContext';
-import { ProgressProvider } from './src/context/ProgressContext';
+import { ProgressProvider, useProgress } from './src/context/ProgressContext';
+import { OnboardingScreen } from './src/screens/OnboardingScreen';
+
+const RootNavigator = () => {
+  const { hasOnboarded } = useProgress();
+
+  if (!hasOnboarded) {
+    return <OnboardingScreen />;
+  }
+
+  return <AppNavigator />;
+};
 
 export default function App() {
   return (
@@ -11,7 +22,7 @@ export default function App() {
       <ProgressProvider>
         <RewardsProvider>
           <NavigationContainer>
-            <AppNavigator />
+            <RootNavigator />
             <StatusBar style="auto" />
           </NavigationContainer>
         </RewardsProvider>

@@ -11,7 +11,7 @@ import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
-  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData } = useProgress();
+  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge } = useProgress();
 
   const handleResetData = () => {
     Alert.alert(
@@ -56,8 +56,8 @@ export const SettingsScreen = () => {
             <Ionicons name="person" size={32} color={theme.colors.white} />
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Social Explorer</Text>
-            <Text style={styles.profileAge}>Level: Learner</Text>
+            <Text style={styles.profileName}>{childName}</Text>
+            <Text style={styles.profileAge}>Age: {childAge}</Text>
           </View>
         </Card>
 
