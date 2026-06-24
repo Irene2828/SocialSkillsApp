@@ -60,19 +60,19 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   correctButton: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: theme.colors.successSoft,
     borderColor: theme.colors.success,
   },
   correctText: {
-    color: '#2E7D32',
+    color: theme.colors.success,
     fontWeight: '600',
   },
   incorrectButton: {
-    backgroundColor: '#FFEBEE',
-    borderColor: '#EF5350',
+    backgroundColor: theme.colors.neutralGrey,
+    borderColor: theme.colors.neutralGrey,
   },
   incorrectText: {
-    color: '#C62828',
+    color: theme.colors.secondaryText,
     fontWeight: '600',
   },
 });

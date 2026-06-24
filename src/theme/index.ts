@@ -2,7 +2,9 @@ export const theme = {
   colors: {
     background: '#FAFAF8',
     primary: '#4F8EF7',
-    success: '#48C78E',
+    success: '#7C8CF8', // Soft purple
+    successSoft: '#EDEBFF',
+    neutralGrey: '#E5E7EB',
     accent: '#FFC857',
     text: '#222222',
     secondaryText: '#6B7280',

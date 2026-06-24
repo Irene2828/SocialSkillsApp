@@ -71,13 +71,16 @@ export const NewQuizScreen = () => {
 
   const renderSelection = () => (
     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-      {QUIZ_CATEGORIES.map(category => (
-        <QuizCard 
-          key={category.id} 
-          category={category} 
-          onPressStart={() => handleStartQuiz(category.id)} 
-        />
-      ))}
+      <View style={styles.bentoGrid}>
+        {QUIZ_CATEGORIES.map(category => (
+          <View key={category.id} style={styles.bentoItem}>
+            <QuizCard 
+              category={category} 
+              onPressStart={() => handleStartQuiz(category.id)} 
+            />
+          </View>
+        ))}
+      </View>
     </ScrollView>
   );
 
@@ -164,6 +167,14 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: theme.spacing.xl,
+  },
+  bentoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -theme.spacing.xs,
+  },
+  bentoItem: {
+    width: '50%',
   },
   inProgressContainer: {
     flex: 1,

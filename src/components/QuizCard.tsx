@@ -1,41 +1,55 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card } from './Card';
-import { Button } from './Button';
 import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
+import { Ionicons } from '@expo/vector-icons';
 
 interface QuizCardProps {
   category: QuizCategory;
   onPressStart: () => void;
 }
 
+const getCategoryIcon = (id: string): any => {
+  switch (id) {
+    case 'Friendship': return 'people-outline';
+    case 'Manners': return 'school-outline';
+    case 'Feelings': return 'heart-outline';
+    case 'Playground': return 'basketball-outline';
+    case 'Safety': return 'shield-checkmark-outline';
+    default: return 'book-outline';
+  }
+};
+
 export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) => {
   return (
-    <Card style={styles.card}>
-      <View style={styles.content}>
-        <Text style={styles.title}>{category.title}</Text>
-        <Text style={styles.description}>{category.description}</Text>
-      </View>
-      <Button title="Start Quiz" onPress={onPressStart} />
-    </Card>
+    <TouchableOpacity onPress={onPressStart} activeOpacity={0.8} style={styles.container}>
+      <Card style={styles.card}>
+        <Ionicons name={getCategoryIcon(category.id)} size={32} color={theme.colors.primary} style={styles.icon} />
+        <Text style={styles.title} numberOfLines={2}>{category.title}</Text>
+      </Card>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  card: {
-    marginBottom: theme.spacing.md,
+  container: {
+    flex: 1,
+    margin: theme.spacing.xs,
   },
-  content: {
-    marginBottom: theme.spacing.md,
+  card: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.lg,
+    minHeight: 140,
+  },
+  icon: {
+    marginBottom: theme.spacing.sm,
   },
   title: {
-    ...theme.typography.heading,
-    fontSize: 20,
-    marginBottom: theme.spacing.xs,
-  },
-  description: {
     ...theme.typography.body,
-    color: theme.colors.secondaryText,
+    fontWeight: '600',
+    textAlign: 'center',
   },
 });

@@ -5,6 +5,7 @@ import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
 
 interface QuestionViewProps {
   question: Question;
@@ -60,9 +61,17 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
       {isAnswered && (
         <View style={styles.feedbackContainer}>
-          <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
-            {isCorrect ? 'Correct ✓' : 'Try again next time'}
-          </Text>
+          <View style={styles.feedbackTitleContainer}>
+            <Ionicons 
+              name={isCorrect ? "checkmark-circle" : "ellipse"} 
+              size={24} 
+              color={isCorrect ? theme.colors.success : theme.colors.secondaryText} 
+              style={styles.feedbackIcon}
+            />
+            <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+              {isCorrect ? 'Correct' : "Let's try again"}
+            </Text>
+          </View>
           <Text style={styles.explanationText}>{question.explanation}</Text>
           <Button
             title="Continue"
@@ -99,17 +108,24 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     ...theme.shadows.soft,
   },
+  feedbackTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  feedbackIcon: {
+    marginRight: theme.spacing.xs,
+  },
   feedbackTitle: {
     ...theme.typography.heading,
     fontSize: 20,
-    marginBottom: theme.spacing.sm,
-    textAlign: 'center',
   },
   feedbackCorrect: {
-    color: '#2E7D32',
+    color: theme.colors.success,
   },
   feedbackIncorrect: {
-    color: '#C62828',
+    color: theme.colors.secondaryText,
   },
   explanationText: {
     ...theme.typography.body,
