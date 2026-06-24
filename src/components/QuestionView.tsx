@@ -1,0 +1,123 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Question } from '../data/types';
+import { Card } from './Card';
+import { AnswerButton } from './AnswerButton';
+import { Button } from './Button';
+import { theme } from '../theme';
+
+interface QuestionViewProps {
+  question: Question;
+  onContinue: (isCorrect: boolean) => void;
+}
+
+export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue }) => {
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  // Reset state when question changes
+  useEffect(() => {
+    setSelectedIndex(null);
+  }, [question.id]);
+
+  const handleSelect = (index: number) => {
+    if (selectedIndex === null) {
+      setSelectedIndex(index);
+    }
+  };
+
+  const isAnswered = selectedIndex !== null;
+  const isCorrect = selectedIndex === question.correctAnswerIndex;
+
+  return (
+    <View style={styles.container}>
+      <Card style={styles.scenarioCard}>
+        <Text style={styles.scenarioText}>{question.scenario}</Text>
+      </Card>
+
+      <View style={styles.optionsContainer}>
+        {question.options.map((option, index) => {
+          let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
+
+          if (isAnswered) {
+            if (index === question.correctAnswerIndex) {
+              state = selectedIndex === index ? 'selected-correct' : 'unselected-correct';
+            } else if (index === selectedIndex) {
+              state = 'selected-incorrect';
+            }
+          }
+
+          return (
+            <AnswerButton
+              key={index}
+              text={option}
+              onPress={() => handleSelect(index)}
+              state={state}
+              disabled={isAnswered}
+            />
+          );
+        })}
+      </View>
+
+      {isAnswered && (
+        <View style={styles.feedbackContainer}>
+          <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+            {isCorrect ? 'Correct ✓' : 'Try again next time'}
+          </Text>
+          <Text style={styles.explanationText}>{question.explanation}</Text>
+          <Button
+            title="Continue"
+            onPress={() => onContinue(isCorrect)}
+            style={styles.continueButton}
+          />
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scenarioCard: {
+    marginBottom: theme.spacing.lg,
+    backgroundColor: theme.colors.white,
+  },
+  scenarioText: {
+    ...theme.typography.heading,
+    fontSize: 22,
+    lineHeight: 30,
+    textAlign: 'center',
+  },
+  optionsContainer: {
+    marginBottom: theme.spacing.lg,
+  },
+  feedbackContainer: {
+    marginTop: theme.spacing.md,
+    padding: theme.spacing.md,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.md,
+    ...theme.shadows.soft,
+  },
+  feedbackTitle: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    marginBottom: theme.spacing.sm,
+    textAlign: 'center',
+  },
+  feedbackCorrect: {
+    color: '#2E7D32',
+  },
+  feedbackIncorrect: {
+    color: '#C62828',
+  },
+  explanationText: {
+    ...theme.typography.body,
+    marginBottom: theme.spacing.md,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
+  },
+  continueButton: {
+    marginTop: theme.spacing.sm,
+  },
+});
