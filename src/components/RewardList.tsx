@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Reward } from '../data/types';
 import { RewardCard } from './RewardCard';
@@ -10,14 +10,22 @@ interface RewardListProps {
 
 export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
   const { deductCoins } = useRewards();
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleRedeem = (reward: Reward) => {
+  const handleRedeem = async (reward: Reward) => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+
     const success = deductCoins(reward.cost);
     if (success) {
       Alert.alert('Redeemed ✓', `You have successfully redeemed ${reward.title}!`);
     } else {
       Alert.alert('Oops!', 'You need more coins to unlock this reward.');
     }
+
+    setTimeout(() => {
+      setIsProcessing(false);
+    }, 500);
   };
 
   if (rewards.length === 0) {

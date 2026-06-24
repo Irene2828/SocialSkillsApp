@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
@@ -11,7 +11,38 @@ import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
-  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit } = useProgress();
+  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData } = useProgress();
+
+  const handleResetData = () => {
+    Alert.alert(
+      "Reset Progress?",
+      "Are you sure? This will reset all streaks and quizzes. (Hold to confirm not required in basic Alert, but we require an extra yes)",
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Yes, Reset", 
+          style: "destructive",
+          onPress: () => {
+            Alert.alert(
+              "Final Confirmation",
+              "We are safely clearing the data. Continue?",
+              [
+                { text: "Cancel", style: "cancel" },
+                { 
+                  text: "Reset", 
+                  style: "destructive",
+                  onPress: () => {
+                    resetAllData();
+                    Alert.alert("Success", "We saved your progress safely (Reset complete).");
+                  }
+                }
+              ]
+            );
+          }
+        }
+      ]
+    );
+  };
 
   return (
     <ScreenWrapper>
@@ -52,6 +83,13 @@ export const SettingsScreen = () => {
                 />
               ))}
             </View>
+            
+            <Text style={[styles.controlTitle, { marginTop: theme.spacing.lg, color: '#EF4444' }]}>Danger Zone</Text>
+            <Button 
+              title="Reset All Progress" 
+              variant="secondary" 
+              onPress={handleResetData} 
+            />
           </Card>
         )}
 

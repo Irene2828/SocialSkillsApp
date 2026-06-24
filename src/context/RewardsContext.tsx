@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Reward } from '../data/types';
+import { safeStorage } from '../utils/storage';
+import { logger } from '../utils/logger';
 
 interface RewardsContextType {
   coinBalance: number;
@@ -28,18 +29,15 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     const loadData = async () => {
       try {
-        const storedCoins = await AsyncStorage.getItem('@coin_balance');
-        if (storedCoins !== null) {
-          setCoinBalance(parseFloat(storedCoins));
-        }
+        const storedCoins = await safeStorage.get<number>('@coin_balance', 0);
+        setCoinBalance(Math.max(0, storedCoins));
 
-        const storedRewards = await AsyncStorage.getItem('@custom_rewards');
-        if (storedRewards !== null) {
-          const customRewards = JSON.parse(storedRewards) as Reward[];
-          setRewards([...DEFAULT_REWARDS, ...customRewards]);
-        }
+        const storedRewards = await safeStorage.get<Reward[]>('@custom_rewards', []);
+        setRewards([...DEFAULT_REWARDS, ...storedRewards]);
       } catch (e) {
-        console.error('Failed to load rewards data', e);
+        logger.error('Failed to load rewards data', e);
+        setCoinBalance(0);
+        setRewards(DEFAULT_REWARDS);
       } finally {
         setIsLoaded(true);
       }
@@ -48,33 +46,36 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const saveCoins = async (newBalance: number) => {
-    try {
-      await AsyncStorage.setItem('@coin_balance', newBalance.toString());
-    } catch (e) {
-      console.error('Failed to save coins', e);
+    const validBalance = Math.max(0, newBalance);
+    const success = await safeStorage.set('@coin_balance', validBalance);
+    if (!success) {
+      logger.warn('Failed to save coins, rolling back');
+      setCoinBalance(coinBalance); // rollback on fail
     }
   };
 
   const saveCustomRewards = async (newRewards: Reward[]) => {
-    try {
-      const customOnly = newRewards.filter(r => r.isCustom);
-      await AsyncStorage.setItem('@custom_rewards', JSON.stringify(customOnly));
-    } catch (e) {
-      console.error('Failed to save custom rewards', e);
+    const customOnly = newRewards.filter(r => r.isCustom);
+    const success = await safeStorage.set('@custom_rewards', customOnly);
+    if (!success) {
+      logger.warn('Failed to save custom rewards');
     }
   };
 
   const addCoins = (amount: number) => {
-    const newBalance = coinBalance + amount;
+    const validAmount = Math.max(0, amount);
+    const newBalance = coinBalance + validAmount;
     setCoinBalance(newBalance);
     saveCoins(newBalance);
   };
 
   const deductCoins = (amount: number) => {
-    if (coinBalance >= amount) {
-      const newBalance = coinBalance - amount;
+    const validAmount = Math.max(0, amount);
+    if (coinBalance >= validAmount) {
+      const newBalance = coinBalance - validAmount;
       setCoinBalance(newBalance);
       saveCoins(newBalance);
+      logger.info('reward_redeemed', { amount: validAmount, newBalance });
       return true;
     }
     return false;

@@ -10,9 +10,10 @@ import { Ionicons } from '@expo/vector-icons';
 interface QuestionViewProps {
   question: Question;
   onContinue: (isCorrect: boolean) => void;
+  disabled?: boolean;
 }
 
-export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue }) => {
+export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -95,6 +96,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
             title="Continue"
             onPress={() => onContinue(isCorrect)}
             style={styles.continueButton}
+            disabled={disabled}
           />
         </View>
       )}

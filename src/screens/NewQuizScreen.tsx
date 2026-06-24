@@ -29,6 +29,7 @@ export const NewQuizScreen = () => {
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const completionFadeAnim = useRef(new Animated.Value(0)).current;
   const completionSlideAnim = useRef(new Animated.Value(20)).current;
@@ -54,34 +55,42 @@ export const NewQuizScreen = () => {
     }
   }, [quizState]);
 
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+
   const handleStartQuickQuiz = () => {
-    // Shuffle all questions regardless of category
-    const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+    const shuffled = shuffleArray(allQuestions);
     const selected = shuffled.slice(0, 10);
     
     setSelectedCategory(null);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
+    setIsProcessing(false);
     setQuizState('in-progress');
   };
 
   const handleStartQuiz = (category: Category) => {
-    // Filter questions by category
     const categoryQuestions = allQuestions.filter(q => q.category === category);
-    
-    // Shuffle and pick 10 questions (or all if less than 10)
-    const shuffled = [...categoryQuestions].sort(() => 0.5 - Math.random());
+    const shuffled = shuffleArray(categoryQuestions);
     const selected = shuffled.slice(0, 10);
 
     setSelectedCategory(category);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
+    setIsProcessing(false);
     setQuizState('in-progress');
   };
 
-  const handleContinue = (isCorrect: boolean) => {
+  const handleContinue = async (isCorrect: boolean) => {
+    if (isProcessing) return;
     if (isCorrect) {
       setScore(prev => prev + 1);
     }
@@ -89,7 +98,7 @@ export const NewQuizScreen = () => {
     if (currentIndex + 1 < currentQuestions.length) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      // Calculate final score since React state might not be updated yet
+      setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
       let coinsEarned = 0;
       if (finalScore >= 8) coinsEarned = 1;
@@ -98,8 +107,9 @@ export const NewQuizScreen = () => {
       if (coinsEarned > 0) {
         addCoins(coinsEarned);
       }
-      recordQuizCompletion(finalScore, coinsEarned);
+      await recordQuizCompletion(finalScore, coinsEarned);
       setQuizState('completed');
+      setIsProcessing(false);
     }
   };
 
@@ -156,6 +166,7 @@ export const NewQuizScreen = () => {
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
+            disabled={isProcessing}
           />
         </ScrollView>
       </View>
