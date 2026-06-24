@@ -1,0 +1,67 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { Card } from './Card';
+import { Button } from './Button';
+import { Reward } from '../data/types';
+import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
+
+interface RewardCardProps {
+  reward: Reward;
+  onRedeem: (reward: Reward) => void;
+}
+
+export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
+  return (
+    <Card style={styles.card}>
+      <View style={styles.iconContainer}>
+        <Ionicons name={reward.icon as any || 'star-outline'} size={32} color={theme.colors.primary} />
+      </View>
+      <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
+      <View style={styles.costContainer}>
+        <Ionicons name="cash" size={16} color={theme.colors.accent} />
+        <Text style={styles.costText}>{reward.cost}</Text>
+      </View>
+      <Button 
+        title="Redeem" 
+        onPress={() => onRedeem(reward)} 
+        style={styles.redeemButton}
+      />
+    </Card>
+  );
+};
+
+const styles = StyleSheet.create({
+  card: {
+    flex: 1,
+    margin: theme.spacing.xs,
+    padding: theme.spacing.md,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    minHeight: 180,
+  },
+  iconContainer: {
+    marginBottom: theme.spacing.sm,
+  },
+  title: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: theme.spacing.xs,
+  },
+  costContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+  },
+  costText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.accent,
+    marginLeft: theme.spacing.xs,
+  },
+  redeemButton: {
+    width: '100%',
+    paddingVertical: theme.spacing.sm,
+  },
+});

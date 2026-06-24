@@ -1,28 +1,45 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
+import { CoinBalanceCard } from '../components/CoinBalanceCard';
+import { RewardList } from '../components/RewardList';
+import { AddRewardForm } from '../components/AddRewardForm';
+import { useRewards } from '../context/RewardsContext';
 import { theme } from '../theme';
 
 export const MyRewardsScreen = () => {
+  const { coinBalance, rewards } = useRewards();
+
   return (
     <ScreenWrapper>
       <Header title="My Rewards" />
-      <View style={styles.content}>
-        <Text style={styles.placeholderText}>My Rewards coming soon</Text>
-      </View>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        
+        {/* Top Section: Stack Layout (Focus on balance and adding) */}
+        <View style={styles.topSection}>
+          <CoinBalanceCard balance={coinBalance} />
+          <AddRewardForm />
+        </View>
+
+        {/* Bottom Section: Bento Grid (Choice mode for redemption) */}
+        <View style={styles.bentoSection}>
+          <RewardList rewards={rewards} />
+        </View>
+
+      </ScrollView>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  scrollContent: {
+    paddingBottom: theme.spacing.xl,
   },
-  placeholderText: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
+  topSection: {
+    marginBottom: theme.spacing.lg,
+  },
+  bentoSection: {
+    // Container for the Bento grid elements
   },
 });

@@ -10,10 +10,15 @@ import { Card } from '../components/Card';
 import { theme } from '../theme';
 import { QUIZ_CATEGORIES, Category, Question } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
+import { useRewards } from '../context/RewardsContext';
+import { useNavigation } from '@react-navigation/native';
 
 type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
+  const { addCoins } = useRewards();
+  const navigation = useNavigation<any>();
+
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
@@ -43,6 +48,15 @@ export const NewQuizScreen = () => {
     if (currentIndex + 1 < currentQuestions.length) {
       setCurrentIndex(prev => prev + 1);
     } else {
+      // Calculate final score since React state might not be updated yet
+      const finalScore = isCorrect ? score + 1 : score;
+      let coinsEarned = 0;
+      if (finalScore >= 8) coinsEarned = 1;
+      else if (finalScore >= 6) coinsEarned = 0.5;
+      
+      if (coinsEarned > 0) {
+        addCoins(coinsEarned);
+      }
       setQuizState('completed');
     }
   };
@@ -93,6 +107,10 @@ export const NewQuizScreen = () => {
     else if (score >= total * 0.7) message = "Great job, Social Explorer!";
     else if (score >= total * 0.5) message = "You're learning fast!";
 
+    let coinsEarned = 0;
+    if (score >= 8) coinsEarned = 1;
+    else if (score >= 6) coinsEarned = 0.5;
+
     return (
       <View style={styles.completedContainer}>
         <Card style={styles.completedCard}>
@@ -103,12 +121,25 @@ export const NewQuizScreen = () => {
             <Text style={styles.scoreText}>{score} / {total}</Text>
           </View>
           
+          {coinsEarned > 0 && (
+            <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
+          )}
+
           <Text style={styles.messageText}>{message}</Text>
           
           <Button 
-            title="Back to Home" 
+            title="Take Another Quiz" 
             onPress={handleBackToHome} 
-            style={styles.homeButton}
+            style={[styles.actionButton, styles.primaryButton]}
+          />
+          <Button 
+            title="Go to Rewards" 
+            onPress={() => {
+              handleBackToHome();
+              navigation.navigate('MyRewards');
+            }} 
+            variant="secondary"
+            style={styles.actionButton}
           />
         </Card>
       </View>
@@ -177,7 +208,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: theme.spacing.xl,
   },
-  homeButton: {
+  coinsEarnedText: {
+    ...theme.typography.heading,
+    color: theme.colors.accent,
+    fontSize: 24,
+    marginBottom: theme.spacing.md,
+  },
+  actionButton: {
     width: '100%',
+    marginBottom: theme.spacing.sm,
+  },
+  primaryButton: {
+    // Gradient logic goes here if implemented, for now solid is fine per v2 design system
   },
 });

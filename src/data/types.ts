@@ -25,3 +25,11 @@ export const QUIZ_CATEGORIES: QuizCategory[] = [
   { id: "Playground", title: "Playground Skills", description: "Have fun and stay safe at recess." },
   { id: "Safety", title: "Safety Basics", description: "Learn important rules to keep safe." },
 ];
+
+export interface Reward {
+  id: string;
+  title: string;
+  cost: number;
+  icon?: string;
+  isCustom: boolean;
+}
