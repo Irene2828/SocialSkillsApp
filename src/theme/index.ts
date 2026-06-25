@@ -1,7 +1,7 @@
 export const theme = {
   colors: {
     background: '#FAFAF8',
-    primary: '#4F8EF7',
+    primary: '#4C1D95', // Deeper darker purple
     success: '#7C8CF8', // Soft purple
     successSoft: '#EDEBFF',
     neutralGrey: '#E5E7EB',

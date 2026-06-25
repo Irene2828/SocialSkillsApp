@@ -13,7 +13,7 @@ import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useNavigation } from '@react-navigation/native';
-import { StreakCard } from '../components/StreakCard';
+
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 
@@ -21,7 +21,7 @@ type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
-  const { streak, quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
+  const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const navigation = useNavigation<any>();
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
@@ -133,16 +133,6 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <View style={styles.topSection}>
-          <View style={styles.greetingRow}>
-            <Text style={styles.greetingText}>{timeGreeting}, {childName} 👋</Text>
-            <View style={styles.coinBadge}>
-              <Text style={styles.coinBadgeText}>{coinBalance} 🪙</Text>
-            </View>
-          </View>
-          <StreakCard streak={streak} />
-        </View>
-
         <QuickStartButton onPress={handleStartQuickQuiz} />
 
         <Text style={styles.sectionTitle}>Or choose a topic:</Text>
@@ -187,11 +177,6 @@ export const NewQuizScreen = () => {
     else if (score >= total * 0.7) message = "Great job, Social Explorer!";
     else if (score >= total * 0.5) message = "You're learning fast!";
 
-    let streakMessage = "Great start!";
-    if (streak >= 14) streakMessage = "Habit master!";
-    else if (streak >= 7) streakMessage = "Amazing consistency!";
-    else if (streak >= 3) streakMessage = "You're on fire 🔥";
-
     let coinsEarned = 0;
     if (score >= 8) coinsEarned = 1;
     else if (score >= 6) coinsEarned = 0.5;
@@ -211,7 +196,6 @@ export const NewQuizScreen = () => {
               <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
             )}
 
-            <Text style={styles.streakProgressText}>{streakMessage}</Text>
             <Text style={styles.messageText}>{message}</Text>
           </Animated.View>
 
@@ -236,7 +220,7 @@ export const NewQuizScreen = () => {
 
   return (
     <ScreenWrapper>
-      <Header title={quizState === 'selection' ? "New Quiz" : selectedCategory || "Quiz"} />
+      <Header title={quizState === 'selection' ? "Choose a Topic" : selectedCategory || "Quiz"} />
       <View style={styles.content}>
         {quizState === 'selection' && renderSelection()}
         {quizState === 'in-progress' && renderInProgress()}
@@ -253,34 +237,6 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: theme.spacing.xl,
     paddingHorizontal: theme.spacing.md,
-  },
-  topSection: {
-    marginBottom: theme.spacing.md,
-  },
-  greetingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: theme.spacing.md,
-    marginTop: theme.spacing.sm,
-  },
-  greetingText: {
-    ...theme.typography.heading,
-    fontSize: 20,
-    flex: 1,
-  },
-  coinBadge: {
-    backgroundColor: theme.colors.white,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.xs,
-    borderRadius: theme.borderRadius.full,
-    borderColor: theme.colors.accent,
-    borderWidth: 1,
-  },
-  coinBadgeText: {
-    ...theme.typography.heading,
-    fontSize: 16,
-    color: theme.colors.accent,
   },
   sectionTitle: {
     ...theme.typography.body,
@@ -344,12 +300,6 @@ const styles = StyleSheet.create({
     color: theme.colors.accent,
     fontSize: 24,
     marginBottom: theme.spacing.md,
-  },
-  streakProgressText: {
-    ...theme.typography.body,
-    fontWeight: '600',
-    color: theme.colors.success,
-    marginBottom: theme.spacing.sm,
   },
   actionButton: {
     width: '100%',

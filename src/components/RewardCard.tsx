@@ -62,6 +62,5 @@ const styles = StyleSheet.create({
   },
   redeemButton: {
     width: '100%',
-    paddingVertical: theme.spacing.sm,
   },
 });

@@ -9,7 +9,7 @@ const ALL_ACHIEVEMENTS: Achievement[] = [
   { id: 'ten_quizzes', title: '10 Quizzes Completed' },
   { id: 'twenty_five_correct', title: '25 Correct Answers Total' },
   { id: 'first_coin', title: 'First Coin Earned' },
-  { id: 'three_day_streak', title: '3-Day Streak' },
+  { id: 'three_day_streak', title: '3-Day Explorer' },
 ];
 
 interface AchievementListProps {

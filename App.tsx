@@ -5,6 +5,7 @@ import { AppNavigator } from './src/navigation/AppNavigator';
 import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider, useProgress } from './src/context/ProgressContext';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { DesignReviewScreen } from './src/screens/DesignReviewScreen';
 
 const RootNavigator = () => {
   const { hasOnboarded } = useProgress();
@@ -22,7 +23,7 @@ export default function App() {
       <ProgressProvider>
         <RewardsProvider>
           <NavigationContainer>
-            <RootNavigator />
+            <DesignReviewScreen />
             <StatusBar style="auto" />
           </NavigationContainer>
         </RewardsProvider>

@@ -36,10 +36,8 @@ export const OnboardingScreen = () => {
 
   const renderStep1 = () => (
     <View style={styles.stepContainer}>
-      <Ionicons name="compass-outline" size={80} color={theme.colors.primary} style={styles.icon} />
       <Text style={styles.title}>Welcome to Social Quest</Text>
       <Text style={styles.subtitle}>Helping kids build strong social skills through simple daily practice.</Text>
-      <View style={styles.spacer} />
       <Button title="Get Started" onPress={handleNext} style={styles.button} />
     </View>
   );
@@ -193,7 +191,6 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    paddingVertical: 16, // Enforce min 44px
   },
   label: {
     ...theme.typography.heading,

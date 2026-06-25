@@ -87,7 +87,7 @@ Text:
 
 Primary:
 
-* `#4F8EF7`
+* `#4C1D95`
 
 Success:
 
@@ -120,7 +120,7 @@ Use for:
 * “Redeem”
 
 ```css
-#4F8EF7 → #7AA7FF
+#A78BFA → #4C1D95
 ```
 
 ---
@@ -173,7 +173,7 @@ Font:
 ## Buttons
 
 * height: 48–56px
-* radius: 18–20px
+* radius: Full pill (9999px) (Primary) / 18–20px (Secondary)
 * primary = gradient allowed
 * secondary = flat
 

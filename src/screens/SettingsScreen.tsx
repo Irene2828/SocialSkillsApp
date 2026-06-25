@@ -16,7 +16,7 @@ export const SettingsScreen = () => {
   const handleResetData = () => {
     Alert.alert(
       "Reset Progress?",
-      "Are you sure? This will reset all streaks and quizzes. (Hold to confirm not required in basic Alert, but we require an extra yes)",
+      "Are you sure? This will reset all progress and quizzes.",
       [
         { text: "Cancel", style: "cancel" },
         { 
@@ -46,11 +46,9 @@ export const SettingsScreen = () => {
 
   return (
     <ScreenWrapper>
-      <Header title="Settings" />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Child Profile (Stack) */}
-        <Text style={styles.sectionHeader}>Child Section</Text>
         <Card style={styles.profileCard}>
           <View style={styles.avatarPlaceholder}>
             <Ionicons name="person" size={32} color={theme.colors.white} />
@@ -65,7 +63,6 @@ export const SettingsScreen = () => {
         <AchievementList unlockedIds={achievements} />
 
         {/* Parent Section */}
-        <Text style={styles.sectionHeader}>Parent Section</Text>
         <ParentLockToggle />
 
         {isParentModeUnlocked && (

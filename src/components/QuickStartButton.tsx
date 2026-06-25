@@ -3,6 +3,7 @@ import { Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme';
 import { ScalePressable } from './ScalePressable';
+import { LinearGradient } from 'expo-linear-gradient';
 
 interface QuickStartButtonProps {
   onPress: () => void;
@@ -10,24 +11,38 @@ interface QuickStartButtonProps {
 
 export const QuickStartButton: React.FC<QuickStartButtonProps> = ({ onPress }) => {
   return (
-    <ScalePressable style={styles.button} onPress={onPress}>
-      <Ionicons name="play-circle" size={32} color={theme.colors.white} style={styles.icon} />
-      <Text style={styles.text}>Start Quick Quiz</Text>
+    <ScalePressable style={styles.buttonContainer} onPress={onPress}>
+      <LinearGradient
+        colors={['#A78BFA', '#4C1D95']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.gradient}
+      >
+        <Ionicons name="play-circle" size={32} color={theme.colors.white} style={styles.icon} />
+        <Text style={styles.text}>Start Quick Quiz</Text>
+      </LinearGradient>
     </ScalePressable>
   );
 };
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.lg,
+  buttonContainer: {
+    borderRadius: theme.borderRadius.full,
+    marginBottom: theme.spacing.lg,
+    shadowColor: '#FFFFFF',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
+    elevation: 4,
+    backgroundColor: '#4C1D95',
+  },
+  gradient: {
+    borderRadius: theme.borderRadius.full,
     paddingVertical: theme.spacing.lg,
     paddingHorizontal: theme.spacing.xl,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.lg,
-    ...theme.shadows.soft,
   },
   icon: {
     marginRight: theme.spacing.sm,

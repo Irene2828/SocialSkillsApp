@@ -15,6 +15,7 @@ interface QuestionViewProps {
 
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [hasFailed, setHasFailed] = useState(false);
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
@@ -22,6 +23,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   // Reset state and trigger animation when question changes
   useEffect(() => {
     setSelectedIndex(null);
+    setHasFailed(false);
     fadeAnim.setValue(0);
     slideAnim.setValue(10);
     
@@ -42,6 +44,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   const handleSelect = (index: number) => {
     if (selectedIndex === null) {
       setSelectedIndex(index);
+      if (index !== question.correctAnswerIndex) {
+        setHasFailed(true);
+      }
     }
   };
 
@@ -59,10 +64,12 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
           let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
 
           if (isAnswered) {
-            if (index === question.correctAnswerIndex) {
-              state = selectedIndex === index ? 'selected-correct' : 'unselected-correct';
-            } else if (index === selectedIndex) {
-              state = 'selected-incorrect';
+            if (isCorrect) {
+              state = index === question.correctAnswerIndex ? 'selected-correct' : 'unselected-correct';
+            } else {
+              if (index === selectedIndex) {
+                state = 'selected-incorrect';
+              }
             }
           }
 
@@ -88,16 +95,29 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               style={styles.feedbackIcon}
             />
             <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
-              {isCorrect ? 'Correct' : "Let's try again"}
+              {isCorrect ? 'Correct' : "Not quite, try again!"}
             </Text>
           </View>
-          <Text style={styles.explanationText}>{question.explanation}</Text>
-          <Button
-            title="Continue"
-            onPress={() => onContinue(isCorrect)}
-            style={styles.continueButton}
-            disabled={disabled}
-          />
+          
+          {isCorrect && (
+            <Text style={styles.explanationText}>{question.explanation}</Text>
+          )}
+
+          {isCorrect ? (
+            <Button
+              title="Continue"
+              onPress={() => onContinue(!hasFailed)}
+              style={styles.continueButton}
+              disabled={disabled}
+            />
+          ) : (
+            <Button
+              title="Try Again"
+              onPress={() => setSelectedIndex(null)}
+              style={styles.continueButton}
+              variant="secondary"
+            />
+          )}
         </View>
       )}
     </Animated.View>
