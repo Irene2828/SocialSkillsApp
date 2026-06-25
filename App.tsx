@@ -23,7 +23,8 @@ export default function App() {
       <ProgressProvider>
         <RewardsProvider>
           <NavigationContainer>
-            <DesignReviewScreen />
+            {/* <DesignReviewScreen /> */}
+            <RootNavigator />
             <StatusBar style="auto" />
           </NavigationContainer>
         </RewardsProvider>

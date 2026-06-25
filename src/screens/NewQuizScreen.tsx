@@ -133,9 +133,6 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <QuickStartButton onPress={handleStartQuickQuiz} />
-
-        <Text style={styles.sectionTitle}>Or choose a topic:</Text>
         <View style={styles.bentoGrid}>
           {QUIZ_CATEGORIES.map(category => (
             <View key={category.id} style={styles.bentoItem}>
