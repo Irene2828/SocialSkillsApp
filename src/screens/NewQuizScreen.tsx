@@ -13,6 +13,7 @@ import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
@@ -159,6 +160,13 @@ export const NewQuizScreen = () => {
     );
   };
 
+  const renderCoinJar = () => (
+    <View style={styles.coinJarContainer}>
+      <Ionicons name="cash" size={20} color={theme.colors.success} />
+      <Text style={styles.coinJarText}>{coinBalance}</Text>
+    </View>
+  );
+
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
     const currentQuestion = currentQuestions[currentIndex];
@@ -166,7 +174,11 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <Header title={`Topic: ${selectedCategory}`} hasDivider={true} />
+          <Header 
+            title={`Topic: ${selectedCategory}`} 
+            hasDivider={true} 
+            rightElement={renderCoinJar()}
+          />
           <ProgressBar current={currentIndex + 1} total={currentQuestions.length} />
           <QuestionView 
             question={currentQuestion} 
@@ -335,5 +347,21 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
+  },
+  coinJarContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  coinJarText: {
+    ...theme.typography.body,
+    fontWeight: '700',
+    color: theme.colors.success,
+    marginLeft: 4,
   },
 });

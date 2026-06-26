@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal, ImageBackground } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -91,32 +91,46 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         animationType="fade"
       >
         <View style={styles.modalOverlay}>
-          <View style={styles.feedbackContainer}>
-            <View style={styles.feedbackTitleContainer}>
-              <Text style={styles.feedbackTitle}>
-                {isCorrect ? 'Correct!' : "Not quite, try again!"}
-              </Text>
-            </View>
-            
-            {isCorrect && (
-              <Text style={styles.explanationText}>{question.explanation}</Text>
-            )}
+          <ImageBackground 
+            source={require('../../assets/scandi_bg_pattern.png')} 
+            style={styles.feedbackContainerBackground}
+            imageStyle={{ borderRadius: theme.borderRadius.lg }}
+            resizeMode="cover"
+          >
+            <View style={styles.feedbackContainer}>
+              <View style={styles.feedbackTitleContainer}>
+                <Text style={styles.feedbackTitle}>
+                  {isCorrect ? 'Correct!' : "Not quite, try again!"}
+                </Text>
+              </View>
+              
+              {isCorrect && (
+                <Text style={styles.explanationText}>{question.explanation}</Text>
+              )}
 
-            {isCorrect ? (
-              <Button
-                title="Continue"
-                onPress={() => onContinue(!hasFailed)}
-                style={styles.continueButton}
-                disabled={disabled}
-              />
-            ) : (
-              <Button
-                title="Try Again"
-                onPress={() => setSelectedIndex(null)}
-                style={styles.continueButton}
-              />
-            )}
-          </View>
+              {isCorrect && (
+                <View style={styles.coinRewardContainer}>
+                  <Ionicons name="cash" size={24} color={theme.colors.success} />
+                  <Text style={styles.coinRewardText}>+1 Coin!</Text>
+                </View>
+              )}
+
+              {isCorrect ? (
+                <Button
+                  title="Continue"
+                  onPress={() => onContinue(!hasFailed)}
+                  style={styles.continueButton}
+                  disabled={disabled}
+                />
+              ) : (
+                <Button
+                  title="Try Again"
+                  onPress={() => setSelectedIndex(null)}
+                  style={styles.continueButton}
+                />
+              )}
+            </View>
+          </ImageBackground>
         </View>
       </Modal>
     </Animated.View>
@@ -156,17 +170,20 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(255,255,255,0.7)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
   },
+  feedbackContainerBackground: {
+    width: '100%',
+    borderRadius: theme.borderRadius.lg,
+    ...theme.shadows.glow,
+  },
   feedbackContainer: {
     width: '100%',
     padding: theme.spacing.xl,
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
-    ...theme.shadows.glow,
+    backgroundColor: 'transparent',
   },
   feedbackTitleContainer: {
     flexDirection: 'row',
@@ -186,6 +203,18 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.secondaryText,
+  },
+  coinRewardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  coinRewardText: {
+    ...theme.typography.heading,
+    color: theme.colors.success,
+    fontSize: 20,
+    marginLeft: theme.spacing.xs,
   },
   continueButton: {
     marginTop: theme.spacing.sm,
