@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
-import { AchievementList } from '../components/AchievementList';
+import { TopicProgressList } from '../components/TopicProgressList';
 import { ParentLockToggle } from '../components/ParentLockToggle';
 import { Button } from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
@@ -11,7 +11,7 @@ import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export const SettingsScreen = () => {
-  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge } = useProgress();
+  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge, totalQuizzesCompleted } = useProgress();
 
   const handleResetData = () => {
     Alert.alert(
@@ -59,8 +59,8 @@ export const SettingsScreen = () => {
           </View>
         </Card>
 
-        {/* Achievements (Light Bento Mix) */}
-        <AchievementList unlockedIds={achievements} />
+        {/* Achievements (Topic Progress) */}
+        <TopicProgressList totalCompletions={totalQuizzesCompleted} />
 
         {/* Parent Section */}
         <ParentLockToggle />

@@ -26,12 +26,12 @@ export const AppNavigator = () => {
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.secondaryText,
+        tabBarActiveTintColor: theme.colors.white,
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.white,
-          borderTopColor: theme.colors.border,
+          backgroundColor: 'rgba(76, 29, 149, 0.75)',
+          borderTopColor: 'transparent',
           elevation: 0,
           shadowOpacity: 0,
         },

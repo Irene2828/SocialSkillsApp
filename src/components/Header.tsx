@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   container: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.md,
-    marginBottom: theme.spacing.xxl,
+    marginBottom: theme.spacing.lg,
   },
   title: {
     ...theme.typography.heading,
