@@ -229,7 +229,7 @@ export const NewQuizScreen = () => {
   return (
     <ScreenWrapper>
       {quizState !== 'start' && (
-        <Header title={quizState === 'selection' ? "Choose a Topic" : selectedCategory || "Quiz"} />
+        <Header title={quizState === 'selection' ? "Choose a Topic" : (selectedCategory ? `Topic: ${selectedCategory}` : "Quiz")} />
       )}
       <View style={styles.content}>
         {quizState === 'start' && renderStart()}
