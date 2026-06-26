@@ -46,6 +46,7 @@ export const SettingsScreen = () => {
 
   return (
     <ScreenWrapper>
+      <Header title="Profile" />
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Child Profile (Stack) */}

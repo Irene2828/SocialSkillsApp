@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...theme.typography.heading,
     fontSize: 22,
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.xl,
   },
   topicCard: {
     flexDirection: 'row',
