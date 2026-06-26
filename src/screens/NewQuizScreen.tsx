@@ -192,10 +192,6 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.completedContainer}>
         <Card style={styles.completedCard}>
-          <View style={styles.scoreContainer}>
-            <Text style={styles.scoreText}>{score} / {total}</Text>
-          </View>
-          
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             {coinsEarned > 0 && (
               <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
@@ -203,6 +199,10 @@ export const NewQuizScreen = () => {
 
             <Text style={styles.messageText}>{message}</Text>
             <Text style={styles.categoryText}>{categoryName}</Text>
+            
+            <View style={styles.scoreContainer}>
+              <Text style={styles.scoreText}>{score} / {total}</Text>
+            </View>
           </Animated.View>
 
           <Button 
