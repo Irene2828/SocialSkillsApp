@@ -84,8 +84,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     backgroundColor: 'transparent',
     borderWidth: 1.5,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.full,
+    borderColor: '#374151',
+    borderRadius: theme.borderRadius.md,
   },
   outlineButton: {
     paddingVertical: theme.spacing.md,
