@@ -25,14 +25,16 @@ export const AppNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.secondaryText,
+        tabBarActiveTintColor: '#FFFFFF',
+        tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.6)',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.background,
-          borderTopColor: theme.colors.border,
+          backgroundColor: '#7A437A', // Plum purple to match the screenshot
+          borderTopColor: 'transparent',
           elevation: 0,
           shadowOpacity: 0,
+          height: 60, // slightly taller for breathing room
+          paddingBottom: 8,
         },
       })}
     >

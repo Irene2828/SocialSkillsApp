@@ -139,9 +139,11 @@ const styles = StyleSheet.create({
   },
   scenarioText: {
     ...theme.typography.heading,
-    fontSize: 22,
-    lineHeight: 30,
+    fontSize: 24,
+    lineHeight: 32,
     textAlign: 'center',
+    fontWeight: '800',
+    color: '#211C27',
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,

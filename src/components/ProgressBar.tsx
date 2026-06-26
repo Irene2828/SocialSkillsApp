@@ -42,13 +42,13 @@ const styles = StyleSheet.create({
   },
   barBackground: {
     height: 8,
-    backgroundColor: theme.colors.border,
+    backgroundColor: '#D1C6DE',
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
   },
   barFill: {
     height: '100%',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#9E85BA',
     borderRadius: theme.borderRadius.full,
   },
 });
