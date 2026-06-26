@@ -54,12 +54,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   const isCorrect = selectedIndex === question.correctAnswerIndex;
 
   return (
-    <Animated.View style={[styles.container, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-      <Card style={styles.scenarioCard}>
-        <Text style={styles.scenarioText}>{question.scenario}</Text>
-      </Card>
+    <View style={styles.container}>
+      <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+        <Card style={styles.scenarioCard}>
+          <Text style={styles.scenarioText}>{question.scenario}</Text>
+        </Card>
 
-      <View style={styles.optionsContainer}>
+        <View style={styles.optionsContainer}>
         {question.options.map((option, index) => {
           let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
 
@@ -84,6 +85,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
           );
         })}
       </View>
+    </Animated.View>
 
       <Modal
         visible={isAnswered}
@@ -133,12 +135,15 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
           </View>
         </View>
       </Modal>
-    </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  animatedContainer: {
     flex: 1,
   },
   scenarioCard: {
@@ -222,5 +227,6 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     marginTop: theme.spacing.sm,
+    width: '100%',
   },
 });
