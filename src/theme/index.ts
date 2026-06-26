@@ -17,38 +17,38 @@ export const theme = {
   typography: {
     fontFamily: 'Inter',
     heading: {
-      fontSize: 28,
+      fontSize: 24,
       fontWeight: '600' as const, // SemiBold
       color: '#111827',
-      lineHeight: 36,
+      lineHeight: 32,
       letterSpacing: -0.5,
     },
     body: {
-      fontSize: 18,
+      fontSize: 16,
       fontWeight: '400' as const, // Regular
       color: '#374151',
-      lineHeight: 28,
-    },
-    button: {
-      fontSize: 18,
-      fontWeight: '500' as const, // Medium
-      color: '#FFFFFF',
       lineHeight: 24,
     },
+    button: {
+      fontSize: 16,
+      fontWeight: '500' as const, // Medium
+      color: '#FFFFFF',
+      lineHeight: 22,
+    },
     caption: {
-      fontSize: 15,
+      fontSize: 14,
       fontWeight: '400' as const,
       color: '#6B7280',
-      lineHeight: 22,
+      lineHeight: 20,
     },
   },
   spacing: {
-    xs: 8,
-    sm: 12,
-    md: 20,
-    lg: 32,
-    xl: 48,
-    xxl: 64,
+    xs: 6,
+    sm: 10,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    xxl: 48,
   },
   borderRadius: {
     sm: 16,
@@ -74,6 +74,6 @@ export const theme = {
     }
   },
   layout: {
-    minTouchTarget: 56, // generous touch target for kids
+    minTouchTarget: 48, // slightly reduced from 56 for smaller screens
   },
 };

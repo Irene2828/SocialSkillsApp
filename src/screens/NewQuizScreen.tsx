@@ -144,6 +144,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <Header title="Choose a Topic" />
         <View style={styles.bentoGrid}>
           {QUIZ_CATEGORIES.map(category => (
             <View key={category.id} style={styles.bentoItem}>
@@ -166,6 +167,7 @@ export const NewQuizScreen = () => {
       <View style={styles.inProgressContainer}>
         <ProgressBar current={currentIndex + 1} total={currentQuestions.length} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <Header title={`Topic: ${selectedCategory}`} />
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
@@ -226,9 +228,6 @@ export const NewQuizScreen = () => {
 
   return (
     <ScreenWrapper>
-      {quizState !== 'start' && quizState !== 'completed' && (
-        <Header title={quizState === 'selection' ? "Choose a Topic" : (selectedCategory ? `Topic: ${selectedCategory}` : "Quiz")} />
-      )}
       <View style={styles.content}>
         {quizState === 'start' && renderStart()}
         {quizState === 'selection' && renderSelection()}
