@@ -192,9 +192,6 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.completedContainer}>
         <Card style={styles.completedCard}>
-          <Text style={styles.completedTitle}>Quiz Complete!</Text>
-          <Text style={styles.categoryText}>{categoryName}</Text>
-          
           <View style={styles.scoreContainer}>
             <Text style={styles.scoreText}>{score} / {total}</Text>
           </View>
@@ -219,7 +216,7 @@ export const NewQuizScreen = () => {
               navigation.navigate('MyRewards');
             }} 
             variant="secondary"
-            style={styles.actionButton}
+            style={[styles.actionButton, { borderWidth: 0 }]}
           />
         </Card>
       </View>
@@ -228,7 +225,7 @@ export const NewQuizScreen = () => {
 
   return (
     <ScreenWrapper>
-      {quizState !== 'start' && (
+      {quizState !== 'start' && quizState !== 'completed' && (
         <Header title={quizState === 'selection' ? "Choose a Topic" : (selectedCategory ? `Topic: ${selectedCategory}` : "Quiz")} />
       )}
       <View style={styles.content}>
