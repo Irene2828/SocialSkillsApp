@@ -251,9 +251,9 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
   },
   startContent: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: theme.spacing.xxl,
   },
   startTitle: {
     ...theme.typography.heading,
