@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
-    backgroundColor: 'transparent',
+    backgroundColor: theme.colors.white,
     borderWidth: 1.5,
     borderColor: '#374151',
     borderRadius: theme.borderRadius.md,
