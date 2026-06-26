@@ -16,9 +16,10 @@ export const Header: React.FC<HeaderProps> = ({ title }) => {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.md,
-    marginBottom: theme.spacing.lg,
+    paddingTop: theme.spacing.xl,
+    paddingBottom: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
   title: {
     ...theme.typography.heading,

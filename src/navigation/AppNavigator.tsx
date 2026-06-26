@@ -23,15 +23,14 @@ export const AppNavigator = () => {
             iconName = focused ? 'settings' : 'settings-outline';
           }
 
-          // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: theme.colors.secondaryText,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#E0F2FE',
-          borderTopColor: 'transparent',
+          backgroundColor: theme.colors.background,
+          borderTopColor: theme.colors.border,
           elevation: 0,
           shadowOpacity: 0,
         },
@@ -50,7 +49,7 @@ export const AppNavigator = () => {
       <Tab.Screen 
         name="Settings" 
         component={SettingsScreen} 
-        options={{ tabBarLabel: 'Settings' }}
+        options={{ tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
   );
