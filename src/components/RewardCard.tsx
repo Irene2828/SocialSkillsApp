@@ -21,7 +21,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
           <View style={styles.costContainer}>
-            <Ionicons name="cash" size={16} color={theme.colors.accent} />
+            <Ionicons name="cash" size={16} color={theme.colors.success} />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
@@ -30,6 +30,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
         title="Redeem" 
         onPress={() => onRedeem(reward)} 
         style={styles.redeemButton}
+        variant="outline"
       />
     </Card>
   );
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
   costText: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: theme.colors.accent,
+    color: theme.colors.success,
     marginLeft: theme.spacing.xs,
   },
   redeemButton: {

@@ -12,7 +12,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
   return (
     <Card style={styles.card}>
       <View style={styles.iconContainer}>
-        <Ionicons name="cash" size={48} color={theme.colors.accent} />
+        <Ionicons name="cash-outline" size={48} color={theme.colors.success} />
       </View>
       <Text style={styles.balanceText}>{balance} Coins</Text>
       <Text style={styles.equivalenceText}>≈ ${balance} CAD</Text>

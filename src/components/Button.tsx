@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text, StyleSheet, PressableProps, View } from 'react-native';
 import { ScalePressable } from './ScalePressable';
 import { theme } from '../theme';
@@ -6,27 +6,51 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   title: string;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'outline';
   style?: any;
 }
 
-export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, ...props }) => {
+  const [isPressed, setIsPressed] = useState(false);
   const isPrimary = variant === 'primary';
+  const isSecondary = variant === 'secondary';
+  const isOutline = variant === 'outline';
+
+  let textStyle = styles.secondaryText;
+  if (isPrimary || (isOutline && isPressed)) {
+    textStyle = styles.primaryText;
+  } else if (isOutline) {
+    textStyle = styles.outlineText;
+  }
 
   const content = (
-    <Text style={[styles.text, isPrimary ? styles.primaryText : styles.secondaryText]}>
+    <Text style={[styles.text, textStyle]}>
       {title}
     </Text>
   );
+
+  const handlePressIn = (e: any) => {
+    setIsPressed(true);
+    if (onPressIn) onPressIn(e);
+  };
+
+  const handlePressOut = (e: any) => {
+    setIsPressed(false);
+    if (onPressOut) onPressOut(e);
+  };
 
   return (
     <ScalePressable
       style={[
         styles.button,
         isPrimary && styles.primaryButtonContainer,
-        !isPrimary && styles.secondaryButton,
+        isSecondary && styles.secondaryButton,
+        isOutline && styles.outlineButton,
+        isOutline && isPressed && styles.outlineButtonPressed,
         style,
       ]}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
       {...props}
     >
       {isPrimary ? (
@@ -77,6 +101,17 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
   },
+  outlineButton: {
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.full,
+  },
+  outlineButtonPressed: {
+    backgroundColor: theme.colors.primary,
+  },
   text: {
     ...theme.typography.button,
   },
@@ -85,5 +120,8 @@ const styles = StyleSheet.create({
   },
   secondaryText: {
     color: theme.colors.text,
+  },
+  outlineText: {
+    color: theme.colors.primary,
   },
 });
