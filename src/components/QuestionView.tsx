@@ -93,13 +93,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         <View style={styles.modalOverlay}>
           <View style={styles.feedbackContainer}>
             <View style={styles.feedbackTitleContainer}>
-              <Ionicons 
-                name={isCorrect ? "checkmark-circle" : "ellipse"} 
-                size={32} 
-                color={isCorrect ? theme.colors.success : theme.colors.secondaryText} 
-                style={styles.feedbackIcon}
-              />
-              <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+              <Text style={styles.feedbackTitle}>
                 {isCorrect ? 'Correct!' : "Not quite, try again!"}
               </Text>
             </View>
@@ -178,20 +172,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.sm,
-  },
-  feedbackIcon: {
-    marginRight: theme.spacing.xs,
+    marginBottom: theme.spacing.lg,
   },
   feedbackTitle: {
-    ...theme.typography.heading,
-    fontSize: 20,
-  },
-  feedbackCorrect: {
-    color: theme.colors.success,
-  },
-  feedbackIncorrect: {
-    color: theme.colors.secondaryText,
+    ...theme.typography.body,
+    fontSize: 18,
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#374151',
   },
   explanationText: {
     ...theme.typography.body,
