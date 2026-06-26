@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -85,40 +85,46 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         })}
       </View>
 
-      {isAnswered && (
-        <View style={styles.feedbackContainer}>
-          <View style={styles.feedbackTitleContainer}>
-            <Ionicons 
-              name={isCorrect ? "checkmark-circle" : "ellipse"} 
-              size={24} 
-              color={isCorrect ? theme.colors.success : theme.colors.secondaryText} 
-              style={styles.feedbackIcon}
-            />
-            <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
-              {isCorrect ? 'Correct' : "Not quite, try again!"}
-            </Text>
-          </View>
-          
-          {isCorrect && (
-            <Text style={styles.explanationText}>{question.explanation}</Text>
-          )}
+      <Modal
+        visible={isAnswered}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.feedbackContainer}>
+            <View style={styles.feedbackTitleContainer}>
+              <Ionicons 
+                name={isCorrect ? "checkmark-circle" : "ellipse"} 
+                size={32} 
+                color={isCorrect ? theme.colors.success : theme.colors.secondaryText} 
+                style={styles.feedbackIcon}
+              />
+              <Text style={[styles.feedbackTitle, isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect]}>
+                {isCorrect ? 'Correct!' : "Not quite, try again!"}
+              </Text>
+            </View>
+            
+            {isCorrect && (
+              <Text style={styles.explanationText}>{question.explanation}</Text>
+            )}
 
-          {isCorrect ? (
-            <Button
-              title="Continue"
-              onPress={() => onContinue(!hasFailed)}
-              style={styles.continueButton}
-              disabled={disabled}
-            />
-          ) : (
-            <Button
-              title="Try Again"
-              onPress={() => setSelectedIndex(null)}
-              style={styles.continueButton}
-            />
-          )}
+            {isCorrect ? (
+              <Button
+                title="Continue"
+                onPress={() => onContinue(!hasFailed)}
+                style={styles.continueButton}
+                disabled={disabled}
+              />
+            ) : (
+              <Button
+                title="Try Again"
+                onPress={() => setSelectedIndex(null)}
+                style={styles.continueButton}
+              />
+            )}
+          </View>
         </View>
-      )}
+      </Modal>
     </Animated.View>
   );
 };
@@ -148,18 +154,25 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     letterSpacing: 0.5,
     textAlign: 'center',
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#211C27',
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+  },
   feedbackContainer: {
-    marginTop: theme.spacing.md,
-    padding: theme.spacing.md,
+    width: '100%',
+    padding: theme.spacing.xl,
     backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.md,
-    ...theme.shadows.soft,
+    borderRadius: theme.borderRadius.lg,
+    ...theme.shadows.glow,
   },
   feedbackTitleContainer: {
     flexDirection: 'row',
