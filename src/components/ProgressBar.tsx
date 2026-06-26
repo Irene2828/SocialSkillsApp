@@ -24,7 +24,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xxl,
   },
   text: {
     ...theme.typography.body,
