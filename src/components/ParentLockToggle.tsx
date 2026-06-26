@@ -54,7 +54,7 @@ export const ParentLockToggle: React.FC = () => {
     <Card style={styles.card}>
       <View style={styles.row}>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>Parent Mode</Text>
+          <Text style={styles.title}>Settings Mode</Text>
           <Text style={styles.description}>Unlock settings and reward editing</Text>
         </View>
         <Switch
