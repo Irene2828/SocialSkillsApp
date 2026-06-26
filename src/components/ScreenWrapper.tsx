@@ -4,29 +4,18 @@ import { theme } from '../theme';
 
 export const ScreenWrapper: React.FC<ViewProps> = ({ children, style, ...props }) => {
   return (
-    <ImageBackground 
-      source={require('../../assets/scandi_bg_pattern.png')} 
-      style={styles.imageBackground}
-      resizeMode="cover"
-    >
-      <SafeAreaView style={styles.safeArea}>
-        <View style={[styles.container, style]} {...props}>
-          {children}
-        </View>
-      </SafeAreaView>
-    </ImageBackground>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={[styles.container, style]} {...props}>
+        {children}
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  imageBackground: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-  },
   safeArea: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: theme.colors.background,
   },
   container: {
     flex: 1,

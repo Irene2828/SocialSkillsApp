@@ -94,11 +94,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
       >
         <View style={styles.modalOverlay}>
           <View style={styles.feedbackContainerBackground}>
-            <Image 
-              source={require('../../assets/scandi_bg_pattern.png')} 
-              style={StyleSheet.absoluteFill}
-              resizeMode="cover"
-            />
             <View style={styles.feedbackContainer}>
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
@@ -187,6 +182,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.background,
     ...theme.shadows.glow,
   },
   feedbackContainer: {
