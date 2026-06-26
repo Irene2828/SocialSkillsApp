@@ -165,9 +165,9 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
-        <ProgressBar current={currentIndex + 1} total={currentQuestions.length} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <Header title={`Topic: ${selectedCategory}`} />
+          <Header title={`Topic: ${selectedCategory}`} hasDivider={true} />
+          <ProgressBar current={currentIndex + 1} total={currentQuestions.length} />
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 

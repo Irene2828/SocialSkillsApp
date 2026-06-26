@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.sm,
-    borderWidth: 2,
+    borderWidth: 1.5,
     justifyContent: 'center',
   },
   text: {
@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   defaultButton: {
-    backgroundColor: theme.colors.white,
-    borderColor: theme.colors.border,
+    backgroundColor: 'transparent',
+    borderColor: '#374151',
   },
   defaultText: {
     color: theme.colors.text,

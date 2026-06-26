@@ -18,19 +18,27 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ current, total }) => {
       <View style={styles.barBackground}>
         <View style={[styles.barFill, { width: `${progressPercentage}%` }]} />
       </View>
+      <Text style={styles.percentageText}>{Math.round(progressPercentage)}%</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.xxl,
+    marginBottom: theme.spacing.sm,
   },
   text: {
     ...theme.typography.body,
-    fontWeight: '600',
+    fontSize: 18,
+    color: theme.colors.text,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
+  },
+  percentageText: {
+    ...theme.typography.caption,
+    textAlign: 'left',
+    marginTop: theme.spacing.xs,
+    marginLeft: theme.spacing.md,
   },
   barBackground: {
     height: 8,
