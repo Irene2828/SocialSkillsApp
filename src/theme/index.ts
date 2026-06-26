@@ -2,8 +2,8 @@ export const theme = {
   colors: {
     background: '#FAFAF8',
     primary: '#4C1D95', // Deeper darker purple
-    success: '#7C8CF8', // Soft purple
-    successSoft: '#EDEBFF',
+    success: '#22C55E', // Salad Green (Tailwind Green 500)
+    successSoft: '#DCFCE7', // Light Salad Green (Tailwind Green 100)
     neutralGrey: '#E5E7EB',
     accent: '#FFC857',
     text: '#222222',
