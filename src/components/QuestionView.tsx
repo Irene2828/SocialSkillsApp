@@ -115,7 +115,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               title="Try Again"
               onPress={() => setSelectedIndex(null)}
               style={styles.continueButton}
-              variant="secondary"
             />
           )}
         </View>

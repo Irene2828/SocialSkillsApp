@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.success,
   },
   correctText: {
-    color: theme.colors.success,
+    color: theme.colors.text,
     fontWeight: '600',
   },
   incorrectButton: {
