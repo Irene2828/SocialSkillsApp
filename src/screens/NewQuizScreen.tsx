@@ -202,6 +202,7 @@ export const NewQuizScreen = () => {
             )}
 
             <Text style={styles.messageText}>{message}</Text>
+            <Text style={styles.categoryText}>{categoryName}</Text>
           </Animated.View>
 
           <Button 
@@ -304,28 +305,24 @@ const styles = StyleSheet.create({
   categoryText: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
   scoreContainer: {
-    backgroundColor: theme.colors.primary,
-    width: 120,
-    height: 120,
-    borderRadius: 60,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.lg,
   },
   scoreText: {
     ...theme.typography.heading,
-    color: theme.colors.white,
-    fontSize: 32,
+    color: theme.colors.primary,
+    fontSize: 48,
   },
   messageText: {
     ...theme.typography.heading,
     fontSize: 22,
     color: theme.colors.text,
     textAlign: 'center',
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.sm,
   },
   coinsEarnedText: {
     ...theme.typography.heading,
