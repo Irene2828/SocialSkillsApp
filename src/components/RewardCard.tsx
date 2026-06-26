@@ -14,7 +14,7 @@ interface RewardCardProps {
 
 export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAfford }) => {
   return (
-    <Card style={styles.card}>
+    <Card style={[styles.card, !canAfford && { opacity: 0.5 }]}>
       <View style={styles.leftContent}>
         <View style={styles.iconContainer}>
           <Ionicons name={reward.icon as any || 'star-outline'} size={32} color={theme.colors.primary} />

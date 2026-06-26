@@ -14,7 +14,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
       <View style={styles.iconContainer}>
         <Ionicons name="cash-outline" size={48} color={theme.colors.success} />
       </View>
-      <Text style={styles.balanceText}>{balance} Coins</Text>
+      <Text style={[styles.balanceText, balance === 0 && { color: theme.colors.success }]}>{balance} Coins</Text>
     </Card>
   );
 };
