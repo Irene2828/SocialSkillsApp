@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -139,8 +139,13 @@ const styles = StyleSheet.create({
   },
   scenarioText: {
     ...theme.typography.heading,
-    fontSize: 24,
-    lineHeight: 32,
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+      default: 'Comic Sans MS',
+    }),
+    fontSize: 26, // Slightly larger for comic fonts
+    lineHeight: 34,
     textAlign: 'center',
     fontWeight: '800',
     color: '#211C27',
