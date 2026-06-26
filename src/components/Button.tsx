@@ -66,9 +66,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   primaryButtonContainer: {
-    borderRadius: theme.borderRadius.full,
-    ...theme.shadows.glow,
+    borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.primary,
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.xl,
   },
   primaryGradient: {
     width: '100%',
