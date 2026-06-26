@@ -17,14 +17,14 @@ import { useNavigation } from '@react-navigation/native';
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 
-type QuizState = 'selection' | 'in-progress' | 'completed';
+type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const navigation = useNavigation<any>();
 
-  const [quizState, setQuizState] = useState<QuizState>('selection');
+  const [quizState, setQuizState] = useState<QuizState>('start');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -121,24 +121,29 @@ export const NewQuizScreen = () => {
     setScore(0);
   };
 
+  const renderStart = () => {
+    return (
+      <View style={styles.startContainer}>
+        <View style={styles.startContent}>
+          <Text style={styles.startTitle}>Social Quest</Text>
+          <Text style={styles.startSubtitle}>Ready to practice?</Text>
+        </View>
+        <Button 
+          title="Start Quiz" 
+          onPress={() => setQuizState('selection')} 
+          style={styles.actionButton}
+        />
+      </View>
+    );
+  };
+
   const renderSelection = () => {
     if (quizzesTakenToday >= dailyLimit) {
       return <SimpleLockScreen />;
     }
 
-    const hour = new Date().getHours();
-    let timeGreeting = 'Good morning';
-    if (hour >= 12 && hour < 17) timeGreeting = 'Good afternoon';
-    else if (hour >= 17) timeGreeting = 'Good evening';
-
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Button 
-          title="Start Quick Quiz" 
-          onPress={handleStartQuickQuiz} 
-          style={styles.quickStartButton}
-        />
-        <Text style={styles.sectionTitle}>Or choose a topic:</Text>
         <View style={styles.bentoGrid}>
           {QUIZ_CATEGORIES.map(category => (
             <View key={category.id} style={styles.bentoItem}>
@@ -223,8 +228,11 @@ export const NewQuizScreen = () => {
 
   return (
     <ScreenWrapper>
-      <Header title={quizState === 'selection' ? "Choose a Topic" : selectedCategory || "Quiz"} />
+      {quizState !== 'start' && (
+        <Header title={quizState === 'selection' ? "Choose a Topic" : selectedCategory || "Quiz"} />
+      )}
       <View style={styles.content}>
+        {quizState === 'start' && renderStart()}
         {quizState === 'selection' && renderSelection()}
         {quizState === 'in-progress' && renderInProgress()}
         {quizState === 'completed' && renderCompleted()}
@@ -236,6 +244,27 @@ export const NewQuizScreen = () => {
 const styles = StyleSheet.create({
   content: {
     flex: 1,
+  },
+  startContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: theme.spacing.xl,
+  },
+  startContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  startTitle: {
+    ...theme.typography.heading,
+    fontSize: 42,
+    color: theme.colors.primary,
+    marginBottom: theme.spacing.sm,
+  },
+  startSubtitle: {
+    ...theme.typography.body,
+    fontSize: 18,
+    color: theme.colors.secondaryText,
   },
   scrollContent: {
     paddingBottom: theme.spacing.xl,
