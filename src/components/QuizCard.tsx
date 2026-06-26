@@ -27,7 +27,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) =>
     <ScalePressable onPress={onPressStart} style={styles.container}>
       <Card style={styles.card}>
         <Ionicons name={getCategoryIcon(category.id)} size={32} color={theme.colors.primary} style={styles.icon} />
-        <Text style={styles.title} numberOfLines={2}>{category.title}</Text>
+        <Text style={styles.title} numberOfLines={2}>Topic: {category.title}</Text>
       </Card>
     </ScalePressable>
   );
