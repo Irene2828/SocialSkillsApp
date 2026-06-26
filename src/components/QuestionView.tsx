@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Modal, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal, Image } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -91,12 +91,12 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         animationType="fade"
       >
         <View style={styles.modalOverlay}>
-          <ImageBackground 
-            source={require('../../assets/scandi_bg_pattern.png')} 
-            style={styles.feedbackContainerBackground}
-            imageStyle={{ borderRadius: theme.borderRadius.lg }}
-            resizeMode="cover"
-          >
+          <View style={styles.feedbackContainerBackground}>
+            <Image 
+              source={require('../../assets/scandi_bg_pattern.png')} 
+              style={StyleSheet.absoluteFill}
+              resizeMode="cover"
+            />
             <View style={styles.feedbackContainer}>
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
@@ -130,7 +130,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                 />
               )}
             </View>
-          </ImageBackground>
+          </View>
         </View>
       </Modal>
     </Animated.View>
@@ -176,14 +176,18 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
   },
   feedbackContainerBackground: {
-    width: '80%',
-    maxWidth: 350,
+    width: '85%',
+    maxWidth: 400,
     borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: theme.colors.primary,
     ...theme.shadows.glow,
   },
   feedbackContainer: {
     padding: theme.spacing.xl,
     backgroundColor: 'transparent',
+    alignItems: 'center',
   },
   feedbackTitleContainer: {
     flexDirection: 'row',
