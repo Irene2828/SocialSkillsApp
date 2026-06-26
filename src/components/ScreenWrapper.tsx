@@ -1,30 +1,32 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, ViewProps, View } from 'react-native';
+import { SafeAreaView, StyleSheet, ViewProps, View, ImageBackground } from 'react-native';
 import { theme } from '../theme';
-import { LinearGradient } from 'expo-linear-gradient';
 
 export const ScreenWrapper: React.FC<ViewProps> = ({ children, style, ...props }) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <LinearGradient 
-        colors={['#FFFFFF', theme.colors.background]} 
-        style={styles.gradient}
-      >
+    <ImageBackground 
+      source={require('../../assets/scandi_bg_pattern.png')} 
+      style={styles.imageBackground}
+      resizeMode="cover"
+    >
+      <SafeAreaView style={styles.safeArea}>
         <View style={[styles.container, style]} {...props}>
           {children}
         </View>
-      </LinearGradient>
-    </SafeAreaView>
+      </SafeAreaView>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-  },
-  gradient: {
-    flex: 1,
+    backgroundColor: 'transparent',
   },
   container: {
     flex: 1,
