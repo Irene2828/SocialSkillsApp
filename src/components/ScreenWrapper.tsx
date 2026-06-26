@@ -7,7 +7,7 @@ export const ScreenWrapper: React.FC<ViewProps> = ({ children, style, ...props }
   return (
     <SafeAreaView style={styles.safeArea}>
       <LinearGradient 
-        colors={['#E0F2FE', '#FFFFFF']} 
+        colors={['#FFFFFF', theme.colors.background]} 
         style={styles.gradient}
       >
         <View style={[styles.container, style]} {...props}>
@@ -21,7 +21,7 @@ export const ScreenWrapper: React.FC<ViewProps> = ({ children, style, ...props }
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#E0F2FE',
+    backgroundColor: '#FFFFFF',
   },
   gradient: {
     flex: 1,

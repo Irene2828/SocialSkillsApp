@@ -53,18 +53,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
       onPressOut={handlePressOut}
       {...props}
     >
-      {isPrimary ? (
-        <LinearGradient
-          colors={['#A78BFA', '#4C1D95']} // Whitish purple glow fading to deep dark purple
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.primaryGradient}
-        >
-          {content}
-        </LinearGradient>
-      ) : (
-        content
-      )}
+      {content}
     </ScalePressable>
   );
 };

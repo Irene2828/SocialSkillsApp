@@ -1,7 +1,7 @@
 export const theme = {
   colors: {
     background: '#F6F5F2', // Warm paper-like off-white to emulate the texture
-    primary: '#4C1D95', // Deeper darker purple
+    primary: '#7A437A', // Matched to the plum footer color
     primarySoft: '#EDE9FE', // Soft lavender
     success: '#8B5CF6', // Soft lavender/periwinkle highlight instead of harsh green
     successSoft: '#F5F3FF', // Very light lavender
