@@ -10,7 +10,7 @@ interface TopicProgressListProps {
 export const TopicProgressList: React.FC<TopicProgressListProps> = ({ totalCompletions }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>Completed Quizzes</Text>
+      <Text style={styles.headerTitle}>Completed Quizes</Text>
       
       <View style={styles.topicCard}>
         <Text style={styles.topicText}>Topic "Friendship"</Text>

@@ -97,13 +97,13 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    padding: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
   },
   profileCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
   avatarPlaceholder: {
     width: 60,
