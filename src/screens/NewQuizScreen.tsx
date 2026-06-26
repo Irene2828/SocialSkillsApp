@@ -177,9 +177,12 @@ export const NewQuizScreen = () => {
           <Header 
             title={`Topic: ${selectedCategory}`} 
             hasDivider={true} 
+          />
+          <ProgressBar 
+            current={currentIndex + 1} 
+            total={currentQuestions.length} 
             rightElement={renderCoinJar()}
           />
-          <ProgressBar current={currentIndex + 1} total={currentQuestions.length} />
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
