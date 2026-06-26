@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     textAlign: 'center',
-    marginBottom: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
   },
   barBackground: {
     height: 8,
