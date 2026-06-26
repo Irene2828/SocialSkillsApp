@@ -9,9 +9,10 @@ import { Ionicons } from '@expo/vector-icons';
 interface RewardCardProps {
   reward: Reward;
   onRedeem: (reward: Reward) => void;
+  canAfford: boolean;
 }
 
-export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
+export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAfford }) => {
   return (
     <Card style={styles.card}>
       <View style={styles.leftContent}>
@@ -30,7 +31,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
         title="Redeem" 
         onPress={() => onRedeem(reward)} 
         style={styles.redeemButton}
-        variant="outline"
+        variant={canAfford ? "outline" : "secondary"}
       />
     </Card>
   );

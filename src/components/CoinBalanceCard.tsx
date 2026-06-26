@@ -15,7 +15,6 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
         <Ionicons name="cash-outline" size={48} color={theme.colors.success} />
       </View>
       <Text style={styles.balanceText}>{balance} Coins</Text>
-      <Text style={styles.equivalenceText}>≈ ${balance} CAD</Text>
     </Card>
   );
 };
@@ -34,10 +33,5 @@ const styles = StyleSheet.create({
     fontSize: 32,
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
-  },
-  equivalenceText: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
-    fontSize: 16,
   },
 });

@@ -9,7 +9,7 @@ interface RewardListProps {
 }
 
 export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
-  const { deductCoins } = useRewards();
+  const { deductCoins, coinBalance } = useRewards();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleRedeem = async (reward: Reward) => {
@@ -41,7 +41,11 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
     <View style={styles.gridContainer}>
       {rewards.map(reward => (
         <View key={reward.id} style={styles.gridItem}>
-          <RewardCard reward={reward} onRedeem={handleRedeem} />
+          <RewardCard 
+            reward={reward} 
+            onRedeem={handleRedeem} 
+            canAfford={coinBalance >= reward.cost}
+          />
         </View>
       ))}
     </View>
