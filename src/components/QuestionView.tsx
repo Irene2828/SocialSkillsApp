@@ -65,7 +65,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
           if (isAnswered) {
             if (isCorrect) {
-              state = index === question.correctAnswerIndex ? 'selected-correct' : 'unselected-correct';
+              state = index === question.correctAnswerIndex ? 'selected-correct' : 'default';
             } else {
               if (index === selectedIndex) {
                 state = 'selected-incorrect';
