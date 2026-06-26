@@ -133,6 +133,12 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <Button 
+          title="Start Quick Quiz" 
+          onPress={handleStartQuickQuiz} 
+          style={styles.quickStartButton}
+        />
+        <Text style={styles.sectionTitle}>Or choose a topic:</Text>
         <View style={styles.bentoGrid}>
           {QUIZ_CATEGORIES.map(category => (
             <View key={category.id} style={styles.bentoItem}>
@@ -234,6 +240,9 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingBottom: theme.spacing.xl,
     paddingHorizontal: theme.spacing.md,
+  },
+  quickStartButton: {
+    marginBottom: theme.spacing.md,
   },
   sectionTitle: {
     ...theme.typography.body,
