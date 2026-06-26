@@ -66,12 +66,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginHorizontal: -theme.spacing.xs,
+    flexDirection: 'column',
   },
   gridItem: {
-    width: '50%',
+    width: '100%',
+    marginBottom: theme.spacing.sm,
   },
 });
 

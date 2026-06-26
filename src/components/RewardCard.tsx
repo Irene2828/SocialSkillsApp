@@ -14,13 +14,17 @@ interface RewardCardProps {
 export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
   return (
     <Card style={styles.card}>
-      <View style={styles.iconContainer}>
-        <Ionicons name={reward.icon as any || 'star-outline'} size={32} color={theme.colors.primary} />
-      </View>
-      <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
-      <View style={styles.costContainer}>
-        <Ionicons name="cash" size={16} color={theme.colors.accent} />
-        <Text style={styles.costText}>{reward.cost}</Text>
+      <View style={styles.leftContent}>
+        <View style={styles.iconContainer}>
+          <Ionicons name={reward.icon as any || 'star-outline'} size={32} color={theme.colors.primary} />
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
+          <View style={styles.costContainer}>
+            <Ionicons name="cash" size={16} color={theme.colors.accent} />
+            <Text style={styles.costText}>{reward.cost}</Text>
+          </View>
+        </View>
       </View>
       <Button 
         title="Redeem" 
@@ -33,26 +37,31 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem }) => {
 
 const styles = StyleSheet.create({
   card: {
-    flex: 1,
-    margin: theme.spacing.xs,
+    flexDirection: 'row',
     padding: theme.spacing.md,
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: 180,
+  },
+  leftContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: theme.spacing.sm,
   },
   iconContainer: {
-    marginBottom: theme.spacing.sm,
+    marginRight: theme.spacing.md,
+  },
+  textContainer: {
+    flex: 1,
   },
   title: {
-    ...theme.typography.body,
-    fontWeight: '600',
-    textAlign: 'center',
-    marginBottom: theme.spacing.xs,
+    ...theme.typography.heading,
+    fontSize: 16,
+    marginBottom: 4,
   },
   costContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
   },
   costText: {
     ...theme.typography.body,
@@ -61,6 +70,6 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xs,
   },
   redeemButton: {
-    width: '100%',
+    minWidth: 100,
   },
 });
