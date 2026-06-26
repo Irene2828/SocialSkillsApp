@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     }),
     fontSize: 26, // Slightly larger for comic fonts
     lineHeight: 34,
+    letterSpacing: 0.5,
     textAlign: 'center',
     fontWeight: '800',
     color: '#211C27',
