@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
-    backgroundColor: 'rgba(76, 29, 149, 0.3)',
+    backgroundColor: 'rgba(76, 29, 149, 0.1)',
   },
   scenarioText: {
     ...theme.typography.heading,
