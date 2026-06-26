@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
     backgroundColor: theme.colors.white,
     borderWidth: 1.5,
-    borderColor: '#374151',
+    borderColor: theme.colors.primary,
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.xl,
     elevation: 0,
@@ -176,12 +176,12 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
   },
   feedbackContainerBackground: {
-    width: '100%',
+    width: '80%',
+    maxWidth: 350,
     borderRadius: theme.borderRadius.lg,
     ...theme.shadows.glow,
   },
   feedbackContainer: {
-    width: '100%',
     padding: theme.spacing.xl,
     backgroundColor: 'transparent',
   },

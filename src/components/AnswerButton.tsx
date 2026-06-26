@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   },
   defaultButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    borderColor: '#374151',
+    borderColor: theme.colors.primary,
   },
   defaultText: {
     color: theme.colors.text,
