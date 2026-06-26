@@ -100,6 +100,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1,
     borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.full,
   },
   outlineButton: {
     paddingVertical: theme.spacing.md,
