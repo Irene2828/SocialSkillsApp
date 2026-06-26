@@ -10,38 +10,38 @@ interface TopicProgressListProps {
 export const TopicProgressList: React.FC<TopicProgressListProps> = ({ totalCompletions }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.headerTitle}>Achievements</Text>
+      <Text style={styles.headerTitle}>Completed Quizzes</Text>
       
       <View style={styles.topicCard}>
-        <Text style={styles.topicText}>Topic "Friendship" Completed</Text>
+        <Text style={styles.topicText}>Topic "Friendship"</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>5 times</Text>
         </View>
       </View>
       
       <View style={styles.topicCard}>
-        <Text style={styles.topicText}>Topic "Playground" Completed</Text>
+        <Text style={styles.topicText}>Topic "Playground"</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>0 times</Text>
         </View>
       </View>
 
       <View style={styles.topicCard}>
-        <Text style={styles.topicText}>Topic "Manners" Completed</Text>
+        <Text style={styles.topicText}>Topic "Manners"</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>2 times</Text>
         </View>
       </View>
 
       <View style={styles.topicCard}>
-        <Text style={styles.topicText}>Topic "School" Completed</Text>
+        <Text style={styles.topicText}>Topic "School"</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>0 times</Text>
         </View>
       </View>
 
       <View style={styles.topicCard}>
-        <Text style={styles.topicText}>Topic "Feelings" Completed</Text>
+        <Text style={styles.topicText}>Topic "Feelings"</Text>
         <View style={styles.badge}>
           <Text style={styles.badgeText}>1 times</Text>
         </View>
@@ -75,10 +75,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   badge: {
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: theme.spacing.sm,
-    paddingVertical: 4,
-    borderRadius: theme.borderRadius.full,
+    paddingLeft: theme.spacing.sm,
   },
   badgeText: {
     ...theme.typography.body,

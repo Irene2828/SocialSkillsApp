@@ -89,11 +89,6 @@ export const SettingsScreen = () => {
             />
           </Card>
         )}
-
-        {/* System Section */}
-        <Text style={styles.sectionHeader}>System</Text>
-        <Text style={styles.versionText}>Social Quest v1.0.0 (Offline Mode Active)</Text>
-
       </ScrollView>
     </ScreenWrapper>
   );
@@ -158,11 +153,5 @@ const styles = StyleSheet.create({
     marginRight: theme.spacing.sm,
     marginBottom: theme.spacing.sm,
     minWidth: 50,
-  },
-  versionText: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
-    textAlign: 'center',
-    marginTop: theme.spacing.md,
   },
 });
