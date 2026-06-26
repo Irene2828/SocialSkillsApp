@@ -53,6 +53,7 @@ export const TopicProgressList: React.FC<TopicProgressListProps> = ({ totalCompl
 const styles = StyleSheet.create({
   container: {
     marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xxl,
   },
   headerTitle: {
     ...theme.typography.heading,
