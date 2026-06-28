@@ -47,19 +47,6 @@ export const SettingsScreen = () => {
   return (
     <ScreenWrapper>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Profile" />
-        
-        {/* Child Profile (Stack) */}
-        <Card style={styles.profileCard}>
-          <View style={styles.avatarPlaceholder}>
-            <Ionicons name="person" size={32} color={theme.colors.white} />
-          </View>
-          <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>{childName}</Text>
-            <Text style={styles.profileAge}>Age: {childAge}</Text>
-          </View>
-        </Card>
-
         {/* Achievements (Topic Progress) */}
         <TopicProgressList totalCompletions={totalQuizzesCompleted} />
 

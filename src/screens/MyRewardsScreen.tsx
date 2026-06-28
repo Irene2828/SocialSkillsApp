@@ -17,14 +17,6 @@ export const MyRewardsScreen = () => {
   return (
     <ScreenWrapper>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header 
-          title="I earned..." 
-          rightElement={
-            <View style={styles.helpButton}>
-              <Ionicons name="help" size={20} color={theme.colors.secondaryText} />
-            </View>
-          }
-        />
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         <View style={styles.topSection}>
