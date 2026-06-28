@@ -126,7 +126,13 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.startContainer}>
         <View style={styles.startContent}>
-          <Text style={styles.startTitle}>Social Quest</Text>
+          <Text 
+            style={styles.startTitle}
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            Social Quest
+          </Text>
           <Text style={styles.startSubtitle}>Ready to practice?</Text>
         </View>
         <Button 

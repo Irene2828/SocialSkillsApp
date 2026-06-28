@@ -61,12 +61,12 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
 const styles = StyleSheet.create({
   button: {
     minHeight: theme.layout.minTouchTarget,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
   },
   primaryButtonContainer: {
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.full,
     backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 1.5,
     borderColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.full,
   },
   outlineButton: {
     paddingVertical: theme.spacing.md,

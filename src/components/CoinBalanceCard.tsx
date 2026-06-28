@@ -15,12 +15,17 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
         <View style={styles.waveBackground} />
         <View style={styles.content}>
           <View style={styles.iconContainer}>
-            {/* Using a star in a circle to mimic the 3D coin */}
             <View style={styles.coinBadge}>
-              <Ionicons name="star" size={40} color={theme.colors.white} />
+              <Text style={styles.jarEmoji}>🍯</Text>
             </View>
           </View>
-          <Text style={styles.balanceNumber}>{balance}</Text>
+          <Text 
+            style={styles.balanceNumber}
+            adjustsFontSizeToFit
+            numberOfLines={1}
+          >
+            {balance}
+          </Text>
           <Text style={styles.balanceLabel}>Coins</Text>
         </View>
       </View>
@@ -66,11 +71,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: theme.colors.success, // Yellow/Gold
+    backgroundColor: 'rgba(255, 200, 87, 0.2)', // Soft yellow glow
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.shadows.glow,
-    shadowColor: theme.colors.success,
+  },
+  jarEmoji: {
+    fontSize: 48,
   },
   balanceNumber: {
     ...theme.typography.heading,
