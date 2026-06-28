@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     flex: 1,
     paddingRight: theme.spacing.md,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   defaultButton: {
     backgroundColor: theme.colors.white,
