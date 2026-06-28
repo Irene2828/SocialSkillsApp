@@ -3,7 +3,6 @@ import { ScrollView, View, Text, StyleSheet, Pressable, TextInput } from 'react-
 import { NewQuizScreen } from './NewQuizScreen';
 import { MyRewardsScreen } from './MyRewardsScreen';
 import { SettingsScreen } from './SettingsScreen';
-import { OnboardingScreen } from './OnboardingScreen';
 import { QuestionView } from '../components/QuestionView';
 import { Question } from '../data/types';
 import { theme } from '../theme';
@@ -113,35 +112,28 @@ export const DesignReviewScreen = () => {
       >
         <View pointerEvents="none" style={styles.screensContainer}>
           <View style={styles.screenWrapper}>
-            <Text style={styles.label}>1. Onboarding Screen</Text>
-            <View style={styles.screenBox}>
-              <OnboardingScreen />
-            </View>
-          </View>
-
-          <View style={styles.screenWrapper}>
-            <Text style={styles.label}>2. New Quiz (Home)</Text>
+            <Text style={styles.label}>1. New Quiz (Home)</Text>
             <View style={styles.screenBox}>
               <NewQuizScreen />
             </View>
           </View>
 
           <View style={styles.screenWrapper}>
-            <Text style={styles.label}>3. My Rewards</Text>
+            <Text style={styles.label}>2. My Rewards</Text>
             <View style={styles.screenBox}>
               <MyRewardsScreen />
             </View>
           </View>
 
           <View style={styles.screenWrapper}>
-            <Text style={styles.label}>4. Settings</Text>
+            <Text style={styles.label}>3. Settings</Text>
             <View style={styles.screenBox}>
               <SettingsScreen />
             </View>
           </View>
 
           <View style={styles.screenWrapper}>
-            <Text style={styles.label}>5. Active Quiz Question</Text>
+            <Text style={styles.label}>4. Active Quiz Question</Text>
             <View style={styles.screenBox}>
               <View style={{ flex: 1, backgroundColor: '#FAFAF8', padding: 16, paddingTop: 40 }}>
                 <QuestionView 
