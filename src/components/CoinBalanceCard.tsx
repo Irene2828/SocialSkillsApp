@@ -14,19 +14,16 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
       <View style={styles.card}>
         <View style={styles.waveBackground} />
         <View style={styles.content}>
-          <View style={styles.iconContainer}>
-            <View style={styles.coinBadge}>
-              <Text style={styles.jarEmoji}>🍯</Text>
-            </View>
+          <View style={styles.balanceRow}>
+            <Text 
+              style={styles.balanceNumber}
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            >
+              {balance}
+            </Text>
+            <Text style={styles.balanceLabel}>Coins</Text>
           </View>
-          <Text 
-            style={styles.balanceNumber}
-            adjustsFontSizeToFit
-            numberOfLines={1}
-          >
-            {balance}
-          </Text>
-          <Text style={styles.balanceLabel}>Coins</Text>
         </View>
       </View>
     </View>
@@ -64,19 +61,11 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     zIndex: 1,
   },
-  iconContainer: {
-    marginBottom: theme.spacing.md,
-  },
-  coinBadge: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: 'rgba(255, 200, 87, 0.2)', // Soft yellow glow
+  balanceRow: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  jarEmoji: {
-    fontSize: 48,
+    marginTop: theme.spacing.xl,
   },
   balanceNumber: {
     ...theme.typography.heading,
@@ -86,8 +75,9 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     ...theme.typography.heading,
-    fontSize: 20,
+    fontSize: 24,
     color: theme.colors.primary,
     fontWeight: '500',
+    marginLeft: theme.spacing.sm,
   },
 });
