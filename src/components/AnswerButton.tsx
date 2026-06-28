@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   defaultButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
     borderColor: theme.colors.primary,
   },
   defaultText: {
