@@ -1,7 +1,8 @@
 import React from 'react';
-import { Text, StyleSheet } from 'react-native';
+import { Text, StyleSheet, View } from 'react-native';
 import { theme } from '../theme';
 import { ScalePressable } from './ScalePressable';
+import { Ionicons } from '@expo/vector-icons';
 
 interface AnswerButtonProps {
   text: string;
@@ -13,16 +14,22 @@ interface AnswerButtonProps {
 export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state, disabled }) => {
   let buttonStyle = styles.defaultButton;
   let textStyle = styles.defaultText;
+  let iconName: keyof typeof Ionicons.glyphMap = 'radio-button-off';
+  let iconColor = theme.colors.border;
 
   switch (state) {
     case 'selected-correct':
     case 'unselected-correct':
       buttonStyle = styles.correctButton;
       textStyle = styles.correctText;
+      iconName = 'checkmark-circle';
+      iconColor = theme.colors.success;
       break;
     case 'selected-incorrect':
       buttonStyle = styles.incorrectButton;
       textStyle = styles.incorrectText;
+      iconName = 'close-circle';
+      iconColor = theme.colors.error;
       break;
     default:
       break;
@@ -35,6 +42,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       disabled={disabled}
     >
       <Text style={[styles.text, textStyle]}>{text}</Text>
+      <Ionicons name={iconName} size={24} color={iconColor} />
     </ScalePressable>
   );
 };
@@ -42,37 +50,38 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
 const styles = StyleSheet.create({
   button: {
     minHeight: theme.layout.minTouchTarget,
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    marginBottom: theme.spacing.sm,
-    borderWidth: 1.5,
-    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    borderRadius: theme.borderRadius.full,
+    marginBottom: theme.spacing.md,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: theme.colors.white,
+    ...theme.shadows.soft,
   },
   text: {
     ...theme.typography.body,
-    textAlign: 'center',
+    flex: 1,
+    paddingRight: theme.spacing.md,
+    fontWeight: '500',
   },
   defaultButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.white,
   },
   defaultText: {
-    color: theme.colors.text,
+    color: '#111827',
   },
   correctButton: {
     backgroundColor: theme.colors.successSoft,
-    borderColor: theme.colors.success,
   },
   correctText: {
     color: theme.colors.text,
-    fontWeight: '600',
   },
   incorrectButton: {
-    backgroundColor: theme.colors.neutralGrey,
-    borderColor: theme.colors.neutralGrey,
+    backgroundColor: theme.colors.errorSoft,
   },
   incorrectText: {
     color: theme.colors.secondaryText,
-    fontWeight: '600',
   },
 });

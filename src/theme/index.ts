@@ -1,10 +1,10 @@
 export const theme = {
   colors: {
-    background: '#E0F2FE', // Light sky blue
-    primary: '#7A437A', // Matched to the plum footer color
-    primarySoft: '#EDE9FE', // Soft lavender
-    success: '#8B5CF6', // Soft lavender/periwinkle highlight instead of harsh green
-    successSoft: '#F5F3FF', // Very light lavender
+    background: '#F7F7F9', // Very light grey/white
+    primary: '#6B4EFF', // Vibrant purple
+    primarySoft: '#F3EFFF', // Soft purple background
+    success: '#FFC857', // Matching the yellow/gold from the screenshot for coins
+    successSoft: '#FFF5E5', // Soft yellow
     error: '#9CA3AF', // Soft neutral grey instead of harsh red
     errorSoft: '#F3F4F6', // Light neutral grey
     neutralGrey: '#E5E7EB',
@@ -15,10 +15,10 @@ export const theme = {
     border: '#F3F4F6', // Softer border
   },
   typography: {
-    fontFamily: 'Inter',
+    fontFamily: 'System', // Use system font for clean sans-serif look
     heading: {
       fontSize: 24,
-      fontWeight: '600' as const, // SemiBold
+      fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 32,
       letterSpacing: -0.5,
@@ -52,23 +52,23 @@ export const theme = {
   },
   borderRadius: {
     sm: 16,
-    md: 24,
-    lg: 32,
+    md: 24, // Increased for pill-like cards
+    lg: 32, // Increased for main containers
     xl: 40,
     full: 9999,
   },
   shadows: {
     soft: {
-      shadowColor: '#111827',
-      shadowOffset: { width: 0, height: 8 },
+      shadowColor: '#6B4EFF', // Tinted shadow
+      shadowOffset: { width: 0, height: 12 },
       shadowOpacity: 0.04,
       shadowRadius: 24,
       elevation: 2,
     },
     glow: {
-      shadowColor: '#4C1D95',
+      shadowColor: '#6B4EFF',
       shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.15,
+      shadowOpacity: 0.1,
       shadowRadius: 24,
       elevation: 4,
     }

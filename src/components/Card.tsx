@@ -13,9 +13,8 @@ export const Card: React.FC<ViewProps> = ({ children, style, ...props }) => {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.xl,
+    ...theme.shadows.soft,
   },
 });

@@ -7,6 +7,8 @@ export interface Question {
   category: Category;
   difficulty: Difficulty;
   scenario: string;
+  prompt?: string;
+  image?: any;
   options: string[];
   correctAnswerIndex: number;
   explanation: string;

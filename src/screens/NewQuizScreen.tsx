@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
@@ -175,14 +175,24 @@ export const NewQuizScreen = () => {
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           <Header 
-            title={`Topic: ${selectedCategory}`} 
-            hasDivider={true} 
+            title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
+            leftElement={
+              <Pressable style={styles.backButton} onPress={handleBackToHome}>
+                <Ionicons name="arrow-back" size={24} color={theme.colors.primary} />
+              </Pressable>
+            }
+            rightElement={renderCoinJar()}
           />
           <ProgressBar 
             current={currentIndex + 1} 
             total={currentQuestions.length} 
-            rightElement={renderCoinJar()}
           />
+          <View style={styles.topicPillContainer}>
+            <View style={styles.topicPill}>
+              <Ionicons name="heart" size={16} color={theme.colors.primary} />
+              <Text style={styles.topicPillText}>Topic: {selectedCategory}</Text>
+            </View>
+          </View>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
@@ -364,7 +374,34 @@ const styles = StyleSheet.create({
   coinJarText: {
     ...theme.typography.body,
     fontWeight: '700',
-    color: theme.colors.success,
+    color: theme.colors.text, // Text in coin jar is dark in the design
     marginLeft: 4,
   },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: theme.colors.white,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...theme.shadows.soft,
+  },
+  topicPillContainer: {
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  topicPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.primarySoft,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+  },
+  topicPillText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.primary,
+    marginLeft: theme.spacing.sm,
+  }
 });

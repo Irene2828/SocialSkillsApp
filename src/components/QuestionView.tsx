@@ -58,6 +58,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <Card style={styles.scenarioCard}>
           <Text style={styles.scenarioText}>{question.scenario}</Text>
+          {question.prompt && (
+            <Text style={styles.promptText}>{question.prompt}</Text>
+          )}
         </Card>
 
         <View style={styles.optionsContainer}>
@@ -143,27 +146,25 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
-    backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.primary,
-    borderRadius: theme.borderRadius.md,
     padding: theme.spacing.xl,
-    elevation: 0,
-    shadowOpacity: 0,
+    paddingVertical: theme.spacing.xxl,
   },
   scenarioText: {
     ...theme.typography.heading,
-    fontFamily: Platform.select({
-      ios: 'Chalkboard SE',
-      android: 'casual',
-      default: 'Comic Sans MS',
-    }),
-    fontSize: 26, // Slightly larger for comic fonts
-    lineHeight: 34,
-    letterSpacing: 0.5,
-    textAlign: 'center',
-    fontWeight: '700',
-    color: '#211C27',
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 28,
+    lineHeight: 38,
+    textAlign: 'left',
+    color: '#111827',
+  },
+  promptText: {
+    ...theme.typography.heading,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: 28,
+    lineHeight: 38,
+    textAlign: 'left',
+    color: theme.colors.primary,
+    marginTop: theme.spacing.md,
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,

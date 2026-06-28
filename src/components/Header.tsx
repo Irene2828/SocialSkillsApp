@@ -5,13 +5,19 @@ import { theme } from '../theme';
 interface HeaderProps {
   title: string;
   hasDivider?: boolean;
+  leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title, hasDivider, rightElement }) => {
+export const Header: React.FC<HeaderProps> = ({ title, hasDivider, leftElement, rightElement }) => {
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
+        {leftElement && (
+          <View style={styles.leftElementContainer}>
+            {leftElement}
+          </View>
+        )}
         <Text style={styles.title}>{title}</Text>
         {rightElement && (
           <View style={styles.rightElementContainer}>
@@ -41,7 +47,16 @@ const styles = StyleSheet.create({
   title: {
     ...theme.typography.heading,
     textAlign: 'center',
-    fontSize: 28,
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  leftElementContainer: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    zIndex: 1,
   },
   rightElementContainer: {
     position: 'absolute',
