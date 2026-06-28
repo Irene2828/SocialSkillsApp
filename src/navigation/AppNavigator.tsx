@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
@@ -10,6 +11,10 @@ import { theme } from '../theme';
 const Tab = createBottomTabNavigator();
 
 export const AppNavigator = () => {
+  const insets = useSafeAreaInsets();
+  const paddingBottom = Math.max(insets.bottom, 12);
+  const height = 60 + paddingBottom;
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -36,9 +41,9 @@ export const AppNavigator = () => {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          height: 80,
-          paddingBottom: 24,
-          paddingTop: 12,
+          height: height,
+          paddingBottom: paddingBottom,
+          paddingTop: 8,
         },
       })}
     >

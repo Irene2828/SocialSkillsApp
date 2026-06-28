@@ -20,7 +20,9 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
           <Ionicons name={reward.icon as any || 'gift'} size={32} color={theme.colors.primary} />
         </View>
         <View style={styles.textContainer}>
-          <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
+          <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
+            {reward.title}
+          </Text>
           <View style={styles.costContainer}>
             <Ionicons name="star" size={16} color={theme.colors.success} />
             <Text style={styles.costText}>{reward.cost}</Text>
@@ -81,8 +83,9 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.xs,
   },
   redeemButton: {
-    minWidth: 90,
+    minWidth: 80,
     borderRadius: theme.borderRadius.full,
     paddingVertical: 8,
+    paddingHorizontal: theme.spacing.sm,
   },
 });
