@@ -48,6 +48,15 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
           />
         </View>
       ))}
+      <View style={styles.bannerContainer}>
+        <View style={styles.bannerIconContainer}>
+          <Ionicons name="star" size={32} color={theme.colors.primary} />
+        </View>
+        <View style={styles.bannerTextContainer}>
+          <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
+          <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
+        </View>
+      </View>
     </View>
   );
 };
@@ -74,8 +83,34 @@ const styles = StyleSheet.create({
   },
   gridItem: {
     width: '100%',
-    marginBottom: theme.spacing.sm,
+    marginBottom: theme.spacing.lg,
   },
+  bannerContainer: {
+    backgroundColor: theme.colors.primarySoft,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: theme.spacing.sm,
+    marginBottom: theme.spacing.xl,
+  },
+  bannerIconContainer: {
+    marginRight: theme.spacing.md,
+  },
+  bannerTextContainer: {
+    flex: 1,
+  },
+  bannerTitle: {
+    ...theme.typography.heading,
+    fontSize: 16,
+    color: theme.colors.primary,
+    marginBottom: 4,
+  },
+  bannerSubtitle: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+  }
 });
 
-import { theme } from '../theme'; // Import at the bottom due to circular dependency or place properly
+import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';

@@ -8,6 +8,7 @@ import { AddRewardForm } from '../components/AddRewardForm';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards } = useRewards();
@@ -16,7 +17,14 @@ export const MyRewardsScreen = () => {
   return (
     <ScreenWrapper>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="I earned..." />
+        <Header 
+          title="I earned..." 
+          rightElement={
+            <View style={styles.helpButton}>
+              <Ionicons name="help" size={20} color={theme.colors.secondaryText} />
+            </View>
+          }
+        />
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         <View style={styles.topSection}>
@@ -42,6 +50,15 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   bentoSection: {
-    // Container for the Bento grid elements
+    paddingHorizontal: theme.spacing.xl,
+  },
+  helpButton: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: theme.colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

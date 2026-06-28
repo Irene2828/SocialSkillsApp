@@ -14,15 +14,15 @@ interface RewardCardProps {
 
 export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAfford }) => {
   return (
-    <Card style={[styles.card, !canAfford && { opacity: 0.5 }]}>
+    <View style={[styles.card, !canAfford && { opacity: 0.6 }]}>
       <View style={styles.leftContent}>
         <View style={styles.iconContainer}>
-          <Ionicons name={reward.icon as any || 'star-outline'} size={32} color={theme.colors.primary} />
+          <Ionicons name={reward.icon as any || 'gift'} size={32} color={theme.colors.primary} />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={2}>{reward.title}</Text>
           <View style={styles.costContainer}>
-            <Ionicons name="cash" size={16} color={theme.colors.success} />
+            <Ionicons name="star" size={16} color={theme.colors.success} />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
@@ -33,7 +33,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
         style={styles.redeemButton}
         variant={canAfford ? "outline" : "secondary"}
       />
-    </Card>
+    </View>
   );
 };
 
@@ -43,6 +43,9 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.lg,
+    ...theme.shadows.soft,
   },
   leftContent: {
     flexDirection: 'row',
@@ -52,13 +55,19 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: theme.spacing.md,
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: theme.colors.primarySoft,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textContainer: {
     flex: 1,
   },
   title: {
     ...theme.typography.heading,
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 4,
   },
   costContainer: {
@@ -68,10 +77,12 @@ const styles = StyleSheet.create({
   costText: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: theme.colors.success,
+    color: theme.colors.primary, // Changed to purple based on mockup
     marginLeft: theme.spacing.xs,
   },
   redeemButton: {
-    minWidth: 100,
+    minWidth: 90,
+    borderRadius: theme.borderRadius.full,
+    paddingVertical: 8,
   },
 });
