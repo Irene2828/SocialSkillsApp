@@ -168,9 +168,14 @@ export const NewQuizScreen = () => {
   };
 
   const renderCoinJar = () => (
-    <View style={styles.coinJarContainer}>
-      <FontAwesome5 name="coins" size={20} color={theme.colors.primary} />
-      <Text style={styles.coinJarText}>{coinBalance}</Text>
+    <View style={{ position: 'relative' }}>
+      <View style={styles.screenFolderTab}>
+        <Text style={styles.screenFolderTabText}>Topic: {selectedCategory}</Text>
+      </View>
+      <View style={styles.coinJarContainer}>
+        <FontAwesome5 name="coins" size={20} color={theme.colors.primary} />
+        <Text style={styles.coinJarText}>{coinBalance}</Text>
+      </View>
     </View>
   );
 
@@ -374,12 +379,32 @@ const styles = StyleSheet.create({
   coinJarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: theme.colors.stroke,
+  },
+  screenFolderTab: {
+    position: 'absolute',
+    top: -40, // Move up above the coin jar
+    right: 0,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    borderBottomWidth: 0,
+    zIndex: -1, // Drop it behind the coin jar if needed, or 0
+  },
+  screenFolderTabText: {
+    ...theme.typography.body,
+    fontSize: 12,
+    fontWeight: '600',
+    color: theme.colors.text,
   },
   coinJarText: {
     ...theme.typography.body,

@@ -58,11 +58,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     <View style={styles.container}>
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
-          {topicName && (
-            <View style={styles.folderTab}>
-              <Text style={styles.folderTabText}>Topic: {topicName}</Text>
-            </View>
-          )}
           <Card style={styles.scenarioCard}>
             <Text style={styles.scenarioText}>{question.scenario}</Text>
           {question.prompt && (
