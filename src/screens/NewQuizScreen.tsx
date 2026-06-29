@@ -231,10 +231,9 @@ export const NewQuizScreen = () => {
             )}
 
             <Text style={styles.messageText}>{message}</Text>
-            <Text style={styles.categoryText}>{categoryName}</Text>
             
             <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>{score} / {total}</Text>
+              <Text style={styles.scoreText}>{total} / {total}</Text>
             </View>
           </Animated.View>
 
@@ -244,7 +243,7 @@ export const NewQuizScreen = () => {
             style={[styles.actionButton, styles.primaryButton]}
           />
           <Button 
-            title="Go to Rewards" 
+            title="Redeem Points" 
             onPress={() => {
               handleBackToHome();
               navigation.navigate('MyRewards');
@@ -262,7 +261,7 @@ export const NewQuizScreen = () => {
       <View style={styles.content}>
         {quizState === 'start' && renderStart()}
         {quizState === 'selection' && renderSelection()}
-        {quizState === 'in-progress' && renderInProgress()}
+        {(quizState === 'in-progress' || quizState === 'completed') && renderInProgress()}
         {quizState === 'completed' && renderCompleted()}
       </View>
     </ScreenWrapper>
@@ -319,9 +318,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   completedContainer: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255,255,255,0.85)',
     justifyContent: 'center',
-    padding: theme.spacing.md,
+    padding: theme.spacing.xl,
+    zIndex: 10,
   },
   completedCard: {
     alignItems: 'center',
