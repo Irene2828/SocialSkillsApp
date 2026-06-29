@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonContainer: {
     borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#FFD700',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
   },
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
   },
   primaryText: {
-    color: theme.colors.white,
+    color: theme.colors.text,
   },
   secondaryText: {
     color: theme.colors.text,

@@ -13,12 +13,12 @@ export const QuickStartButton: React.FC<QuickStartButtonProps> = ({ onPress }) =
   return (
     <ScalePressable style={styles.buttonContainer} onPress={onPress}>
       <LinearGradient
-        colors={['#A78BFA', '#4C1D95']}
+        colors={['#FFE55C', '#FFD700']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.gradient}
       >
-        <Ionicons name="play-circle" size={32} color={theme.colors.white} style={styles.icon} />
+        <Ionicons name="play-circle" size={32} color={theme.colors.text} style={styles.icon} />
         <Text style={styles.text}>Start Quick Quiz</Text>
       </LinearGradient>
     </ScalePressable>
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 12,
     elevation: 4,
-    backgroundColor: '#4C1D95',
+    backgroundColor: '#FFD700',
   },
   gradient: {
     borderRadius: theme.borderRadius.full,
@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
   text: {
     ...theme.typography.heading,
     fontSize: 22,
-    color: theme.colors.white,
+    color: theme.colors.text,
   },
 });
