@@ -110,7 +110,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
               {isCorrect && (
                 <View style={styles.coinRewardContainer}>
-                  <Ionicons name="cash" size={24} color={theme.colors.success} />
+                  <Text style={{ fontSize: 24 }}>🪙</Text>
                   <Text style={styles.coinRewardText}>+1 Coin!</Text>
                 </View>
               )}
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   },
   coinRewardText: {
     ...theme.typography.heading,
-    color: theme.colors.success,
+    color: theme.colors.primary,
     fontSize: 20,
     marginLeft: theme.spacing.xs,
   },
