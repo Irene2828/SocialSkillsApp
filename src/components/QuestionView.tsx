@@ -248,6 +248,7 @@ const styles = StyleSheet.create({
   explanationText: {
     ...theme.typography.body,
     fontSize: 17,
+    fontStyle: 'italic',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.secondaryText,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
@@ -296,22 +296,23 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
       )}
 
-      <View style={styles.content}>
+      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {screenState === 'idle' && renderIdle()}
         {screenState === 'imageSelected' && renderImageSelected()}
         {screenState === 'generating' && renderGenerating()}
         {screenState === 'success' && renderSuccess()}
         {screenState === 'error' && renderError()}
-      </View>
+      </ScrollView>
     </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    flexGrow: 1,
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.xl,
+    paddingBottom: 40,
   },
   headerSubtitleContainer: {
     paddingHorizontal: theme.spacing.md,
