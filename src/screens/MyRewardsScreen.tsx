@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   bentoSection: {
-    paddingHorizontal: theme.spacing.xl,
+    // Removed padding to allow full width on small screens
   },
   helpButton: {
     width: 32,
