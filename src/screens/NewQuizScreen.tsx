@@ -13,7 +13,7 @@ import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
@@ -168,7 +168,7 @@ export const NewQuizScreen = () => {
 
   const renderCoinJar = () => (
     <View style={styles.coinJarContainer}>
-      <Text style={{ fontSize: 18 }}>🪙</Text>
+      <FontAwesome5 name="coins" size={20} color={theme.colors.success} />
       <Text style={styles.coinJarText}>{coinBalance}</Text>
     </View>
   );

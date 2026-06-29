@@ -5,7 +5,7 @@ import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 interface QuestionViewProps {
   question: Question;
@@ -110,7 +110,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
               {isCorrect && (
                 <View style={styles.coinRewardContainer}>
-                  <Text style={{ fontSize: 24 }}>🪙</Text>
+                  <FontAwesome5 name="coins" size={24} color={theme.colors.success} />
                   <Text style={styles.coinRewardText}>+1 Coin!</Text>
                 </View>
               )}

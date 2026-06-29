@@ -4,7 +4,7 @@ import { Card } from './Card';
 import { Button } from './Button';
 import { Reward } from '../data/types';
 import { theme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 interface RewardCardProps {
   reward: Reward;
@@ -24,7 +24,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             {reward.title}
           </Text>
           <View style={styles.costContainer}>
-            <Text style={{ fontSize: 16 }}>🪙</Text>
+            <FontAwesome5 name="coins" size={16} color={theme.colors.success} />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
