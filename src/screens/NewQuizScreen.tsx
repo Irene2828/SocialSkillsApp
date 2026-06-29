@@ -408,7 +408,9 @@ const styles = StyleSheet.create({
   topicPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.primarySoft,
+    backgroundColor: theme.colors.primary,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.full,

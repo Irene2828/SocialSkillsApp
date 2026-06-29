@@ -25,10 +25,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
   },
   barBackground: {
-    height: 8,
+    height: 10,
     backgroundColor: theme.colors.white,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
   },
@@ -36,5 +34,7 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: theme.colors.primary,
     borderRadius: theme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
   },
 });
