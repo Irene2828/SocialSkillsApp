@@ -17,7 +17,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
     <View style={styles.card}>
       <View style={styles.leftContent}>
         <View style={styles.iconContainer}>
-          <Ionicons name={reward.icon as any || 'gift'} size={32} color={theme.colors.text} />
+          <Ionicons name={reward.icon as any || 'gift'} size={32} color="#4B5563" />
         </View>
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>

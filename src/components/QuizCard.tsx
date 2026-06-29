@@ -47,6 +47,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginBottom: theme.spacing.sm,
+    textShadowColor: 'rgba(0,0,0,0.15)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   title: {
     ...theme.typography.body,

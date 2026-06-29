@@ -170,7 +170,7 @@ export const NewQuizScreen = () => {
   const renderCoinJar = () => (
     <View style={{ position: 'relative' }}>
       <View style={styles.screenFolderTab}>
-        <Text style={styles.screenFolderTabText}>Topic: {selectedCategory}</Text>
+        <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {selectedCategory}</Text>
       </View>
       <View style={styles.coinJarContainer}>
         <FontAwesome5 
@@ -398,8 +398,10 @@ const styles = StyleSheet.create({
   },
   screenFolderTab: {
     position: 'absolute',
-    top: -26, // Dropped down slightly so it's not cut off by the safe area
+    top: -20, // Lowered more
     right: 0,
+    minWidth: 120, // Prevent wrapping
+    alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
