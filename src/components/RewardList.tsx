@@ -49,9 +49,6 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
         </View>
       ))}
       <View style={styles.bannerContainer}>
-        <View style={styles.bannerIconContainer}>
-          <Ionicons name="star" size={32} color={theme.colors.primary} />
-        </View>
         <View style={styles.bannerTextContainer}>
           <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
           <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
@@ -93,9 +90,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: theme.spacing.sm,
     marginBottom: theme.spacing.xl,
-  },
-  bannerIconContainer: {
-    marginRight: theme.spacing.md,
   },
   bannerTextContainer: {
     flex: 1,

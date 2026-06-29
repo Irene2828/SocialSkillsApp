@@ -24,7 +24,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             {reward.title}
           </Text>
           <View style={styles.costContainer}>
-            <Ionicons name="star" size={16} color={theme.colors.success} />
+            <Text style={{ fontSize: 16 }}>🪙</Text>
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>

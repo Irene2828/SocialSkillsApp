@@ -168,7 +168,7 @@ export const NewQuizScreen = () => {
 
   const renderCoinJar = () => (
     <View style={styles.coinJarContainer}>
-      <Ionicons name="cash" size={20} color={theme.colors.success} />
+      <Text style={{ fontSize: 18 }}>🪙</Text>
       <Text style={styles.coinJarText}>{coinBalance}</Text>
     </View>
   );
