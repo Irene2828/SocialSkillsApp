@@ -1,8 +1,8 @@
 export const theme = {
   colors: {
     background: '#F7F7F9', // Very light grey/white
-    primary: '#6B4EFF', // Vibrant purple
-    primarySoft: '#F3EFFF', // Soft purple background
+    primary: '#BEF264', // Soft pastel lime green
+    primarySoft: '#ECFCCB', // Very soft lime background
     success: '#FFC857', // Matching the yellow/gold from the screenshot for coins
     successSoft: '#FFF5E5', // Soft yellow
     error: '#9CA3AF', // Soft neutral grey instead of harsh red
@@ -32,7 +32,7 @@ export const theme = {
     button: {
       fontSize: 16,
       fontWeight: '500' as const, // Medium
-      color: '#FFFFFF',
+      color: '#111827',
       lineHeight: 22,
     },
     caption: {
@@ -59,16 +59,16 @@ export const theme = {
   },
   shadows: {
     soft: {
-      shadowColor: '#6B4EFF', // Tinted shadow
+      shadowColor: '#BEF264', // Tinted shadow
       shadowOffset: { width: 0, height: 12 },
-      shadowOpacity: 0.04,
+      shadowOpacity: 0.15,
       shadowRadius: 24,
       elevation: 2,
     },
     glow: {
-      shadowColor: '#6B4EFF',
+      shadowColor: '#BEF264',
       shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.1,
+      shadowOpacity: 0.2,
       shadowRadius: 24,
       elevation: 4,
     }

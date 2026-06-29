@@ -13,7 +13,7 @@ export const QuickStartButton: React.FC<QuickStartButtonProps> = ({ onPress }) =
   return (
     <ScalePressable style={styles.buttonContainer} onPress={onPress}>
       <LinearGradient
-        colors={['#FFE55C', '#FFD700']}
+        colors={[theme.colors.primarySoft, theme.colors.primary]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.gradient}
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.6,
     shadowRadius: 12,
     elevation: 4,
-    backgroundColor: '#FFD700',
+    backgroundColor: theme.colors.primary,
   },
   gradient: {
     borderRadius: theme.borderRadius.full,

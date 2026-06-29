@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
   },
   primaryButtonContainer: {
     borderRadius: theme.borderRadius.full,
-    backgroundColor: '#FFD700',
+    backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
   },
