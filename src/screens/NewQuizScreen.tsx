@@ -181,11 +181,17 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <View style={styles.topicPillContainer}>
+            <View style={styles.topicPill}>
+              <Ionicons name="heart-outline" size={16} color={theme.colors.text} />
+              <Text style={styles.topicPillText}>Topic: {selectedCategory}</Text>
+            </View>
+          </View>
           <Header 
             title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
-                <Ionicons name="arrow-back" size={24} color={theme.colors.primary} />
+                <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               </Pressable>
             }
             rightElement={renderCoinJar()}
@@ -194,12 +200,6 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <View style={styles.topicPillContainer}>
-            <View style={styles.topicPill}>
-              <Ionicons name="heart" size={16} color={theme.colors.text} />
-              <Text style={styles.topicPillText}>Topic: {selectedCategory}</Text>
-            </View>
-          </View>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 

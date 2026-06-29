@@ -9,7 +9,7 @@ export const theme = {
     errorSoft: '#F3F4F6', // Light neutral grey
     neutralGrey: '#E5E7EB',
     accent: '#FFC857',
-    stroke: '#65A30D', // Warm darker green for card borders
+    stroke: '#D1D5DB', // Grey for card borders
     text: '#111827', // Almost black
     secondaryText: '#6B7280',
     white: '#FFFFFF',
@@ -60,18 +60,18 @@ export const theme = {
   },
   shadows: {
     soft: {
-      shadowColor: '#BEF264', // Tinted shadow
+      shadowColor: '#9CA3AF', // Neutral shadow
       shadowOffset: { width: 0, height: 12 },
-      shadowOpacity: 0.15,
+      shadowOpacity: 0.08,
       shadowRadius: 24,
-      elevation: 2,
+      elevation: 1,
     },
     glow: {
-      shadowColor: '#BEF264',
+      shadowColor: '#9CA3AF',
       shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.2,
+      shadowOpacity: 0.1,
       shadowRadius: 24,
-      elevation: 4,
+      elevation: 2,
     }
   },
   layout: {

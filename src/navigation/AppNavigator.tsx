@@ -37,7 +37,7 @@ export const AppNavigator = () => {
         tabBarInactiveTintColor: 'rgba(0, 0, 0, 0.5)',
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: theme.colors.primary,
+          backgroundColor: '#F3F4F6', // Silver grey
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
