@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   scenarioText: {
     ...theme.typography.heading,
     fontFamily: theme.typography.fontFamily,
-    fontSize: 28,
+    fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',
     lineHeight: 38,
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
   promptText: {
     ...theme.typography.heading,
     fontFamily: theme.typography.fontFamily,
-    fontSize: 28,
+    fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',
     lineHeight: 38,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.7)',
+    backgroundColor: 'rgba(229, 231, 235, 0.85)', // Silver-grey glass effect
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 1.5,
     borderColor: theme.colors.stroke,
-    backgroundColor: theme.colors.background,
+    backgroundColor: theme.colors.white,
     ...theme.shadows.glow,
   },
   feedbackContainer: {

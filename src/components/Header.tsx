@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     textAlign: 'center',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   leftElementContainer: {
     position: 'absolute',

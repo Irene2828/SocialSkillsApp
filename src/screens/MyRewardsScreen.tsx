@@ -31,7 +31,6 @@ export const MyRewardsScreen = () => {
         </View>
 
       </ScrollView>
-      <GoldenDust />
     </ScreenWrapper>
   );
 };

@@ -26,7 +26,9 @@ const styles = StyleSheet.create({
   },
   barBackground: {
     height: 8,
-    backgroundColor: theme.colors.border,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
   },
