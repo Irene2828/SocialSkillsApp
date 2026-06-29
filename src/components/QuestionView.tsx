@@ -11,9 +11,10 @@ interface QuestionViewProps {
   question: Question;
   onContinue: (isCorrect: boolean) => void;
   disabled?: boolean;
+  topicName?: string;
 }
 
-export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled }) => {
+export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   
@@ -56,12 +57,19 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-        <Card style={styles.scenarioCard}>
-          <Text style={styles.scenarioText}>{question.scenario}</Text>
+        <View style={styles.cardWrapper}>
+          {topicName && (
+            <View style={styles.folderTab}>
+              <Text style={styles.folderTabText}>Topic: {topicName}</Text>
+            </View>
+          )}
+          <Card style={styles.scenarioCard}>
+            <Text style={styles.scenarioText}>{question.scenario}</Text>
           {question.prompt && (
             <Text style={styles.promptText}>{question.prompt}</Text>
           )}
-        </Card>
+          </Card>
+        </View>
 
         <View style={styles.optionsContainer}>
         {question.options.map((option, index) => {
@@ -106,7 +114,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               
               {isCorrect && (
                 <View style={styles.coinRewardContainer}>
-                  <FontAwesome5 name="coins" size={24} color="#65A30D" />
+                  <FontAwesome5 name="coins" size={24} color={theme.colors.primary} />
                   <Text style={styles.coinRewardText}>+1 Coin!</Text>
                 </View>
               )}
@@ -140,6 +148,31 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: theme.spacing.lg, // Make room for the tab
+  },
+  cardWrapper: {
+    position: 'relative',
+    marginTop: theme.spacing.lg,
+  },
+  folderTab: {
+    position: 'absolute',
+    top: -30,
+    right: 20,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    borderBottomWidth: 0,
+    zIndex: -1, // Keep it visually attached behind the rounded edge if needed, or zIndex 1
+  },
+  folderTabText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    fontSize: 14,
+    color: theme.colors.text,
   },
   animatedContainer: {
     flex: 1,

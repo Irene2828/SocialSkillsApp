@@ -169,7 +169,7 @@ export const NewQuizScreen = () => {
 
   const renderCoinJar = () => (
     <View style={styles.coinJarContainer}>
-      <FontAwesome5 name="coins" size={20} color="#65A30D" />
+      <FontAwesome5 name="coins" size={20} color={theme.colors.primary} />
       <Text style={styles.coinJarText}>{coinBalance}</Text>
     </View>
   );
@@ -181,12 +181,6 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={styles.topicPillContainer}>
-            <View style={styles.topicPill}>
-              <Ionicons name="heart-outline" size={16} color={theme.colors.text} />
-              <Text style={styles.topicPillText}>Topic: {selectedCategory}</Text>
-            </View>
-          </View>
           <Header 
             title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
             leftElement={
@@ -204,6 +198,7 @@ export const NewQuizScreen = () => {
             question={currentQuestion} 
             onContinue={handleContinue} 
             disabled={isProcessing}
+            topicName={selectedCategory || undefined}
           />
         </ScrollView>
       </View>
@@ -401,24 +396,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...theme.shadows.soft,
   },
-  topicPillContainer: {
-    alignItems: 'center',
-    marginBottom: theme.spacing.lg,
-  },
-  topicPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: theme.colors.primary,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.sm,
-    borderRadius: theme.borderRadius.full,
-  },
-  topicPillText: {
-    ...theme.typography.body,
-    fontWeight: '600',
-    color: theme.colors.text,
-    marginLeft: theme.spacing.sm,
-  }
 });

@@ -24,7 +24,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             {reward.title}
           </Text>
           <View style={styles.costContainer}>
-            <FontAwesome5 name="coins" size={14} color="#65A30D" />
+            <FontAwesome5 name="coins" size={14} color={theme.colors.primary} />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
