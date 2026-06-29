@@ -13,7 +13,17 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
       <View style={styles.card}>
         <View style={styles.content}>
           <View style={styles.balanceRow}>
-            <FontAwesome5 name="coins" size={34} color={theme.colors.primary} style={{ marginRight: theme.spacing.md }} />
+            <FontAwesome5 
+              name="coins" 
+              size={34} 
+              color={theme.colors.primary} 
+              style={{ 
+                marginRight: theme.spacing.md,
+                textShadowColor: 'rgba(0,0,0,0.15)',
+                textShadowOffset: { width: 0, height: 1 },
+                textShadowRadius: 2 
+              }} 
+            />
             <Text 
               style={styles.balanceNumber}
               adjustsFontSizeToFit

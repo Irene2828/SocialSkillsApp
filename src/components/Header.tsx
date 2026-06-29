@@ -7,11 +7,12 @@ interface HeaderProps {
   hasDivider?: boolean;
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
+  style?: any;
 }
 
-export const Header: React.FC<HeaderProps> = ({ title, hasDivider, leftElement, rightElement }) => {
+export const Header: React.FC<HeaderProps> = ({ title, hasDivider, leftElement, rightElement, style }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       <View style={styles.contentContainer}>
         {leftElement && (
           <View style={styles.leftElementContainer}>

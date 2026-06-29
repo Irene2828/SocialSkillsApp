@@ -109,7 +109,16 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               
               {isCorrect && (
                 <View style={styles.coinRewardContainer}>
-                  <FontAwesome5 name="coins" size={24} color={theme.colors.primary} />
+                  <FontAwesome5 
+                    name="coins" 
+                    size={24} 
+                    color={theme.colors.primary} 
+                    style={{
+                      textShadowColor: 'rgba(0,0,0,0.15)',
+                      textShadowOffset: { width: 0, height: 1 },
+                      textShadowRadius: 2
+                    }}
+                  />
                   <Text style={styles.coinRewardText}>+1 Coin!</Text>
                 </View>
               )}

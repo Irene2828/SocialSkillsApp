@@ -173,7 +173,16 @@ export const NewQuizScreen = () => {
         <Text style={styles.screenFolderTabText}>Topic: {selectedCategory}</Text>
       </View>
       <View style={styles.coinJarContainer}>
-        <FontAwesome5 name="coins" size={20} color={theme.colors.primary} />
+        <FontAwesome5 
+          name="coins" 
+          size={20} 
+          color={theme.colors.primary} 
+          style={{
+            textShadowColor: 'rgba(0,0,0,0.15)',
+            textShadowOffset: { width: 0, height: 1 },
+            textShadowRadius: 2
+          }}
+        />
         <Text style={styles.coinJarText}>{coinBalance}</Text>
       </View>
     </View>
@@ -187,6 +196,7 @@ export const NewQuizScreen = () => {
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           <Header 
+            style={{ marginTop: 24 }} // Make room for the tag above it
             title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
@@ -388,7 +398,7 @@ const styles = StyleSheet.create({
   },
   screenFolderTab: {
     position: 'absolute',
-    top: -40, // Move up above the coin jar
+    top: -26, // Dropped down slightly so it's not cut off by the safe area
     right: 0,
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 12,
