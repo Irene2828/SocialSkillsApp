@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
-import { DesignReviewScreen } from '../screens/DesignReviewScreen';
+import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
 import { theme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -27,8 +27,8 @@ export const AppNavigator = () => {
             iconName = focused ? 'cash' : 'cash-outline';
           } else if (route.name === 'Settings') {
             iconName = focused ? 'settings' : 'settings-outline';
-          } else if (route.name === 'Review') {
-            iconName = focused ? 'brush' : 'brush-outline';
+          } else if (route.name === 'AIQuiz') {
+            iconName = focused ? 'camera' : 'camera-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -58,9 +58,9 @@ export const AppNavigator = () => {
         options={{ tabBarLabel: 'My Rewards' }}
       />
       <Tab.Screen 
-        name="Review" 
-        component={DesignReviewScreen} 
-        options={{ tabBarLabel: 'Critique' }}
+        name="AIQuiz" 
+        component={CreateQuizFromPhotoScreen} 
+        options={{ tabBarLabel: 'AI Quiz' }}
       />
       <Tab.Screen 
         name="Settings" 

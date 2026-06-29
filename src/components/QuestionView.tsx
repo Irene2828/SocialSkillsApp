@@ -114,9 +114,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                     size={24} 
                     color={theme.colors.primary} 
                     style={{
-                      textShadowColor: 'rgba(0,0,0,0.15)',
-                      textShadowOffset: { width: 0, height: 1 },
-                      textShadowRadius: 2
+                      textShadowColor: '#9CA3AF',
+                      textShadowOffset: { width: -0.5, height: 0.5 },
+                      textShadowRadius: 1
                     }}
                   />
                   <Text style={styles.coinRewardText}>+1 Coin!</Text>

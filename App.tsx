@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider, useProgress } from './src/context/ProgressContext';
+import { QuizProvider } from './src/context/QuizContext';
 const RootNavigator = () => {
   return <AppNavigator />;
 };
@@ -13,11 +14,13 @@ export default function App() {
     <SafeAreaProvider>
       <ProgressProvider>
         <RewardsProvider>
-          <NavigationContainer>
-            {/* <DesignReviewScreen /> */}
-            <RootNavigator />
-            <StatusBar style="auto" />
-          </NavigationContainer>
+          <QuizProvider>
+            <NavigationContainer>
+              {/* <DesignReviewScreen /> */}
+              <RootNavigator />
+              <StatusBar style="auto" />
+            </NavigationContainer>
+          </QuizProvider>
         </RewardsProvider>
       </ProgressProvider>
     </SafeAreaProvider>

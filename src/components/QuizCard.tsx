@@ -26,7 +26,14 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) =>
   return (
     <ScalePressable onPress={onPressStart} style={styles.container}>
       <Card style={styles.card}>
-        <Ionicons name={getCategoryIcon(category.id)} size={32} color="#65A30D" style={styles.icon} />
+        {category.isNew && (
+          <View style={styles.newBadge}>
+            <Text style={styles.newBadgeText}>NEW</Text>
+          </View>
+        )}
+        <View style={styles.iconContainer}>
+          <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
+        </View>
         <Text style={styles.title} numberOfLines={2}>{category.title}</Text>
       </Card>
     </ScalePressable>
@@ -44,9 +51,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: theme.spacing.lg,
     minHeight: 140,
+    position: 'relative',
+  },
+  newBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#84CC16', // Lime green
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    zIndex: 1,
+  },
+  newBadgeText: {
+    ...theme.typography.body,
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#FFFFFF',
+  },
+  iconContainer: {
+    marginBottom: theme.spacing.md,
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: 'rgba(190, 242, 100, 0.8)',
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   icon: {
-    marginBottom: theme.spacing.sm,
     textShadowColor: 'rgba(0,0,0,0.15)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,

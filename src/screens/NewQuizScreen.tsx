@@ -12,6 +12,7 @@ import { QUIZ_CATEGORIES, Category, Question } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
+import { useQuizContext } from '../context/QuizContext';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
@@ -24,7 +25,10 @@ type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
+  const { customCategories, customQuestions } = useQuizContext();
   const navigation = useNavigation<any>();
+
+  const allCategories = [...QUIZ_CATEGORIES, ...customCategories];
 
   const [quizState, setQuizState] = useState<QuizState>('start');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -79,7 +83,10 @@ export const NewQuizScreen = () => {
   };
 
   const handleStartQuiz = (category: Category) => {
-    const categoryQuestions = allQuestions.filter(q => q.category === category);
+    let categoryQuestions = allQuestions.filter(q => q.category === category);
+    if (categoryQuestions.length === 0) {
+      categoryQuestions = customQuestions.filter(q => q.category === category);
+    }
     const shuffled = shuffleArray(categoryQuestions);
     const selected = shuffled.slice(0, 10);
 
@@ -154,7 +161,7 @@ export const NewQuizScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Header title="Choose a Topic" />
         <View style={styles.bentoGrid}>
-          {QUIZ_CATEGORIES.map(category => (
+          {allCategories.map(category => (
             <View key={category.id} style={styles.bentoItem}>
               <QuizCard 
                 category={category} 
@@ -178,9 +185,9 @@ export const NewQuizScreen = () => {
           size={20} 
           color={theme.colors.primary} 
           style={{
-            textShadowColor: 'rgba(0,0,0,0.15)',
-            textShadowOffset: { width: 0, height: 1 },
-            textShadowRadius: 2
+            textShadowColor: '#9CA3AF',
+            textShadowOffset: { width: -0.5, height: 0.5 },
+            textShadowRadius: 1
           }}
         />
         <Text style={styles.coinJarText}>{coinBalance}</Text>
@@ -221,7 +228,7 @@ export const NewQuizScreen = () => {
   };
 
   const renderCompleted = () => {
-    const categoryName = QUIZ_CATEGORIES.find(c => c.id === selectedCategory)?.title || '';
+    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || '';
     const total = currentQuestions.length;
     
     let message = "Good effort!";
@@ -398,13 +405,14 @@ const styles = StyleSheet.create({
   },
   screenFolderTab: {
     position: 'absolute',
-    top: -20, // Lowered more
+    top: -65, // Increased space
     right: 0,
     minWidth: 120, // Prevent wrapping
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 6,
+    paddingTop: 12,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     borderWidth: 1,

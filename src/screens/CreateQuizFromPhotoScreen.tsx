@@ -1,0 +1,488 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated } from 'react-native';
+import { ScreenWrapper } from '../components/ScreenWrapper';
+import { Header } from '../components/Header';
+import { Button } from '../components/Button';
+import { Card } from '../components/Card';
+import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { generateQuizFromImage } from '../utils/aiQuizGenerator';
+import { useNavigation } from '@react-navigation/native';
+import { useRewards } from '../context/RewardsContext';
+import { useProgress } from '../context/ProgressContext';
+import { useQuizContext } from '../context/QuizContext';
+
+type ScreenState = 'idle' | 'imageSelected' | 'generating' | 'success' | 'error';
+
+export const CreateQuizFromPhotoScreen = () => {
+  const [screenState, setScreenState] = useState<ScreenState>('idle');
+  const [imageUri, setImageUri] = useState<string | null>(null);
+  const [imageBase64, setImageBase64] = useState<string | null>(null);
+  const [generatedQuiz, setGeneratedQuiz] = useState<any>(null);
+  const [errorMessage, setErrorMessage] = useState('');
+  
+  const [selectedAge, setSelectedAge] = useState('7-8');
+  const [selectedDifficulty, setSelectedDifficulty] = useState('Medium');
+
+  const [loadingText, setLoadingText] = useState('Understanding the concept...');
+  const spinAnim = new Animated.Value(0);
+
+  const navigation = useNavigation<any>();
+  const { addCustomQuiz } = useQuizContext();
+
+  useEffect(() => {
+    if (screenState === 'generating') {
+      Animated.loop(
+        Animated.timing(spinAnim, {
+          toValue: 1,
+          duration: 3000,
+          useNativeDriver: true,
+        })
+      ).start();
+
+      const texts = [
+        'Understanding the concept...',
+        'Creating original questions...',
+        'Building your quiz...'
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        i = (i + 1) % texts.length;
+        setLoadingText(texts[i]);
+      }, 2500);
+
+      return () => clearInterval(interval);
+    }
+  }, [screenState]);
+
+  const spin = spinAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg']
+  });
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setImageUri(result.assets[0].uri);
+      setImageBase64(result.assets[0].base64 || null);
+      setScreenState('imageSelected');
+    }
+  };
+
+  const takePhoto = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets[0]) {
+      setImageUri(result.assets[0].uri);
+      setImageBase64(result.assets[0].base64 || null);
+      setScreenState('imageSelected');
+    }
+  };
+
+  const handleGenerate = async () => {
+    if (!imageBase64) return;
+    
+    setScreenState('generating');
+    try {
+      const quiz = await generateQuizFromImage(imageBase64);
+      setGeneratedQuiz(quiz);
+      
+      // Save it to context
+      const newCategoryId = quiz.concept;
+      const newCategory = {
+        id: newCategoryId,
+        title: quiz.concept,
+        description: 'AI Generated Quiz',
+        isNew: true
+      };
+      
+      const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+        id: `${newCategoryId}-q${index}`,
+        category: newCategoryId,
+        difficulty: selectedDifficulty,
+        scenario: q.question,
+        options: q.options,
+        correctAnswerIndex: q.correctIndex,
+        explanation: q.explanation || 'Great job!'
+      }));
+      
+      addCustomQuiz(newCategory, questionsWithCategory);
+      setScreenState('success');
+    } catch (error: any) {
+      setErrorMessage(error.message || 'An error occurred while generating the quiz.');
+      setScreenState('error');
+    }
+  };
+
+  const handleStartQuiz = () => {
+    navigation.navigate('NewQuiz', { playCategory: generatedQuiz.concept });
+    setScreenState('idle'); // reset for next time
+  };
+
+  const renderIdle = () => (
+    <View style={styles.idleContainer}>
+      <Card style={styles.uploadCard}>
+        <View style={styles.iconContainer}>
+          <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
+        </View>
+        
+        <Button 
+          title="Take Photo" 
+          onPress={takePhoto} 
+          style={styles.button}
+        />
+        
+        <Button 
+          title="Upload from Gallery" 
+          onPress={pickImage} 
+          variant="secondary"
+          style={styles.button}
+        />
+      </Card>
+      <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
+    </View>
+  );
+
+  const renderImageSelected = () => (
+    <View style={styles.idleContainer}>
+      <Card style={styles.previewCard}>
+        {imageUri && <Image source={{ uri: imageUri }} style={styles.previewImage} />}
+      </Card>
+      
+      <View style={styles.rowButtons}>
+        <Button 
+          title="Replace" 
+          onPress={pickImage} 
+          variant="secondary"
+          style={styles.halfButton}
+        />
+        <Button 
+          title="Remove" 
+          onPress={() => {
+            setImageUri(null);
+            setImageBase64(null);
+            setScreenState('idle');
+          }} 
+          variant="outline"
+          style={styles.halfButton}
+        />
+      </View>
+      
+      <Button 
+        title="Generate Quiz" 
+        onPress={handleGenerate} 
+        style={styles.generateButton}
+      />
+    </View>
+  );
+
+  const renderGenerating = () => (
+    <View style={styles.generatingContainer}>
+      <Animated.View style={{ transform: [{ rotate: spin }] }}>
+        <Ionicons name="sparkles" size={64} color={theme.colors.primary} />
+      </Animated.View>
+      <Text style={styles.loadingText}>{loadingText}</Text>
+      <View style={styles.progressContainer}>
+        <ActivityIndicator size="large" color={theme.colors.primary} />
+      </View>
+    </View>
+  );
+
+  const renderSuccess = () => (
+    <View style={styles.successContainer}>
+      <View style={styles.successHeader}>
+        <View style={styles.successIconWrapper}>
+          <Ionicons name="checkmark-circle" size={48} color={theme.colors.success} />
+        </View>
+        <Text style={styles.successTitle}>Quiz Ready!</Text>
+        <Text style={styles.successSubtitle}>
+          {generatedQuiz?.questions?.length || 0} questions created for concept:
+        </Text>
+        <Text style={styles.conceptText}>{generatedQuiz?.concept}</Text>
+      </View>
+
+      <Card style={styles.settingsCard}>
+        <Text style={styles.sectionTitle}>Difficulty</Text>
+        <View style={styles.selectorRow}>
+          {['Easy', 'Medium', 'Hard'].map(diff => (
+            <Pressable 
+              key={diff} 
+              style={[styles.selectorItem, selectedDifficulty === diff && styles.selectorItemActive]}
+              onPress={() => setSelectedDifficulty(diff)}
+            >
+              <Text style={[styles.selectorText, selectedDifficulty === diff && styles.selectorTextActive]}>
+                {diff}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        <Text style={[styles.sectionTitle, {marginTop: 24}]}>Age Group</Text>
+        <View style={styles.selectorRow}>
+          {['5-6', '7-8', '9-10'].map(age => (
+            <Pressable 
+              key={age} 
+              style={[styles.selectorItem, selectedAge === age && styles.selectorItemActive]}
+              onPress={() => setSelectedAge(age)}
+            >
+              <Text style={[styles.selectorText, selectedAge === age && styles.selectorTextActive]}>
+                {age}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+      </Card>
+
+      <Button 
+        title="Start Quiz" 
+        onPress={handleStartQuiz} 
+        style={styles.generateButton}
+      />
+      <Button 
+        title="Generate Again" 
+        onPress={() => setScreenState('idle')} 
+        variant="secondary"
+        style={styles.generateButton}
+      />
+    </View>
+  );
+
+  const renderError = () => (
+    <View style={styles.errorContainer}>
+      <Ionicons name="alert-circle" size={64} color={theme.colors.error} />
+      <Text style={styles.errorTitle}>Oops!</Text>
+      <Text style={styles.errorMessage}>{errorMessage}</Text>
+      <Button 
+        title="Try Again" 
+        onPress={() => setScreenState('idle')} 
+        style={styles.button}
+      />
+    </View>
+  );
+
+  return (
+    <ScreenWrapper>
+      <Header 
+        title="Create Quiz" 
+      />
+      {screenState !== 'generating' && screenState !== 'success' && (
+        <View style={styles.headerSubtitleContainer}>
+          <Text style={styles.headerSubtitle}>
+            Upload a page and AI will create original quiz questions based on the underlying concept.
+          </Text>
+        </View>
+      )}
+
+      <View style={styles.content}>
+        {screenState === 'idle' && renderIdle()}
+        {screenState === 'imageSelected' && renderImageSelected()}
+        {screenState === 'generating' && renderGenerating()}
+        {screenState === 'success' && renderSuccess()}
+        {screenState === 'error' && renderError()}
+      </View>
+    </ScreenWrapper>
+  );
+};
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.xl,
+  },
+  headerSubtitleContainer: {
+    paddingHorizontal: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
+  },
+  headerSubtitle: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  idleContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  uploadCard: {
+    width: '100%',
+    padding: theme.spacing.xl,
+    alignItems: 'center',
+    backgroundColor: '#FAFAFA',
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+    borderRadius: 24, // Premium rounded corners
+  },
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.xl,
+    ...theme.shadows.soft,
+  },
+  button: {
+    width: '100%',
+    marginBottom: theme.spacing.md,
+  },
+  supportedText: {
+    ...theme.typography.body,
+    fontSize: 14,
+    color: theme.colors.secondaryText,
+    marginTop: theme.spacing.lg,
+  },
+  previewCard: {
+    width: '100%',
+    height: 300,
+    padding: 0,
+    overflow: 'hidden',
+    borderRadius: 24,
+    marginBottom: theme.spacing.xl,
+  },
+  previewImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+  },
+  rowButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: theme.spacing.xl,
+  },
+  halfButton: {
+    width: '48%',
+  },
+  generateButton: {
+    width: '100%',
+    marginBottom: theme.spacing.md,
+  },
+  generatingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    color: theme.colors.text,
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.lg,
+    textAlign: 'center',
+  },
+  progressContainer: {
+    marginTop: theme.spacing.lg,
+  },
+  successContainer: {
+    flex: 1,
+  },
+  successHeader: {
+    alignItems: 'center',
+    marginBottom: theme.spacing.xl,
+  },
+  successIconWrapper: {
+    backgroundColor: '#E4F8E5',
+    padding: 16,
+    borderRadius: 40,
+    marginBottom: theme.spacing.md,
+  },
+  successTitle: {
+    ...theme.typography.heading,
+    fontSize: 28,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+  },
+  successSubtitle: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  conceptText: {
+    ...theme.typography.heading,
+    fontSize: 18,
+    color: theme.colors.primary,
+    marginTop: theme.spacing.sm,
+    textAlign: 'center',
+  },
+  settingsCard: {
+    marginBottom: theme.spacing.xl,
+    padding: theme.spacing.lg,
+    borderRadius: 20,
+  },
+  sectionTitle: {
+    ...theme.typography.heading,
+    fontSize: 16,
+    marginBottom: theme.spacing.md,
+    color: theme.colors.text,
+  },
+  selectorRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  selectorItem: {
+    flex: 1,
+    paddingVertical: 12,
+    marginHorizontal: 4,
+    borderRadius: 12,
+    backgroundColor: theme.colors.background,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+  },
+  selectorItemActive: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  selectorText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.secondaryText,
+  },
+  selectorTextActive: {
+    color: theme.colors.white,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorTitle: {
+    ...theme.typography.heading,
+    fontSize: 24,
+    color: theme.colors.error,
+    marginTop: theme.spacing.lg,
+  },
+  errorMessage: {
+    ...theme.typography.body,
+    textAlign: 'center',
+    marginVertical: theme.spacing.lg,
+    color: theme.colors.secondaryText,
+  }
+});

@@ -29,9 +29,9 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
               size={14} 
               color={theme.colors.primary} 
               style={{
-                textShadowColor: 'rgba(0,0,0,0.15)',
-                textShadowOffset: { width: 0, height: 1 },
-                textShadowRadius: 2
+                textShadowColor: '#9CA3AF',
+                textShadowOffset: { width: -0.5, height: 0.5 },
+                textShadowRadius: 1
               }}
             />
             <Text style={styles.costText}>{reward.cost}</Text>
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: 'rgba(190, 242, 100, 0.8)',
     borderWidth: 1,
     borderColor: theme.colors.stroke,
     justifyContent: 'center',

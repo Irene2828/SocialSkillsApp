@@ -1,4 +1,5 @@
-export type Category = "Friendship" | "Manners" | "School" | "Feelings" | "Playground" | "Safety";
+// We allow string so custom AI concepts can be used as categories
+export type Category = "Friendship" | "Manners" | "School" | "Feelings" | "Playground" | "Safety" | string;
 
 export type Difficulty = "Easy" | "Medium";
 
@@ -18,6 +19,7 @@ export interface QuizCategory {
   id: Category;
   title: string;
   description: string;
+  isNew?: boolean;
 }
 
 export const QUIZ_CATEGORIES: QuizCategory[] = [
