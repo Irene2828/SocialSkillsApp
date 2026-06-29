@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     borderWidth: 1.5,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.stroke,
     backgroundColor: theme.colors.background,
     ...theme.shadows.glow,
   },

@@ -90,6 +90,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: theme.spacing.sm,
     marginBottom: theme.spacing.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
   },
   bannerTextContainer: {
     flex: 1,
@@ -97,7 +99,7 @@ const styles = StyleSheet.create({
   bannerTitle: {
     ...theme.typography.heading,
     fontSize: 16,
-    color: theme.colors.primary,
+    color: theme.colors.text,
     marginBottom: 4,
   },
   bannerSubtitle: {

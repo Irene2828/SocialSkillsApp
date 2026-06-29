@@ -41,6 +41,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
     position: 'relative',
     minHeight: 120,
   },

@@ -9,6 +9,7 @@ export const theme = {
     errorSoft: '#F3F4F6', // Light neutral grey
     neutralGrey: '#E5E7EB',
     accent: '#FFC857',
+    stroke: '#65A30D', // Warm darker green for card borders
     text: '#111827', // Almost black
     secondaryText: '#6B7280',
     white: '#FFFFFF',
