@@ -24,7 +24,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             {reward.title}
           </Text>
           <View style={styles.costContainer}>
-            <FontAwesome5 name="coins" size={16} color={theme.colors.success} />
+            <FontAwesome5 name="coins" size={14} color="#F59E0B" />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
@@ -75,12 +75,17 @@ const styles = StyleSheet.create({
   costContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: theme.colors.errorSoft,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
   },
   costText: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: theme.colors.primary, // Changed to purple based on mockup
-    marginLeft: theme.spacing.xs,
+    color: theme.colors.text,
+    marginLeft: 6,
   },
   redeemButton: {
     minWidth: 80,
