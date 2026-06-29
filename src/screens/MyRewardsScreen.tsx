@@ -5,6 +5,7 @@ import { Header } from '../components/Header';
 import { CoinBalanceCard } from '../components/CoinBalanceCard';
 import { RewardList } from '../components/RewardList';
 import { AddRewardForm } from '../components/AddRewardForm';
+import { GoldenDust } from '../components/GoldenDust';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
@@ -30,6 +31,7 @@ export const MyRewardsScreen = () => {
         </View>
 
       </ScrollView>
+      <GoldenDust />
     </ScreenWrapper>
   );
 };

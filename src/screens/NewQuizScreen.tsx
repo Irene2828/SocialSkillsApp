@@ -17,6 +17,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
+import { AnimatedGrassBackground } from '../components/AnimatedGrassBackground';
 
 type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
 
@@ -195,7 +196,7 @@ export const NewQuizScreen = () => {
           />
           <View style={styles.topicPillContainer}>
             <View style={styles.topicPill}>
-              <Ionicons name="heart" size={16} color={theme.colors.primary} />
+              <Ionicons name="heart" size={16} color={theme.colors.text} />
               <Text style={styles.topicPillText}>Topic: {selectedCategory}</Text>
             </View>
           </View>
@@ -257,14 +258,17 @@ export const NewQuizScreen = () => {
   };
 
   return (
-    <ScreenWrapper>
-      <View style={styles.content}>
-        {quizState === 'start' && renderStart()}
-        {quizState === 'selection' && renderSelection()}
-        {(quizState === 'in-progress' || quizState === 'completed') && renderInProgress()}
-        {quizState === 'completed' && renderCompleted()}
-      </View>
-    </ScreenWrapper>
+    <View style={{ flex: 1 }}>
+      <AnimatedGrassBackground />
+      <ScreenWrapper transparent>
+        <View style={styles.content}>
+          {quizState === 'start' && renderStart()}
+          {quizState === 'selection' && renderSelection()}
+          {(quizState === 'in-progress' || quizState === 'completed') && renderInProgress()}
+          {quizState === 'completed' && renderCompleted()}
+        </View>
+      </ScreenWrapper>
+    </View>
   );
 };
 
@@ -285,7 +289,7 @@ const styles = StyleSheet.create({
   startTitle: {
     ...theme.typography.heading,
     fontSize: 42,
-    color: theme.colors.primary,
+    color: theme.colors.text,
     marginBottom: theme.spacing.sm,
   },
   startSubtitle: {
@@ -412,7 +416,7 @@ const styles = StyleSheet.create({
   topicPillText: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: theme.colors.primary,
+    color: theme.colors.text,
     marginLeft: theme.spacing.sm,
   }
 });

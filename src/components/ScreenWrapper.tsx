@@ -2,9 +2,13 @@ import React from 'react';
 import { SafeAreaView, StyleSheet, ViewProps, View, ImageBackground } from 'react-native';
 import { theme } from '../theme';
 
-export const ScreenWrapper: React.FC<ViewProps> = ({ children, style, ...props }) => {
+interface ScreenWrapperProps extends ViewProps {
+  transparent?: boolean;
+}
+
+export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, transparent, ...props }) => {
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={[styles.safeArea, transparent && { backgroundColor: 'transparent' }]}>
       <View style={[styles.container, style]} {...props}>
         {children}
       </View>
