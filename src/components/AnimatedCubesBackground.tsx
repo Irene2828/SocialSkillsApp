@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 const CUBE_COUNT = 30;
-const CUBE_COLORS = ['#BEF264', '#D9F99D', '#ECFCCB', '#FFFFFF'];
+const CUBE_COLORS = ['#E5E7EB', '#D1D5DB', '#F3F4F6', '#FFFFFF'];
 
 export const AnimatedCubesBackground: React.FC = () => {
   const [cubes] = useState(() => {
@@ -40,7 +40,7 @@ export const AnimatedCubesBackground: React.FC = () => {
     <View style={styles.container} pointerEvents="none">
       {/* Soft gradient background */}
       <LinearGradient
-        colors={['#F7F7F9', '#ECFCCB']}
+        colors={['#F0F1F3', '#FFFFFF']}
         style={StyleSheet.absoluteFill}
       />
 
@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     borderRadius: 2, // Slight rounding so they aren't painfully sharp
-    shadowColor: '#BEF264',
+    shadowColor: '#9CA3AF',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.15,
     shadowRadius: 3,
     elevation: 2,
   },

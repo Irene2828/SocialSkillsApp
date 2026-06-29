@@ -1,6 +1,6 @@
 export const theme = {
   colors: {
-    background: '#F7F7F9', // Very light grey/white
+    background: '#F0F1F3', // Light silver grey
     primary: '#BEF264', // Soft pastel lime green
     primarySoft: '#ECFCCB', // Very soft lime background
     success: '#FFC857', // Matching the yellow/gold from the screenshot for coins
