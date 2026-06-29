@@ -169,7 +169,7 @@ export const NewQuizScreen = () => {
 
   const renderCoinJar = () => (
     <View style={styles.coinJarContainer}>
-      <FontAwesome5 name="coins" size={20} color={theme.colors.success} />
+      <FontAwesome5 name="coins" size={20} color="#65A30D" />
       <Text style={styles.coinJarText}>{coinBalance}</Text>
     </View>
   );

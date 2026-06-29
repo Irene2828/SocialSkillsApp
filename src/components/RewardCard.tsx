@@ -24,7 +24,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             {reward.title}
           </Text>
           <View style={styles.costContainer}>
-            <FontAwesome5 name="coins" size={14} color="#F59E0B" />
+            <FontAwesome5 name="coins" size={14} color="#65A30D" />
             <Text style={styles.costText}>{reward.cost}</Text>
           </View>
         </View>
@@ -62,7 +62,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.colors.primarySoft,
+    backgroundColor: theme.colors.primary,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
     justifyContent: 'center',
     alignItems: 'center',
   },
