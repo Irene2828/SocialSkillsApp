@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xl,
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.text,
     borderRadius: theme.borderRadius.full,
   },
   outlineButtonPressed: {
@@ -109,6 +109,6 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   outlineText: {
-    color: theme.colors.primary,
+    color: theme.colors.text,
   },
 });

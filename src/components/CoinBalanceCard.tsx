@@ -13,7 +13,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
       <View style={styles.card}>
         <View style={styles.content}>
           <View style={styles.balanceRow}>
-            <FontAwesome5 name="coins" size={48} color={theme.colors.success} style={{ marginRight: theme.spacing.sm }} />
+            <FontAwesome5 name="coins" size={34} color={theme.colors.success} style={{ marginRight: theme.spacing.md }} />
             <Text 
               style={styles.balanceNumber}
               adjustsFontSizeToFit
@@ -58,13 +58,14 @@ const styles = StyleSheet.create({
   balanceNumber: {
     ...theme.typography.heading,
     fontSize: 54,
-    color: theme.colors.primary,
+    fontWeight: '400',
+    color: theme.colors.text,
     lineHeight: 60,
   },
   balanceLabel: {
     ...theme.typography.heading,
     fontSize: 24,
-    color: theme.colors.primary,
+    color: theme.colors.text,
     fontWeight: '500',
     marginLeft: theme.spacing.sm,
   },

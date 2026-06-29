@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 38,
     textAlign: 'left',
-    color: theme.colors.primary,
+    color: theme.colors.text,
     marginTop: theme.spacing.md,
   },
   optionsContainer: {
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   coinRewardText: {
     ...theme.typography.heading,
-    color: theme.colors.primary,
+    color: theme.colors.text,
     fontSize: 20,
     marginLeft: theme.spacing.xs,
   },
