@@ -17,7 +17,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
-import { AnimatedGrassBackground } from '../components/AnimatedGrassBackground';
+import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
 
@@ -259,7 +259,7 @@ export const NewQuizScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedGrassBackground />
+      <AnimatedCubesBackground />
       <ScreenWrapper transparent>
         <View style={styles.content}>
           {quizState === 'start' && renderStart()}
