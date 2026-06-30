@@ -234,9 +234,7 @@ export const MyRewardsScreen = () => {
                   <Text style={styles.successCuteCopy}>
                     <Text style={{ fontSize: 24, fontStyle: 'italic', fontWeight: '600' }}>Hey parents!</Text>
                     {'\n\n'}
-                    I've just <Text style={{ fontWeight: 'bold' }}>earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
-                    {'\n\n'}
-                    <Text style={{ fontWeight: 'bold' }}>Here is what I chose to redeem it for:</Text>
+                    <Text style={{ fontWeight: 'bold' }}>I've just earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
                   </Text>
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
