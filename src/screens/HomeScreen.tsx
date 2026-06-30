@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
@@ -7,8 +7,66 @@ import { useNavigation } from '@react-navigation/native';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { AnimatedExplodingWord } from '../components/AnimatedExplodingWord';
 
+const useAttentionLoop = () => {
+  const fadeAnim = useRef(new Animated.Value(1)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const pulse = () => {
+      // Fade out + shrink slightly
+      Animated.parallel([
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 350,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(scaleAnim, {
+          toValue: 0.92,
+          duration: 350,
+          easing: Easing.in(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start(() => {
+        // Brief pause invisible
+        setTimeout(() => {
+          // Snap back in with slight overshoot
+          Animated.parallel([
+            Animated.timing(fadeAnim, {
+              toValue: 1,
+              duration: 500,
+              easing: Easing.out(Easing.back(1.6)),
+              useNativeDriver: true,
+            }),
+            Animated.timing(scaleAnim, {
+              toValue: 1,
+              duration: 500,
+              easing: Easing.out(Easing.back(1.6)),
+              useNativeDriver: true,
+            }),
+          ]).start(() => {
+            // Wait random interval 3–6 seconds then pulse again
+            const delay = 3000 + Math.random() * 3000;
+            timeoutId = setTimeout(pulse, delay);
+          });
+        }, 120);
+      });
+    };
+
+    // First pulse after initial 4 second delay
+    timeoutId = setTimeout(pulse, 4000);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  return { fadeAnim, scaleAnim };
+};
+
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
+  const { fadeAnim, scaleAnim } = useAttentionLoop();
 
   return (
     <View style={{ flex: 1 }}>
@@ -21,14 +79,21 @@ export const HomeScreen = () => {
               <AnimatedExplodingWord word="Explorer" style={styles.startTitle} />
             </View>
           </View>
-          <View style={{ width: '100%', alignItems: 'center' }}>
+          <Animated.View
+            style={{
+              width: '100%',
+              alignItems: 'center',
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }],
+            }}
+          >
             <Text style={styles.startSubtitle}>Ready to practice?</Text>
             <Button 
               title="Start Quiz" 
               onPress={() => navigation.navigate('NewQuiz')} 
               style={styles.actionButton}
             />
-          </View>
+          </Animated.View>
         </View>
       </ScreenWrapper>
     </View>
@@ -52,7 +117,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,
     lineHeight: 52,
-    letterSpacing: -1.2, // Apple Display tight tracking for large hero text
+    letterSpacing: -1.2,
     textAlign: 'center',
   },
   startSubtitle: {
