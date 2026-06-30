@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
   },
   balanceRow: {
     flexDirection: 'row',
