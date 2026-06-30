@@ -14,6 +14,7 @@ import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled } = useRewards();
@@ -112,17 +113,13 @@ export const MyRewardsScreen = () => {
   };
 
   return (
-    <ScreenWrapper>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+    <View style={{ flex: 1 }}>
+      <AnimatedCubesBackground />
+      <ScreenWrapper transparent>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         <View style={styles.topSection}>
-          <View style={styles.bannerContainer}>
-            <View style={styles.bannerTextContainer}>
-              <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
-              <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
-            </View>
-          </View>
           <CoinBalanceCard balance={coinBalance} />
           {isParentModeUnlocked && <AddRewardForm />}
         </View>
@@ -165,7 +162,8 @@ export const MyRewardsScreen = () => {
 
       </ScrollView>
       {renderSuccessModal()}
-    </ScreenWrapper>
+      </ScreenWrapper>
+    </View>
   );
 };
 
@@ -301,7 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#E5E7EB', // Silver grey instead of primary green
   },
   tabText: {
     ...theme.typography.button,

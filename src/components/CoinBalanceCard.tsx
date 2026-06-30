@@ -33,6 +33,10 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
             </Text>
             <Text style={styles.balanceLabel}>Coins</Text>
           </View>
+          <View style={styles.textContainer}>
+            <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
+            <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
+          </View>
         </View>
       </View>
     </View>
@@ -80,5 +84,23 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontWeight: '500',
     marginLeft: theme.spacing.sm,
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginTop: theme.spacing.md,
+  },
+  bannerTitle: {
+    ...theme.typography.heading,
+    fontSize: 16,
+    color: theme.colors.text,
+    textAlign: 'center',
+  },
+  bannerSubtitle: {
+    ...theme.typography.body,
+    fontSize: 15,
+    fontStyle: 'italic',
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+    marginBottom: 4,
   },
 });

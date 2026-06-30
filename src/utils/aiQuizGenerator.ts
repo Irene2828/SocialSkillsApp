@@ -82,7 +82,7 @@ export const generateQuizFromImage = async (base64Image: string) => {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error('OpenAI Error Response:', errorData);
-      throw new Error(errorData?.error?.message || \`API responded with status: \${response.status}\`);
+      throw new Error(errorData?.error?.message || `API responded with status: ${response.status}`);
     }
 
     const data = await response.json();

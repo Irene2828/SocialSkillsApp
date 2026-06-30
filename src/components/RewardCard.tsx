@@ -9,6 +9,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 interface RewardCardProps {
   reward: Reward;
   onRedeem: (reward: Reward) => void;
+  canAfford?: boolean;
   isProcessing?: boolean;
 }
 
@@ -27,7 +28,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             title={isProcessing ? "Redeeming points.." : "Redeem"} 
             onPress={() => onRedeem(reward)} 
             style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
-            variant={canAfford ? "outline" : "secondary"}
+            variant={canAfford ? "primary" : "secondary"}
             disabled={!canAfford || isProcessing}
           />
         </View>
@@ -112,6 +113,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   redeemButtonActive: {
-    borderColor: '#84CC16', // Lime green
+    // Managed by primary variant
   },
 });

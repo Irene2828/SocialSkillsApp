@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
+import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { SilverDust } from '../components/SilverDust';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { theme } from '../theme';
@@ -108,12 +110,12 @@ export const CreateQuizFromPhotoScreen = () => {
     setScreenState('generating');
     try {
       // OpenAI requires the data URI prefix for base64 images
-      const dataUri = \`data:image/jpeg;base64,\${imageBase64}\`;
+      const dataUri = `data:image/jpeg;base64,${imageBase64}`;
       const quiz = await generateQuizFromImage(dataUri);
       setGeneratedQuiz(quiz);
       
       // Save it to context
-      const newCategoryId = \`custom_ai_\${Date.now()}\`;
+      const newCategoryId = `custom_ai_${Date.now()}`;
       const newCategory = {
         id: newCategoryId,
         title: quiz.concept,
@@ -216,60 +218,30 @@ export const CreateQuizFromPhotoScreen = () => {
   );
 
   const renderSuccess = () => (
-    <View style={styles.successContainer}>
-      <View style={styles.successHeader}>
-        <View style={styles.successIconWrapper}>
-          <Ionicons name="checkmark-circle" size={48} color={theme.colors.success} />
-        </View>
-        <Text style={styles.successTitle}>Quiz Ready!</Text>
-        <Text style={styles.successSubtitle}>
-          {generatedQuiz?.questions?.length || 0} questions created for concept:
-        </Text>
-        <Text style={styles.conceptText}>{generatedQuiz?.concept}</Text>
-      </View>
-
-      <Card style={styles.settingsCard}>
-        <Text style={styles.sectionTitle}>Difficulty</Text>
-        <View style={styles.selectorRow}>
-          {['Easy', 'Medium', 'Hard'].map(diff => (
-            <Pressable 
-              key={diff} 
-              style={[styles.selectorItem, selectedDifficulty === diff && styles.selectorItemActive]}
-              onPress={() => setSelectedDifficulty(diff)}
-            >
-              <Text style={[styles.selectorText, selectedDifficulty === diff && styles.selectorTextActive]}>
-                {diff}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-
-        <Text style={[styles.sectionTitle, {marginTop: 24}]}>Age Group</Text>
-        <View style={styles.selectorRow}>
-          {['5-6', '7-8', '9-10'].map(age => (
-            <Pressable 
-              key={age} 
-              style={[styles.selectorItem, selectedAge === age && styles.selectorItemActive]}
-              onPress={() => setSelectedAge(age)}
-            >
-              <Text style={[styles.selectorText, selectedAge === age && styles.selectorTextActive]}>
-                {age}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-      </Card>
-
+    <View style={[styles.successContainer, { backgroundColor: theme.colors.success, padding: 32, borderRadius: 24, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }]}>
+      <SilverDust />
+      <Ionicons name="checkmark-circle" size={80} color={theme.colors.white} style={{ marginBottom: 16 }} />
+      <Text style={[styles.successTitle, { color: theme.colors.white, fontSize: 40 }]}>Success!</Text>
+      <Text style={[styles.successSubtitle, { color: theme.colors.white, fontStyle: 'italic', fontSize: 20, textAlign: 'center', marginBottom: 40 }]}>
+        Your new quiz is added to your quiz library.
+      </Text>
+      
       <Button 
         title="Start Quiz" 
-        onPress={handleStartQuiz} 
-        style={styles.generateButton}
+        onPress={() => {
+           setScreenState('idle');
+           navigation.navigate('NewQuiz', { tab: 'ai' });
+        }} 
+        style={[styles.generateButton, { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary, borderWidth: 2 }]}
       />
       <Button 
-        title="Generate Again" 
-        onPress={() => setScreenState('idle')} 
+        title="Go to Quiz Library" 
+        onPress={() => {
+           setScreenState('idle');
+           navigation.navigate('NewQuiz', { tab: 'ai' });
+        }} 
         variant="secondary"
-        style={styles.generateButton}
+        style={[styles.generateButton, { backgroundColor: 'transparent', borderColor: theme.colors.white }]}
       />
     </View>
   );
@@ -288,10 +260,12 @@ export const CreateQuizFromPhotoScreen = () => {
   );
 
   return (
-    <ScreenWrapper>
-      <Header 
-        title="Create Quiz" 
-      />
+    <View style={{ flex: 1 }}>
+      <AnimatedCubesBackground />
+      <ScreenWrapper transparent>
+        <Header 
+          title="Create Quiz" 
+        />
       {screenState !== 'generating' && screenState !== 'success' && (
         <View style={styles.headerSubtitleContainer}>
           <Text style={styles.headerSubtitle}>
@@ -307,7 +281,8 @@ export const CreateQuizFromPhotoScreen = () => {
         {screenState === 'success' && renderSuccess()}
         {screenState === 'error' && renderError()}
       </ScrollView>
-    </ScreenWrapper>
+      </ScreenWrapper>
+    </View>
   );
 };
 

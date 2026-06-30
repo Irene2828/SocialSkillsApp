@@ -20,6 +20,9 @@ export interface QuizCategory {
   title: string;
   description: string;
   isNew?: boolean;
+  icon?: string;
+  color?: string;
+  isCustom?: boolean;
 }
 
 export const QUIZ_CATEGORIES: QuizCategory[] = [

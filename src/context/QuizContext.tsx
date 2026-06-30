@@ -24,6 +24,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_1',
     category: 'c_listening_ai',
+    difficulty: 'Medium',
     scenario: 'Your friend is talking about their favorite movie. To show you are listening, you should...',
     options: [
       'Look away and think about your toys',
@@ -36,6 +37,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_2',
     category: 'c_listening_ai',
+    difficulty: 'Medium',
     scenario: 'Your friend is telling a story, but you are confused about what happened. What can you say?',
     options: [
       '"Can you repeat that?"',
@@ -48,6 +50,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_3',
     category: 'c_listening_ai',
+    difficulty: 'Medium',
     scenario: 'While someone is speaking, how can you use your body to show you are listening?',
     options: [
       'Cross your arms and sigh',
@@ -60,6 +63,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_4',
     category: 'c_listening_ai',
+    difficulty: 'Medium',
     scenario: 'Your friend is telling you about their weekend, but you really want to talk about your new game. What should you do?',
     options: [
       'Wait for them to finish, because it is their turn to speak',
@@ -72,6 +76,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_5',
     category: 'c_listening_ai',
+    difficulty: 'Medium',
     scenario: 'How do you know when it is your turn to talk?',
     options: [
       'Whenever you feel like it',

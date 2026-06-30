@@ -50,7 +50,7 @@ export const AppNavigator = () => {
       <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
-        options={{ tabBarLabel: 'New Quiz' }}
+        options={{ tabBarLabel: 'Quiz Library' }}
       />
       <Tab.Screen 
         name="MyRewards" 

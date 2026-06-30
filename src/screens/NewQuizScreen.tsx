@@ -13,12 +13,13 @@ import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { SilverDust } from '../components/SilverDust';
 
 type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
 
@@ -27,11 +28,22 @@ export const NewQuizScreen = () => {
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const { customCategories, customQuestions } = useQuizContext();
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
 
   const allCategories = [...QUIZ_CATEGORIES, ...customCategories];
 
   const [quizState, setQuizState] = useState<QuizState>('start');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
+  const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
+
+  useEffect(() => {
+    if (route.params?.tab === 'ai') {
+      setActiveTab('ai');
+      setQuizState('selection');
+      // Clear param so it doesn't get stuck
+      navigation.setParams({ tab: undefined });
+    }
+  }, [route.params?.tab]);
   const [currentQuestions, setCurrentQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -156,27 +168,53 @@ export const NewQuizScreen = () => {
     //   return <SimpleLockScreen />;
     // }
 
+    const displayCategories = activeTab === 'general' ? QUIZ_CATEGORIES : customCategories;
+
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <Header title="Choose a Topic" />
-        <View style={styles.bentoGrid}>
-          {allCategories.map(category => (
-            <View key={category.id} style={styles.bentoItem}>
-              <QuizCard 
-                category={category} 
-                onPressStart={() => handleStartQuiz(category.id)} 
-              />
-            </View>
-          ))}
+        
+        <View style={styles.tabContainer}>
+          <Pressable 
+            style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
+            onPress={() => setActiveTab('general')}
+          >
+            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>General</Text>
+          </Pressable>
+          <Pressable 
+            style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
+            onPress={() => setActiveTab('ai')}
+          >
+            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Generated with AI</Text>
+          </Pressable>
         </View>
+
+        {displayCategories.length === 0 ? (
+          <Text style={{ textAlign: 'center', marginTop: 40, color: theme.colors.secondaryText }}>
+            No AI quizzes yet. Go to the Create Quiz tab!
+          </Text>
+        ) : (
+          <View style={styles.bentoGrid}>
+            {displayCategories.map(category => (
+              <View key={category.id} style={styles.bentoItem}>
+                <QuizCard 
+                  category={category} 
+                  onPressStart={() => handleStartQuiz(category.id)} 
+                />
+              </View>
+            ))}
+          </View>
+        )}
       </ScrollView>
     );
   };
 
-  const renderCoinJar = () => (
+  const renderCoinJar = () => {
+    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || selectedCategory;
+    return (
     <View style={{ position: 'relative' }}>
       <View style={styles.screenFolderTab}>
-        <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {selectedCategory}</Text>
+        <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
       </View>
       <View style={styles.coinJarContainer}>
         <FontAwesome5 
@@ -192,7 +230,8 @@ export const NewQuizScreen = () => {
         <Text style={styles.coinJarText}>{coinBalance}</Text>
       </View>
     </View>
-  );
+    );
+  };
 
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
@@ -239,6 +278,7 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.completedContainer}>
+        <SilverDust />
         <Card style={styles.completedCard}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             
@@ -448,4 +488,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...theme.shadows.soft,
   },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.lg,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.full,
+    padding: 4,
+    ...theme.shadows.soft,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: theme.borderRadius.full,
+  },
+  activeTab: {
+    backgroundColor: '#E5E7EB', // Silver grey
+  },
+  tabText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+  },
+  activeTabText: {
+    color: theme.colors.text,
+  }
 });

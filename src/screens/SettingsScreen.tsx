@@ -9,6 +9,7 @@ import { Button } from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
+import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 export const SettingsScreen = () => {
   const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge, totalQuizzesCompleted } = useProgress();
@@ -45,8 +46,10 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <ScreenWrapper>
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+    <View style={{ flex: 1 }}>
+      <AnimatedCubesBackground />
+      <ScreenWrapper transparent>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Achievements (Topic Progress) */}
         <TopicProgressList totalCompletions={totalQuizzesCompleted} />
 
@@ -77,8 +80,9 @@ export const SettingsScreen = () => {
             />
           </Card>
         )}
-      </ScrollView>
-    </ScreenWrapper>
+        </ScrollView>
+      </ScreenWrapper>
+    </View>
   );
 };
 
