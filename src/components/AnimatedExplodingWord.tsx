@@ -6,64 +6,91 @@ interface AnimatedExplodingWordProps {
   style?: StyleProp<TextStyle>;
 }
 
+// Seeded pseudo-random so it's always the same chaotic pattern
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+};
+
 export const AnimatedExplodingWord: React.FC<AnimatedExplodingWordProps> = ({ word, style }) => {
   const letters = word.split('');
   const { width } = useWindowDimensions();
 
-  // Each letter gets its own animated value
-  const animations = useRef(letters.map(() => new Animated.Value(0))).current;
-  // Track each letter's measured x position so we can compute offset from top-left
-  const positions = useRef<number[]>(letters.map(() => 0));
-  const containerRef = useRef<View>(null);
+  // Separate anim values for position/opacity and rotation
+  const posAnims = useRef(letters.map(() => new Animated.Value(0))).current;
+  const rotAnims = useRef(letters.map(() => new Animated.Value(0))).current;
 
   useEffect(() => {
-    animations.forEach(anim => anim.setValue(0));
+    posAnims.forEach(a => a.setValue(0));
+    rotAnims.forEach(a => a.setValue(0));
 
-    // Stagger each letter so they land one by one
-    const anims = animations.map((anim, index) =>
-      Animated.timing(anim, {
+    const anims = letters.map((_, index) => {
+      const delay = index * 110; // slow stagger so each letter is distinct
+
+      // Position: slow chaotic flight then snap to rest
+      const posAnim = Animated.timing(posAnims[index], {
         toValue: 1,
-        duration: 700,
-        delay: index * 90,
-        easing: Easing.bezier(0.16, 1, 0.3, 1), // smooth spring-like ease out
+        duration: 900,
+        delay,
+        easing: Easing.bezier(0.2, 0, 0.1, 1), // slow start, fast finish snap
         useNativeDriver: true,
-      })
-    );
+      });
+
+      // Rotation: long spin that rapidly decelerates into place
+      const rotAnim = Animated.timing(rotAnims[index], {
+        toValue: 1,
+        duration: 900,
+        delay,
+        easing: Easing.out(Easing.quad),
+        useNativeDriver: true,
+      });
+
+      return Animated.parallel([posAnim, rotAnim]);
+    });
 
     Animated.parallel(anims).start();
   }, [word]);
 
   return (
-    <View ref={containerRef} style={styles.container}>
+    <View style={styles.container}>
       {letters.map((letter, index) => {
-        // Each letter starts at the top-left of the screen relative to its final position.
-        // We use a large negative offset pointing toward top-left.
-        // The further right the letter is in the word, the further left it needs to travel.
-        // We approximate: letter at index `i` sits roughly i * ~28px from the start of the word.
-        // Starting position is top-left of screen, so translateX ≈ -(letterX from left edge of word + word's x from screen left)
-        // Since we don't know exact position at render time, we use a proportional estimate.
-        const estimatedLetterOffsetX = index * 26; // rough px offset within the word
-        // We want all letters to come from roughly (0,0) of the screen viewport.
-        // The word is centered, so it starts ~width/2 - wordWidth/2 from the left.
-        // wordWidth ≈ letters.length * 26
-        const wordStart = width / 2 - (letters.length * 26) / 2;
-        const absoluteLetterX = wordStart + estimatedLetterOffsetX;
-        const startTranslateX = -absoluteLetterX; // how far left to go to reach x=0
-        const startTranslateY = -300; // start well above the screen
+        // Chaotic starting scatter — different for each letter using seeded random
+        const r1 = seededRandom(index * 3);
+        const r2 = seededRandom(index * 3 + 1);
+        const r3 = seededRandom(index * 3 + 2);
 
-        const translateX = animations[index].interpolate({
+        // Letters scatter from a wide area around the top-left
+        // Mix of close and far letters for chaos
+        const startX = -(r1 * 320 + 80);      // -80 to -400
+        const startY = -(r2 * 280 + 60);      // -60 to -340
+
+        // Spin amount: 1 to 3 full rotations, direction varies
+        const spinDir = index % 2 === 0 ? 1 : -1;
+        const spinDeg = spinDir * (360 + r3 * 720); // 360-1080 degrees of spin
+
+        const translateX = posAnims[index].interpolate({
           inputRange: [0, 1],
-          outputRange: [startTranslateX, 0],
+          outputRange: [startX, 0],
         });
 
-        const translateY = animations[index].interpolate({
+        const translateY = posAnims[index].interpolate({
           inputRange: [0, 1],
-          outputRange: [startTranslateY, 0],
+          outputRange: [startY, 0],
         });
 
-        const opacity = animations[index].interpolate({
-          inputRange: [0, 0.15, 1],
-          outputRange: [0, 1, 1],
+        const rotate = rotAnims[index].interpolate({
+          inputRange: [0, 1],
+          outputRange: [`${spinDeg}deg`, '0deg'],
+        });
+
+        const opacity = posAnims[index].interpolate({
+          inputRange: [0, 0.1, 0.85, 1],
+          outputRange: [0, 1, 1, 1],
+        });
+
+        const scale = posAnims[index].interpolate({
+          inputRange: [0, 0.6, 0.85, 1],
+          outputRange: [0.3, 1.15, 0.95, 1], // slight overshoot then settle
         });
 
         return (
@@ -76,6 +103,8 @@ export const AnimatedExplodingWord: React.FC<AnimatedExplodingWordProps> = ({ wo
                 transform: [
                   { translateX },
                   { translateY },
+                  { rotate },
+                  { scale },
                 ],
               },
             ]}
