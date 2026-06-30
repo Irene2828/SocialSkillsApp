@@ -1,11 +1,10 @@
-// DM Sans — premium geometric sans-serif used by Notion, Linear, Vercel.
-// More refined and distinctive than Inter while being equally versatile.
+// Instrument Sans — premium geometric sans-serif, narrow and elegant, close to Inter but more upscale.
 export const FONTS = {
-  regular: 'DMSans_400Regular',
-  regularItalic: 'DMSans_400Regular_Italic',
-  medium: 'DMSans_500Medium',
-  semiBold: 'DMSans_600SemiBold',
-  bold: 'DMSans_700Bold',
+  regular: 'InstrumentSans_400Regular',
+  regularItalic: 'InstrumentSans_400Regular_Italic',
+  medium: 'InstrumentSans_500Medium',
+  semiBold: 'InstrumentSans_600SemiBold',
+  bold: 'InstrumentSans_700Bold',
 };
 
 export const theme = {

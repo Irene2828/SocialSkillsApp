@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   },
   startTitle: {
     ...theme.typography.heading,
+    fontFamily: 'InstrumentSans_500Medium',
     fontSize: 42,
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,

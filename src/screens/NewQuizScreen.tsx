@@ -1,5 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
@@ -22,6 +24,17 @@ import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { SilverDust } from '../components/SilverDust';
 
 type QuizState = 'selection' | 'in-progress' | 'completed';
+type QuizLevel = {
+  label: string;
+  difficulty: string;
+  questionCount: number;
+};
+
+const QUIZ_LEVELS: QuizLevel[] = [
+  { label: 'Level Easy', difficulty: 'Easy', questionCount: 5 },
+  { label: 'Level 2', difficulty: 'Medium', questionCount: 10 },
+  { label: 'Level 3', difficulty: 'Challenge', questionCount: 20 },
+];
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
@@ -39,8 +52,105 @@ export const NewQuizScreen = () => {
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
+  const [showLevelPicker, setShowLevelPicker] = useState(false);
+  const [pendingCategory, setPendingCategory] = useState<Category | null>(null);
   
   const [undoToast, setUndoToast] = useState<{ category: QuizCategory, questions: Question[] } | null>(null);
+
+  const [showAiMenu, setShowAiMenu] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [loadingText, setLoadingText] = useState('Understanding the concept...');
+
+  useEffect(() => {
+    if (aiGenerating) {
+      const texts = [
+        'Understanding the concept...',
+        'Creating original questions...',
+        'Building your quiz...'
+      ];
+      let i = 0;
+      const interval = setInterval(() => {
+        i = (i + 1) % texts.length;
+        setLoadingText(texts[i]);
+      }, 2500);
+      return () => clearInterval(interval);
+    }
+  }, [aiGenerating]);
+
+  const handleGenerate = async (base64Data: string) => {
+    setLoadingText('Understanding the concept...');
+    setAiGenerating(true);
+    try {
+      const dataUri = `data:image/jpeg;base64,${base64Data}`;
+      const quiz = await generateQuizFromImage(dataUri);
+      
+      const newCategoryId = `custom_ai_${Date.now()}`;
+      const newCategory = {
+        id: newCategoryId,
+        title: quiz.concept,
+        description: 'AI Generated Quiz',
+        icon: 'sparkles',
+        color: '#A78BFA',
+        isCustom: true
+      };
+      
+      const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+        id: `${newCategoryId}-q${index}`,
+        category: newCategoryId,
+        difficulty: 'Medium',
+        scenario: q.question,
+        options: q.options,
+        correctAnswerIndex: q.correctIndex,
+        explanation: q.explanation || 'Great job!'
+      }));
+      
+      addCustomQuiz(newCategory, questionsWithCategory);
+      setAiGenerating(false);
+      Alert.alert('Success', 'AI Quiz generated and added to your library!');
+    } catch (error: any) {
+      setAiGenerating(false);
+      Alert.alert('Error', error.message || 'Failed to generate quiz.');
+    }
+  };
+
+  const pickImage = async () => {
+    setShowAiMenu(false);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets[0]?.base64) {
+      handleGenerate(result.assets[0].base64);
+    }
+  };
+
+  const takePhoto = async () => {
+    setShowAiMenu(false);
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets[0]?.base64) {
+      handleGenerate(result.assets[0].base64);
+    }
+  };
 
   const handleDeletePinChange = (text: string) => {
     const newPin = text.replace(/[^0-9]/g, '');
@@ -113,6 +223,22 @@ export const NewQuizScreen = () => {
     return arr;
   };
 
+  const buildQuestionSet = (questions: Question[], questionCount: number): Question[] => {
+    if (questions.length === 0) return [];
+
+    const selected: Question[] = [];
+    while (selected.length < questionCount) {
+      const round = shuffleArray(questions);
+      const remaining = questionCount - selected.length;
+      selected.push(...round.slice(0, remaining));
+    }
+
+    return selected.map((question, index) => ({
+      ...question,
+      id: `${question.id}-${index}`,
+    }));
+  };
+
   const handleStartQuickQuiz = () => {
     const shuffled = shuffleArray(allQuestions);
     const selected = shuffled.slice(0, 5);
@@ -125,13 +251,22 @@ export const NewQuizScreen = () => {
     setQuizState('in-progress');
   };
 
-  const handleStartQuiz = (category: Category) => {
+  const handleSelectQuizCategory = (category: Category) => {
+    setPendingCategory(category);
+    setShowLevelPicker(true);
+  };
+
+  const handleCloseLevelPicker = () => {
+    setShowLevelPicker(false);
+    setPendingCategory(null);
+  };
+
+  const handleStartQuiz = (category: Category, questionCount: number) => {
     let categoryQuestions = allQuestions.filter(q => q.category === category);
     if (categoryQuestions.length === 0) {
       categoryQuestions = customQuestions.filter(q => q.category === category);
     }
-    const shuffled = shuffleArray(categoryQuestions);
-    const selected = shuffled.slice(0, 5);
+    const selected = buildQuestionSet(categoryQuestions, questionCount);
 
     setSelectedCategory(category);
     setCurrentQuestions(selected);
@@ -139,6 +274,13 @@ export const NewQuizScreen = () => {
     setScore(0);
     setIsProcessing(false);
     setQuizState('in-progress');
+  };
+
+  const handleSelectLevel = (level: QuizLevel) => {
+    if (!pendingCategory) return;
+    handleStartQuiz(pendingCategory, level.questionCount);
+    setShowLevelPicker(false);
+    setPendingCategory(null);
   };
 
   const handleContinue = async (isCorrect: boolean) => {
@@ -152,7 +294,7 @@ export const NewQuizScreen = () => {
     } else {
       setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
-      let coinsEarned = 5;
+      let coinsEarned = currentQuestions.length;
       
       if (coinsEarned > 0) {
         addCoins(coinsEarned);
@@ -201,24 +343,43 @@ export const NewQuizScreen = () => {
         </View>
 
         {displayCategories.length === 0 ? (
-          <Text style={{ textAlign: 'center', marginTop: 40, color: theme.colors.secondaryText }}>
-            No AI quizzes yet. Go to the Create Quiz tab!
-          </Text>
+          <View style={styles.emptyAiContainer}>
+            <Text style={styles.emptyAiText}>No AI quizzes yet.</Text>
+            <Text style={styles.emptyAiSub}>Create your first one from a photo or concept!</Text>
+            <View style={styles.createAiButtonContainer}>
+              <Button
+                title="Create AI Quiz"
+                style={styles.createAiButton}
+                onPress={() => setShowAiMenu(true)}
+              />
+            </View>
+          </View>
         ) : (
-          <View style={styles.bentoGrid}>
-            {displayCategories.map(category => (
-              <View key={category.id} style={styles.bentoItem}>
-                <QuizCard 
-                  category={category} 
-                  onPressStart={() => handleStartQuiz(category.id)} 
-                  onDelete={category.isCustom ? () => {
-                    setQuizToDelete(category.id);
-                    setShowDeletePin(true);
-                  } : undefined}
+          <>
+            <View style={styles.bentoGrid}>
+              {displayCategories.map(category => (
+                <View key={category.id} style={styles.bentoItem}>
+                  <QuizCard 
+                    category={category} 
+                    onPressStart={() => handleSelectQuizCategory(category.id)} 
+                    onDelete={category.isCustom ? () => {
+                      setQuizToDelete(category.id);
+                      setShowDeletePin(true);
+                    } : undefined}
+                  />
+                </View>
+              ))}
+            </View>
+            {activeTab === 'ai' && (
+              <View style={styles.createAiButtonContainer}>
+                <Button
+                  title="Create New AI Quiz"
+                  style={styles.createAiButton}
+                  onPress={() => setShowAiMenu(true)}
                 />
               </View>
-            ))}
-          </View>
+            )}
+          </>
         )}
       </ScrollView>
     );
@@ -252,8 +413,7 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          {/* Centered Topic Tab */}
-          <View style={{ alignItems: 'center', marginBottom: -24, zIndex: 1 }}>
+          <View style={{ alignItems: 'center', marginBottom: 16, zIndex: 1 }}>
             <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 'auto' }]}>
               <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
@@ -294,7 +454,7 @@ export const NewQuizScreen = () => {
     else if (score >= total * 0.7) message = "Great job, Social Explorer!";
     else if (score >= total * 0.5) message = "You're learning fast!";
 
-    let coinsEarned = 5;
+    let coinsEarned = total;
 
     return (
       <View style={styles.completedContainer}>
@@ -353,6 +513,58 @@ export const NewQuizScreen = () => {
         </View>
       </ScreenWrapper>
 
+      {/* AI Quiz creation menu modal */}
+      <Modal visible={showAiMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.levelCard} onPress={() => {}}>
+              <Text style={styles.levelTitle}>Create AI Quiz</Text>
+              <Text style={[styles.questionCaption, { marginBottom: 24, paddingHorizontal: 16 }]}>
+                Upload a page or take a photo, and AI will create original quiz questions based on the concept.
+              </Text>
+              
+              <Pressable
+                style={styles.levelOption}
+                onPress={takePhoto}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 12 }} />
+                  <View>
+                    <Text style={styles.levelOptionTitle}>Take Photo</Text>
+                    <Text style={styles.levelOptionSub}>Use your camera</Text>
+                  </View>
+                </View>
+              </Pressable>
+
+              <Pressable
+                style={styles.levelOption}
+                onPress={pickImage}
+              >
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Ionicons name="image-outline" size={24} color={theme.colors.text} style={{ marginRight: 12 }} />
+                  <View>
+                    <Text style={styles.levelOptionTitle}>Upload from Gallery</Text>
+                    <Text style={styles.levelOptionSub}>Choose an existing photo</Text>
+                  </View>
+                </View>
+              </Pressable>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* AI Quiz generating loader modal */}
+      <Modal visible={aiGenerating} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <Card style={[styles.levelCard, { alignItems: 'center', paddingVertical: 40 }]}>
+            <Ionicons name="sparkles" size={64} color={theme.colors.primary} />
+            <Text style={[styles.levelTitle, { marginTop: 16, marginBottom: 8 }]}>Generating Quiz...</Text>
+            <Text style={[styles.questionCaption, { marginBottom: 24 }]}>{loadingText}</Text>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </Card>
+        </View>
+      </Modal>
+
       {undoToast && (
         <View style={{ position: 'absolute', bottom: 20, left: 20, right: 20, backgroundColor: '#374151', padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000, ...theme.shadows.soft }}>
           <Text style={{ color: '#fff', fontSize: 16 }}>Removed from library</Text>
@@ -382,13 +594,36 @@ export const NewQuizScreen = () => {
                   keyboardType="number-pad"
                   maxLength={4}
                   autoFocus
-                  placeholder="1111"
+                  placeholder="****"
                   autoComplete="off"
                   autoCorrect={false}
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
               </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      <Modal visible={showLevelPicker} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={handleCloseLevelPicker}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.levelCard} onPress={() => {}}>
+              <Text style={styles.levelTitle}>Choose Quiz Level</Text>
+              {QUIZ_LEVELS.map(level => (
+                <Pressable
+                  key={level.label}
+                  style={styles.levelOption}
+                  onPress={() => handleSelectLevel(level)}
+                >
+                  <View>
+                    <Text style={styles.levelOptionTitle}>{level.label}</Text>
+                    <Text style={styles.levelOptionSub}>{level.difficulty}</Text>
+                  </View>
+                  <Text style={styles.levelQuestionCount}>{level.questionCount} questions</Text>
+                </Pressable>
+              ))}
             </Pressable>
           </View>
         </Pressable>
@@ -421,6 +656,22 @@ const styles = StyleSheet.create({
   },
   bentoItem: {
     width: '47.5%',
+  },
+  emptyAiContainer: {
+    alignItems: 'center',
+    paddingTop: theme.spacing.xl,
+  },
+  emptyAiText: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    textAlign: 'center',
+    color: theme.colors.text,
+  },
+  emptyAiSub: {
+    ...theme.typography.body,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
+    marginTop: theme.spacing.xs,
   },
   inProgressContainer: {
     flex: 1,
@@ -477,6 +728,14 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: theme.spacing.sm,
   },
+  createAiButton: {
+    width: '100%',
+  },
+  createAiButtonContainer: {
+    width: '100%',
+    marginTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
+  },
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
   },
@@ -514,7 +773,7 @@ const styles = StyleSheet.create({
   },
   screenFolderTabText: {
     ...theme.typography.body,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     color: theme.colors.text,
   },
@@ -575,6 +834,47 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     marginBottom: 16,
+    color: theme.colors.text,
+  },
+  levelCard: {
+    width: '100%',
+    maxWidth: 400,
+    padding: theme.spacing.xl,
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    ...theme.shadows.soft,
+  },
+  levelTitle: {
+    ...theme.typography.heading,
+    fontSize: 22,
+    textAlign: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  levelOption: {
+    minHeight: 72,
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.border,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  levelOptionTitle: {
+    ...theme.typography.button,
+    color: theme.colors.text,
+  },
+  levelOptionSub: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    marginTop: 2,
+  },
+  levelQuestionCount: {
+    ...theme.typography.button,
+    fontSize: 14,
     color: theme.colors.text,
   },
   tabContainer: {

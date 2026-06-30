@@ -7,12 +7,12 @@ import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
 import {
   useFonts,
-  DMSans_400Regular,
-  DMSans_400Regular_Italic,
-  DMSans_500Medium,
-  DMSans_600SemiBold,
-  DMSans_700Bold,
-} from '@expo-google-fonts/dm-sans';
+  InstrumentSans_400Regular,
+  InstrumentSans_400Regular_Italic,
+  InstrumentSans_500Medium,
+  InstrumentSans_600SemiBold,
+  InstrumentSans_700Bold,
+} from '@expo-google-fonts/instrument-sans';
 import { View, ActivityIndicator } from 'react-native';
 
 const RootNavigator = () => {
@@ -21,11 +21,11 @@ const RootNavigator = () => {
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    DMSans_400Regular,
-    DMSans_400Regular_Italic,
-    DMSans_500Medium,
-    DMSans_600SemiBold,
-    DMSans_700Bold,
+    InstrumentSans_400Regular,
+    InstrumentSans_400Regular_Italic,
+    InstrumentSans_500Medium,
+    InstrumentSans_600SemiBold,
+    InstrumentSans_700Bold,
   });
 
   if (!fontsLoaded) {

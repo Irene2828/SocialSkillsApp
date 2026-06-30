@@ -84,15 +84,15 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
           style={[styles.actionBtn, styles.editBtn]}
           onPress={() => { close(); onEdit(reward); }}
         >
-          <Ionicons name="pencil" size={22} color="#fff" />
-          <Text style={styles.actionText}>Edit</Text>
+          <Ionicons name="pencil" size={22} color="#111827" />
+          <Text style={[styles.actionText, styles.editActionText]}>Edit</Text>
         </Pressable>
         <Pressable
           style={[styles.actionBtn, styles.deleteBtn]}
           onPress={() => { close(); onDelete(reward); }}
         >
-          <Ionicons name="trash-outline" size={22} color="#fff" />
-          <Text style={styles.actionText}>Delete</Text>
+          <Ionicons name="trash-outline" size={22} color="#111827" />
+          <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
       </View>
 
@@ -156,20 +156,25 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   editBtn: {
-    backgroundColor: '#6366F1', // indigo
+    backgroundColor: '#F3F4F6', // Footer Grey
     borderTopLeftRadius: theme.borderRadius.lg,
     borderBottomLeftRadius: theme.borderRadius.lg,
   },
   deleteBtn: {
-    backgroundColor: '#EF4444', // red
+    backgroundColor: '#BEF264', // Brand Green
     borderTopRightRadius: theme.borderRadius.lg,
     borderBottomRightRadius: theme.borderRadius.lg,
   },
   actionText: {
-    color: '#fff',
     fontSize: 12,
     fontWeight: '600',
     letterSpacing: 0.3,
+  },
+  editActionText: {
+    color: '#111827',
+  },
+  deleteActionText: {
+    color: '#111827',
   },
   card: {
     backgroundColor: theme.colors.white,

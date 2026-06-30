@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
   },
   balanceNumber: {
     ...theme.typography.heading,
+    fontFamily: 'InstrumentSans_500Medium',
     fontSize: 54,
     fontWeight: '400',
     color: theme.colors.text,
@@ -79,6 +80,7 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     ...theme.typography.heading,
+    fontFamily: 'InstrumentSans_500Medium',
     fontSize: 24,
     color: theme.colors.text,
     fontWeight: '500',

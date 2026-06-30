@@ -4,7 +4,7 @@ import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
 
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   scenarioText: {
     ...theme.typography.heading,
-    fontFamily: 'DMSans_400Regular_Italic',
+    fontFamily: FONTS.regularItalic,
     fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     ...theme.typography.heading,
-    fontFamily: 'DMSans_400Regular_Italic',
+    fontFamily: FONTS.regularItalic,
     fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',

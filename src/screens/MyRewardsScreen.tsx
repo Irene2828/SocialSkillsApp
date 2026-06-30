@@ -71,6 +71,61 @@ export const MyRewardsScreen = () => {
     }
   };
 
+  const handleDeletePinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setDeletePin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        if (rewardToDelete) {
+          deleteReward(rewardToDelete.id);
+          Alert.alert('Success', 'Reward deleted.');
+        }
+        setShowDeletePin(false);
+        setDeletePin('');
+        setRewardToDelete(null);
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setDeletePin('');
+      }
+    }
+  };
+
+  const handleEditPinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setEditPin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        setShowEditPin(false);
+        setEditPin('');
+        setEditTitle(rewardToEdit?.title || '');
+        setEditCost(String(rewardToEdit?.cost || ''));
+        setShowEditForm(true);
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setEditPin('');
+      }
+    }
+  };
+
+  const handleSaveEdit = () => {
+    const costNum = parseInt(editCost, 10);
+    if (!editTitle.trim() || isNaN(costNum) || costNum <= 0) {
+      Alert.alert('Invalid Input', 'Please enter a valid reward name and a cost greater than 0.');
+      return;
+    }
+
+    if (rewardToEdit) {
+      updateReward(rewardToEdit.id, { title: editTitle.trim(), cost: costNum });
+      Alert.alert('Success', 'Reward updated.');
+    }
+    setShowEditForm(false);
+    setRewardToEdit(null);
+    setEditTitle('');
+    setEditCost('');
+  };
+
   const handlePinChange = (text: string) => {
     const newPin = text.replace(/[^0-9]/g, '');
     setPin(newPin);
@@ -242,13 +297,105 @@ export const MyRewardsScreen = () => {
                   keyboardType="number-pad"
                   maxLength={4}
                   autoFocus
-                  placeholder="1111"
+                  placeholder="****"
                   autoComplete="off"
                   autoCorrect={false}
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
               </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Delete PIN Modal */}
+      <Modal visible={showDeletePin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowDeletePin(false);
+          setDeletePin('');
+          setRewardToDelete(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <View style={styles.pinContainer}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={deletePin}
+                  onChangeText={handleDeletePinChange}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="oneTimeCode"
+                />
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Edit PIN Modal */}
+      <Modal visible={showEditPin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowEditPin(false);
+          setEditPin('');
+          setRewardToEdit(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <View style={styles.pinContainer}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Edit</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={editPin}
+                  onChangeText={handleEditPinChange}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="oneTimeCode"
+                />
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Edit Details Form Modal */}
+      <Modal visible={showEditForm} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowEditForm(false);
+          setRewardToEdit(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <Text style={styles.pinTitle}>Edit Reward</Text>
+              <TextInput
+                style={[styles.editInput, { marginBottom: 16 }]}
+                value={editTitle}
+                onChangeText={setEditTitle}
+                placeholder="Reward Name"
+              />
+              <TextInput
+                style={[styles.editInput, { marginBottom: 24 }]}
+                value={editCost}
+                onChangeText={setEditCost}
+                placeholder="Cost"
+                keyboardType="numeric"
+              />
+              <Button
+                title="Save Changes"
+                onPress={handleSaveEdit}
+                style={{ width: '100%', marginBottom: 12 }}
+              />
             </Pressable>
           </View>
         </Pressable>
@@ -407,5 +554,28 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
     textAlign: 'center',
     marginTop: theme.spacing.xl,
-  }
+  },
+  pinCard: {
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.xxl,
+    borderRadius: 32,
+    zIndex: 1000,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    ...theme.shadows.soft,
+  },
+  editInput: {
+    width: '100%',
+    height: 48,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.md,
+    ...theme.typography.body,
+    backgroundColor: theme.colors.white,
+  },
 });

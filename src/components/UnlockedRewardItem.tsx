@@ -30,9 +30,14 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           Unlocked: {new Date(reward.timestamp).toLocaleDateString()}
         </Text>
       </View>
-      <View style={[styles.checkbox, reward.isFulfilled && styles.checkboxChecked]}>
-        {reward.isFulfilled && <Ionicons name="checkmark" size={16} color={theme.colors.white} />}
-      </View>
+      {reward.isFulfilled ? (
+        <View style={styles.receivedChip}>
+          <Ionicons name="checkmark-circle" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
+          <Text style={styles.receivedText}>Reward Received</Text>
+        </View>
+      ) : (
+        <View style={styles.checkbox} />
+      )}
     </Pressable>
   );
 };
