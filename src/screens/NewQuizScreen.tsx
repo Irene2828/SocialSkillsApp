@@ -8,7 +8,7 @@ import { QuestionView } from '../components/QuestionView';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
 import { theme } from '../theme';
-import { QUIZ_CATEGORIES, Category, Question } from '../data/types';
+import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
@@ -26,7 +26,7 @@ type QuizState = 'selection' | 'in-progress' | 'completed';
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
-  const { customCategories, customQuestions, removeCustomQuiz } = useQuizContext();
+  const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz } = useQuizContext();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
 
@@ -39,6 +39,8 @@ export const NewQuizScreen = () => {
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
+  
+  const [undoToast, setUndoToast] = useState<{ category: QuizCategory, questions: Question[] } | null>(null);
 
   const handleDeletePinChange = (text: string) => {
     const newPin = text.replace(/[^0-9]/g, '');
@@ -47,7 +49,13 @@ export const NewQuizScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (quizToDelete) {
+          const cat = customCategories.find(c => c.id === quizToDelete);
+          const qs = customQuestions.filter(q => q.category === quizToDelete);
           removeCustomQuiz(quizToDelete);
+          if (cat) {
+            setUndoToast({ category: cat, questions: qs });
+            setTimeout(() => setUndoToast(null), 5000);
+          }
         }
         setShowDeletePin(false);
         setDeletePin('');
@@ -252,7 +260,7 @@ export const NewQuizScreen = () => {
           </View>
           <Header 
             title=""
-            style={{ marginTop: 24, paddingHorizontal: 0 }} 
+            style={{ marginTop: 0, paddingTop: 12, marginBottom: 8, paddingHorizontal: 0 }} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
@@ -265,7 +273,7 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <Text style={styles.questionCaption}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+          <Text style={[styles.questionCaption, { marginTop: 2, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
@@ -344,6 +352,18 @@ export const NewQuizScreen = () => {
           {quizState === 'completed' && renderCompleted()}
         </View>
       </ScreenWrapper>
+
+      {undoToast && (
+        <View style={{ position: 'absolute', bottom: 20, left: 20, right: 20, backgroundColor: '#374151', padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000, ...theme.shadows.soft }}>
+          <Text style={{ color: '#fff', fontSize: 16 }}>Removed from library</Text>
+          <Pressable onPress={() => {
+            addCustomQuiz(undoToast.category, undoToast.questions);
+            setUndoToast(null);
+          }}>
+            <Text style={{ color: theme.colors.primary, fontSize: 16, fontWeight: 'bold' }}>Undo</Text>
+          </Pressable>
+        </View>
+      )}
 
       <Modal visible={showDeletePin} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => {

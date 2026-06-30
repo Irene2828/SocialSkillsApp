@@ -5,7 +5,7 @@ import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
 import { Ionicons } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
-import { MarqueeText } from './MarqueeText';
+
 
 interface QuizCardProps {
   category: QuizCategory;
@@ -39,8 +39,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
           </View>
         </View>
-        <View style={{ width: '100%', overflow: 'hidden' }}>
-          <MarqueeText text={category.title} style={styles.title} />
+        <View style={{ width: '100%' }}>
+          <Text 
+            style={styles.title} 
+            numberOfLines={3} 
+            adjustsFontSizeToFit 
+            minimumFontScale={0.8}
+          >
+            {category.title}
+          </Text>
         </View>
         {onDelete && (
           <View style={{ position: 'absolute', right: 4, top: -8, zIndex: 100, elevation: 10 }}>

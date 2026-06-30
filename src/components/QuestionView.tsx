@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Modal, Image } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -18,14 +18,21 @@ interface QuestionViewProps {
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
+  const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 380;
+
+  if (question.id !== currentQuestionId) {
+    setSelectedIndex(null);
+    setHasFailed(false);
+    setCurrentQuestionId(question.id);
+  }
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
 
   // Reset state and trigger animation when question changes
   useEffect(() => {
-    setSelectedIndex(null);
-    setHasFailed(false);
     fadeAnim.setValue(0);
     slideAnim.setValue(10);
     
@@ -66,9 +73,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
           <Card style={styles.scenarioCard}>
-            <Text style={styles.scenarioText}>{question.scenario}</Text>
+            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }]}>{question.scenario}</Text>
           {question.prompt && (
-            <Text style={styles.promptText}>{question.prompt}</Text>
+            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }]}>{question.prompt}</Text>
           )}
           </Card>
         </View>
