@@ -1,6 +1,6 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
@@ -27,7 +27,7 @@ export const AppNavigator = () => {
           } else if (route.name === 'NewQuiz') {
             iconName = focused ? 'bulb' : 'bulb-outline';
           } else if (route.name === 'MyRewards') {
-            iconName = focused ? 'cash' : 'cash-outline';
+            return <FontAwesome5 name="coins" size={size - 2} color={color} />;
           } else if (route.name === 'AIQuiz') {
             iconName = focused ? 'camera' : 'camera-outline';
           }
@@ -45,6 +45,7 @@ export const AppNavigator = () => {
           height: height,
           paddingBottom: paddingBottom,
           paddingTop: 8,
+          width: '100%',
         },
       })}
     >

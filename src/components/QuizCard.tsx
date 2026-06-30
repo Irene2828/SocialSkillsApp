@@ -42,9 +42,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
         <View style={{ width: '100%' }}>
           <Text 
             style={styles.title} 
-            numberOfLines={1} 
-            adjustsFontSizeToFit 
-            minimumFontScale={0.7}
           >
             {category.title}
           </Text>
