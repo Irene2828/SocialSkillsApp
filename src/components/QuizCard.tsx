@@ -43,7 +43,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
           <MarqueeText text={category.title} style={styles.title} />
         </View>
         {onDelete && (
-          <View style={{ position: 'absolute', right: -8, top: -8, zIndex: 100, elevation: 10 }}>
+          <View style={{ position: 'absolute', right: 4, top: -8, zIndex: 100, elevation: 10 }}>
             <ScalePressable 
               style={{ padding: 8 }} 
               onPress={(e: any) => {
