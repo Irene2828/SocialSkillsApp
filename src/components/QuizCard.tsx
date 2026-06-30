@@ -33,17 +33,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             <Text style={styles.newBadgeText}>NEW</Text>
           </View>
         )}
-        {onDelete && (
-          <ScalePressable 
-            style={{ position: 'absolute', right: 4, top: 4, padding: 8, zIndex: 10 }} 
-            onPress={(e: any) => {
-              if (e && e.stopPropagation) e.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Ionicons name="remove" size={28} color={theme.colors.error} />
-          </ScalePressable>
-        )}
+
         <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', position: 'relative', marginBottom: 16 }}>
           <View style={[styles.iconContainer, { marginBottom: 0 }]}>
             <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
@@ -52,6 +42,17 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
         <View style={{ width: '100%', overflow: 'hidden' }}>
           <MarqueeText text={category.title} style={styles.title} />
         </View>
+        {onDelete && (
+          <ScalePressable 
+            style={{ position: 'absolute', right: -12, top: -12, padding: 8, zIndex: 100, elevation: 10 }} 
+            onPress={(e: any) => {
+              if (e && e.stopPropagation) e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Ionicons name="remove" size={28} color={theme.colors.error} />
+          </ScalePressable>
+        )}
       </Card>
     </ScalePressable>
   );
