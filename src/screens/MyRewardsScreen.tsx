@@ -23,7 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 export const MyRewardsScreen = () => {
-  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward } = useRewards();
+  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
@@ -46,6 +46,14 @@ export const MyRewardsScreen = () => {
   const [editTitle, setEditTitle] = useState('');
   const [editCost, setEditCost] = useState('');
   const [showEditForm, setShowEditForm] = useState(false);
+  
+  // Add flow
+  const [showAddPin, setShowAddPin] = useState(false);
+  const [addPin, setAddPin] = useState('');
+  const [addTitle, setAddTitle] = useState('');
+  const [addCost, setAddCost] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
+
   const [successToast, setSuccessToast] = useState<{ message: string } | null>(null);
   const [highlightFirstItem, setHighlightFirstItem] = useState(false);
 
@@ -92,6 +100,38 @@ export const MyRewardsScreen = () => {
         setDeletePin('');
       }
     }
+  };
+
+  const handleAddPinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setAddPin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        setShowAddPin(false);
+        setAddPin('');
+        setShowAddForm(true);
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setAddPin('');
+      }
+    }
+  };
+
+  const handleSaveAdd = () => {
+    const costNum = parseInt(addCost, 10);
+    if (!addTitle.trim() || isNaN(costNum) || costNum <= 0) {
+      Alert.alert('Invalid Input', 'Please enter a valid reward name and a cost greater than 0.');
+      return;
+    }
+
+    addReward({ title: addTitle.trim(), cost: costNum });
+    setSuccessToast({ message: 'Reward added!' });
+    setTimeout(() => setSuccessToast(null), 3000);
+    
+    setShowAddForm(false);
+    setAddTitle('');
+    setAddCost('');
   };
 
   const handleEditPinChange = (text: string) => {
@@ -230,7 +270,6 @@ export const MyRewardsScreen = () => {
         <Header title="My Results" style={{ paddingHorizontal: 0, marginTop: 0, marginBottom: 8, paddingBottom: 8 }} />
         <View style={styles.topSection}>
           <CoinBalanceCard balance={coinBalance} />
-          {isParentModeUnlocked && <AddRewardForm />}
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
@@ -251,12 +290,19 @@ export const MyRewardsScreen = () => {
 
         <View style={styles.bentoSection}>
           {activeTab === 'available' ? (
-            <RewardList 
-              rewards={rewards} 
-              onRedeemSuccess={setRedeemedReward}
-              onEdit={(reward) => { setRewardToEdit(reward); setShowEditPin(true); }}
-              onDelete={(reward) => { setRewardToDelete(reward); setShowDeletePin(true); }}
-            />
+            <View>
+              <RewardList 
+                rewards={rewards} 
+                onRedeemSuccess={setRedeemedReward}
+                onEdit={(reward) => { setRewardToEdit(reward); setShowEditPin(true); }}
+                onDelete={(reward) => { setRewardToDelete(reward); setShowDeletePin(true); }}
+              />
+              <Button 
+                title="Add New Reward" 
+                onPress={() => setShowAddPin(true)} 
+                style={{ marginTop: 16, width: '100%', backgroundColor: '#BEF264' }}
+              />
+            </View>
           ) : (
             <View style={{ marginTop: 8 }}>
               {unlockedRewards.length === 0 ? (
@@ -416,6 +462,66 @@ export const MyRewardsScreen = () => {
         </Pressable>
       </Modal>
 
+      {/* Add PIN Modal */}
+      <Modal visible={showAddPin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowAddPin(false);
+          setAddPin('');
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <View style={styles.pinContainer}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Add</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={addPin}
+                  onChangeText={handleAddPinChange}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="oneTimeCode"
+                />
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Add Details Form Modal */}
+      <Modal visible={showAddForm} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowAddForm(false);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <Text style={styles.pinTitle}>Add New Reward</Text>
+              <TextInput
+                style={[styles.editInput, { marginBottom: 16 }]}
+                value={addTitle}
+                onChangeText={setAddTitle}
+                placeholder="Reward Name"
+              />
+              <TextInput
+                style={[styles.editInput, { marginBottom: 24 }]}
+                value={addCost}
+                onChangeText={setAddCost}
+                placeholder="Cost"
+                keyboardType="numeric"
+              />
+              <Button
+                title="Save Reward"
+                onPress={handleSaveAdd}
+                style={{ width: '100%', marginBottom: 12 }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
     </View>
   );
 };
@@ -472,7 +578,6 @@ const styles = StyleSheet.create({
   },
   successCard: {
     width: '100%',
-    maxWidth: 400,
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
@@ -527,6 +632,7 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontSize: 20,
     marginBottom: 24,
+    textAlign: 'center',
   },
   pinInput: {
     width: 120,
@@ -572,7 +678,6 @@ const styles = StyleSheet.create({
   },
   pinCard: {
     width: '100%',
-    maxWidth: 400,
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,

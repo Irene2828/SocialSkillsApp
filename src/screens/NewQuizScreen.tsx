@@ -31,9 +31,9 @@ type QuizLevel = {
 };
 
 const QUIZ_LEVELS: QuizLevel[] = [
-  { label: 'Level Easy', difficulty: 'Easy', questionCount: 5 },
-  { label: 'Level 2', difficulty: 'Medium', questionCount: 10 },
-  { label: 'Level 3', difficulty: 'Challenge', questionCount: 20 },
+  { label: 'Easy', difficulty: 'Easy', questionCount: 5 },
+  { label: 'Medium', difficulty: 'Medium', questionCount: 10 },
+  { label: 'Advanced', difficulty: 'Challenge', questionCount: 20 },
 ];
 
 export const NewQuizScreen = () => {
@@ -52,8 +52,9 @@ export const NewQuizScreen = () => {
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
-  const [showLevelPicker, setShowLevelPicker] = useState(false);
-  const [pendingCategory, setPendingCategory] = useState<Category | null>(null);
+  const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
+  
+  const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
   
   const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
 
@@ -265,16 +266,6 @@ export const NewQuizScreen = () => {
     setQuizState('in-progress');
   };
 
-  const handleSelectQuizCategory = (category: Category) => {
-    setPendingCategory(category);
-    setShowLevelPicker(true);
-  };
-
-  const handleCloseLevelPicker = () => {
-    setShowLevelPicker(false);
-    setPendingCategory(null);
-  };
-
   const handleStartQuiz = (category: Category, questionCount: number) => {
     let categoryQuestions = allQuestions.filter(q => q.category === category);
     if (categoryQuestions.length === 0) {
@@ -290,11 +281,8 @@ export const NewQuizScreen = () => {
     setQuizState('in-progress');
   };
 
-  const handleSelectLevel = (level: QuizLevel) => {
-    if (!pendingCategory) return;
-    handleStartQuiz(pendingCategory, level.questionCount);
-    setShowLevelPicker(false);
-    setPendingCategory(null);
+  const handleSelectQuizCategory = (category: Category) => {
+    handleStartQuiz(category, selectedLevel.questionCount);
   };
 
   const handleContinue = async (isCorrect: boolean) => {
@@ -339,7 +327,29 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Choose Quiz Topic" style={{ marginBottom: 0 }} />
+        <Header title="Select Quiz Level" style={{ marginBottom: 12, marginTop: 4 }} />
+        
+        <View style={styles.levelChipsContainer}>
+          {QUIZ_LEVELS.map((level) => {
+            const isSelected = selectedLevel.label === level.label;
+            return (
+              <Pressable
+                key={level.label}
+                style={[
+                  styles.levelChip,
+                  isSelected && styles.levelChipSelected
+                ]}
+                onPress={() => setSelectedLevel(level)}
+              >
+                <Text style={[styles.levelChipText, isSelected && styles.levelChipTextSelected]}>
+                  {level.label}
+                </Text>
+              </Pressable>
+            );
+          })}
+        </View>
+
+        <Header title="Choose Quiz Topic" style={{ marginBottom: 8, marginTop: 16 }} />
         
         <View style={styles.tabContainer}>
           <Pressable 
@@ -713,8 +723,10 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   completedCard: {
+    width: '100%',
     alignItems: 'center',
     paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
   },
   completedTitle: {
     ...theme.typography.heading,
@@ -848,6 +860,7 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontSize: 20,
     marginBottom: 24,
+    textAlign: 'center',
   },
   pinInput: {
     width: 120,
@@ -925,6 +938,36 @@ const styles = StyleSheet.create({
     letterSpacing: 0.15,
   },
   activeTabText: {
+    color: theme.colors.text,
+  },
+  levelChipsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    marginBottom: 8,
+    gap: 8,
+  },
+  levelChip: {
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    ...theme.shadows.soft,
+  },
+  levelChipSelected: {
+    borderColor: theme.colors.primary,
+    backgroundColor: '#F7FEE7', // Super light brand green
+  },
+  levelChipText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+    fontSize: 14,
+  },
+  levelChipTextSelected: {
     color: theme.colors.text,
   },
   toastWrapper: {

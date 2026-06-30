@@ -213,6 +213,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.typography.heading,
     fontSize: 18,
+    fontWeight: '500',
     marginBottom: 4,
     textTransform: 'capitalize',
   },

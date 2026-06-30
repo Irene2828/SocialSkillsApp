@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontFamily: 'InstrumentSans_500Medium',
     fontSize: 54,
-    fontWeight: '400',
+    fontWeight: '500',
     color: theme.colors.text,
     lineHeight: 60,
   },

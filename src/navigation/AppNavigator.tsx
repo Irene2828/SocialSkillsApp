@@ -6,6 +6,7 @@ import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { DesignQABoard } from '../screens/DesignQABoard';
 import { theme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -66,6 +67,14 @@ export const AppNavigator = () => {
         name="MyRewards" 
         component={MyRewardsScreen} 
         options={{ tabBarLabel: 'My Rewards' }}
+      />
+      <Tab.Screen 
+        name="DesignQA" 
+        component={DesignQABoard} 
+        options={{ 
+          tabBarButton: () => null,
+          tabBarStyle: { display: 'none' }
+        }}
       />
     </Tab.Navigator>
   );
