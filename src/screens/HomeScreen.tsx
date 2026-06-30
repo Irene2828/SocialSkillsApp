@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
@@ -41,6 +41,8 @@ const useAttentionLoop = () => {
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
   const { fadeAnim, scaleAnim } = useAttentionLoop();
+  const { height } = useWindowDimensions();
+  const isSmallScreen = height < 700;
 
   return (
     <View style={{ flex: 1 }}>
@@ -55,10 +57,10 @@ export const HomeScreen = () => {
           </Text>
         </View>
         <View style={styles.startContainer}>
-          <View style={styles.startContent}>
+          <View style={[styles.startContent, isSmallScreen && { marginBottom: 38 }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Text style={styles.startTitle}>Social </Text>
-              <AnimatedExplodingWord word="Explorer" style={styles.startTitle} />
+              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }]}>Social </Text>
+              <AnimatedExplodingWord word="Explorer" style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }]} />
             </View>
           </View>
 
