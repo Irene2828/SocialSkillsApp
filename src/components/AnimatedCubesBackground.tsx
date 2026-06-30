@@ -15,20 +15,36 @@ export const AnimatedCubesBackground: React.FC = () => {
       color: CUBE_COLORS[Math.floor(Math.random() * CUBE_COLORS.length)],
       duration: Math.random() * 10000 + 15000, // Very slow float: 15s to 25s
       rotationDir: Math.random() > 0.5 ? 1 : -1,
+      randomOffset: Math.random(), // 0 to 1
       animValue: new Animated.Value(0),
     }));
   });
 
   useEffect(() => {
-    const animations = cubes.map(c =>
-      Animated.loop(
+    const animations = cubes.map(c => {
+      c.animValue.setValue(c.randomOffset);
+      return Animated.sequence([
         Animated.timing(c.animValue, {
           toValue: 1,
-          duration: c.duration,
+          duration: c.duration * (1 - c.randomOffset),
           useNativeDriver: true,
-        })
-      )
-    );
+        }),
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(c.animValue, {
+              toValue: 0,
+              duration: 0,
+              useNativeDriver: true,
+            }),
+            Animated.timing(c.animValue, {
+              toValue: 1,
+              duration: c.duration,
+              useNativeDriver: true,
+            })
+          ])
+        )
+      ]);
+    });
     Animated.parallel(animations).start();
   }, [cubes]);
 

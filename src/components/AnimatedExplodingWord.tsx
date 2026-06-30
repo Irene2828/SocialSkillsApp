@@ -16,56 +16,35 @@ export const AnimatedExplodingWord: React.FC<AnimatedExplodingWordProps> = ({ wo
     // Reset animations
     animations.forEach(anim => anim.setValue(0));
 
-    // Create staggering falling/exploding animations
     const anims = animations.map((anim, index) => {
       return Animated.timing(anim, {
         toValue: 1,
-        duration: 400, // fast landing
-        delay: index * 50, // one by one fast
-        easing: Easing.out(Easing.back(1.5)), // gives a slight bounce when landing
+        duration: 800, // slower, more premium duration
+        delay: index * 60, // slightly more staggered
+        easing: Easing.bezier(0.25, 0.1, 0.25, 1), // smooth Apple-like easing
         useNativeDriver: true,
       });
     });
 
-    // Start staggered animation
-    Animated.stagger(40, anims).start();
+    Animated.parallel(anims).start();
   }, [word]);
 
   return (
     <View style={styles.container}>
       {letters.map((letter, index) => {
-        // Random starting positions from top left
-        // To make it look like "particles in space", give them large negative X and Y offsets
-        // and large rotations
-        
-        // We use pseudo-random but deterministic based on index so it looks same every time
-        const randomX = -150 - (index * 30); 
-        const randomY = -200 - (index * 40);
-        const randomRot = (index % 2 === 0 ? 1 : -1) * (180 + index * 45);
-
-        const translateX = animations[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: [randomX, 0],
-        });
-
         const translateY = animations[index].interpolate({
           inputRange: [0, 1],
-          outputRange: [randomY, 0],
-        });
-
-        const rotate = animations[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: [`${randomRot}deg`, '0deg'],
+          outputRange: [15, 0],
         });
 
         const opacity = animations[index].interpolate({
-          inputRange: [0, 0.2, 1],
-          outputRange: [0, 1, 1],
+          inputRange: [0, 1],
+          outputRange: [0, 1],
         });
         
         const scale = animations[index].interpolate({
-          inputRange: [0, 0.5, 1],
-          outputRange: [0.1, 1.2, 1],
+          inputRange: [0, 1],
+          outputRange: [0.9, 1],
         });
 
         return (
@@ -76,9 +55,7 @@ export const AnimatedExplodingWord: React.FC<AnimatedExplodingWordProps> = ({ wo
               {
                 opacity,
                 transform: [
-                  { translateX },
                   { translateY },
-                  { rotate },
                   { scale }
                 ],
               },
