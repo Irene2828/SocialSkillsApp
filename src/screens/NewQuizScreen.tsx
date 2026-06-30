@@ -55,8 +55,6 @@ export const NewQuizScreen = () => {
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
   
   const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
-  
-  const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
 
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -641,28 +639,6 @@ export const NewQuizScreen = () => {
         </Pressable>
       </Modal>
 
-      <Modal visible={showLevelPicker} transparent animationType="fade">
-        <Pressable style={{ flex: 1 }} onPress={handleCloseLevelPicker}>
-          <View style={styles.modalOverlay}>
-            <Pressable style={styles.levelCard} onPress={() => {}}>
-              <Text style={styles.levelTitle}>Choose Quiz Level</Text>
-              {QUIZ_LEVELS.map(level => (
-                <Pressable
-                  key={level.label}
-                  style={styles.levelOption}
-                  onPress={() => handleSelectLevel(level)}
-                >
-                  <View>
-                    <Text style={styles.levelOptionTitle}>{level.label}</Text>
-                    <Text style={styles.levelOptionSub}>{level.difficulty}</Text>
-                  </View>
-                  <Text style={styles.levelQuestionCount}>{level.questionCount} questions</Text>
-                </Pressable>
-              ))}
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
     </View>
   );
 };
