@@ -260,7 +260,7 @@ export const NewQuizScreen = () => {
           </View>
           <Header 
             title=""
-            style={{ marginTop: 0, paddingTop: 12, marginBottom: 8, paddingHorizontal: 0 }} 
+            style={{ marginTop: 0, paddingTop: 24, marginBottom: 8, paddingHorizontal: 0 }} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
