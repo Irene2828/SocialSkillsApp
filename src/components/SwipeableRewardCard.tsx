@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
   wrapper: {
     position: 'relative',
     overflow: 'hidden',
-    borderRadius: theme.borderRadius.lg,
-    marginBottom: 12,
+    borderRadius: 24,
+    marginBottom: -8,
   },
   actionsContainer: {
     position: 'absolute',
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 24,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },
   inner: {
     flexDirection: 'row',
-    padding: theme.spacing.md,
+    padding: theme.spacing.lg,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -200,10 +200,10 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: theme.spacing.md,
-    width: 60,
-    height: 60,
-    borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.colors.errorSoft,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#F3F4F6',
     justifyContent: 'center',
     alignItems: 'center',
   },
