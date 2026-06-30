@@ -153,6 +153,7 @@ export const MyRewardsScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
+        <Header title="My Results" style={{ paddingHorizontal: 0, marginTop: 0 }} />
         <View style={styles.topSection}>
           <CoinBalanceCard balance={coinBalance} />
           {isParentModeUnlocked && <AddRewardForm />}
@@ -222,10 +223,9 @@ export const MyRewardsScreen = () => {
                   onChangeText={handleFulfillPinChange}
                   keyboardType="number-pad"
                   maxLength={4}
-                  secureTextEntry
                   autoFocus
-                  placeholder="****"
-                  autoComplete="new-password"
+                  placeholder="1111"
+                  autoComplete="off"
                   autoCorrect={false}
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
