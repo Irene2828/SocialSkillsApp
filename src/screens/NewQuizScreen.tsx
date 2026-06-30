@@ -175,7 +175,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Choose Quiz Topic" align="left" />
+        <Header title="Choose Quiz Topic" />
         
         <View style={styles.tabContainer}>
           <Pressable 

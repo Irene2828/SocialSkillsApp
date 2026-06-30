@@ -18,7 +18,7 @@ export const MarqueeText: React.FC<MarqueeTextProps> = ({ text, style, duration 
         Animated.sequence([
           Animated.timing(animatedValue, {
             toValue: -textWidth,
-            duration: (textWidth / 50) * 1000, // speed based on width
+            duration: (textWidth / 15) * 1000, // slow speed based on width
             easing: Easing.linear,
             useNativeDriver: true,
           }),

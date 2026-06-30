@@ -33,19 +33,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             <Text style={styles.newBadgeText}>NEW</Text>
           </View>
         )}
-        {onDelete && (
-          <ScalePressable 
-            style={styles.deleteButton} 
-            onPress={(e: any) => {
-              if (e && e.stopPropagation) e.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Ionicons name="remove" size={24} color={theme.colors.error} />
-          </ScalePressable>
-        )}
-        <View style={styles.iconContainer}>
-          <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
+        <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', position: 'relative', marginBottom: 16 }}>
+          <View style={[styles.iconContainer, { marginBottom: 0 }]}>
+            <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
+          </View>
+          {onDelete && (
+            <ScalePressable 
+              style={{ position: 'absolute', right: 0, top: -8, padding: 8 }} 
+              onPress={(e: any) => {
+                if (e && e.stopPropagation) e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Ionicons name="remove" size={28} color={theme.colors.error} />
+            </ScalePressable>
+          )}
         </View>
         <View style={{ width: '100%', overflow: 'hidden' }}>
           <MarqueeText text={category.title} style={styles.title} />
@@ -68,16 +70,7 @@ const styles = StyleSheet.create({
     minHeight: 140,
     position: 'relative',
   },
-  deleteButton: {
-    position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 28,
-    height: 28,
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2,
-  },
+
   newBadge: {
     position: 'absolute',
     top: 8,
