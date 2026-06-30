@@ -251,8 +251,8 @@ export const NewQuizScreen = () => {
             </View>
           </View>
           <Header 
+            title=""
             style={{ marginTop: 24, paddingHorizontal: 0 }} 
-            title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
@@ -265,6 +265,7 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
+          <Text style={styles.questionCaption}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
@@ -466,6 +467,14 @@ const styles = StyleSheet.create({
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
   },
+  questionCaption: {
+    ...theme.typography.body,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
+    marginTop: 8,
+    marginBottom: 16,
+  },
+
   coinJarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
