@@ -58,14 +58,14 @@ export const AppNavigator = () => {
         options={{ tabBarLabel: 'Quiz Library' }}
       />
       <Tab.Screen 
-        name="MyRewards" 
-        component={MyRewardsScreen} 
-        options={{ tabBarLabel: 'My Rewards' }}
-      />
-      <Tab.Screen 
         name="AIQuiz" 
         component={CreateQuizFromPhotoScreen} 
         options={{ tabBarLabel: 'AI Quiz' }}
+      />
+      <Tab.Screen 
+        name="MyRewards" 
+        component={MyRewardsScreen} 
+        options={{ tabBarLabel: 'My Rewards' }}
       />
     </Tab.Navigator>
   );

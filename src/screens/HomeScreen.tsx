@@ -51,13 +51,15 @@ const styles = StyleSheet.create({
     fontSize: 42,
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,
-    lineHeight: 52, // Half spacing
-    textAlign: 'center', // Centered with subtitle
+    lineHeight: 52,
+    letterSpacing: -1.2, // Apple Display tight tracking for large hero text
+    textAlign: 'center',
   },
   startSubtitle: {
     ...theme.typography.body,
     fontSize: 18,
     color: theme.colors.secondaryText,
+    letterSpacing: 0.1,
     marginBottom: theme.spacing.md,
   },
   actionButton: {

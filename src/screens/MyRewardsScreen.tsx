@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
   tabText: {
     ...theme.typography.button,
     color: theme.colors.secondaryText,
+    letterSpacing: 0.15,
   },
   activeTabText: {
     color: theme.colors.text,

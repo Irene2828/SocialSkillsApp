@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView, Modal } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
@@ -218,35 +218,45 @@ export const CreateQuizFromPhotoScreen = () => {
   );
 
   const renderSuccess = () => (
-    <View style={[styles.successContainer, { justifyContent: 'center', alignItems: 'center' }]}>
-      <SilverDust />
-      <Card style={{ alignItems: 'center', paddingVertical: 40, width: '100%', zIndex: 1 }}>
-        <Text style={[styles.successTitle, { color: theme.colors.text, fontSize: 40, fontWeight: '600' }]}>Success!</Text>
-        <Text style={[styles.successSubtitle, { color: theme.colors.text, fontStyle: 'italic', fontSize: 20, textAlign: 'center', marginBottom: 40, marginTop: 16 }]}>
-          Your new quiz is added to your quiz library.
-        </Text>
-        
-        <Button 
-          title="Start Quiz" 
-          onPress={() => {
-             setScreenState('idle');
-             navigation.navigate('NewQuiz', { tab: 'ai' });
-          }} 
-          style={styles.generateButton}
-        />
-        <Pressable 
-          style={{ marginTop: 16 }}
-          onPress={() => {
-             setScreenState('idle');
-             navigation.navigate('NewQuiz', { tab: 'ai' });
-          }} 
-        >
-          <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText, textDecorationLine: 'underline' }}>
-            Go to Quiz Library
+    <Modal
+      visible={screenState === 'success'}
+      transparent
+      animationType="fade"
+      onRequestClose={() => setScreenState('idle')}
+    >
+      <Pressable
+        style={styles.successOverlay}
+        onPress={() => setScreenState('idle')}
+      >
+        <SilverDust />
+        <Pressable onPress={() => {}} style={styles.successCard}>
+          <Text style={styles.successTitle}>Success!</Text>
+          <Text style={styles.successSubtitle}>
+            Your new quiz is added to your quiz library.
           </Text>
+          <Button 
+            title="Start Quiz" 
+            onPress={() => {
+               setScreenState('idle');
+               navigation.navigate('NewQuiz', { tab: 'ai' });
+            }} 
+            style={styles.generateButton}
+          />
+          <Pressable 
+            style={{ marginTop: 16 }}
+            onPress={() => {
+               setScreenState('idle');
+               navigation.navigate('NewQuiz', { tab: 'ai' });
+            }} 
+          >
+            <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText, textDecorationLine: 'underline' }}>
+              Go to Quiz Library
+            </Text>
+          </Pressable>
         </Pressable>
-      </Card>
-    </View>
+        <Text style={styles.successDismissHint}>Tap outside to create another quiz</Text>
+      </Pressable>
+    </Modal>
   );
 
   const renderError = () => (
@@ -281,10 +291,10 @@ export const CreateQuizFromPhotoScreen = () => {
         {screenState === 'idle' && renderIdle()}
         {screenState === 'imageSelected' && renderImageSelected()}
         {screenState === 'generating' && renderGenerating()}
-        {screenState === 'success' && renderSuccess()}
         {screenState === 'error' && renderError()}
       </ScrollView>
       </ScreenWrapper>
+      {renderSuccess()}
     </View>
   );
 };
@@ -465,5 +475,30 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: theme.spacing.lg,
     color: theme.colors.secondaryText,
-  }
+  },
+  successOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.88)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.xl,
+  },
+  successCard: {
+    width: '100%',
+    backgroundColor: theme.colors.white,
+    borderRadius: 28,
+    paddingVertical: 40,
+    paddingHorizontal: 28,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    ...theme.shadows.soft,
+  },
+  successDismissHint: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    marginTop: 24,
+    textAlign: 'center',
+    opacity: 0.7,
+  },
 });

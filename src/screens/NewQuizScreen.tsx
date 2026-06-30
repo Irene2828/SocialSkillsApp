@@ -417,10 +417,10 @@ const styles = StyleSheet.create({
   bentoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -theme.spacing.xs,
+    gap: 12,
   },
   bentoItem: {
-    width: '50%',
+    width: '47.5%',
   },
   inProgressContainer: {
     flex: 1,
@@ -579,7 +579,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: theme.spacing.lg,
+    marginBottom: 12,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
     padding: 4,
@@ -597,6 +597,7 @@ const styles = StyleSheet.create({
   tabText: {
     ...theme.typography.button,
     color: theme.colors.secondaryText,
+    letterSpacing: 0.15,
   },
   activeTabText: {
     color: theme.colors.text,

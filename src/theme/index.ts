@@ -17,6 +17,8 @@ export const theme = {
   },
   typography: {
     fontFamily: 'System', // Use system font for clean sans-serif look
+
+    // Large screen headlines — tight tracking like SF Pro Display
     heading: {
       fontSize: 24,
       fontWeight: '600' as const,
@@ -24,23 +26,51 @@ export const theme = {
       lineHeight: 32,
       letterSpacing: -0.5,
     },
+
+    // Section labels, card titles — slightly open like SF Pro Text
+    label: {
+      fontSize: 13,
+      fontWeight: '600' as const,
+      color: '#6B7280',
+      lineHeight: 18,
+      letterSpacing: 0.6, // Apple uses ~0.6 for small all-caps labels
+      textTransform: 'uppercase' as const,
+    },
+
+    // Body text — neutral, slightly open for legibility
     body: {
       fontSize: 16,
-      fontWeight: '400' as const, // Regular
+      fontWeight: '400' as const,
       color: '#374151',
       lineHeight: 24,
+      letterSpacing: 0.1,
     },
+
+    // CTA / button text — slightly wider for impact and clarity
     button: {
       fontSize: 16,
-      fontWeight: '500' as const, // Medium
+      fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 22,
+      letterSpacing: 0.2,
     },
+
+    // Small supporting text / hints
     caption: {
       fontSize: 14,
       fontWeight: '400' as const,
       color: '#6B7280',
       lineHeight: 20,
+      letterSpacing: 0.15,
+    },
+
+    // Tab labels, nav items — tight but readable
+    tab: {
+      fontSize: 12,
+      fontWeight: '500' as const,
+      color: '#6B7280',
+      lineHeight: 16,
+      letterSpacing: 0.1,
     },
   },
   spacing: {
@@ -75,6 +105,6 @@ export const theme = {
     }
   },
   layout: {
-    minTouchTarget: 48, // slightly reduced from 56 for smaller screens
+    minTouchTarget: 48,
   },
 };
