@@ -273,7 +273,7 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <Text style={[styles.questionCaption, { marginTop: 2, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+          <Text style={[styles.questionCaption, { marginTop: -6, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
