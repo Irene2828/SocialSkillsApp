@@ -515,11 +515,8 @@ const styles = StyleSheet.create({
     minWidth: 120, // Prevent wrapping
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    paddingTop: 12,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
     borderBottomWidth: 0,
