@@ -183,7 +183,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Choose Quiz Topic" />
+        <Header title="Choose Quiz Topic" style={{ marginBottom: 0 }} />
         
         <View style={styles.tabContainer}>
           <Pressable 
@@ -387,16 +387,6 @@ export const NewQuizScreen = () => {
                   autoCorrect={false}
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
-                />
-                <Button 
-                  title="Cancel" 
-                  onPress={() => {
-                    setShowDeletePin(false);
-                    setDeletePin('');
-                    setQuizToDelete(null);
-                  }} 
-                  variant="outline"
-                  style={{ marginTop: 16 }}
                 />
               </View>
             </Pressable>
