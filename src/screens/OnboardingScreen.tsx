@@ -36,7 +36,7 @@ export const OnboardingScreen = () => {
 
   const renderStep1 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.title}>Welcome to Social Quest</Text>
+      <Text style={styles.title}>Welcome to Social Explorer</Text>
       <Text style={styles.subtitle}>Helping kids build strong social skills through simple daily practice.</Text>
       <Button title="Get Started" onPress={handleNext} style={styles.button} />
     </View>

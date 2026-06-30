@@ -86,7 +86,7 @@ export const MyRewardsScreen = () => {
                   <Text style={styles.successCuteCopy}>
                     <Text style={{ backgroundColor: theme.colors.primary }}>Hey parents!</Text>
                     {'\n\n'}
-                    I've just earned {redeemedReward.cost} coins for my social skills knowledge!
+                    I've just <Text style={{ fontWeight: 'bold' }}>earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
                     {'\n\n'}
                     Here's what I redeem it for:
                   </Text>
@@ -101,7 +101,7 @@ export const MyRewardsScreen = () => {
                     title="Approve Reward" 
                     onPress={handleApproveReward} 
                     style={styles.approveButton}
-                    variant="outline"
+                    variant="primary"
                   />
                 </>
               )}
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: '#E5E7EB', // Silver grey instead of primary green
+    backgroundColor: '#F3F4F6', // Matches footer color
   },
   tabText: {
     ...theme.typography.button,

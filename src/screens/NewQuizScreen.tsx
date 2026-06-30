@@ -147,9 +147,9 @@ export const NewQuizScreen = () => {
           <Text 
             style={styles.startTitle}
             adjustsFontSizeToFit
-            numberOfLines={1}
+            numberOfLines={2}
           >
-            Social Quest
+            Social Explorer
           </Text>
           <Text style={styles.startSubtitle}>Ready to practice?</Text>
         </View>
@@ -503,7 +503,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: '#E5E7EB', // Silver grey
+    backgroundColor: '#F3F4F6', // Matches footer color
   },
   tabText: {
     ...theme.typography.button,
