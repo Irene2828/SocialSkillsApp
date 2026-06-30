@@ -88,15 +88,15 @@ export const MyRewardsScreen = () => {
                     style={styles.pinInput}
                     value={pin}
                     onChangeText={handlePinChange}
-                    keyboardType="numeric"
+                    keyboardType="number-pad"
                     maxLength={4}
                     secureTextEntry
                     autoFocus
                     placeholder="****"
-                    autoComplete="off"
+                    autoComplete="new-password"
                     autoCorrect={false}
                     importantForAutofill="no"
-                    textContentType="none"
+                    textContentType="oneTimeCode"
                   />
                   <Button 
                     title="Cancel" 
@@ -115,7 +115,7 @@ export const MyRewardsScreen = () => {
                     {'\n\n'}
                     I've just <Text style={{ fontWeight: 'bold' }}>earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
                     {'\n\n'}
-                    Here's what I redeem it for:
+                    <Text style={{ fontWeight: 'bold' }}>Here is what I chose to redeem it for:</Text>
                   </Text>
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
@@ -213,15 +213,15 @@ export const MyRewardsScreen = () => {
                   style={styles.pinInput}
                   value={fulfillPin}
                   onChangeText={handleFulfillPinChange}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   maxLength={4}
                   secureTextEntry
                   autoFocus
                   placeholder="****"
-                  autoComplete="off"
+                  autoComplete="new-password"
                   autoCorrect={false}
                   importantForAutofill="no"
-                  textContentType="none"
+                  textContentType="oneTimeCode"
                 />
                 <Button 
                   title="Cancel" 
