@@ -9,6 +9,7 @@ import { ScalePressable } from './ScalePressable';
 interface QuizCardProps {
   category: QuizCategory;
   onPressStart: () => void;
+  onDelete?: () => void;
 }
 
 const getCategoryIcon = (id: string): any => {
@@ -22,7 +23,7 @@ const getCategoryIcon = (id: string): any => {
   }
 };
 
-export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) => {
+export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete }) => {
   return (
     <ScalePressable onPress={onPressStart} style={styles.container}>
       <Card style={styles.card}>
@@ -30,6 +31,17 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart }) =>
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
           </View>
+        )}
+        {onDelete && (
+          <ScalePressable 
+            style={styles.deleteButton} 
+            onPress={(e: any) => {
+              if (e && e.stopPropagation) e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Ionicons name="remove" size={16} color="#FFFFFF" />
+          </ScalePressable>
         )}
         <View style={styles.iconContainer}>
           <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
@@ -52,6 +64,20 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     minHeight: 140,
     position: 'relative',
+  },
+  deleteButton: {
+    position: 'absolute',
+    top: 8,
+    left: 8,
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: theme.colors.errorSoft,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    borderWidth: 1,
+    borderColor: theme.colors.error,
   },
   newBadge: {
     position: 'absolute',

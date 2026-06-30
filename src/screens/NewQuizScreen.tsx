@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
@@ -26,7 +26,7 @@ type QuizState = 'selection' | 'in-progress' | 'completed';
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
-  const { customCategories, customQuestions } = useQuizContext();
+  const { customCategories, customQuestions, removeCustomQuiz } = useQuizContext();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
 
@@ -35,6 +35,29 @@ export const NewQuizScreen = () => {
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
+
+  const [showDeletePin, setShowDeletePin] = useState(false);
+  const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
+  const [deletePin, setDeletePin] = useState('');
+
+  const handleDeletePinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setDeletePin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        if (quizToDelete) {
+          removeCustomQuiz(quizToDelete);
+        }
+        setShowDeletePin(false);
+        setDeletePin('');
+        setQuizToDelete(null);
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setDeletePin('');
+      }
+    }
+  };
 
   useEffect(() => {
     if (route.params?.tab === 'ai') {
@@ -180,6 +203,10 @@ export const NewQuizScreen = () => {
                 <QuizCard 
                   category={category} 
                   onPressStart={() => handleStartQuiz(category.id)} 
+                  onDelete={category.isCustom ? () => {
+                    setQuizToDelete(category.id);
+                    setShowDeletePin(true);
+                  } : undefined}
                 />
               </View>
             ))}
@@ -316,6 +343,42 @@ export const NewQuizScreen = () => {
           {quizState === 'completed' && renderCompleted()}
         </View>
       </ScreenWrapper>
+
+      <Modal visible={showDeletePin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowDeletePin(false);
+          setDeletePin('');
+          setQuizToDelete(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={() => {}}>
+              <View style={styles.pinContainer}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={deletePin}
+                  onChangeText={handleDeletePinChange}
+                  keyboardType="numeric"
+                  maxLength={4}
+                  secureTextEntry
+                  autoFocus
+                  placeholder="****"
+                />
+                <Button 
+                  title="Cancel" 
+                  onPress={() => {
+                    setShowDeletePin(false);
+                    setDeletePin('');
+                    setQuizToDelete(null);
+                  }} 
+                  variant="outline"
+                  style={{ marginTop: 16 }}
+                />
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 };
@@ -451,6 +514,47 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     ...theme.shadows.soft,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+  },
+  pinCard: {
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+    padding: theme.spacing.xxl,
+    borderRadius: 32,
+    zIndex: 1000,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    ...theme.shadows.soft,
+  },
+  pinContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  pinTitle: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    marginBottom: 24,
+  },
+  pinInput: {
+    width: 120,
+    height: 60,
+    borderWidth: 2,
+    borderColor: theme.colors.stroke,
+    borderRadius: 16,
+    textAlign: 'center',
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 16,
+    color: theme.colors.text,
   },
   tabContainer: {
     flexDirection: 'row',
