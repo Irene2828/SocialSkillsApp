@@ -24,8 +24,31 @@ export const MyRewardsScreen = () => {
   const [showPinInput, setShowPinInput] = useState(false);
   const [pin, setPin] = useState('');
 
+  const [showFulfillPin, setShowFulfillPin] = useState(false);
+  const [rewardToFulfill, setRewardToFulfill] = useState<string | null>(null);
+  const [fulfillPin, setFulfillPin] = useState('');
+
   const handleApproveReward = () => {
     setShowPinInput(true);
+  };
+
+  const handleFulfillPinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setFulfillPin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        if (rewardToFulfill) {
+          toggleRewardFulfilled(rewardToFulfill);
+        }
+        setShowFulfillPin(false);
+        setFulfillPin('');
+        setRewardToFulfill(null);
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setFulfillPin('');
+      }
+    }
   };
 
   const handlePinChange = (text: string) => {
@@ -148,11 +171,19 @@ export const MyRewardsScreen = () => {
               {unlockedRewards.length === 0 ? (
                 <Text style={styles.emptyText}>No approved rewards yet.</Text>
               ) : (
-                unlockedRewards.map(ur => (
+                [...unlockedRewards].sort((a, b) => {
+                  if (a.isFulfilled === b.isFulfilled) {
+                    return b.timestamp - a.timestamp;
+                  }
+                  return a.isFulfilled ? 1 : -1;
+                }).map(ur => (
                   <UnlockedRewardItem 
                     key={ur.id} 
                     reward={ur} 
-                    onToggle={toggleRewardFulfilled} 
+                    onToggle={(id) => {
+                      setRewardToFulfill(id);
+                      setShowFulfillPin(true);
+                    }} 
                   />
                 ))
               )}
@@ -163,6 +194,43 @@ export const MyRewardsScreen = () => {
       </ScrollView>
       {renderSuccessModal()}
       </ScreenWrapper>
+
+      <Modal visible={showFulfillPin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowFulfillPin(false);
+          setFulfillPin('');
+          setRewardToFulfill(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.successCard} onPress={() => {}}>
+              <View style={styles.pinContainer}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Modify</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={fulfillPin}
+                  onChangeText={handleFulfillPinChange}
+                  keyboardType="numeric"
+                  maxLength={4}
+                  secureTextEntry
+                  autoFocus
+                  placeholder="****"
+                />
+                <Button 
+                  title="Cancel" 
+                  onPress={() => {
+                    setShowFulfillPin(false);
+                    setFulfillPin('');
+                    setRewardToFulfill(null);
+                  }} 
+                  variant="outline"
+                  style={{ marginTop: 16 }}
+                />
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
     </View>
   );
 };

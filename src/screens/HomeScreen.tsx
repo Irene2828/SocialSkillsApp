@@ -22,13 +22,15 @@ export const HomeScreen = () => {
             >
               Social Explorer
             </Text>
-            <Text style={styles.startSubtitle}>Ready to practice?</Text>
           </View>
-          <Button 
-            title="Start Quiz" 
-            onPress={() => navigation.navigate('NewQuiz')} 
-            style={styles.actionButton}
-          />
+          <View style={{ width: '100%', alignItems: 'center' }}>
+            <Text style={styles.startSubtitle}>Ready to practice?</Text>
+            <Button 
+              title="Start Quiz" 
+              onPress={() => navigation.navigate('NewQuiz')} 
+              style={styles.actionButton}
+            />
+          </View>
         </View>
       </ScreenWrapper>
     </View>
@@ -51,13 +53,14 @@ const styles = StyleSheet.create({
     fontSize: 42,
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,
-    lineHeight: 64, // Double spacing
+    lineHeight: 52, // Half spacing
     textAlign: 'center', // Centered with subtitle
   },
   startSubtitle: {
     ...theme.typography.body,
     fontSize: 18,
     color: theme.colors.secondaryText,
+    marginBottom: theme.spacing.md,
   },
   actionButton: {
     width: '100%',
