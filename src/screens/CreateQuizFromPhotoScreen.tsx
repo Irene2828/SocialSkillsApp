@@ -107,16 +107,20 @@ export const CreateQuizFromPhotoScreen = () => {
     
     setScreenState('generating');
     try {
-      const quiz = await generateQuizFromImage(imageBase64);
+      // OpenAI requires the data URI prefix for base64 images
+      const dataUri = \`data:image/jpeg;base64,\${imageBase64}\`;
+      const quiz = await generateQuizFromImage(dataUri);
       setGeneratedQuiz(quiz);
       
       // Save it to context
-      const newCategoryId = quiz.concept;
+      const newCategoryId = \`custom_ai_\${Date.now()}\`;
       const newCategory = {
         id: newCategoryId,
         title: quiz.concept,
         description: 'AI Generated Quiz',
-        isNew: true
+        icon: 'sparkles', // magical icon for AI generated
+        color: '#A78BFA', // Purple styling to stand out
+        isCustom: true
       };
       
       const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
@@ -310,12 +314,10 @@ export const CreateQuizFromPhotoScreen = () => {
 const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
-    paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.xl,
     paddingBottom: 40,
   },
   headerSubtitleContainer: {
-    paddingHorizontal: theme.spacing.md,
     marginBottom: theme.spacing.lg,
   },
   headerSubtitle: {

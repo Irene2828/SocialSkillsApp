@@ -84,8 +84,7 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingHorizontal: theme.spacing.md,
-    paddingBottom: theme.spacing.xl,
+    paddingVertical: theme.spacing.xl,
   },
   profileCard: {
     flexDirection: 'row',

@@ -6,26 +6,30 @@ import { useRewards } from '../context/RewardsContext';
 
 interface RewardListProps {
   rewards: Reward[];
+  onRedeemSuccess?: (reward: Reward) => void;
 }
 
-export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
+export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess }) => {
   const { deductCoins, coinBalance } = useRewards();
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
 
   const handleRedeem = async (reward: Reward) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
+    if (processingId) return;
+    setProcessingId(reward.id);
+
+    // Simulate realistic processing time
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     const success = deductCoins(reward.cost);
     if (success) {
-      Alert.alert('Redeemed ✓', `You have successfully redeemed ${reward.title}!`);
+      if (onRedeemSuccess) {
+        onRedeemSuccess(reward);
+      }
     } else {
       Alert.alert('Oops!', 'You need more coins to unlock this reward.');
     }
 
-    setTimeout(() => {
-      setIsProcessing(false);
-    }, 500);
+    setProcessingId(null);
   };
 
   if (rewards.length === 0) {
@@ -45,15 +49,10 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards }) => {
             reward={reward} 
             onRedeem={handleRedeem} 
             canAfford={coinBalance >= reward.cost}
+            isProcessing={processingId === reward.id}
           />
         </View>
       ))}
-      <View style={styles.bannerContainer}>
-        <View style={styles.bannerTextContainer}>
-          <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
-          <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
-        </View>
-      </View>
     </View>
   );
 };
@@ -81,30 +80,6 @@ const styles = StyleSheet.create({
   gridItem: {
     width: '100%',
     marginBottom: theme.spacing.lg,
-  },
-  bannerContainer: {
-    backgroundColor: theme.colors.primarySoft,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing.xl,
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: theme.spacing.sm,
-    marginBottom: theme.spacing.xl,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
-  },
-  bannerTextContainer: {
-    flex: 1,
-  },
-  bannerTitle: {
-    ...theme.typography.heading,
-    fontSize: 16,
-    color: theme.colors.text,
-    marginBottom: 4,
-  },
-  bannerSubtitle: {
-    ...theme.typography.caption,
-    color: theme.colors.secondaryText,
   }
 });
 

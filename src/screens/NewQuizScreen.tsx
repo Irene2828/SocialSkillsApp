@@ -72,7 +72,7 @@ export const NewQuizScreen = () => {
 
   const handleStartQuickQuiz = () => {
     const shuffled = shuffleArray(allQuestions);
-    const selected = shuffled.slice(0, 10);
+    const selected = shuffled.slice(0, 5);
     
     setSelectedCategory(null);
     setCurrentQuestions(selected);
@@ -88,7 +88,7 @@ export const NewQuizScreen = () => {
       categoryQuestions = customQuestions.filter(q => q.category === category);
     }
     const shuffled = shuffleArray(categoryQuestions);
-    const selected = shuffled.slice(0, 10);
+    const selected = shuffled.slice(0, 5);
 
     setSelectedCategory(category);
     setCurrentQuestions(selected);
@@ -109,9 +109,7 @@ export const NewQuizScreen = () => {
     } else {
       setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
-      let coinsEarned = 0;
-      if (finalScore >= 8) coinsEarned = 1;
-      else if (finalScore >= 6) coinsEarned = 0.5;
+      let coinsEarned = 5;
       
       if (coinsEarned > 0) {
         addCoins(coinsEarned);
@@ -153,9 +151,10 @@ export const NewQuizScreen = () => {
   };
 
   const renderSelection = () => {
-    if (quizzesTakenToday >= dailyLimit) {
-      return <SimpleLockScreen />;
-    }
+    // Temporarily disable daily limit for testing
+    // if (quizzesTakenToday >= dailyLimit) {
+    //   return <SimpleLockScreen />;
+    // }
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -232,26 +231,35 @@ export const NewQuizScreen = () => {
     const total = currentQuestions.length;
     
     let message = "Good effort!";
-    if (score === total) message = "Perfect! You're a Social Master!";
+    if (score === total) message = "Awesome!";
     else if (score >= total * 0.7) message = "Great job, Social Explorer!";
     else if (score >= total * 0.5) message = "You're learning fast!";
 
-    let coinsEarned = 0;
-    if (score >= 8) coinsEarned = 1;
-    else if (score >= 6) coinsEarned = 0.5;
+    let coinsEarned = 5;
 
     return (
       <View style={styles.completedContainer}>
         <Card style={styles.completedCard}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
-            {coinsEarned > 0 && (
-              <Text style={styles.coinsEarnedText}>+{coinsEarned} Coins!</Text>
-            )}
-
-            <Text style={styles.messageText}>{message}</Text>
             
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreText}>{total} / {total}</Text>
+            <Text style={[styles.messageText, { marginBottom: 48 }]}>{message}</Text>
+
+            <Text style={{ ...theme.typography.heading, fontSize: 16, color: theme.colors.text, marginBottom: 12 }}>
+              + {coinsEarned} points earned for this quiz!
+            </Text>
+
+            <View style={{ ...styles.coinJarContainer, backgroundColor: theme.colors.errorSoft, borderWidth: 0, marginBottom: 48, paddingHorizontal: 16, paddingVertical: 8 }}>
+              <FontAwesome5 
+                name="coins" 
+                size={20} 
+                color={theme.colors.primary} 
+                style={{
+                  textShadowColor: '#9CA3AF',
+                  textShadowOffset: { width: -0.5, height: 0.5 },
+                  textShadowRadius: 1
+                }}
+              />
+              <Text style={{ ...styles.coinJarText, fontSize: 18 }}>{coinBalance}</Text>
             </View>
           </Animated.View>
 
@@ -281,7 +289,7 @@ export const NewQuizScreen = () => {
         <View style={styles.content}>
           {quizState === 'start' && renderStart()}
           {quizState === 'selection' && renderSelection()}
-          {(quizState === 'in-progress' || quizState === 'completed') && renderInProgress()}
+          {quizState === 'in-progress' && renderInProgress()}
           {quizState === 'completed' && renderCompleted()}
         </View>
       </ScreenWrapper>
@@ -316,7 +324,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.md,
   },
   quickStartButton: {
     marginBottom: theme.spacing.md,
@@ -366,7 +373,7 @@ const styles = StyleSheet.create({
   scoreContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: 48, // Doubled from original theme.spacing.lg
   },
   scoreText: {
     ...theme.typography.heading,

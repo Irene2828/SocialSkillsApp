@@ -1,19 +1,115 @@
-import React from 'react';
-import { View, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, Alert } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { CoinBalanceCard } from '../components/CoinBalanceCard';
 import { RewardList } from '../components/RewardList';
+import { UnlockedRewardItem } from '../components/UnlockedRewardItem';
 import { AddRewardForm } from '../components/AddRewardForm';
 import { GoldenDust } from '../components/GoldenDust';
+import { SilverDust } from '../components/SilverDust';
+import { Card } from '../components/Card';
+import { Button } from '../components/Button';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
 export const MyRewardsScreen = () => {
-  const { coinBalance, rewards } = useRewards();
+  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled } = useRewards();
   const { isParentModeUnlocked } = useProgress();
+  const [redeemedReward, setRedeemedReward] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
+  const [showPinInput, setShowPinInput] = useState(false);
+  const [pin, setPin] = useState('');
+
+  const handleApproveReward = () => {
+    setShowPinInput(true);
+  };
+
+  const handlePinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setPin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        if (redeemedReward) {
+          addUnlockedReward(redeemedReward);
+          setTimeout(() => {
+            setRedeemedReward(null);
+            setShowPinInput(false);
+            setPin('');
+            setActiveTab('unlocked');
+          }, 500);
+        }
+      } else {
+        Alert.alert('Incorrect PIN', 'Please try again.');
+        setPin('');
+      }
+    }
+  };
+
+  const renderSuccessModal = () => {
+    if (!redeemedReward) return null;
+    return (
+      <Modal transparent visible animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setRedeemedReward(null)}>
+          <View style={styles.modalOverlay}>
+            <SilverDust />
+            <Pressable style={styles.successCard} onPress={() => {}}>
+              {showPinInput ? (
+                <View style={styles.pinContainer}>
+                  <Text style={styles.pinTitle}>Enter Parent PIN</Text>
+                  <TextInput
+                    style={styles.pinInput}
+                    value={pin}
+                    onChangeText={handlePinChange}
+                    keyboardType="numeric"
+                    maxLength={4}
+                    secureTextEntry
+                    autoFocus
+                    placeholder="****"
+                  />
+                  <Button 
+                    title="Cancel" 
+                    onPress={() => {
+                      setShowPinInput(false);
+                      setPin('');
+                    }} 
+                    variant="outline"
+                    style={{ marginTop: 16 }}
+                  />
+                </View>
+              ) : (
+                <>
+                  <Text style={styles.successCuteCopy}>
+                    <Text style={{ backgroundColor: theme.colors.primary }}>Hey parents!</Text>
+                    {'\n\n'}
+                    I've just earned {redeemedReward.cost} coins for my social skills knowledge!
+                    {'\n\n'}
+                    Here's what I redeem it for:
+                  </Text>
+                  <View style={styles.successRewardRow}>
+                    <View style={styles.successIconWrapper}>
+                      <Ionicons name={redeemedReward.icon || 'gift'} size={40} color="#4B5563" />
+                    </View>
+                    <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
+                  </View>
+
+                  <Button 
+                    title="Approve Reward" 
+                    onPress={handleApproveReward} 
+                    style={styles.approveButton}
+                    variant="outline"
+                  />
+                </>
+              )}
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+    );
+  };
 
   return (
     <ScreenWrapper>
@@ -21,16 +117,54 @@ export const MyRewardsScreen = () => {
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         <View style={styles.topSection}>
+          <View style={styles.bannerContainer}>
+            <View style={styles.bannerTextContainer}>
+              <Text style={styles.bannerTitle}>Keep learning, keep earning!</Text>
+              <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
+            </View>
+          </View>
           <CoinBalanceCard balance={coinBalance} />
           {isParentModeUnlocked && <AddRewardForm />}
         </View>
 
-        {/* Bottom Section: Bento Grid (Choice mode for redemption) */}
+        {/* Bottom Section: Tabs and Lists */}
+        <View style={styles.tabContainer}>
+          <Pressable 
+            style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
+            onPress={() => setActiveTab('available')}
+          >
+            <Text style={[styles.tabText, activeTab === 'available' && styles.activeTabText]}>All Rewards</Text>
+          </Pressable>
+          <Pressable 
+            style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
+            onPress={() => setActiveTab('unlocked')}
+          >
+            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Approved</Text>
+          </Pressable>
+        </View>
+
         <View style={styles.bentoSection}>
-          <RewardList rewards={rewards} />
+          {activeTab === 'available' ? (
+            <RewardList rewards={rewards} onRedeemSuccess={setRedeemedReward} />
+          ) : (
+            <View style={{ marginTop: 8 }}>
+              {unlockedRewards.length === 0 ? (
+                <Text style={styles.emptyText}>No approved rewards yet.</Text>
+              ) : (
+                unlockedRewards.map(ur => (
+                  <UnlockedRewardItem 
+                    key={ur.id} 
+                    reward={ur} 
+                    onToggle={toggleRewardFulfilled} 
+                  />
+                ))
+              )}
+            </View>
+          )}
         </View>
 
       </ScrollView>
+      {renderSuccessModal()}
     </ScreenWrapper>
   );
 };
@@ -41,6 +175,29 @@ const styles = StyleSheet.create({
   },
   topSection: {
     marginBottom: theme.spacing.lg,
+  },
+  bannerContainer: {
+    backgroundColor: theme.colors.primarySoft,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+  },
+  bannerTextContainer: {
+    flex: 1,
+  },
+  bannerTitle: {
+    ...theme.typography.heading,
+    fontSize: 16,
+    color: theme.colors.text,
+    marginBottom: 4,
+  },
+  bannerSubtitle: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
   },
   bentoSection: {
     // Removed padding to allow full width on small screens
@@ -54,4 +211,109 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+  },
+  successCard: {
+    width: '100%',
+    maxWidth: 400,
+    alignItems: 'center',
+    padding: theme.spacing.xxl,
+    borderRadius: 32,
+    zIndex: 1000,
+    backgroundColor: theme.colors.white,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    ...theme.shadows.soft,
+  },
+  successRewardRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successIconWrapper: {
+    backgroundColor: 'rgba(190, 242, 100, 0.8)',
+    width: 64,
+    height: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 32,
+  },
+  successRewardLabel: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    color: '#4B5563',
+    marginLeft: 12,
+    textTransform: 'capitalize',
+  },
+  successCuteCopy: {
+    ...theme.typography.body,
+    fontStyle: 'italic',
+    fontSize: 20,
+    lineHeight: 28,
+    color: theme.colors.text,
+    textAlign: 'center',
+    marginBottom: 32,
+  },
+  approveButton: {
+    marginTop: 32,
+    width: '100%',
+    borderColor: theme.colors.primary,
+    borderWidth: 2,
+  },
+  pinContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 16,
+  },
+  pinTitle: {
+    ...theme.typography.heading,
+    fontSize: 20,
+    marginBottom: 24,
+  },
+  pinInput: {
+    width: 120,
+    height: 60,
+    borderWidth: 2,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.md,
+    fontSize: 32,
+    textAlign: 'center',
+    letterSpacing: 8,
+    backgroundColor: theme.colors.white,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.lg,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.full,
+    padding: 4,
+    ...theme.shadows.soft,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: theme.borderRadius.full,
+  },
+  activeTab: {
+    backgroundColor: theme.colors.primary,
+  },
+  tabText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+  },
+  activeTabText: {
+    color: theme.colors.text,
+  },
+  emptyText: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+    marginTop: theme.spacing.xl,
+  }
 });

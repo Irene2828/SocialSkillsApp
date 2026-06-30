@@ -9,12 +9,12 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 interface RewardCardProps {
   reward: Reward;
   onRedeem: (reward: Reward) => void;
-  canAfford: boolean;
+  isProcessing?: boolean;
 }
 
-export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAfford }) => {
+export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAfford, isProcessing }) => {
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, !canAfford && styles.cardDimmed]}>
       <View style={styles.leftContent}>
         <View style={styles.iconContainer}>
           <Ionicons name={reward.icon as any || 'gift'} size={32} color="#4B5563" />
@@ -23,27 +23,28 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
           <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
             {reward.title}
           </Text>
-          <View style={styles.costContainer}>
-            <FontAwesome5 
-              name="coins" 
-              size={14} 
-              color={theme.colors.primary} 
-              style={{
-                textShadowColor: '#9CA3AF',
-                textShadowOffset: { width: -0.5, height: 0.5 },
-                textShadowRadius: 1
-              }}
-            />
-            <Text style={styles.costText}>{reward.cost}</Text>
-          </View>
+          <Button 
+            title={isProcessing ? "Redeeming points.." : "Redeem"} 
+            onPress={() => onRedeem(reward)} 
+            style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
+            variant={canAfford ? "outline" : "secondary"}
+            disabled={!canAfford || isProcessing}
+          />
         </View>
       </View>
-      <Button 
-        title="Redeem" 
-        onPress={() => onRedeem(reward)} 
-        style={styles.redeemButton}
-        variant={canAfford ? "outline" : "secondary"}
-      />
+      <View style={styles.costContainer}>
+        <FontAwesome5 
+          name="coins" 
+          size={14} 
+          color={theme.colors.primary} 
+          style={{
+            textShadowColor: '#9CA3AF',
+            textShadowOffset: { width: -0.5, height: 0.5 },
+            textShadowRadius: 1
+          }}
+        />
+        <Text style={styles.costText}>{reward.cost}</Text>
+      </View>
     </View>
   );
 };
@@ -59,6 +60,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
+  },
+  cardDimmed: {
+    opacity: 0.5,
   },
   leftContent: {
     flexDirection: 'row',
@@ -82,15 +86,16 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontSize: 18,
     marginBottom: 4,
+    textTransform: 'capitalize',
   },
   costContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.errorSoft,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    alignSelf: 'center',
   },
   costText: {
     ...theme.typography.body,
@@ -101,7 +106,12 @@ const styles = StyleSheet.create({
   redeemButton: {
     minWidth: 80,
     borderRadius: theme.borderRadius.full,
-    paddingVertical: 8,
-    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 6,
+    paddingHorizontal: theme.spacing.md,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+  },
+  redeemButtonActive: {
+    borderColor: '#84CC16', // Lime green
   },
 });

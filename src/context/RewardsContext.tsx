@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Reward } from '../data/types';
+import { Reward, UnlockedReward } from '../data/types';
 import { safeStorage } from '../utils/storage';
 import { logger } from '../utils/logger';
 
@@ -8,15 +8,18 @@ interface RewardsContextType {
   addCoins: (amount: number) => void;
   deductCoins: (amount: number) => boolean;
   rewards: Reward[];
+  unlockedRewards: UnlockedReward[];
   addReward: (reward: Omit<Reward, 'id' | 'isCustom'>) => void;
+  addUnlockedReward: (reward: Reward) => void;
+  toggleRewardFulfilled: (id: string) => void;
 }
 
 const DEFAULT_REWARDS: Reward[] = [
-  { id: 'r1', title: 'Ice Cream', cost: 5, icon: 'ice-cream-outline', isCustom: false },
-  { id: 'r2', title: 'Movie Night', cost: 10, icon: 'film-outline', isCustom: false },
-  { id: 'r3', title: 'Extra Game Time', cost: 8, icon: 'game-controller-outline', isCustom: false },
-  { id: 'r4', title: 'Bike Adventure', cost: 15, icon: 'bicycle-outline', isCustom: false },
-  { id: 'r5', title: 'Surprise Toy', cost: 20, icon: 'gift-outline', isCustom: false },
+  { id: 'r1', title: 'New HW / MB Car', cost: 5, icon: 'car-sport-outline', isCustom: false },
+  { id: 'r2', title: 'Ice Cream At McDonald\'s', cost: 10, icon: 'ice-cream-outline', isCustom: false },
+  { id: 'r3', title: 'New Dry Erase Markers', cost: 15, icon: 'pencil-outline', isCustom: false },
+  { id: 'r4', title: 'New Coloring Book', cost: 25, icon: 'book-outline', isCustom: false },
+  { id: 'r5', title: 'New Captain Underpants Book', cost: 50, icon: 'book-outline', isCustom: false },
 ];
 
 const RewardsContext = createContext<RewardsContextType | undefined>(undefined);
@@ -24,20 +27,34 @@ const RewardsContext = createContext<RewardsContextType | undefined>(undefined);
 export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [coinBalance, setCoinBalance] = useState(0);
   const [rewards, setRewards] = useState<Reward[]>(DEFAULT_REWARDS);
+  const [unlockedRewards, setUnlockedRewards] = useState<UnlockedReward[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const storedCoins = await safeStorage.get<number>('@coin_balance', 0);
-        setCoinBalance(Math.max(0, storedCoins));
+        
+        // Auto-correct any leftover stats from older versions of the app where 
+        // payouts were 1 coin. Since all quizzes now give 5 coins, any balance 
+        // not divisible by 5 is invalid.
+        if (storedCoins > 0 && storedCoins % 5 !== 0) {
+          setCoinBalance(0);
+          safeStorage.set('@coin_balance', 0);
+        } else {
+          setCoinBalance(Math.max(0, storedCoins));
+        }
 
         const storedRewards = await safeStorage.get<Reward[]>('@custom_rewards', []);
         setRewards([...DEFAULT_REWARDS, ...storedRewards]);
+
+        const storedUnlocked = await safeStorage.get<UnlockedReward[]>('@unlocked_rewards', []);
+        setUnlockedRewards(storedUnlocked);
       } catch (e) {
         logger.error('Failed to load rewards data', e);
         setCoinBalance(0);
         setRewards(DEFAULT_REWARDS);
+        setUnlockedRewards([]);
       } finally {
         setIsLoaded(true);
       }
@@ -59,6 +76,13 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const success = await safeStorage.set('@custom_rewards', customOnly);
     if (!success) {
       logger.warn('Failed to save custom rewards');
+    }
+  };
+
+  const saveUnlockedRewards = async (newUnlocked: UnlockedReward[]) => {
+    const success = await safeStorage.set('@unlocked_rewards', newUnlocked);
+    if (!success) {
+      logger.warn('Failed to save unlocked rewards');
     }
   };
 
@@ -93,10 +117,43 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveCustomRewards(newRewards);
   };
 
+  const addUnlockedReward = (reward: Reward) => {
+    const newUnlocked: UnlockedReward = {
+      id: `unlocked_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      rewardId: reward.id,
+      title: reward.title,
+      cost: reward.cost,
+      icon: reward.icon || 'gift',
+      timestamp: Date.now(),
+      isFulfilled: false,
+    };
+    // Prepend so newest is at the top
+    const newList = [newUnlocked, ...unlockedRewards];
+    setUnlockedRewards(newList);
+    saveUnlockedRewards(newList);
+  };
+
+  const toggleRewardFulfilled = (id: string) => {
+    const newList = unlockedRewards.map(r => 
+      r.id === id ? { ...r, isFulfilled: !r.isFulfilled } : r
+    );
+    setUnlockedRewards(newList);
+    saveUnlockedRewards(newList);
+  };
+
   if (!isLoaded) return null;
 
   return (
-    <RewardsContext.Provider value={{ coinBalance, addCoins, deductCoins, rewards, addReward }}>
+    <RewardsContext.Provider value={{ 
+      coinBalance, 
+      addCoins, 
+      deductCoins, 
+      rewards, 
+      unlockedRewards,
+      addReward,
+      addUnlockedReward,
+      toggleRewardFulfilled
+    }}>
       {children}
     </RewardsContext.Provider>
   );

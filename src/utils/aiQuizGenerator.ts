@@ -1,8 +1,3 @@
-import { GoogleGenAI, Type, Schema } from '@google/genai';
-
-// Initialize the API
-const ai = new GoogleGenAI({ apiKey: process.env.EXPO_PUBLIC_GEMINI_API_KEY || '' });
-
 const SYSTEM_PROMPT = `You are an educational quiz generator for children.
 
 The uploaded image is provided only to understand the educational concept being taught.
@@ -29,67 +24,74 @@ Requirements:
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
 
-Create between 10 and 20 questions.
+Create exactly 5 questions to match the app's quiz format length.
 Each question should test the concept from a different real-life perspective.
-Avoid repeating the same scenario.`;
+Avoid repeating the same scenario.
 
-const quizSchema: Schema = {
-  type: Type.OBJECT,
-  properties: {
-    concept: { type: Type.STRING },
-    questions: {
-      type: Type.ARRAY,
-      items: {
-        type: Type.OBJECT,
-        properties: {
-          type: { type: Type.STRING },
-          question: { type: Type.STRING },
-          options: {
-            type: Type.ARRAY,
-            items: { type: Type.STRING },
-          },
-          correctIndex: { type: Type.INTEGER },
-          explanation: { type: Type.STRING }
-        },
-        required: ['type', 'question', 'options', 'correctIndex', 'explanation']
-      }
+Return the response STRICTLY as a JSON object matching this schema:
+{
+  "concept": "Name of the concept/topic (string)",
+  "questions": [
+    {
+      "question": "Scenario text (string)",
+      "options": ["Option 1", "Option 2", "Option 3"],
+      "correctIndex": 0, // Integer 0, 1, or 2 representing correct option
+      "explanation": "Explanation for why this is correct (string)"
     }
-  },
-  required: ['concept', 'questions']
-};
+  ]
+}
+No markdown wrappers, no backticks, just raw JSON.`;
 
-export const generateQuizFromImage = async (base64Image: string, mimeType: string = 'image/jpeg') => {
-  if (!process.env.EXPO_PUBLIC_GEMINI_API_KEY) {
-    throw new Error('Gemini API key is not configured in .env.local');
+export const generateQuizFromImage = async (base64Image: string) => {
+  const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OpenAI API key is not configured in .env.local');
   }
 
   try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: [
-        {
-          role: 'user',
-          parts: [
-            { text: SYSTEM_PROMPT },
-            {
-              inlineData: {
-                data: base64Image,
-                mimeType: mimeType,
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: SYSTEM_PROMPT
+          },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'image_url',
+                image_url: {
+                  url: base64Image
+                }
               }
-            }
-          ]
-        }
-      ],
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: quizSchema,
-      }
+            ]
+          }
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 1500,
+      })
     });
 
-    const text = response.text;
-    if (text) {
-        return JSON.parse(text);
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      console.error('OpenAI Error Response:', errorData);
+      throw new Error(errorData?.error?.message || \`API responded with status: \${response.status}\`);
     }
+
+    const data = await response.json();
+    const messageContent = data.choices[0]?.message?.content;
+    
+    if (messageContent) {
+      return JSON.parse(messageContent);
+    }
+    
     throw new Error('No content received from AI');
   } catch (error) {
     console.error('Error generating quiz:', error);

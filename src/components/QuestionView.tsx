@@ -152,7 +152,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: theme.spacing.lg, // Make room for the tab
   },
   cardWrapper: {
     position: 'relative',
