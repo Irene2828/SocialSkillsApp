@@ -78,7 +78,8 @@ export const AppNavigator = () => {
           component={DesignQABoard} 
           options={{ 
             tabBarButton: () => null,
-            tabBarStyle: { display: 'none' }
+            tabBarStyle: { display: 'none' },
+            tabBarItemStyle: { display: 'none' }
           }}
         />
       )}
