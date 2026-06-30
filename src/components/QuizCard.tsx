@@ -43,15 +43,17 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
           <MarqueeText text={category.title} style={styles.title} />
         </View>
         {onDelete && (
-          <ScalePressable 
-            style={{ position: 'absolute', right: -12, top: -12, padding: 8, zIndex: 100, elevation: 10 }} 
-            onPress={(e: any) => {
-              if (e && e.stopPropagation) e.stopPropagation();
-              onDelete();
-            }}
-          >
-            <Ionicons name="remove" size={28} color={theme.colors.error} />
-          </ScalePressable>
+          <View style={{ position: 'absolute', right: -8, top: -8, zIndex: 100, elevation: 10 }}>
+            <ScalePressable 
+              style={{ padding: 8 }} 
+              onPress={(e: any) => {
+                if (e && e.stopPropagation) e.stopPropagation();
+                onDelete();
+              }}
+            >
+              <Ionicons name="remove" size={28} color={theme.colors.error} />
+            </ScalePressable>
+          </View>
         )}
       </Card>
     </ScalePressable>
