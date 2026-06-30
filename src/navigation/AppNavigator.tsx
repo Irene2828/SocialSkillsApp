@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
-import { SettingsScreen } from '../screens/SettingsScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
+import { HomeScreen } from '../screens/HomeScreen';
 import { theme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -21,12 +21,12 @@ export const AppNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
 
-          if (route.name === 'NewQuiz') {
+          if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === 'NewQuiz') {
             iconName = focused ? 'bulb' : 'bulb-outline';
           } else if (route.name === 'MyRewards') {
             iconName = focused ? 'cash' : 'cash-outline';
-          } else if (route.name === 'Settings') {
-            iconName = focused ? 'settings' : 'settings-outline';
           } else if (route.name === 'AIQuiz') {
             iconName = focused ? 'camera' : 'camera-outline';
           }
@@ -48,6 +48,11 @@ export const AppNavigator = () => {
       })}
     >
       <Tab.Screen 
+        name="Home" 
+        component={HomeScreen} 
+        options={{ tabBarLabel: 'Home' }}
+      />
+      <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
         options={{ tabBarLabel: 'Quiz Library' }}
@@ -61,11 +66,6 @@ export const AppNavigator = () => {
         name="AIQuiz" 
         component={CreateQuizFromPhotoScreen} 
         options={{ tabBarLabel: 'AI Quiz' }}
-      />
-      <Tab.Screen 
-        name="Settings" 
-        component={SettingsScreen} 
-        options={{ tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
   );

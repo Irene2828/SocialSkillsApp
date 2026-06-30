@@ -84,7 +84,7 @@ export const MyRewardsScreen = () => {
               ) : (
                 <>
                   <Text style={styles.successCuteCopy}>
-                    <Text style={{ backgroundColor: theme.colors.primary }}>Hey parents!</Text>
+                    <Text style={{ fontSize: 24, fontStyle: 'italic', fontWeight: '600' }}>Hey parents!</Text>
                     {'\n\n'}
                     I've just <Text style={{ fontWeight: 'bold' }}>earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
                     {'\n\n'}
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   successIconWrapper: {
-    backgroundColor: 'rgba(190, 242, 100, 0.8)',
+    backgroundColor: '#E5E7EB',
     width: 64,
     height: 64,
     justifyContent: 'center',

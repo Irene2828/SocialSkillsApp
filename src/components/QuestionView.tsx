@@ -6,6 +6,7 @@ import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { SilverDust } from './SilverDust';
 
 interface QuestionViewProps {
   question: Question;
@@ -99,6 +100,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         animationType="fade"
       >
         <View style={styles.modalOverlay}>
+          {isCorrect && <SilverDust />}
           <View style={styles.feedbackContainerBackground}>
             <View style={styles.feedbackContainer}>
               <View style={styles.feedbackTitleContainer}>

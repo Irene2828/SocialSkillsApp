@@ -8,18 +8,19 @@ interface HeaderProps {
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
   style?: any;
+  align?: 'left' | 'center' | 'right';
 }
 
-export const Header: React.FC<HeaderProps> = ({ title, hasDivider, leftElement, rightElement, style }) => {
+export const Header: React.FC<HeaderProps> = ({ title, hasDivider, leftElement, rightElement, style, align }) => {
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.contentContainer}>
+      <View style={[styles.contentContainer, align === 'left' && { justifyContent: 'flex-start' }, align === 'right' && { justifyContent: 'flex-end' }]}>
         {leftElement && (
           <View style={styles.leftElementContainer}>
             {leftElement}
           </View>
         )}
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, align && { textAlign: align }]}>{title}</Text>
         {rightElement && (
           <View style={styles.rightElementContainer}>
             {rightElement}

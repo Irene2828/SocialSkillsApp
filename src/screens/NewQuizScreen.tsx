@@ -21,7 +21,7 @@ import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { SilverDust } from '../components/SilverDust';
 
-type QuizState = 'start' | 'selection' | 'in-progress' | 'completed';
+type QuizState = 'selection' | 'in-progress' | 'completed';
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
@@ -32,7 +32,7 @@ export const NewQuizScreen = () => {
 
   const allCategories = [...QUIZ_CATEGORIES, ...customCategories];
 
-  const [quizState, setQuizState] = useState<QuizState>('start');
+  const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
@@ -140,27 +140,7 @@ export const NewQuizScreen = () => {
     setScore(0);
   };
 
-  const renderStart = () => {
-    return (
-      <View style={styles.startContainer}>
-        <View style={styles.startContent}>
-          <Text 
-            style={styles.startTitle}
-            adjustsFontSizeToFit
-            numberOfLines={2}
-          >
-            Social Explorer
-          </Text>
-          <Text style={styles.startSubtitle}>Ready to practice?</Text>
-        </View>
-        <Button 
-          title="Start Quiz" 
-          onPress={() => setQuizState('selection')} 
-          style={styles.actionButton}
-        />
-      </View>
-    );
-  };
+  // (renderStart moved to HomeScreen)
 
   const renderSelection = () => {
     // Temporarily disable daily limit for testing
@@ -172,7 +152,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Choose a Topic" />
+        <Header title="Choose Quiz Topic" align="left" />
         
         <View style={styles.tabContainer}>
           <Pressable 
@@ -212,10 +192,6 @@ export const NewQuizScreen = () => {
   const renderCoinJar = () => {
     const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || selectedCategory;
     return (
-    <View style={{ position: 'relative' }}>
-      <View style={styles.screenFolderTab}>
-        <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
-      </View>
       <View style={styles.coinJarContainer}>
         <FontAwesome5 
           name="coins" 
@@ -229,7 +205,6 @@ export const NewQuizScreen = () => {
         />
         <Text style={styles.coinJarText}>{coinBalance}</Text>
       </View>
-    </View>
     );
   };
 
@@ -237,15 +212,24 @@ export const NewQuizScreen = () => {
     if (currentQuestions.length === 0) return null;
     const currentQuestion = currentQuestions[currentIndex];
 
+    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || selectedCategory;
+
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          {/* Centered Topic Tab */}
+          <View style={{ alignItems: 'center', marginBottom: -24, zIndex: 1 }}>
+            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 'auto' }]}>
+              <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
+            </View>
+          </View>
           <Header 
-            style={{ marginTop: 24 }} // Make room for the tag above it
+            style={{ marginTop: 24, paddingHorizontal: 0 }} 
             title={`Question ${currentIndex + 1} of ${currentQuestions.length}`} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+                <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
               </Pressable>
             }
             rightElement={renderCoinJar()}
@@ -327,7 +311,6 @@ export const NewQuizScreen = () => {
       <AnimatedCubesBackground />
       <ScreenWrapper transparent>
         <View style={styles.content}>
-          {quizState === 'start' && renderStart()}
           {quizState === 'selection' && renderSelection()}
           {quizState === 'in-progress' && renderInProgress()}
           {quizState === 'completed' && renderCompleted()}
@@ -341,27 +324,7 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
   },
-  startContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: theme.spacing.xl,
-  },
-  startContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: theme.spacing.xxl,
-  },
-  startTitle: {
-    ...theme.typography.heading,
-    fontSize: 42,
-    color: theme.colors.text,
-    marginBottom: theme.spacing.sm,
-  },
-  startSubtitle: {
-    ...theme.typography.body,
-    fontSize: 18,
-    color: theme.colors.secondaryText,
-  },
+  // Start styles moved to HomeScreen
   scrollContent: {
     paddingBottom: theme.spacing.xl,
   },
@@ -480,10 +443,11 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   backButton: {
-    width: 40,
+    paddingHorizontal: 12,
     height: 40,
     borderRadius: 20,
     backgroundColor: theme.colors.white,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     ...theme.shadows.soft,

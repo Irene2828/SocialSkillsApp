@@ -218,31 +218,34 @@ export const CreateQuizFromPhotoScreen = () => {
   );
 
   const renderSuccess = () => (
-    <View style={[styles.successContainer, { backgroundColor: theme.colors.success, padding: 32, borderRadius: 24, justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }]}>
+    <View style={[styles.successContainer, { justifyContent: 'center', alignItems: 'center' }]}>
       <SilverDust />
-      <Ionicons name="checkmark-circle" size={80} color={theme.colors.white} style={{ marginBottom: 16 }} />
-      <Text style={[styles.successTitle, { color: theme.colors.white, fontSize: 40 }]}>Success!</Text>
-      <Text style={[styles.successSubtitle, { color: theme.colors.white, fontStyle: 'italic', fontSize: 20, textAlign: 'center', marginBottom: 40 }]}>
-        Your new quiz is added to your quiz library.
-      </Text>
-      
-      <Button 
-        title="Start Quiz" 
-        onPress={() => {
-           setScreenState('idle');
-           navigation.navigate('NewQuiz', { tab: 'ai' });
-        }} 
-        style={[styles.generateButton, { backgroundColor: theme.colors.primary, borderColor: theme.colors.primary, borderWidth: 2 }]}
-      />
-      <Button 
-        title="Go to Quiz Library" 
-        onPress={() => {
-           setScreenState('idle');
-           navigation.navigate('NewQuiz', { tab: 'ai' });
-        }} 
-        variant="secondary"
-        style={[styles.generateButton, { backgroundColor: 'transparent', borderColor: theme.colors.white }]}
-      />
+      <Card style={{ alignItems: 'center', paddingVertical: 40, width: '100%', zIndex: 1 }}>
+        <Text style={[styles.successTitle, { color: theme.colors.text, fontSize: 40, fontWeight: '600' }]}>Success!</Text>
+        <Text style={[styles.successSubtitle, { color: theme.colors.text, fontStyle: 'italic', fontSize: 20, textAlign: 'center', marginBottom: 40, marginTop: 16 }]}>
+          Your new quiz is added to your quiz library.
+        </Text>
+        
+        <Button 
+          title="Start Quiz" 
+          onPress={() => {
+             setScreenState('idle');
+             navigation.navigate('NewQuiz', { tab: 'ai' });
+          }} 
+          style={styles.generateButton}
+        />
+        <Pressable 
+          style={{ marginTop: 16 }}
+          onPress={() => {
+             setScreenState('idle');
+             navigation.navigate('NewQuiz', { tab: 'ai' });
+          }} 
+        >
+          <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText, textDecorationLine: 'underline' }}>
+            Go to Quiz Library
+          </Text>
+        </Pressable>
+      </Card>
     </View>
   );
 
