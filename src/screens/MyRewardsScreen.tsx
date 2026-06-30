@@ -93,6 +93,10 @@ export const MyRewardsScreen = () => {
                     secureTextEntry
                     autoFocus
                     placeholder="****"
+                    autoComplete="off"
+                    autoCorrect={false}
+                    importantForAutofill="no"
+                    textContentType="none"
                   />
                   <Button 
                     title="Cancel" 
@@ -214,6 +218,10 @@ export const MyRewardsScreen = () => {
                   secureTextEntry
                   autoFocus
                   placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="none"
                 />
                 <Button 
                   title="Cancel" 

@@ -55,6 +55,12 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   const isAnswered = selectedIndex !== null;
   const isCorrect = selectedIndex === question.correctAnswerIndex;
 
+  const displayIsCorrectRef = useRef(isCorrect);
+  if (isAnswered) {
+    displayIsCorrectRef.current = isCorrect;
+  }
+  const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
+
   return (
     <View style={styles.container}>
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
@@ -100,16 +106,16 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         animationType="fade"
       >
         <View style={styles.modalOverlay}>
-          {isCorrect && <SilverDust />}
+          {displayIsCorrect && <SilverDust />}
           <View style={styles.feedbackContainerBackground}>
             <View style={styles.feedbackContainer}>
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
-                  {isCorrect ? 'Correct!' : "Not quite, try again!"}
+                  {displayIsCorrect ? 'Correct!' : "Not quite, try again!"}
                 </Text>
               </View>
               
-              {isCorrect && (
+              {displayIsCorrect && (
                 <View style={styles.coinRewardContainer}>
                   <FontAwesome5 
                     name="coins" 
@@ -125,11 +131,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                 </View>
               )}
 
-              {isCorrect && (
+              {displayIsCorrect && (
                 <Text style={styles.explanationText}>{question.explanation}</Text>
               )}
 
-              {isCorrect ? (
+              {displayIsCorrect ? (
                 <Button
                   title="Continue"
                   onPress={() => onContinue(!hasFailed)}

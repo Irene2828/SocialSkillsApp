@@ -364,6 +364,10 @@ export const NewQuizScreen = () => {
                   secureTextEntry
                   autoFocus
                   placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="none"
                 />
                 <Button 
                   title="Cancel" 
