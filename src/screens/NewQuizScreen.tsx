@@ -379,15 +379,14 @@ export const NewQuizScreen = () => {
                   style={styles.pinInput}
                   value={deletePin}
                   onChangeText={handleDeletePinChange}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                   maxLength={4}
-                  secureTextEntry
                   autoFocus
-                  placeholder="****"
+                  placeholder="1111"
                   autoComplete="off"
                   autoCorrect={false}
                   importantForAutofill="no"
-                  textContentType="none"
+                  textContentType="oneTimeCode"
                 />
                 <Button 
                   title="Cancel" 
