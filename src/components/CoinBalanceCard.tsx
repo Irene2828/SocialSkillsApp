@@ -34,7 +34,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
             <Text style={styles.balanceLabel}>Coins</Text>
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.bannerSubtitle}>You can use your coins to unlock fun rewards.</Text>
+            <Text style={styles.bannerSubtitle}>Use your coins to unlock fun rewards!</Text>
           </View>
         </View>
       </View>
@@ -44,7 +44,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
 
 const styles = StyleSheet.create({
   cardContainer: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: 8,
     alignItems: 'center',
     width: '100%',
   },

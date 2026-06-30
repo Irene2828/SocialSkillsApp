@@ -153,7 +153,7 @@ export const MyRewardsScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
-        <Header title="My Results" style={{ paddingHorizontal: 0, marginTop: 0 }} />
+        <Header title="My Results" style={{ paddingHorizontal: 0, marginTop: 0, marginBottom: 8, paddingBottom: 8 }} />
         <View style={styles.topSection}>
           <CoinBalanceCard balance={coinBalance} />
           {isParentModeUnlocked && <AddRewardForm />}
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl,
   },
   topSection: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: 8,
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,

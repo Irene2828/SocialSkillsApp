@@ -47,7 +47,7 @@ export const AddRewardForm = () => {
 
 const styles = StyleSheet.create({
   card: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: 8,
   },
   inputContainer: {
     flexDirection: 'row',
