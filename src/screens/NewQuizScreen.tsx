@@ -54,7 +54,7 @@ export const NewQuizScreen = () => {
           removeCustomQuiz(quizToDelete);
           if (cat) {
             setUndoToast({ category: cat, questions: qs });
-            setTimeout(() => setUndoToast(null), 5000);
+            setTimeout(() => setUndoToast(null), 12000);
           }
         }
         setShowDeletePin(false);
