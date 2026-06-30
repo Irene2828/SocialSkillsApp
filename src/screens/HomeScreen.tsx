@@ -15,39 +15,15 @@ const useAttentionLoop = () => {
     let timeoutId: ReturnType<typeof setTimeout>;
 
     const pulse = () => {
-      // Fade out + shrink slightly
       Animated.parallel([
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 350,
-          easing: Easing.in(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(scaleAnim, {
-          toValue: 0.92,
-          duration: 350,
-          easing: Easing.in(Easing.ease),
-          useNativeDriver: true,
-        }),
+        Animated.timing(fadeAnim, { toValue: 0, duration: 350, easing: Easing.in(Easing.ease), useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 0.92, duration: 350, easing: Easing.in(Easing.ease), useNativeDriver: true }),
       ]).start(() => {
-        // Brief pause invisible
         setTimeout(() => {
-          // Snap back in with slight overshoot
           Animated.parallel([
-            Animated.timing(fadeAnim, {
-              toValue: 1,
-              duration: 500,
-              easing: Easing.out(Easing.back(1.6)),
-              useNativeDriver: true,
-            }),
-            Animated.timing(scaleAnim, {
-              toValue: 1,
-              duration: 500,
-              easing: Easing.out(Easing.back(1.6)),
-              useNativeDriver: true,
-            }),
+            Animated.timing(fadeAnim, { toValue: 1, duration: 500, easing: Easing.out(Easing.back(1.6)), useNativeDriver: true }),
+            Animated.timing(scaleAnim, { toValue: 1, duration: 500, easing: Easing.out(Easing.back(1.6)), useNativeDriver: true }),
           ]).start(() => {
-            // Wait random interval 3–6 seconds then pulse again
             const delay = 3000 + Math.random() * 3000;
             timeoutId = setTimeout(pulse, delay);
           });
@@ -55,9 +31,7 @@ const useAttentionLoop = () => {
       });
     };
 
-    // First pulse after initial 4 second delay
     timeoutId = setTimeout(pulse, 4000);
-
     return () => clearTimeout(timeoutId);
   }, []);
 
@@ -79,6 +53,7 @@ export const HomeScreen = () => {
               <AnimatedExplodingWord word="Explorer" style={styles.startTitle} />
             </View>
           </View>
+
           <Animated.View
             style={{
               width: '100%',
@@ -88,9 +63,9 @@ export const HomeScreen = () => {
             }}
           >
             <Text style={styles.startSubtitle}>Ready to practice?</Text>
-            <Button 
-              title="Start Quiz" 
-              onPress={() => navigation.navigate('NewQuiz')} 
+            <Button
+              title="Start Quiz"
+              onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
           </Animated.View>
@@ -129,5 +104,5 @@ const styles = StyleSheet.create({
   },
   actionButton: {
     width: '100%',
-  }
+  },
 });

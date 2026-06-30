@@ -23,7 +23,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 export const MyRewardsScreen = () => {
-  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled } = useRewards();
+  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
@@ -33,6 +33,19 @@ export const MyRewardsScreen = () => {
   const [showFulfillPin, setShowFulfillPin] = useState(false);
   const [rewardToFulfill, setRewardToFulfill] = useState<string | null>(null);
   const [fulfillPin, setFulfillPin] = useState('');
+
+  // Delete flow
+  const [showDeletePin, setShowDeletePin] = useState(false);
+  const [rewardToDelete, setRewardToDelete] = useState<any>(null);
+  const [deletePin, setDeletePin] = useState('');
+
+  // Edit flow
+  const [showEditPin, setShowEditPin] = useState(false);
+  const [rewardToEdit, setRewardToEdit] = useState<any>(null);
+  const [editPin, setEditPin] = useState('');
+  const [editTitle, setEditTitle] = useState('');
+  const [editCost, setEditCost] = useState('');
+  const [showEditForm, setShowEditForm] = useState(false);
 
   const handleApproveReward = () => {
     setShowPinInput(true);
@@ -177,7 +190,12 @@ export const MyRewardsScreen = () => {
 
         <View style={styles.bentoSection}>
           {activeTab === 'available' ? (
-            <RewardList rewards={rewards} onRedeemSuccess={setRedeemedReward} />
+            <RewardList 
+              rewards={rewards} 
+              onRedeemSuccess={setRedeemedReward}
+              onEdit={(reward) => { setRewardToEdit(reward); setShowEditPin(true); }}
+              onDelete={(reward) => { setRewardToDelete(reward); setShowDeletePin(true); }}
+            />
           ) : (
             <View style={{ marginTop: 8 }}>
               {unlockedRewards.length === 0 ? (

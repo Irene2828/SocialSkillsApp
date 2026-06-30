@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
   },
   scenarioText: {
     ...theme.typography.heading,
-    fontFamily: theme.typography.fontFamily,
+    fontFamily: 'DMSans_400Regular_Italic',
     fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
   },
   promptText: {
     ...theme.typography.heading,
-    fontFamily: theme.typography.fontFamily,
+    fontFamily: 'DMSans_400Regular_Italic',
     fontSize: 27,
     fontWeight: '400',
     fontStyle: 'italic',

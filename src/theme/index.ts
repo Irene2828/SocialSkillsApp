@@ -1,25 +1,34 @@
+// DM Sans — premium geometric sans-serif used by Notion, Linear, Vercel.
+// More refined and distinctive than Inter while being equally versatile.
+export const FONTS = {
+  regular: 'DMSans_400Regular',
+  regularItalic: 'DMSans_400Regular_Italic',
+  medium: 'DMSans_500Medium',
+  semiBold: 'DMSans_600SemiBold',
+  bold: 'DMSans_700Bold',
+};
+
 export const theme = {
   colors: {
-    background: '#F0F1F3', // Light silver grey
-    primary: '#BEF264', // Soft pastel lime green
-    primarySoft: '#ECFCCB', // Very soft lime background
-    success: '#FFC857', // Matching the yellow/gold from the screenshot for coins
-    successSoft: '#FFF5E5', // Soft yellow
-    error: '#9CA3AF', // Soft neutral grey instead of harsh red
-    errorSoft: '#F3F4F6', // Light neutral grey
+    background: '#F0F1F3',
+    primary: '#BEF264',
+    primarySoft: '#ECFCCB',
+    success: '#FFC857',
+    successSoft: '#FFF5E5',
+    error: '#9CA3AF',
+    errorSoft: '#F3F4F6',
     neutralGrey: '#E5E7EB',
     accent: '#FFC857',
-    stroke: '#D1D5DB', // Grey for card borders
-    text: '#111827', // Almost black
+    stroke: '#D1D5DB',
+    text: '#111827',
     secondaryText: '#6B7280',
     white: '#FFFFFF',
-    border: '#F3F4F6', // Softer border
+    border: '#F3F4F6',
   },
   typography: {
-    fontFamily: 'System', // Use system font for clean sans-serif look
-
-    // Large screen headlines — tight tracking like SF Pro Display
+    // Large display headlines — tight tracking like SF Pro Display
     heading: {
+      fontFamily: FONTS.semiBold,
       fontSize: 24,
       fontWeight: '600' as const,
       color: '#111827',
@@ -27,18 +36,20 @@ export const theme = {
       letterSpacing: -0.5,
     },
 
-    // Section labels, card titles — slightly open like SF Pro Text
+    // Section labels — all-caps small labels like Apple HIG
     label: {
+      fontFamily: FONTS.semiBold,
       fontSize: 13,
       fontWeight: '600' as const,
       color: '#6B7280',
       lineHeight: 18,
-      letterSpacing: 0.6, // Apple uses ~0.6 for small all-caps labels
+      letterSpacing: 0.6,
       textTransform: 'uppercase' as const,
     },
 
-    // Body text — neutral, slightly open for legibility
+    // Body text — neutral, legible
     body: {
+      fontFamily: FONTS.regular,
       fontSize: 16,
       fontWeight: '400' as const,
       color: '#374151',
@@ -46,8 +57,9 @@ export const theme = {
       letterSpacing: 0.1,
     },
 
-    // CTA / button text — slightly wider for impact and clarity
+    // Button / CTA text — semi-bold for authority
     button: {
+      fontFamily: FONTS.semiBold,
       fontSize: 16,
       fontWeight: '600' as const,
       color: '#111827',
@@ -55,8 +67,9 @@ export const theme = {
       letterSpacing: 0.2,
     },
 
-    // Small supporting text / hints
+    // Captions and hints
     caption: {
+      fontFamily: FONTS.regular,
       fontSize: 14,
       fontWeight: '400' as const,
       color: '#6B7280',
@@ -64,8 +77,9 @@ export const theme = {
       letterSpacing: 0.15,
     },
 
-    // Tab labels, nav items — tight but readable
+    // Tab bar labels
     tab: {
+      fontFamily: FONTS.medium,
       fontSize: 12,
       fontWeight: '500' as const,
       color: '#6B7280',
@@ -83,14 +97,14 @@ export const theme = {
   },
   borderRadius: {
     sm: 16,
-    md: 24, // Increased for pill-like cards
-    lg: 32, // Increased for main containers
+    md: 24,
+    lg: 32,
     xl: 40,
     full: 9999,
   },
   shadows: {
     soft: {
-      shadowColor: '#9CA3AF', // Neutral shadow
+      shadowColor: '#9CA3AF',
       shadowOffset: { width: 0, height: 12 },
       shadowOpacity: 0.08,
       shadowRadius: 24,

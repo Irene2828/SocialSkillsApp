@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 import { Reward } from '../data/types';
-import { RewardCard } from './RewardCard';
+import { SwipeableRewardCard } from './SwipeableRewardCard';
 import { useRewards } from '../context/RewardsContext';
+import { theme } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
 
 interface RewardListProps {
   rewards: Reward[];
   onRedeemSuccess?: (reward: Reward) => void;
+  onEdit: (reward: Reward) => void;
+  onDelete: (reward: Reward) => void;
 }
 
-export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess }) => {
+export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess, onEdit, onDelete }) => {
   const { deductCoins, coinBalance } = useRewards();
   const [processingId, setProcessingId] = useState<string | null>(null);
 
@@ -17,14 +21,11 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess
     if (processingId) return;
     setProcessingId(reward.id);
 
-    // Simulate realistic processing time
     await new Promise(resolve => setTimeout(resolve, 1500));
 
     const success = deductCoins(reward.cost);
     if (success) {
-      if (onRedeemSuccess) {
-        onRedeemSuccess(reward);
-      }
+      if (onRedeemSuccess) onRedeemSuccess(reward);
     } else {
       Alert.alert('Oops!', 'You need more coins to unlock this reward.');
     }
@@ -32,7 +33,10 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess
     setProcessingId(null);
   };
 
-  if (rewards.length === 0) {
+  // Sort cheapest → most expensive
+  const sorted = [...rewards].sort((a, b) => a.cost - b.cost);
+
+  if (sorted.length === 0) {
     return (
       <View style={styles.emptyContainer}>
         <Text style={styles.emptyText}>No rewards added yet.</Text>
@@ -43,15 +47,16 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess
 
   return (
     <View style={styles.gridContainer}>
-      {rewards.map(reward => (
-        <View key={reward.id} style={styles.gridItem}>
-          <RewardCard 
-            reward={reward} 
-            onRedeem={handleRedeem} 
-            canAfford={coinBalance >= reward.cost}
-            isProcessing={processingId === reward.id}
-          />
-        </View>
+      {sorted.map(reward => (
+        <SwipeableRewardCard
+          key={reward.id}
+          reward={reward}
+          onRedeem={handleRedeem}
+          canAfford={coinBalance >= reward.cost}
+          isProcessing={processingId === reward.id}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </View>
   );
@@ -77,11 +82,4 @@ const styles = StyleSheet.create({
   gridContainer: {
     flexDirection: 'column',
   },
-  gridItem: {
-    width: '100%',
-    marginBottom: theme.spacing.lg,
-  }
 });
-
-import { theme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';

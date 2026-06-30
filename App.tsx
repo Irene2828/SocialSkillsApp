@@ -3,20 +3,45 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { RewardsProvider } from './src/context/RewardsContext';
-import { ProgressProvider, useProgress } from './src/context/ProgressContext';
+import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
+import {
+  useFonts,
+  DMSans_400Regular,
+  DMSans_400Regular_Italic,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
+import { View, ActivityIndicator } from 'react-native';
+
 const RootNavigator = () => {
   return <AppNavigator />;
 };
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    DMSans_400Regular,
+    DMSans_400Regular_Italic,
+    DMSans_500Medium,
+    DMSans_600SemiBold,
+    DMSans_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F0F1F3' }}>
+        <ActivityIndicator size="large" color="#BEF264" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaProvider>
       <ProgressProvider>
         <RewardsProvider>
           <QuizProvider>
             <NavigationContainer>
-              {/* <DesignReviewScreen /> */}
               <RootNavigator />
               <StatusBar style="auto" />
             </NavigationContainer>

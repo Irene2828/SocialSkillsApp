@@ -10,6 +10,8 @@ interface RewardsContextType {
   rewards: Reward[];
   unlockedRewards: UnlockedReward[];
   addReward: (reward: Omit<Reward, 'id' | 'isCustom'>) => void;
+  deleteReward: (id: string) => void;
+  updateReward: (id: string, updates: Partial<Pick<Reward, 'title' | 'cost'>>) => void;
   addUnlockedReward: (reward: Reward) => void;
   toggleRewardFulfilled: (id: string) => void;
 }
@@ -117,6 +119,18 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveCustomRewards(newRewards);
   };
 
+  const deleteReward = (id: string) => {
+    const newRewards = rewards.filter(r => r.id !== id);
+    setRewards(newRewards);
+    saveCustomRewards(newRewards);
+  };
+
+  const updateReward = (id: string, updates: Partial<Pick<Reward, 'title' | 'cost'>>) => {
+    const newRewards = rewards.map(r => r.id === id ? { ...r, ...updates } : r);
+    setRewards(newRewards);
+    saveCustomRewards(newRewards);
+  };
+
   const addUnlockedReward = (reward: Reward) => {
     const newUnlocked: UnlockedReward = {
       id: `unlocked_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -151,6 +165,8 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       rewards, 
       unlockedRewards,
       addReward,
+      deleteReward,
+      updateReward,
       addUnlockedReward,
       toggleRewardFulfilled
     }}>
