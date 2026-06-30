@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, Alert, LayoutAnimation, Platform, UIManager } from 'react-native';
+
+if (Platform.OS === 'android') {
+  if (UIManager.setLayoutAnimationEnabledExperimental) {
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+  }
+}
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { CoinBalanceCard } from '../components/CoinBalanceCard';
@@ -39,6 +45,7 @@ export const MyRewardsScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (rewardToFulfill) {
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
           toggleRewardFulfilled(rewardToFulfill);
         }
         setShowFulfillPin(false);
