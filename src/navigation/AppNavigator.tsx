@@ -47,6 +47,9 @@ export const AppNavigator = () => {
           paddingTop: 8,
           width: '100%',
         },
+        tabBarItemStyle: {
+          flex: 1,
+        },
       })}
     >
       <Tab.Screen 
