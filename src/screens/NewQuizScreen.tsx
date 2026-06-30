@@ -475,8 +475,8 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     textAlign: 'center',
     color: theme.colors.secondaryText,
-    marginTop: 8,
-    marginBottom: 16,
+    marginTop: 4,
+    marginBottom: 8,
   },
 
   coinJarContainer: {

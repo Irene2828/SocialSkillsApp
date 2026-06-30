@@ -5,6 +5,7 @@ import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
 import { Ionicons } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
+import { MarqueeText } from './MarqueeText';
 
 interface QuizCardProps {
   category: QuizCategory;
@@ -40,13 +41,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
               onDelete();
             }}
           >
-            <Ionicons name="remove" size={16} color="#FFFFFF" />
+            <Ionicons name="remove" size={24} color={theme.colors.error} />
           </ScalePressable>
         )}
         <View style={styles.iconContainer}>
           <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
         </View>
-        <Text style={styles.title} numberOfLines={2}>{category.title}</Text>
+        <View style={{ width: '100%', overflow: 'hidden' }}>
+          <MarqueeText text={category.title} style={styles.title} />
+        </View>
       </Card>
     </ScalePressable>
   );
@@ -68,16 +71,12 @@ const styles = StyleSheet.create({
   deleteButton: {
     position: 'absolute',
     top: 8,
-    left: 8,
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    backgroundColor: theme.colors.errorSoft,
+    right: 8,
+    width: 28,
+    height: 28,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 2,
-    borderWidth: 1,
-    borderColor: theme.colors.error,
   },
   newBadge: {
     position: 'absolute',
