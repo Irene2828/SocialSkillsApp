@@ -48,14 +48,16 @@ export const HomeScreen = () => {
     <View style={{ flex: 1 }}>
       <AnimatedCubesBackground />
       <ScreenWrapper transparent>
-        <View style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
-          <Text 
-            onPress={() => navigation.navigate('DesignQA')} 
-            style={{ color: 'rgba(0,0,0,0.2)', fontSize: 12, fontWeight: 'bold' }}
-          >
-            QA
-          </Text>
-        </View>
+        {__DEV__ && (
+          <View style={{ position: 'absolute', top: 10, right: 10, zIndex: 10 }}>
+            <Text 
+              onPress={() => navigation.navigate('DesignQA')} 
+              style={{ color: 'rgba(0,0,0,0.2)', fontSize: 12, fontWeight: 'bold' }}
+            >
+              QA
+            </Text>
+          </View>
+        )}
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: 38 }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>

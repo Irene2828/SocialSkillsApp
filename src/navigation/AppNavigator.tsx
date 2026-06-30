@@ -69,14 +69,16 @@ export const AppNavigator = () => {
         component={MyRewardsScreen} 
         options={{ tabBarLabel: 'My Rewards' }}
       />
-      <Tab.Screen 
-        name="DesignQA" 
-        component={DesignQABoard} 
-        options={{ 
-          tabBarButton: () => null,
-          tabBarStyle: { display: 'none' }
-        }}
-      />
+      {__DEV__ && (
+        <Tab.Screen 
+          name="DesignQA" 
+          component={DesignQABoard} 
+          options={{ 
+            tabBarButton: () => null,
+            tabBarStyle: { display: 'none' }
+          }}
+        />
+      )}
     </Tab.Navigator>
   );
 };
