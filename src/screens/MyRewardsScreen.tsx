@@ -230,16 +230,6 @@ export const MyRewardsScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-                <Button 
-                  title="Cancel" 
-                  onPress={() => {
-                    setShowFulfillPin(false);
-                    setFulfillPin('');
-                    setRewardToFulfill(null);
-                  }} 
-                  variant="outline"
-                  style={{ marginTop: 16 }}
-                />
               </View>
             </Pressable>
           </View>
