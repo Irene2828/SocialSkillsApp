@@ -5,6 +5,7 @@ import { Button } from '../components/Button';
 import { theme } from '../theme';
 import { useNavigation } from '@react-navigation/native';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { AnimatedExplodingWord } from '../components/AnimatedExplodingWord';
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
@@ -15,13 +16,10 @@ export const HomeScreen = () => {
       <ScreenWrapper transparent>
         <View style={styles.startContainer}>
           <View style={styles.startContent}>
-            <Text 
-              style={styles.startTitle}
-              adjustsFontSizeToFit
-              numberOfLines={2}
-            >
-              Social Explorer
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Text style={styles.startTitle}>Social </Text>
+              <AnimatedExplodingWord word="Explorer" style={styles.startTitle} />
+            </View>
           </View>
           <View style={{ width: '100%', alignItems: 'center' }}>
             <Text style={styles.startSubtitle}>Ready to practice?</Text>
