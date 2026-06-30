@@ -46,6 +46,8 @@ export const MyRewardsScreen = () => {
   const [editTitle, setEditTitle] = useState('');
   const [editCost, setEditCost] = useState('');
   const [showEditForm, setShowEditForm] = useState(false);
+  const [successToast, setSuccessToast] = useState<{ message: string } | null>(null);
+  const [highlightFirstItem, setHighlightFirstItem] = useState(false);
 
   const handleApproveReward = () => {
     setShowPinInput(true);
@@ -79,7 +81,8 @@ export const MyRewardsScreen = () => {
       if (newPin === '1111') {
         if (rewardToDelete) {
           deleteReward(rewardToDelete.id);
-          Alert.alert('Success', 'Reward deleted.');
+          setSuccessToast({ message: 'Reward deleted' });
+          setTimeout(() => setSuccessToast(null), 3000);
         }
         setShowDeletePin(false);
         setDeletePin('');
@@ -118,7 +121,8 @@ export const MyRewardsScreen = () => {
 
     if (rewardToEdit) {
       updateReward(rewardToEdit.id, { title: editTitle.trim(), cost: costNum });
-      Alert.alert('Success', 'Reward updated.');
+      setSuccessToast({ message: 'Reward updated' });
+      setTimeout(() => setSuccessToast(null), 3000);
     }
     setShowEditForm(false);
     setRewardToEdit(null);
@@ -134,11 +138,13 @@ export const MyRewardsScreen = () => {
       if (newPin === '1111') {
         if (redeemedReward) {
           addUnlockedReward(redeemedReward);
+          setHighlightFirstItem(true);
           setTimeout(() => {
             setRedeemedReward(null);
             setShowPinInput(false);
             setPin('');
             setActiveTab('unlocked');
+            setTimeout(() => setHighlightFirstItem(false), 4000);
           }, 500);
         }
       } else {
@@ -261,10 +267,11 @@ export const MyRewardsScreen = () => {
                     return b.timestamp - a.timestamp;
                   }
                   return a.isFulfilled ? 1 : -1;
-                }).map(ur => (
+                }).map((ur, index) => (
                   <UnlockedRewardItem 
                     key={ur.id} 
                     reward={ur} 
+                    isHighlighted={highlightFirstItem && index === 0}
                     onToggle={(id) => {
                       setRewardToFulfill(id);
                       setShowFulfillPin(true);
@@ -278,6 +285,14 @@ export const MyRewardsScreen = () => {
 
       </ScrollView>
       {renderSuccessModal()}
+      {successToast && (
+        <View style={styles.toastWrapper}>
+          <View style={styles.receivedChip}>
+            <Ionicons name="checkmark-circle" size={18} color={theme.colors.text} style={{ marginRight: 6 }} />
+            <Text style={styles.receivedText}>{successToast.message}</Text>
+          </View>
+        </View>
+      )}
       </ScreenWrapper>
 
       <Modal visible={showFulfillPin} transparent animationType="fade">
@@ -577,5 +592,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     ...theme.typography.body,
     backgroundColor: theme.colors.white,
+  },
+  toastWrapper: {
+    position: 'absolute',
+    bottom: 90,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10000,
+  },
+  receivedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: theme.borderRadius.full,
+    ...theme.shadows.soft,
+  },
+  receivedText: {
+    ...theme.typography.button,
+    fontSize: 14,
+    color: theme.colors.text,
   },
 });

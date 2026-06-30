@@ -55,7 +55,7 @@ export const NewQuizScreen = () => {
   const [showLevelPicker, setShowLevelPicker] = useState(false);
   const [pendingCategory, setPendingCategory] = useState<Category | null>(null);
   
-  const [undoToast, setUndoToast] = useState<{ category: QuizCategory, questions: Question[] } | null>(null);
+  const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
 
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -163,8 +163,22 @@ export const NewQuizScreen = () => {
           const qs = customQuestions.filter(q => q.category === quizToDelete);
           removeCustomQuiz(quizToDelete);
           if (cat) {
-            setUndoToast({ category: cat, questions: qs });
-            setTimeout(() => setUndoToast(null), 12000);
+            setSuccessToast({
+              message: 'Quiz deleted',
+              action: {
+                label: 'Undo',
+                onPress: () => {
+                  addCustomQuiz(cat, qs);
+                  setSuccessToast(null);
+                }
+              }
+            });
+            setTimeout(() => {
+              setSuccessToast(current => {
+                if (current?.message === 'Quiz deleted') return null;
+                return current;
+              });
+            }, 6000);
           }
         }
         setShowDeletePin(false);
@@ -565,15 +579,26 @@ export const NewQuizScreen = () => {
         </View>
       </Modal>
 
-      {undoToast && (
-        <View style={{ position: 'absolute', bottom: 20, left: 20, right: 20, backgroundColor: '#374151', padding: 16, borderRadius: 12, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', zIndex: 1000, ...theme.shadows.soft }}>
-          <Text style={{ color: '#fff', fontSize: 16 }}>Removed from library</Text>
-          <Pressable onPress={() => {
-            addCustomQuiz(undoToast.category, undoToast.questions);
-            setUndoToast(null);
-          }}>
-            <Text style={{ color: theme.colors.primary, fontSize: 16, fontWeight: 'bold' }}>Undo</Text>
-          </Pressable>
+      {successToast && (
+        <View style={styles.toastWrapper}>
+          <View style={styles.receivedChip}>
+            <Ionicons name="checkmark-circle" size={18} color={theme.colors.text} style={{ marginRight: 6 }} />
+            <Text style={styles.receivedText}>{successToast.message}</Text>
+            {successToast.action && (
+              <Pressable 
+                onPress={successToast.action.onPress} 
+                style={{ 
+                  marginLeft: 12, 
+                  backgroundColor: 'rgba(17, 24, 39, 0.1)', 
+                  paddingHorizontal: 8, 
+                  paddingVertical: 4, 
+                  borderRadius: 8 
+                }}
+              >
+                <Text style={[styles.receivedText, { fontWeight: '700' }]}>{successToast.action.label}</Text>
+              </Pressable>
+            )}
+          </View>
         </View>
       )}
 
@@ -901,5 +926,27 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: theme.colors.text,
-  }
+  },
+  toastWrapper: {
+    position: 'absolute',
+    bottom: 90,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10000,
+  },
+  receivedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: theme.borderRadius.full,
+    ...theme.shadows.soft,
+  },
+  receivedText: {
+    ...theme.typography.button,
+    fontSize: 14,
+    color: theme.colors.text,
+  },
 });

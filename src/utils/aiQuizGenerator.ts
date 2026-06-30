@@ -24,9 +24,9 @@ Requirements:
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
 
-Create exactly 5 questions to match the app's quiz format length.
-Each question should test the concept from a different real-life perspective.
-Avoid repeating the same scenario.
+Create exactly 20 questions to allow the app to support different levels (5, 10, or 20 questions).
+Each question must test the concept from a different real-life situation, perspective, or problem angle.
+Make the questions smart, diverse, and non-repetitive, ensuring they cover a wide variety of scenarios to help the child thoroughly understand and apply the concept in different contexts.
 
 Return the response STRICTLY as a JSON object matching this schema:
 {
@@ -75,7 +75,7 @@ export const generateQuizFromImage = async (base64Image: string) => {
           }
         ],
         response_format: { type: "json_object" },
-        max_tokens: 1500,
+        max_tokens: 3500,
       })
     });
 
