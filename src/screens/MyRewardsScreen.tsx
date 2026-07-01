@@ -658,7 +658,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: '#F3F4F6', // Matches footer color
+    backgroundColor: 'rgba(190, 242, 100, 0.8)', // vibrant green matching General tab
   },
   tabText: {
     ...theme.typography.button,
