@@ -110,24 +110,24 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
               <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
                 {reward.title}
               </Text>
-              <Button
-                title={isProcessing ? 'Redeeming..' : 'Redeem'}
-                onPress={() => onRedeem(reward)}
-                style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
-                variant={isProcessing ? 'outline' : (canAfford ? 'primary' : 'secondary')}
-                disabled={!canAfford || isProcessing}
-              />
+              <View style={[styles.costContainer, { marginTop: 4 }]}>
+                <FontAwesome5
+                  name="coins"
+                  size={14}
+                  color={theme.colors.primary}
+                  style={{ textShadowColor: '#9CA3AF', textShadowOffset: { width: -0.5, height: 0.5 }, textShadowRadius: 1 }}
+                />
+                <Text style={styles.costText}>{reward.cost}</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.costContainer}>
-            <FontAwesome5
-              name="coins"
-              size={14}
-              color={theme.colors.primary}
-              style={{ textShadowColor: '#9CA3AF', textShadowOffset: { width: -0.5, height: 0.5 }, textShadowRadius: 1 }}
-            />
-            <Text style={styles.costText}>{reward.cost}</Text>
-          </View>
+          <Button
+            title={isProcessing ? 'Redeeming..' : 'Redeem'}
+            onPress={() => onRedeem(reward)}
+            style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
+            variant={isProcessing ? 'outline' : (canAfford ? 'primary' : 'secondary')}
+            disabled={!canAfford || isProcessing}
+          />
         </View>
       </Animated.View>
     </View>
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(190, 242, 100, 0.4)',
+    backgroundColor: theme.colors.primarySoft,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 16,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
   },
   costText: {
     ...theme.typography.body,
@@ -236,8 +236,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
     paddingVertical: 6,
     paddingHorizontal: theme.spacing.md,
-    alignSelf: 'flex-start',
-    marginTop: 4,
+    alignSelf: 'center',
   },
   redeemButtonActive: {
     backgroundColor: '#F7FEE7',

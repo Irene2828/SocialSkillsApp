@@ -34,7 +34,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
             <Text style={styles.balanceLabel}>Coins</Text>
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.bannerSubtitle}>Use your coins to unlock fun rewards!</Text>
+            <Text style={styles.bannerSubtitle}>Use your coins to unlock fun rewards for a reward of your choice!</Text>
           </View>
         </View>
       </View>

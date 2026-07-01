@@ -325,29 +325,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Select Quiz Level" style={{ marginBottom: 12, marginTop: 4 }} />
-        
-        <View style={styles.levelChipsContainer}>
-          {QUIZ_LEVELS.map((level) => {
-            const isSelected = selectedLevel.label === level.label;
-            return (
-              <Pressable
-                key={level.label}
-                style={[
-                  styles.levelChip,
-                  isSelected && styles.levelChipSelected
-                ]}
-                onPress={() => setSelectedLevel(level)}
-              >
-                <Text style={[styles.levelChipText, isSelected && styles.levelChipTextSelected]}>
-                  {level.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-
-        <Header title="Choose Quiz Topic" style={{ marginBottom: 8, marginTop: 16 }} />
+        <Header title="Choose Quiz Topic" style={{ marginBottom: 8, marginTop: 4 }} />
         
         <View style={styles.tabContainer}>
           <Pressable 

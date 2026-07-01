@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(190, 242, 100, 0.4)', // lighter lime
+    backgroundColor: theme.colors.primarySoft, // solid light green
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: theme.spacing.md,
