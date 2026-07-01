@@ -100,6 +100,8 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: theme.borderRadius.sm,
     backgroundColor: '#F7FEE7',
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

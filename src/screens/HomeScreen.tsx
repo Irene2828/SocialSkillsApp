@@ -60,9 +60,9 @@ export const HomeScreen = () => {
         )}
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: 38 }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }]}>Social </Text>
-              <AnimatedExplodingWord word="Explorer" style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }]} />
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', opacity: 0.8 }}>
+              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Social </Text>
+              <AnimatedExplodingWord word="Explorer" style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]} />
             </View>
           </View>
 
