@@ -14,6 +14,7 @@ export const theme = {
     primarySoft: '#ECFCCB',
     success: '#FFC857',
     successSoft: '#FFF5E5',
+    successGreenSoft: '#E4F8E5',
     error: '#9CA3AF',
     errorSoft: '#F3F4F6',
     neutralGrey: '#E5E7EB',
@@ -34,6 +35,28 @@ export const theme = {
       lineHeight: 32,
       letterSpacing: -0.5,
     },
+
+    // Hero display text
+    display: {
+      fontFamily: FONTS.semiBold,
+      fontSize: 42,
+      fontWeight: '600' as const,
+      color: '#111827',
+      lineHeight: 52,
+      letterSpacing: -0.5,
+    },
+
+    // Subheading text
+    subheading: {
+      fontFamily: FONTS.semiBold,
+      fontSize: 20,
+      fontWeight: '600' as const,
+      color: '#111827',
+      lineHeight: 28,
+      letterSpacing: -0.2,
+    },
+
+
 
     // Section labels — all-caps small labels like Apple HIG
     label: {

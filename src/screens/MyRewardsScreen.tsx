@@ -202,6 +202,12 @@ export const MyRewardsScreen = () => {
           <View style={styles.modalOverlay}>
             <SilverDust />
             <Pressable style={styles.successCard} onPress={() => {}}>
+              <Pressable 
+                style={styles.closeButton} 
+                onPress={() => setRedeemedReward(null)}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+              </Pressable>
               {showPinInput ? (
                 <View style={styles.pinContainer}>
                   <Text style={styles.pinTitle}>Enter Parent PIN</Text>
@@ -226,19 +232,19 @@ export const MyRewardsScreen = () => {
                       setPin('');
                     }} 
                     variant="outline"
-                    style={{ marginTop: 16 }}
+                    style={{ marginTop: theme.spacing.md }}
                   />
                 </View>
               ) : (
                 <>
                   <Text style={styles.successCuteCopy}>
-                    <Text style={{ fontSize: 24, fontStyle: 'italic', fontWeight: '600' }}>Hey parents!</Text>
+                    <Text style={{ ...theme.typography.heading, fontStyle: 'italic' }}>Hey parents!</Text>
                     {'\n\n'}
                     <Text style={{ fontWeight: 'bold' }}>I've just earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
                   </Text>
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift'} size={40} color="#4B5563" />
+                      <Ionicons name={redeemedReward.icon || 'gift'} size={40} color={theme.colors.text} />
                     </View>
                     <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
                   </View>
@@ -436,15 +442,24 @@ export const MyRewardsScreen = () => {
         }}>
           <View style={styles.modalOverlay}>
             <Pressable style={styles.pinCard} onPress={() => {}}>
+              <Pressable 
+                style={styles.closeButton} 
+                onPress={() => {
+                  setShowEditForm(false);
+                  setRewardToEdit(null);
+                }}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+              </Pressable>
               <Text style={styles.pinTitle}>Edit Reward</Text>
               <TextInput
-                style={[styles.editInput, { marginBottom: 16 }]}
+                style={[styles.editInput, { marginBottom: theme.spacing.md }]}
                 value={editTitle}
                 onChangeText={setEditTitle}
                 placeholder="Reward Name"
               />
               <TextInput
-                style={[styles.editInput, { marginBottom: 24 }]}
+                style={[styles.editInput, { marginBottom: theme.spacing.lg }]}
                 value={editCost}
                 onChangeText={setEditCost}
                 placeholder="Cost"
@@ -453,7 +468,7 @@ export const MyRewardsScreen = () => {
               <Button
                 title="Save Changes"
                 onPress={handleSaveEdit}
-                style={{ width: '100%', marginBottom: 12 }}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
               />
             </Pressable>
           </View>
@@ -496,15 +511,21 @@ export const MyRewardsScreen = () => {
         }}>
           <View style={styles.modalOverlay}>
             <Pressable style={styles.pinCard} onPress={() => {}}>
+              <Pressable 
+                style={styles.closeButton} 
+                onPress={() => setShowAddForm(false)}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+              </Pressable>
               <Text style={styles.pinTitle}>Add New Reward</Text>
               <TextInput
-                style={[styles.editInput, { marginBottom: 16 }]}
+                style={[styles.editInput, { marginBottom: theme.spacing.md }]}
                 value={addTitle}
                 onChangeText={setAddTitle}
                 placeholder="Reward Name"
               />
               <TextInput
-                style={[styles.editInput, { marginBottom: 24 }]}
+                style={[styles.editInput, { marginBottom: theme.spacing.lg }]}
                 value={addCost}
                 onChangeText={setAddCost}
                 placeholder="Cost"
@@ -513,7 +534,7 @@ export const MyRewardsScreen = () => {
               <Button
                 title="Save Reward"
                 onPress={handleSaveAdd}
-                style={{ width: '100%', marginBottom: 12 }}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
               />
             </Pressable>
           </View>
@@ -580,7 +601,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
-    borderRadius: 32,
+    borderRadius: theme.borderRadius.lg,
     zIndex: 1000,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
@@ -593,25 +614,22 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   successIconWrapper: {
-    backgroundColor: '#E5E7EB',
+    backgroundColor: theme.colors.successGreenSoft,
     width: 64,
     height: 64,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 32,
+    borderRadius: theme.borderRadius.lg,
   },
   successRewardLabel: {
-    ...theme.typography.heading,
-    fontSize: 20,
-    color: '#4B5563',
+    ...theme.typography.subheading,
+    color: theme.colors.text,
     marginLeft: 12,
     textTransform: 'capitalize',
   },
   successCuteCopy: {
     ...theme.typography.body,
     fontStyle: 'italic',
-    fontSize: 20,
-    lineHeight: 28,
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: 32,
@@ -628,8 +646,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   pinTitle: {
-    ...theme.typography.heading,
-    fontSize: 20,
+    ...theme.typography.subheading,
     marginBottom: 24,
     textAlign: 'center',
   },
@@ -681,7 +698,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
-    borderRadius: 32,
+    borderRadius: theme.borderRadius.lg,
     zIndex: 1000,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
@@ -719,5 +736,12 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
     fontSize: 14,
     color: theme.colors.text,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing.md,
+    right: theme.spacing.md,
+    zIndex: 10,
+    padding: theme.spacing.xs,
   },
 });

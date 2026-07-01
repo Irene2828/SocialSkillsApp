@@ -153,28 +153,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 4,
+    gap: theme.spacing.xs,
   },
   editBtn: {
-    backgroundColor: '#F3F4F6', // Footer Grey
-    borderTopLeftRadius: theme.borderRadius.lg,
-    borderBottomLeftRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.border,
+    borderTopLeftRadius: theme.borderRadius.md,
+    borderBottomLeftRadius: theme.borderRadius.md,
   },
   deleteBtn: {
-    backgroundColor: '#BEF264', // Brand Green
-    borderTopRightRadius: theme.borderRadius.lg,
-    borderBottomRightRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    borderTopRightRadius: theme.borderRadius.md,
+    borderBottomRightRadius: theme.borderRadius.md,
   },
   actionText: {
-    fontSize: 12,
-    fontWeight: '600',
-    letterSpacing: 0.3,
+    ...theme.typography.tab,
   },
   editActionText: {
-    color: '#111827',
+    color: theme.colors.text,
   },
   deleteActionText: {
-    color: '#111827',
+    color: theme.colors.text,
   },
   card: {
     backgroundColor: theme.colors.white,
@@ -212,8 +210,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.button,
-    fontSize: 16,
-    marginBottom: 4,
+    marginBottom: theme.spacing.xs,
     textTransform: 'capitalize',
   },
   costContainer: {
@@ -221,8 +218,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.errorSoft,
     paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.sm,
     alignSelf: 'flex-start',
   },
   costText: {
@@ -239,7 +236,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   redeemButtonActive: {
-    backgroundColor: '#F7FEE7',
+    backgroundColor: theme.colors.primarySoft,
     borderWidth: 1.5,
     borderColor: theme.colors.primary,
   },

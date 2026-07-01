@@ -325,7 +325,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Choose Quiz Topic" style={{ marginBottom: 8, marginTop: 4 }} />
+        <Header title="Let's learn about..." style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
         
         <View style={styles.tabContainer}>
           <Pressable 
@@ -357,18 +357,28 @@ export const NewQuizScreen = () => {
         ) : (
           <>
             <View style={styles.bentoGrid}>
-              {displayCategories.map(category => (
-                <View key={category.id} style={styles.bentoItem}>
-                  <QuizCard 
-                    category={category} 
-                    onPressStart={() => handleSelectQuizCategory(category.id)} 
-                    onDelete={category.isCustom ? () => {
-                      setQuizToDelete(category.id);
-                      setShowDeletePin(true);
-                    } : undefined}
-                  />
-                </View>
-              ))}
+              {displayCategories.map((category, index) => {
+                const isFeatured = index === 0 && activeTab === 'general';
+                return (
+                  <View 
+                    key={category.id} 
+                    style={[
+                      styles.bentoItem, 
+                      isFeatured && styles.featuredBentoItem
+                    ]}
+                  >
+                    <QuizCard 
+                      category={category} 
+                      isFeatured={isFeatured}
+                      onPressStart={() => handleSelectQuizCategory(category.id)} 
+                      onDelete={category.isCustom ? () => {
+                        setQuizToDelete(category.id);
+                        setShowDeletePin(true);
+                      } : undefined}
+                    />
+                  </View>
+                );
+              })}
             </View>
             {activeTab === 'ai' && (
               <View style={styles.createAiButtonContainer}>
@@ -518,8 +528,14 @@ export const NewQuizScreen = () => {
         <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
           <View style={styles.modalOverlay}>
             <Pressable style={styles.levelCard} onPress={() => {}}>
+              <Pressable 
+                style={styles.closeButton} 
+                onPress={() => setShowAiMenu(false)}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+              </Pressable>
               <Text style={styles.levelTitle}>Create AI Quiz</Text>
-              <Text style={[styles.questionCaption, { marginBottom: 24, paddingHorizontal: 16 }]}>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: 16 }]}>
                 Upload a page or take a photo, and AI will create original quiz questions based on the concept.
               </Text>
               
@@ -641,10 +657,13 @@ const styles = StyleSheet.create({
   bentoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: theme.spacing.md,
   },
   bentoItem: {
-    width: '47.5%',
+    width: '47%',
+  },
+  featuredBentoItem: {
+    width: '100%',
   },
   emptyAiContainer: {
     alignItems: 'center',
@@ -797,7 +816,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
-    borderRadius: 32,
+    borderRadius: theme.borderRadius.lg,
     zIndex: 1000,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
@@ -810,8 +829,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   pinTitle: {
-    ...theme.typography.heading,
-    fontSize: 20,
+    ...theme.typography.subheading,
     marginBottom: 24,
     textAlign: 'center',
   },
@@ -820,11 +838,10 @@ const styles = StyleSheet.create({
     height: 60,
     borderWidth: 2,
     borderColor: theme.colors.stroke,
-    borderRadius: 16,
+    borderRadius: theme.borderRadius.sm,
     textAlign: 'center',
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 16,
+    ...theme.typography.heading,
+    marginBottom: theme.spacing.md,
     color: theme.colors.text,
   },
   levelCard: {
@@ -838,8 +855,7 @@ const styles = StyleSheet.create({
     ...theme.shadows.soft,
   },
   levelTitle: {
-    ...theme.typography.heading,
-    fontSize: 22,
+    ...theme.typography.subheading,
     textAlign: 'center',
     marginBottom: theme.spacing.lg,
   },
@@ -944,5 +960,12 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
     fontSize: 14,
     color: theme.colors.text,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing.md,
+    right: theme.spacing.md,
+    zIndex: 10,
+    padding: theme.spacing.xs,
   },
 });

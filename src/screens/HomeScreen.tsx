@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
@@ -38,11 +38,28 @@ const useAttentionLoop = () => {
   return { fadeAnim, scaleAnim };
 };
 
+const PROMPTS = [
+  "Did you say please today?",
+  "How are you feeling right now?",
+  "Who did you help today?",
+  "Ready for an adventure?"
+];
+
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
   const { fadeAnim, scaleAnim } = useAttentionLoop();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
+  
+  const [promptIndex, setPromptIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPromptIndex((prev) => (prev + 1) % PROMPTS.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -59,7 +76,7 @@ export const HomeScreen = () => {
           </View>
         )}
         <View style={styles.startContainer}>
-          <View style={[styles.startContent, isSmallScreen && { marginBottom: 38 }]}>
+          <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', opacity: 0.8 }}>
               <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Social </Text>
               <AnimatedExplodingWord word="Explorer" style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]} />
@@ -74,7 +91,7 @@ export const HomeScreen = () => {
               transform: [{ scale: scaleAnim }],
             }}
           >
-            <Text style={styles.startSubtitle}>Ready to practice?</Text>
+            <Text style={styles.startSubtitle}>{PROMPTS[promptIndex]}</Text>
             <Button
               title="Start Quiz"
               onPress={() => navigation.navigate('NewQuiz')}
@@ -99,18 +116,12 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xxl,
   },
   startTitle: {
-    ...theme.typography.heading,
-    fontFamily: 'InstrumentSans_500Medium',
-    fontSize: 42,
-    color: 'rgba(17, 24, 39, 0.8)',
+    ...theme.typography.display,
     marginBottom: theme.spacing.sm,
-    lineHeight: 52,
-    letterSpacing: -0.5,
     textAlign: 'center',
   },
   startSubtitle: {
     ...theme.typography.body,
-    fontSize: 18,
     color: theme.colors.secondaryText,
     letterSpacing: 0.1,
     marginBottom: theme.spacing.md,

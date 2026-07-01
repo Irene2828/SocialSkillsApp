@@ -63,7 +63,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           <Ionicons 
             name={reward.icon as any || 'gift'} 
             size={24} 
-            color={reward.isFulfilled ? theme.colors.secondaryText : "#4B5563"} 
+            color={reward.isFulfilled ? theme.colors.secondaryText : theme.colors.text} 
           />
         </View>
         <View style={styles.textContainer}>
@@ -121,21 +121,19 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.button,
-    fontSize: 16,
-    marginBottom: 4,
+    marginBottom: theme.spacing.xs,
   },
   titleFulfilled: {
     textDecorationLine: 'line-through',
     color: theme.colors.secondaryText,
   },
   date: {
-    ...theme.typography.caption,
-    fontSize: 12,
+    ...theme.typography.tab,
   },
   checkbox: {
     width: 24,
     height: 24,
-    borderRadius: 12,
+    borderRadius: theme.borderRadius.sm,
     borderWidth: 2,
     borderColor: theme.colors.primary,
     justifyContent: 'center',
@@ -150,14 +148,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 12,
+    paddingHorizontal: theme.spacing.sm,
     paddingVertical: 6,
     borderRadius: theme.borderRadius.full,
     marginLeft: theme.spacing.md,
   },
   receivedText: {
-    ...theme.typography.button,
-    fontSize: 12,
+    ...theme.typography.tab,
     color: theme.colors.text,
   },
 });

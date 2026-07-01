@@ -3,49 +3,66 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
-
 
 interface QuizCardProps {
   category: QuizCategory;
   onPressStart: () => void;
   onDelete?: () => void;
+  isFeatured?: boolean;
 }
 
-const getCategoryIcon = (id: string): any => {
+const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
   switch (id) {
-    case 'Friendship': return 'people-outline';
-    case 'Manners': return 'school-outline';
-    case 'Feelings': return 'heart-outline';
-    case 'Playground': return 'basketball-outline';
-    case 'Safety': return 'shield-checkmark-outline';
-    default: return 'book-outline';
+    case 'Friendship': return { name: 'people-outline', family: 'Ionicons' };
+    case 'Manners': return { name: 'handshake', family: 'FontAwesome5' };
+    case 'Feelings': return { name: 'heart-outline', family: 'Ionicons' };
+    case 'Playground': return { name: 'basketball-outline', family: 'Ionicons' };
+    case 'Safety': return { name: 'shield-checkmark-outline', family: 'Ionicons' };
+    default: return { name: 'book-outline', family: 'Ionicons' };
   }
 };
 
-export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete }) => {
+
+export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete, isFeatured }) => {
+  const { name: iconName, family: iconFamily } = getCategoryIcon(category.id);
+
   return (
-    <ScalePressable onPress={onPressStart} style={styles.container}>
-      <Card style={styles.card}>
+    <ScalePressable onPress={onPressStart} style={[styles.container, isFeatured && styles.featuredContainer]}>
+      <Card style={[styles.card, isFeatured && styles.featuredCard]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
           </View>
         )}
 
-        <View style={{ flexDirection: 'row', justifyContent: 'center', width: '100%', position: 'relative', marginBottom: 16 }}>
-          <View style={[styles.iconContainer, { marginBottom: 0 }]}>
-            <Ionicons name={getCategoryIcon(category.id)} size={32} color="#4B5563" style={styles.icon} />
+        <View style={[styles.cardContent, isFeatured && styles.featuredCardContent]}>
+          <View style={[styles.iconContainer, isFeatured && styles.featuredIconContainer]}>
+            {iconFamily === 'FontAwesome5' ? (
+              <FontAwesome5 name={iconName} size={isFeatured ? 36 : 32} color="#4B5563" style={styles.icon} />
+            ) : (
+              <Ionicons name={iconName as any} size={isFeatured ? 36 : 32} color="#4B5563" style={styles.icon} />
+            )}
+          </View>
+
+          <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
+            {isFeatured && (
+              <View style={styles.recommendedBadge}>
+                <Text style={styles.recommendedBadgeText}>RECOMMENDED</Text>
+              </View>
+            )}
+            <Text style={[styles.title, isFeatured && styles.featuredTitle]}>
+              {category.title}
+            </Text>
+            {isFeatured && category.description && (
+              <Text style={styles.descriptionText}>
+                {category.description}
+              </Text>
+            )}
           </View>
         </View>
-        <View style={{ width: '100%' }}>
-          <Text 
-            style={styles.title} 
-          >
-            {category.title}
-          </Text>
-        </View>
+
         {onDelete && (
           <View style={{ position: 'absolute', right: 4, top: -8, zIndex: 100, elevation: 10 }}>
             <ScalePressable 
@@ -69,6 +86,10 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: theme.spacing.xs,
   },
+  featuredContainer: {
+    width: '100%',
+    margin: theme.spacing.xs,
+  },
   card: {
     flex: 1,
     alignItems: 'center',
@@ -77,7 +98,31 @@ const styles = StyleSheet.create({
     minHeight: 140,
     position: 'relative',
   },
-
+  featuredCard: {
+    minHeight: 110,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    padding: theme.spacing.md,
+  },
+  cardContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  featuredCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  textContainer: {
+    alignItems: 'center',
+    width: '100%',
+  },
+  featuredTextContainer: {
+    alignItems: 'flex-start',
+    flex: 1,
+    marginLeft: theme.spacing.md,
+  },
   newBadge: {
     position: 'absolute',
     top: 8,
@@ -94,6 +139,22 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#FFFFFF',
   },
+  recommendedBadge: {
+    backgroundColor: theme.colors.primarySoft,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginBottom: 4,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  recommendedBadgeText: {
+    ...theme.typography.label,
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#3F6212', // Darker green for readability
+  },
   iconContainer: {
     marginBottom: theme.spacing.md,
     width: 60,
@@ -105,6 +166,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  featuredIconContainer: {
+    marginBottom: 0,
+    width: 68,
+    height: 68,
+    borderRadius: theme.borderRadius.sm,
+  },
   icon: {
     textShadowColor: 'rgba(0,0,0,0.15)',
     textShadowOffset: { width: 0, height: 1 },
@@ -114,5 +181,16 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     textAlign: 'center',
+  },
+  featuredTitle: {
+    textAlign: 'left',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  descriptionText: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    marginTop: 2,
+    textAlign: 'left',
   },
 });

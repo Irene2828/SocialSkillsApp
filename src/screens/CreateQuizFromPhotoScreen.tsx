@@ -230,6 +230,12 @@ export const CreateQuizFromPhotoScreen = () => {
       >
         <SilverDust />
         <Pressable onPress={() => {}} style={styles.successCard}>
+          <Pressable 
+            style={styles.closeButton} 
+            onPress={() => setScreenState('idle')}
+          >
+            <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+          </Pressable>
           <Text style={styles.successTitle}>Success!</Text>
           <Text style={styles.successSubtitle}>
             Your new quiz is added to your quiz library.
@@ -303,7 +309,7 @@ const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
     paddingTop: theme.spacing.xl,
-    paddingBottom: 40,
+    paddingBottom: theme.spacing.xl,
   },
   headerSubtitleContainer: {
     marginBottom: theme.spacing.lg,
@@ -311,8 +317,6 @@ const styles = StyleSheet.create({
   headerSubtitle: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
-    fontSize: 16,
-    lineHeight: 22,
   },
   idleContainer: {
     flex: 1,
@@ -322,11 +326,11 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: theme.colors.white,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: theme.colors.neutralGrey,
     borderStyle: 'dashed',
-    borderRadius: 24, // Premium rounded corners
+    borderRadius: theme.borderRadius.md,
   },
   iconContainer: {
     width: 120,
@@ -353,7 +357,7 @@ const styles = StyleSheet.create({
     height: 300,
     padding: 0,
     overflow: 'hidden',
-    borderRadius: 24,
+    borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.xl,
   },
   previewImage: {
@@ -398,26 +402,23 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
   },
   successIconWrapper: {
-    backgroundColor: '#E4F8E5',
-    padding: 16,
-    borderRadius: 40,
+    backgroundColor: theme.colors.successGreenSoft,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.xl,
     marginBottom: theme.spacing.md,
   },
   successTitle: {
     ...theme.typography.heading,
-    fontSize: 28,
     color: theme.colors.text,
     marginBottom: theme.spacing.xs,
   },
   successSubtitle: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
-    fontSize: 16,
     textAlign: 'center',
   },
   conceptText: {
-    ...theme.typography.heading,
-    fontSize: 18,
+    ...theme.typography.body,
     color: theme.colors.primary,
     marginTop: theme.spacing.sm,
     textAlign: 'center',
@@ -478,7 +479,7 @@ const styles = StyleSheet.create({
   },
   successOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.88)',
+    backgroundColor: 'rgba(255, 255, 255, 0.85)', // Standardized white overlay
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
@@ -487,9 +488,9 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
     backgroundColor: theme.colors.white,
-    borderRadius: 28,
-    paddingVertical: 40,
-    paddingHorizontal: 28,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
     alignItems: 'center',
     borderWidth: 1,
     borderColor: theme.colors.stroke,
@@ -501,5 +502,12 @@ const styles = StyleSheet.create({
     marginTop: 24,
     textAlign: 'center',
     opacity: 0.7,
+  },
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing.md,
+    right: theme.spacing.md,
+    zIndex: 10,
+    padding: theme.spacing.xs,
   },
 });

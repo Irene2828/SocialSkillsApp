@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -116,6 +116,19 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
           {displayIsCorrect && <SilverDust />}
           <View style={styles.feedbackContainerBackground}>
             <View style={styles.feedbackContainer}>
+              <Pressable 
+                style={styles.closeButton} 
+                onPress={() => {
+                  if (displayIsCorrect) {
+                    onContinue(!hasFailed);
+                  } else {
+                    setSelectedIndex(null);
+                  }
+                }}
+              >
+                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+              </Pressable>
+              
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
                   {displayIsCorrect ? 'Correct!' : "Not quite, try again!"}
@@ -224,7 +237,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(229, 231, 235, 0.85)', // Silver-grey glass effect
+    backgroundColor: 'rgba(255, 255, 255, 0.85)', // Standardized white overlay
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -252,14 +265,12 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     ...theme.typography.body,
-    fontSize: 18,
     fontWeight: '700',
     textAlign: 'center',
-    color: '#374151',
+    color: theme.colors.text,
   },
   explanationText: {
     ...theme.typography.body,
-    fontSize: 17,
     fontStyle: 'italic',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
@@ -272,13 +283,19 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   coinRewardText: {
-    ...theme.typography.heading,
+    ...theme.typography.subheading,
     color: theme.colors.text,
-    fontSize: 20,
     marginLeft: theme.spacing.xs,
   },
   continueButton: {
     marginTop: theme.spacing.sm,
     width: '100%',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: theme.spacing.md,
+    right: theme.spacing.md,
+    zIndex: 10,
+    padding: theme.spacing.xs,
   },
 });
