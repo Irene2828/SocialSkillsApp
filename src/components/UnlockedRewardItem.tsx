@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: theme.colors.primarySoft, // solid light green
+    backgroundColor: theme.colors.errorSoft, // solid light grey
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: theme.spacing.md,
