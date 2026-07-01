@@ -239,5 +239,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginTop: 4,
   },
-  redeemButtonActive: {},
+  redeemButtonActive: {
+    backgroundColor: '#F7FEE7',
+    borderWidth: 1.5,
+    borderColor: theme.colors.primary,
+  },
 });
