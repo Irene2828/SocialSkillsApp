@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontFamily: 'InstrumentSans_500Medium',
     fontSize: 42,
-    color: theme.colors.text,
+    color: 'rgba(17, 24, 39, 0.8)',
     marginBottom: theme.spacing.sm,
     lineHeight: 52,
     letterSpacing: -0.5,

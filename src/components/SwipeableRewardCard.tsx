@@ -114,7 +114,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 title={isProcessing ? 'Redeeming..' : 'Redeem'}
                 onPress={() => onRedeem(reward)}
                 style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
-                variant={canAfford ? 'primary' : 'secondary'}
+                variant={isProcessing ? 'outline' : (canAfford ? 'primary' : 'secondary')}
                 disabled={!canAfford || isProcessing}
               />
             </View>

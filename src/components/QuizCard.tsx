@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: 'rgba(190, 242, 100, 0.8)',
+    backgroundColor: '#F7FEE7',
     justifyContent: 'center',
     alignItems: 'center',
   },
