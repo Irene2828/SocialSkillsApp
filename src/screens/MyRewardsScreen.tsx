@@ -576,6 +576,7 @@ const styles = StyleSheet.create({
   },
   successCard: {
     width: '100%',
+    maxWidth: 500,
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
@@ -676,6 +677,7 @@ const styles = StyleSheet.create({
   },
   pinCard: {
     width: '100%',
+    maxWidth: 500,
     alignItems: 'center',
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,

@@ -485,6 +485,7 @@ const styles = StyleSheet.create({
   },
   successCard: {
     width: '100%',
+    maxWidth: 500,
     backgroundColor: theme.colors.white,
     borderRadius: 28,
     paddingVertical: 40,

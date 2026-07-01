@@ -230,8 +230,8 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
   },
   feedbackContainerBackground: {
-    width: '85%',
-    maxWidth: 400,
+    width: '100%',
+    maxWidth: 500,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     borderWidth: 1.5,
