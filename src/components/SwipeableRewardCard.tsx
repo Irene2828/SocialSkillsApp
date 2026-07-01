@@ -104,7 +104,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
           <View style={styles.leftContent}>
             <View style={styles.iconContainer}>
-              <Ionicons name={reward.icon as any || 'gift'} size={32} color="#4B5563" />
+              <Ionicons name={reward.icon as any || 'gift'} size={24} color="#4B5563" />
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
@@ -138,8 +138,8 @@ const styles = StyleSheet.create({
   wrapper: {
     position: 'relative',
     overflow: 'hidden',
-    borderRadius: 24,
-    marginBottom: -8,
+    borderRadius: theme.borderRadius.md,
+    marginBottom: theme.spacing.md,
   },
   actionsContainer: {
     position: 'absolute',
@@ -178,14 +178,14 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: theme.colors.white,
-    borderRadius: 24,
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },
   inner: {
     flexDirection: 'row',
-    padding: theme.spacing.lg,
+    padding: theme.spacing.md,
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -200,10 +200,10 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: theme.spacing.md,
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#F3F4F6',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(190, 242, 100, 0.4)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -211,9 +211,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    ...theme.typography.heading,
-    fontSize: 18,
-    fontWeight: '500',
+    ...theme.typography.button,
+    fontSize: 16,
     marginBottom: 4,
     textTransform: 'capitalize',
   },
