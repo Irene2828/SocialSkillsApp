@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
   },
   leftContent: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flex: 1,
     marginRight: theme.spacing.sm,
   },

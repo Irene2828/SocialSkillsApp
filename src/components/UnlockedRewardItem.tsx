@@ -90,7 +90,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     backgroundColor: theme.colors.white,
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
