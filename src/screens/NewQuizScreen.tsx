@@ -9,7 +9,7 @@ import { ProgressBar } from '../components/ProgressBar';
 import { QuestionView } from '../components/QuestionView';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
@@ -745,8 +745,9 @@ const styles = StyleSheet.create({
   },
   screenFolderTabText: {
     ...theme.typography.body,
+    fontFamily: FONTS.bold,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: theme.colors.text,
   },
   coinJarText: {
