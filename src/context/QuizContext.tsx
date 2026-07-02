@@ -7,14 +7,15 @@ interface QuizContextData {
   customQuestions: Question[];
   addCustomQuiz: (category: QuizCategory, questions: Question[]) => void;
   removeCustomQuiz: (categoryId: string) => void;
+  renameCustomQuiz: (categoryId: string, newTitle: string) => void;
 }
 
 const QuizContext = createContext<QuizContextData | undefined>(undefined);
 
 const MOCK_AI_CATEGORY: QuizCategory = {
   id: 'c_listening_ai',
-  title: 'Listen to the Speaker (AI)',
-  description: 'Extracted from Rule #6. Practice being a good listener!',
+  title: 'Active Listening',
+  description: 'Practice being a good listener!',
   icon: 'ear-outline',
   color: '#A78BFA',
   isCustom: true
@@ -138,10 +139,18 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const renameCustomQuiz = (categoryId: string, newTitle: string) => {
+    setCustomCategories(prev => {
+      const newList = prev.map(c => c.id === categoryId ? { ...c, title: newTitle } : c);
+      safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
+      return newList;
+    });
+  };
+
   if (!isLoaded) return null;
 
   return (
-    <QuizContext.Provider value={{ customCategories, customQuestions, addCustomQuiz, removeCustomQuiz }}>
+    <QuizContext.Provider value={{ customCategories, customQuestions, addCustomQuiz, removeCustomQuiz, renameCustomQuiz }}>
       {children}
     </QuizContext.Provider>
   );

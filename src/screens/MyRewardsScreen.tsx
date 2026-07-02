@@ -19,14 +19,138 @@ import { Button } from '../components/Button';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useFeedback } from '../context/FeedbackContext';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 
 export const MyRewardsScreen = () => {
-  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward } = useRewards();
+  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();
+
+  const [showUndo, setShowUndo] = useState(false);
+  const [undoState, setUndoState] = useState<{ type: 'delete' | 'fulfill' | 'delete-custom'; itemId: string } | null>(null);
+  const [deletedUnlockedStack, setDeletedUnlockedStack] = useState<any[]>([]);
+  const [deletedCustomStack, setDeletedCustomStack] = useState<any[]>([]);
+  const undoTimeoutRef = React.useRef<any>(null);
+
+  const handleDeleteUnlocked = (id: string) => {
+    const item = unlockedRewards.find(r => r.id === id);
+    if (item) {
+      deleteUnlockedReward(id);
+      setDeletedUnlockedStack(prev => [item, ...prev]);
+      setUndoState({ type: 'delete', itemId: id });
+      setShowUndo(true);
+
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current);
+      }
+
+      undoTimeoutRef.current = setTimeout(() => {
+        setShowUndo(false);
+        setDeletedUnlockedStack([]);
+        setUndoState(null);
+      }, 5000);
+    }
+  };
+
+  const handleDeleteReward = (reward: any) => {
+    deleteReward(reward.id);
+    setDeletedCustomStack(prev => [reward, ...prev]);
+    setUndoState({ type: 'delete-custom', itemId: reward.id });
+    setShowUndo(true);
+
+    if (undoTimeoutRef.current) {
+      clearTimeout(undoTimeoutRef.current);
+    }
+
+    undoTimeoutRef.current = setTimeout(() => {
+      setShowUndo(false);
+      setDeletedCustomStack([]);
+      setUndoState(null);
+    }, 5000);
+  };
+
+  const handleToggleFulfilled = (id: string) => {
+    const item = unlockedRewards.find(r => r.id === id);
+    if (item) {
+      const wasFulfilled = item.isFulfilled;
+      toggleRewardFulfilled(id);
+
+      if (!wasFulfilled) {
+        // Just marked as fulfilled, offer undo
+        setUndoState({ type: 'fulfill', itemId: id });
+        setShowUndo(true);
+
+        if (undoTimeoutRef.current) {
+          clearTimeout(undoTimeoutRef.current);
+        }
+
+        undoTimeoutRef.current = setTimeout(() => {
+          setShowUndo(false);
+          setUndoState(null);
+        }, 5000);
+      } else {
+        // Toggled back to unfulfilled, hide undo toast
+        setShowUndo(false);
+        setUndoState(null);
+        if (undoTimeoutRef.current) {
+          clearTimeout(undoTimeoutRef.current);
+        }
+      }
+    }
+  };
+
+  const handleUndoAction = () => {
+    if (undoState) {
+      if (undoState.type === 'delete') {
+        if (deletedUnlockedStack.length > 0) {
+          const [lastDeleted, ...remaining] = deletedUnlockedStack;
+          restoreUnlockedReward(lastDeleted);
+          setDeletedUnlockedStack(remaining);
+
+          if (remaining.length > 0) {
+            if (undoTimeoutRef.current) {
+              clearTimeout(undoTimeoutRef.current);
+            }
+            undoTimeoutRef.current = setTimeout(() => {
+              setShowUndo(false);
+              setDeletedUnlockedStack([]);
+              setUndoState(null);
+            }, 5000);
+            return;
+          }
+        }
+      } else if (undoState.type === 'delete-custom') {
+        if (deletedCustomStack.length > 0) {
+          const [lastDeleted, ...remaining] = deletedCustomStack;
+          restoreReward(lastDeleted);
+          setDeletedCustomStack(remaining);
+
+          if (remaining.length > 0) {
+            if (undoTimeoutRef.current) {
+              clearTimeout(undoTimeoutRef.current);
+            }
+            undoTimeoutRef.current = setTimeout(() => {
+              setShowUndo(false);
+              setDeletedCustomStack([]);
+              setUndoState(null);
+            }, 5000);
+            return;
+          }
+        }
+      } else if (undoState.type === 'fulfill') {
+        toggleRewardFulfilled(undoState.itemId);
+      }
+      setShowUndo(false);
+      setUndoState(null);
+      setDeletedUnlockedStack([]);
+      setDeletedCustomStack([]);
+      if (undoTimeoutRef.current) {
+        clearTimeout(undoTimeoutRef.current);
+      }
+    }
+  };
 
   const shakeAnim = React.useRef(new Animated.Value(0)).current;
 
@@ -229,26 +353,25 @@ export const MyRewardsScreen = () => {
                     importantForAutofill="no"
                     textContentType="oneTimeCode"
                   />
-                  <Button 
-                    title="Cancel" 
-                    onPress={() => {
-                      setShowPinInput(false);
-                      setPin('');
-                    }} 
-                    variant="outline"
-                    style={{ marginTop: theme.spacing.md }}
-                  />
                 </View>
               ) : (
                 <>
-                  <Text style={styles.successCuteCopy}>
-                    I've just unlocked a reward for my social skills!{'\n\n'}Here's what I chose:
-                  </Text>
+                  <View style={styles.successTitleContainer}>
+                    <Text style={styles.successTitle}>Reward Unlocked!</Text>
+                    <View style={styles.brushUnderline} />
+                  </View>
+                  
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
                       <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color={theme.colors.text} />
                     </View>
                     <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
+                  </View>
+
+                  <View style={styles.successCopyBox}>
+                    <Text style={styles.successCuteCopy}>
+                      Great job practicing your social skills!{"\n\n"}Ask a parent to approve this reward for you.
+                    </Text>
                   </View>
 
                   <Button 
@@ -300,8 +423,15 @@ export const MyRewardsScreen = () => {
               <RewardList 
                 rewards={rewards} 
                 onRedeemSuccess={setRedeemedReward}
-                onEdit={(reward) => { setRewardToEdit(reward); setShowEditPin(true); }}
-                onDelete={(reward) => { setRewardToDelete(reward); setShowDeletePin(true); }}
+                onEdit={(reward) => {
+                  setRewardToEdit(reward);
+                  setEditTitle(reward.title);
+                  setEditCost(String(reward.cost));
+                  setShowEditForm(true);
+                }}
+                onDelete={(reward) => {
+                  handleDeleteReward(reward);
+                }}
               />
               <Button 
                 title="Add New Reward" 
@@ -319,15 +449,13 @@ export const MyRewardsScreen = () => {
                     return b.timestamp - a.timestamp;
                   }
                   return a.isFulfilled ? 1 : -1;
-                }).map((ur, index) => (
+                }).map((reward) => (
                   <UnlockedRewardItem 
-                    key={ur.id} 
-                    reward={ur} 
-                    isHighlighted={highlightFirstItem && index === 0}
-                    onToggle={(id) => {
-                      setRewardToFulfill(id);
-                      setShowFulfillPin(true);
-                    }} 
+                    key={reward.id} 
+                    reward={reward} 
+                    isHighlighted={highlightFirstItem && unlockedRewards[0]?.id === reward.id}
+                    onToggle={handleToggleFulfilled}
+                    onDelete={handleDeleteUnlocked}
                   />
                 ))
               )}
@@ -522,6 +650,19 @@ export const MyRewardsScreen = () => {
         </Pressable>
       </Modal>
 
+      {showUndo && (
+        <View style={styles.undoToastWrapper}>
+          <View style={styles.undoToastChip}>
+            <Text style={styles.undoToastText}>
+              {undoState?.type === 'fulfill' ? 'Reward marked as received' : 'Reward deleted'}
+            </Text>
+            <Pressable onPress={handleUndoAction} style={styles.undoButton}>
+              <Text style={styles.undoButtonText}>Undo</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+
     </View>
   );
 };
@@ -585,14 +726,12 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    
-    
-    ...theme.shadows.glow,
   },
   successRewardRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: theme.spacing.lg,
   },
   successIconWrapper: {
     backgroundColor: theme.colors.successGreenSoft,
@@ -603,25 +742,55 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
   },
   successRewardLabel: {
-    ...theme.typography.body,
-    fontWeight: '700',
+    ...theme.typography.subheading,
     color: theme.colors.text,
     marginLeft: 12,
     textTransform: 'capitalize',
   },
-  successCuteCopy: {
-    ...theme.typography.body,
-    fontStyle: 'italic',
-    fontSize: 19,
-    color: theme.colors.text,
+  successTitle: {
+    ...theme.typography.subheading,
     textAlign: 'center',
-    marginBottom: 32,
+    color: theme.colors.text,
+    marginBottom: 0,
+  },
+  successTitleContainer: {
+    position: 'relative',
+    alignSelf: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  brushUnderline: {
+    position: 'absolute',
+    bottom: -2,
+    left: '2%',
+    right: '2%',
+    height: 8,
+    backgroundColor: '#BEF264',
+    borderRadius: 4,
+    transform: [{ rotate: '-1.5deg' }],
+    zIndex: -1,
+  },
+  successCopyBox: {
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.sm,
+    padding: theme.spacing.md,
+    width: '100%',
+    marginBottom: theme.spacing.lg,
+  },
+  successCuteCopy: {
+    ...theme.typography.heading,
+    fontFamily: FONTS.regular,
+    fontSize: 19,
+    fontWeight: '400',
+    lineHeight: 26,
+    letterSpacing: 0.2,
+    color: '#111827',
+    textAlign: 'center',
   },
   approveButton: {
-    marginTop: 32,
+    marginTop: theme.spacing.md,
     width: '100%',
-    borderColor: theme.colors.primary,
-    borderWidth: 2,
   },
   pinContainer: {
     width: '100%',
@@ -687,9 +856,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    
-    
-    ...theme.shadows.glow,
   },
   editInput: {
     width: '100%',
@@ -719,8 +885,42 @@ const styles = StyleSheet.create({
     ...theme.shadows.soft,
   },
   toastText: {
-    ...theme.typography.caption,
+    ...theme.typography.button,
     color: theme.colors.text,
+    fontSize: 14,
   },
-
+  undoToastWrapper: {
+    position: 'absolute',
+    bottom: 90,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    zIndex: 10000,
+  },
+  undoToastChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#374151',
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.full,
+    justifyContent: 'space-between',
+    width: '90%',
+    maxWidth: 400,
+  },
+  undoToastText: {
+    ...theme.typography.button,
+    color: theme.colors.white,
+    fontSize: 14,
+  },
+  undoButton: {
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 4,
+  },
+  undoButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.primary,
+    fontSize: 14,
+    fontWeight: '700',
+  },
 });

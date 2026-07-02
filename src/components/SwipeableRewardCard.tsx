@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: theme.borderRadius.md,
   },
   deleteBtn: {
-    backgroundColor: theme.colors.danger,
+    backgroundColor: theme.colors.secondaryText,
     borderTopRightRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },

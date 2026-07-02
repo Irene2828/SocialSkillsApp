@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
 import { QuizCategory } from '../data/types';
@@ -10,6 +10,7 @@ interface QuizCardProps {
   category: QuizCategory;
   onPressStart: () => void;
   onDelete?: () => void;
+  onRename?: () => void;
   isFeatured?: boolean;
 }
 
@@ -26,7 +27,7 @@ const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'Font
 };
 
 
-export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete, isFeatured }) => {
+export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete, onRename, isFeatured }) => {
   const { name: iconName, family: iconFamily } = getCategoryIcon(category.id);
 
   return (
@@ -60,6 +61,17 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             <Text style={[styles.title, isFeatured && styles.featuredTitle]}>
               {category.title}
             </Text>
+            {category.isCustom && onRename && (
+              <Pressable 
+                onPress={(e) => {
+                  if (e && e.stopPropagation) e.stopPropagation();
+                  onRename();
+                }} 
+                style={styles.dotsButton}
+              >
+                <Ionicons name="ellipsis-horizontal" size={20} color={theme.colors.secondaryText} />
+              </Pressable>
+            )}
             {isFeatured && category.description && (
               <Text style={styles.descriptionText}>
                 {category.description}
@@ -185,5 +197,11 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
     marginTop: 2,
     textAlign: 'left',
+  },
+  dotsButton: {
+    marginTop: 6,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 4,
+    alignSelf: 'center',
   },
 });

@@ -14,6 +14,9 @@ interface RewardsContextType {
   updateReward: (id: string, updates: Partial<Pick<Reward, 'title' | 'cost'>>) => void;
   addUnlockedReward: (reward: Reward) => void;
   toggleRewardFulfilled: (id: string) => void;
+  deleteUnlockedReward: (id: string) => void;
+  restoreUnlockedReward: (reward: UnlockedReward) => void;
+  restoreReward: (reward: Reward) => void;
 }
 
 const DEFAULT_REWARDS: Reward[] = [
@@ -155,6 +158,25 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     saveUnlockedRewards(newList);
   };
 
+  const deleteUnlockedReward = (id: string) => {
+    const newList = unlockedRewards.filter(r => r.id !== id);
+    setUnlockedRewards(newList);
+    saveUnlockedRewards(newList);
+  };
+
+  const restoreUnlockedReward = (reward: UnlockedReward) => {
+    const newList = [reward, ...unlockedRewards];
+    setUnlockedRewards(newList);
+    saveUnlockedRewards(newList);
+  };
+
+  const restoreReward = (reward: Reward) => {
+    if (rewards.some(r => r.id === reward.id)) return;
+    const newRewards = [...rewards, reward];
+    setRewards(newRewards);
+    saveCustomRewards(newRewards);
+  };
+
   if (!isLoaded) return null;
 
   return (
@@ -168,7 +190,10 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       deleteReward,
       updateReward,
       addUnlockedReward,
-      toggleRewardFulfilled
+      toggleRewardFulfilled,
+      deleteUnlockedReward,
+      restoreUnlockedReward,
+      restoreReward
     }}>
       {children}
     </RewardsContext.Provider>

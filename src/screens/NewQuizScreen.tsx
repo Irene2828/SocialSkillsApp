@@ -43,7 +43,7 @@ const QUIZ_LEVELS: QuizLevel[] = [
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
-  const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz } = useQuizContext();
+  const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz } = useQuizContext();
   const allCategories = useMemo(() => [...QUIZ_CATEGORIES, ...customCategories], [customCategories]);
   const { showModal, showToast } = useFeedback();
   const navigation = useNavigation<any>();
@@ -57,6 +57,26 @@ export const NewQuizScreen = () => {
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
+
+  const [showRenameModal, setShowRenameModal] = useState(false);
+  const [quizToRenameId, setQuizToRenameId] = useState<string | null>(null);
+  const [renameTitle, setRenameTitle] = useState('');
+
+  const handleOpenRename = (category: any) => {
+    setQuizToRenameId(category.id);
+    setRenameTitle(category.title);
+    setShowRenameModal(true);
+  };
+
+  const handleSaveRename = () => {
+    if (quizToRenameId && renameTitle.trim()) {
+      renameCustomQuiz(quizToRenameId, renameTitle.trim());
+      showToast({ message: 'Quiz renamed!' });
+    }
+    setShowRenameModal(false);
+    setQuizToRenameId(null);
+    setRenameTitle('');
+  };
 
   const shakeAnim = React.useRef(new Animated.Value(0)).current;
 
@@ -319,20 +339,20 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Let's learn about..." style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
+        <Header title="Select a Quiz" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
         
         <View style={styles.tabContainer}>
           <Pressable 
             style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
             onPress={() => setActiveTab('general')}
           >
-            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>General</Text>
+            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>General Quizes</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom Quizes</Text>
+            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom</Text>
           </Pressable>
         </View>
 
@@ -361,6 +381,7 @@ export const NewQuizScreen = () => {
                       category={category} 
                       isFeatured={false}
                       onPressStart={() => handleSelectQuizCategory(category.id)} 
+                      onRename={() => handleOpenRename(category)}
                       onDelete={category.isCustom ? () => {
                         setQuizToDelete(category.id);
                         setShowDeletePin(true);
@@ -413,7 +434,7 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, zIndex: 2 }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, zIndex: 2, paddingHorizontal: 16 }}>
             <Pressable style={styles.backButton} onPress={handleBackToHome}>
               <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
@@ -423,16 +444,14 @@ export const NewQuizScreen = () => {
             </View>
           </View>
           
-          <Header 
-            title=""
-            style={{ marginTop: 0, paddingTop: 4, marginBottom: 12, paddingHorizontal: 0 }} 
-            rightElement={renderCoinJar()}
-          />
+          <Text style={[styles.questionCaption, { marginTop: 8, marginBottom: 8 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <ProgressBar 
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <Text style={[styles.questionCaption, { marginTop: -14, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, marginTop: -16, marginBottom: 8 }}>
+            {renderCoinJar()}
+          </View>
           <QuestionView 
             key={currentQuestion.id}
             question={currentQuestion} 
@@ -456,22 +475,25 @@ export const NewQuizScreen = () => {
 
     let coinsEarned = total;
 
+    const handleRedeemNow = () => {
+      handleBackToHome();
+      navigation.navigate('MyRewards');
+    };
+
     return (
       <Pressable style={styles.completedContainer} onPress={handleBackToHome}>
         <SilverDust />
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
-            
-            <Text style={[styles.messageText, { marginBottom: 48 }]}>{message}</Text>
+            <View style={styles.titleContainer}>
+              <Text style={styles.completedTitle}>{message}</Text>
+              {message === "Awesome!" && <View style={styles.brushUnderline} />}
+            </View>
 
-            <Text style={{ ...theme.typography.heading, fontSize: 16, color: theme.colors.text, marginBottom: 12, letterSpacing: 0.3 }}>
-              + {coinsEarned} points earned for this quiz!
-            </Text>
-
-            <View style={{ ...styles.coinJarContainer, backgroundColor: theme.colors.errorSoft, borderWidth: 0, marginBottom: 48, paddingHorizontal: 16, paddingVertical: 8 }}>
+            <View style={styles.completedCoinRow}>
               <FontAwesome5 
                 name="coins" 
-                size={20} 
+                size={24} 
                 color={theme.colors.primary} 
                 style={{
                   textShadowColor: '#9CA3AF',
@@ -479,24 +501,19 @@ export const NewQuizScreen = () => {
                   textShadowRadius: 1
                 }}
               />
-              <Text style={{ ...styles.coinJarText, fontSize: 18 }}>{coinBalance}</Text>
+              <Text style={styles.completedCoinText}>+{coinsEarned} Coins Earned!</Text>
             </View>
-          </Animated.View>
 
-          <Button 
-            title="Take Another Quiz" 
-            onPress={handleBackToHome} 
-            style={[styles.actionButton, styles.primaryButton]}
-          />
-          <Button 
-            title="Redeem Points" 
-            onPress={() => {
-              handleBackToHome();
-              navigation.navigate('MyRewards');
-            }} 
-            variant="secondary"
-            style={[styles.actionButton, { borderWidth: 0 }]}
-          />
+            <Button
+              title="Redeem Now"
+              onPress={handleRedeemNow}
+              style={styles.completedButton}
+            />
+
+            <Pressable style={styles.linkButton} onPress={handleBackToHome}>
+              <Text style={styles.linkButtonText}>One More Quiz</Text>
+            </Pressable>
+          </Animated.View>
         </Pressable>
       </Pressable>
     );
@@ -592,6 +609,31 @@ export const NewQuizScreen = () => {
         </Pressable>
       </Modal>
 
+      {/* Rename Quiz Modal */}
+      <Modal visible={showRenameModal} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowRenameModal(false);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.pinTitle}>Rename Quiz</Text>
+              <TextInput
+                style={[styles.editInput, { marginBottom: theme.spacing.lg }]}
+                value={renameTitle}
+                onChangeText={setRenameTitle}
+                placeholder="Quiz Name"
+                maxLength={40}
+              />
+              <Button
+                title="Save"
+                onPress={handleSaveRename}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
     </View>
   );
 };
@@ -665,20 +707,31 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     backgroundColor: theme.colors.white,
-    ...theme.shadows.glow,
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: 48,
   },
   completedTitle: {
     ...theme.typography.heading,
-    fontSize: 28,
-    marginBottom: theme.spacing.sm,
+    fontSize: 24,
+    textAlign: 'center',
+    color: theme.colors.text,
+    marginBottom: theme.spacing.lg,
   },
-  categoryText: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
+  completedCoinRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing.xl,
+  },
+  completedCoinText: {
+    ...theme.typography.subheading,
+    color: theme.colors.text,
+    marginLeft: theme.spacing.xs,
+  },
+  completedButton: {
+    marginTop: theme.spacing.md,
+    width: '100%',
   },
   scoreContainer: {
     justifyContent: 'center',
@@ -754,10 +807,10 @@ const styles = StyleSheet.create({
   },
   screenFolderTabText: {
     ...theme.typography.body,
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.regular,
     fontSize: 14,
-    fontWeight: '600',
-    letterSpacing: 0.5,
+    fontWeight: '400',
+    letterSpacing: 0.1,
     color: theme.colors.text,
   },
   coinJarText: {
@@ -794,7 +847,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    ...theme.shadows.glow,
   },
   pinContainer: {
     width: '100%',
@@ -825,7 +877,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.white,
-    ...theme.shadows.soft,
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -951,5 +1002,41 @@ const styles = StyleSheet.create({
     right: theme.spacing.md,
     zIndex: 10,
     padding: theme.spacing.xs,
+  },
+  linkButton: {
+    marginTop: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+  },
+  titleContainer: {
+    position: 'relative',
+    alignSelf: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  brushUnderline: {
+    position: 'absolute',
+    bottom: -2,
+    left: '2%',
+    right: '2%',
+    height: 8,
+    backgroundColor: '#BEF264',
+    borderRadius: 4,
+    transform: [{ rotate: '-1.5deg' }],
+    zIndex: -1,
+  },
+  editInput: {
+    width: '100%',
+    height: 48,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing.md,
+    fontSize: 16,
+    color: theme.colors.text,
   },
 });

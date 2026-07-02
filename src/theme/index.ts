@@ -12,8 +12,8 @@ export const theme = {
     background: '#F0F1F3',
     primary: '#BEF264',
     primarySoft: '#ECFCCB',
-    success: '#FFC857',
-    successSoft: '#FFF5E5',
+    success: '#BEF264',
+    successSoft: '#ECFCCB',
     successGreenSoft: '#E4F8E5',
     danger: '#EF8B8B',       // muted dusty-rose — signals destructive without alarming kids
     dangerSoft: '#FEE2E2',   // light red background for danger zones

@@ -42,7 +42,11 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       disabled={disabled}
     >
       <Text style={[styles.text, textStyle]}>{text}</Text>
-      <Ionicons name={iconName} size={24} color={iconColor} />
+      {state === 'default' ? (
+        <View style={styles.checkboxCircle} />
+      ) : (
+        <Ionicons name={iconName} size={24} color={iconColor} />
+      )}
     </ScalePressable>
   );
 };
@@ -85,5 +89,13 @@ const styles = StyleSheet.create({
   },
   incorrectText: {
     color: theme.colors.secondaryText,
+  },
+  checkboxCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: theme.colors.primary,
+    backgroundColor: 'transparent',
   },
 });

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Pressable, Animated } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Animated, PanResponder } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { UnlockedReward } from '../data/types';
 import { theme } from '../theme';
@@ -7,14 +7,53 @@ import { theme } from '../theme';
 interface UnlockedRewardItemProps {
   reward: UnlockedReward;
   onToggle: (id: string) => void;
+  onDelete: (id: string) => void;
   isHighlighted?: boolean;
 }
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, onToggle, isHighlighted }) => {
+export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, onToggle, onDelete, isHighlighted }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const borderGlow = useRef(new Animated.Value(0)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const swipeOpacity = useRef(new Animated.Value(1)).current;
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onMoveShouldSetPanResponder: (_, gs) =>
+        Math.abs(gs.dx) > 8 && Math.abs(gs.dy) < 20,
+      onPanResponderMove: (_, gs) => {
+        const x = Math.min(0, gs.dx);
+        translateX.setValue(x);
+      },
+      onPanResponderRelease: (_, gs) => {
+        if (gs.dx < -100) {
+          // Swipe out and trigger delete
+          Animated.parallel([
+            Animated.timing(translateX, {
+              toValue: -500,
+              duration: 200,
+              useNativeDriver: true,
+            }),
+            Animated.timing(swipeOpacity, {
+              toValue: 0,
+              duration: 200,
+              useNativeDriver: true,
+            })
+          ]).start(() => {
+            onDelete(reward.id);
+          });
+        } else {
+          // Snap back
+          Animated.spring(translateX, {
+            toValue: 0,
+            useNativeDriver: true,
+          }).start();
+        }
+      },
+    })
+  ).current;
 
   useEffect(() => {
     if (isHighlighted) {
@@ -50,7 +89,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
   });
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }, { translateX }], opacity: swipeOpacity }} {...panResponder.panHandlers}>
       <AnimatedPressable 
         style={[
           styles.container, 
@@ -70,9 +109,11 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           <Text style={[styles.title, reward.isFulfilled && styles.titleFulfilled]} numberOfLines={2}>
             {reward.title}
           </Text>
-          <Text style={styles.date}>
-            Unlocked: {new Date(reward.timestamp).toLocaleDateString()}
-          </Text>
+          {!reward.isFulfilled && (
+            <Text style={styles.date}>
+              Unlocked: {new Date(reward.timestamp).toLocaleDateString()}
+            </Text>
+          )}
         </View>
         {reward.isFulfilled ? (
           <View style={styles.receivedChip}>
@@ -147,7 +188,7 @@ const styles = StyleSheet.create({
   receivedChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.neutralGrey,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,

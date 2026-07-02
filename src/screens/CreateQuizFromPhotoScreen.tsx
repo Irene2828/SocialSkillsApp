@@ -111,31 +111,34 @@ export const CreateQuizFromPhotoScreen = () => {
     try {
       // OpenAI requires the data URI prefix for base64 images
       const dataUri = `data:image/jpeg;base64,${imageBase64}`;
-      const quiz = await generateQuizFromImage(dataUri);
-      setGeneratedQuiz(quiz);
+      const responseData = await generateQuizFromImage(dataUri);
+      setGeneratedQuiz(responseData);
       
-      // Save it to context
-      const newCategoryId = `custom_ai_${Date.now()}`;
-      const newCategory = {
-        id: newCategoryId,
-        title: quiz.concept,
-        description: 'AI Generated Quiz',
-        icon: 'sparkles', // magical icon for AI generated
-        color: '#A78BFA', // Purple styling to stand out
-        isCustom: true
-      };
-      
-      const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-        id: `${newCategoryId}-q${index}`,
-        category: newCategoryId,
-        difficulty: selectedDifficulty,
-        scenario: q.question,
-        options: q.options,
-        correctAnswerIndex: q.correctIndex,
-        explanation: q.explanation || 'Great job!'
-      }));
-      
-      addCustomQuiz(newCategory, questionsWithCategory);
+      // Save all 3 generated quizzes to context
+      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
+        const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
+        const newCategory = {
+          id: newCategoryId,
+          title: quiz.concept,
+          description: 'AI Generated Quiz',
+          icon: 'sparkles', // magical icon for AI generated
+          color: '#A78BFA', // Purple styling to stand out
+          isCustom: true
+        };
+        
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+          id: `${newCategoryId}-q${index}`,
+          category: newCategoryId,
+          difficulty: selectedDifficulty,
+          scenario: q.question,
+          options: q.options,
+          correctAnswerIndex: q.correctIndex,
+          explanation: q.explanation || 'Great job!'
+        }));
+        
+        addCustomQuiz(newCategory, questionsWithCategory);
+      });
+
       setScreenState('success');
     } catch (error: any) {
       setErrorMessage(error.message || 'An error occurred while generating the quiz.');
@@ -230,12 +233,15 @@ export const CreateQuizFromPhotoScreen = () => {
       >
         <SilverDust />
         <Pressable onPress={(e) => { if (e && e.stopPropagation) e.stopPropagation(); }} style={styles.successCard}>
-          <Text style={styles.successTitle}>Success!</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.successTitle}>3 Quizzes Generated!</Text>
+            <View style={styles.brushUnderline} />
+          </View>
           <Text style={styles.successSubtitle}>
-            Your new quiz is added to your quiz library.
+            They have been added to your Custom tab in Quiz Library.
           </Text>
           <Button 
-            title="Start Quiz" 
+            title="Go to Library" 
             onPress={() => {
                setScreenState('idle');
                navigation.navigate('NewQuiz', { tab: 'ai' });
@@ -246,15 +252,14 @@ export const CreateQuizFromPhotoScreen = () => {
             style={{ marginTop: 16 }}
             onPress={() => {
                setScreenState('idle');
-               navigation.navigate('NewQuiz', { tab: 'ai' });
             }} 
           >
-            <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText, textDecorationLine: 'underline' }}>
-              Go to Quiz Library
+            <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText }}>
+              Create Another
             </Text>
           </Pressable>
         </Pressable>
-        <Text style={styles.successDismissHint}>Tap outside to create another quiz</Text>
+        <Text style={styles.successDismissHint}>Tap outside to close</Text>
       </Pressable>
     </Modal>
   );
@@ -276,23 +281,22 @@ export const CreateQuizFromPhotoScreen = () => {
     <View style={{ flex: 1 }}>
       <AnimatedCubesBackground />
       <ScreenWrapper transparent>
-        <Header 
-          title="Create Quiz" 
-        />
-      {screenState !== 'generating' && screenState !== 'success' && (
-        <View style={styles.headerSubtitleContainer}>
-          <Text style={styles.headerSubtitle}>
-            Upload a page and AI will create original quiz questions based on the underlying concept.
-          </Text>
-        </View>
-      )}
-
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        {screenState === 'idle' && renderIdle()}
-        {screenState === 'imageSelected' && renderImageSelected()}
-        {screenState === 'generating' && renderGenerating()}
-        {screenState === 'error' && renderError()}
-      </ScrollView>
+        <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          <Header 
+            title="Create Quiz" 
+          />
+          {screenState !== 'generating' && screenState !== 'success' && (
+            <View style={styles.headerSubtitleContainer}>
+              <Text style={styles.headerSubtitle}>
+                Upload a page and AI will create original quiz questions based on the underlying concept.
+              </Text>
+            </View>
+          )}
+          {screenState === 'idle' && renderIdle()}
+          {screenState === 'imageSelected' && renderImageSelected()}
+          {screenState === 'generating' && renderGenerating()}
+          {screenState === 'error' && renderError()}
+        </ScrollView>
       </ScreenWrapper>
       {renderSuccess()}
     </View>
@@ -313,7 +317,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   idleContainer: {
-    flex: 1,
+    width: '100%',
     alignItems: 'center',
   },
   uploadCard: {
@@ -371,7 +375,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   generatingContainer: {
-    flex: 1,
+    width: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -399,18 +403,17 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   successTitle: {
-    ...theme.typography.body,
-    fontWeight: '700',
-    marginBottom: theme.spacing.sm,
+    ...theme.typography.subheading,
     textAlign: 'center',
     color: theme.colors.text,
+    marginBottom: 0,
   },
   successSubtitle: {
     ...theme.typography.body,
-    fontStyle: 'italic',
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
   },
   conceptText: {
     ...theme.typography.body,
@@ -496,5 +499,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     opacity: 0.7,
   },
-
+  titleContainer: {
+    position: 'relative',
+    alignSelf: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  brushUnderline: {
+    position: 'absolute',
+    bottom: -2,
+    left: '2%',
+    right: '2%',
+    height: 8,
+    backgroundColor: '#BEF264',
+    borderRadius: 4,
+    transform: [{ rotate: '-1.5deg' }],
+    zIndex: -1,
+  },
 });

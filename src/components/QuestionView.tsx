@@ -143,7 +143,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                       textShadowRadius: 1
                     }}
                   />
-                  <Text style={styles.coinRewardText}>+1 Coin!</Text>
+                  <Text style={styles.coinRewardText}>+1 Coin Earned!</Text>
                 </View>
               )}
 
@@ -175,11 +175,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
   },
   cardWrapper: {
     position: 'relative',
-    marginTop: theme.spacing.lg,
+    marginTop: theme.spacing.xs,
   },
   folderTab: {
     position: 'absolute',
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   animatedContainer: {
-    flex: 1,
+    width: '100%',
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
@@ -246,7 +246,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     backgroundColor: theme.colors.white,
-    ...theme.shadows.glow,
   },
   feedbackContainer: {
     padding: theme.spacing.xl,
@@ -269,12 +268,21 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   explanationText: {
-    ...theme.typography.body,
-    fontStyle: 'italic',
+    ...theme.typography.heading,
+    fontFamily: FONTS.regular,
     fontSize: 19,
-    marginBottom: theme.spacing.md,
+    fontWeight: '400',
+    lineHeight: 26,
+    letterSpacing: 0.2,
     textAlign: 'center',
-    color: theme.colors.secondaryText,
+    color: '#111827',
+    borderWidth: 1.5,
+    borderStyle: 'dashed',
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.sm,
+    padding: theme.spacing.md,
+    width: '100%',
+    marginBottom: theme.spacing.md,
   },
   coinRewardContainer: {
     flexDirection: 'row',
