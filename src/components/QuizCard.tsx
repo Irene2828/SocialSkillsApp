@@ -29,7 +29,11 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
   const { name: iconName, family: iconFamily } = getCategoryIcon(category.id);
 
   return (
-    <ScalePressable onPress={onPressStart} style={[styles.container, isFeatured && styles.featuredContainer]}>
+    <ScalePressable 
+      onPress={onPressStart} 
+      onLongPress={onDelete}
+      style={[styles.container, isFeatured && styles.featuredContainer]}
+    >
       <Card style={[styles.card, isFeatured && styles.featuredCard]}>
         {category.isNew && (
           <View style={styles.newBadge}>
@@ -63,19 +67,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
           </View>
         </View>
 
-        {onDelete && (
-          <View style={{ position: 'absolute', right: 4, top: -8, zIndex: 100, elevation: 10 }}>
-            <ScalePressable 
-              style={{ padding: 8 }} 
-              onPress={(e: any) => {
-                if (e && e.stopPropagation) e.stopPropagation();
-                onDelete();
-              }}
-            >
-              <Ionicons name="remove" size={28} color={theme.colors.error} />
-            </ScalePressable>
-          </View>
-        )}
+
       </Card>
     </ScalePressable>
   );

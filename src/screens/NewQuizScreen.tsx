@@ -317,7 +317,7 @@ export const NewQuizScreen = () => {
             style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Generated with AI</Text>
+            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom Quizzes</Text>
           </Pressable>
         </View>
 
@@ -713,6 +713,8 @@ const styles = StyleSheet.create({
   },
   questionCaption: {
     ...theme.typography.body,
+    fontFamily: FONTS.bold,
+    fontWeight: '700',
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginTop: 4,
@@ -740,7 +742,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
-    borderBottomWidth: 0,
+    borderRadius: theme.borderRadius.lg,
     zIndex: -1, // Drop it behind the coin jar if needed, or 0
   },
   screenFolderTabText: {
