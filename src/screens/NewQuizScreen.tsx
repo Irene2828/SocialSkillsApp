@@ -626,6 +626,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.text,
   },
+  emptyAiSub: {
+    ...theme.typography.body,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
+    marginTop: theme.spacing.sm,
+  },
   pinSubtitle: {
     ...theme.typography.body,
     fontStyle: 'italic',
