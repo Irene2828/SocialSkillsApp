@@ -15,6 +15,8 @@ export const theme = {
     success: '#FFC857',
     successSoft: '#FFF5E5',
     successGreenSoft: '#E4F8E5',
+    danger: '#EF8B8B',       // muted dusty-rose — signals destructive without alarming kids
+    dangerSoft: '#FEE2E2',   // light red background for danger zones
     error: '#9CA3AF',
     errorSoft: '#F3F4F6',
     neutralGrey: '#E5E7EB',
@@ -26,14 +28,14 @@ export const theme = {
     border: '#F3F4F6',
   },
   typography: {
-    // Large display headlines — tight tracking like SF Pro Display
+    // Large display headlines
     heading: {
       fontFamily: FONTS.semiBold,
       fontSize: 24,
       fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 32,
-      letterSpacing: -0.5,
+      letterSpacing: -0.2,
     },
 
     // Hero display text
@@ -43,7 +45,7 @@ export const theme = {
       fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 52,
-      letterSpacing: -0.5,
+      letterSpacing: -0.2,
     },
 
     // Subheading text
@@ -53,7 +55,7 @@ export const theme = {
       fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 28,
-      letterSpacing: -0.2,
+      letterSpacing: 0,
     },
 
 

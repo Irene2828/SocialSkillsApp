@@ -47,10 +47,8 @@ const styles = StyleSheet.create({
     minHeight: 40,
   },
   title: {
-    ...theme.typography.heading,
+    ...theme.typography.subheading,
     textAlign: 'center',
-    fontSize: 18,
-    fontWeight: '600',
   },
   leftElementContainer: {
     position: 'absolute',

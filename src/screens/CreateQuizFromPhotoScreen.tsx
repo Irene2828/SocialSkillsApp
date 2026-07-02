@@ -208,7 +208,7 @@ export const CreateQuizFromPhotoScreen = () => {
   const renderGenerating = () => (
     <View style={styles.generatingContainer}>
       <Animated.View style={{ transform: [{ rotate: spin }] }}>
-        <Ionicons name="sparkles" size={64} color={theme.colors.primary} />
+        <Ionicons name="sparkles-outline" size={64} color={theme.colors.primary} />
       </Animated.View>
       <Text style={styles.loadingText}>{loadingText}</Text>
       <View style={styles.progressContainer}>
@@ -267,7 +267,7 @@ export const CreateQuizFromPhotoScreen = () => {
 
   const renderError = () => (
     <View style={styles.errorContainer}>
-      <Ionicons name="alert-circle" size={64} color={theme.colors.error} />
+      <Ionicons name="alert-circle-outline" size={64} color={theme.colors.error} />
       <Text style={styles.errorTitle}>Oops!</Text>
       <Text style={styles.errorMessage}>{errorMessage}</Text>
       <Button 
@@ -347,9 +347,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   supportedText: {
-    ...theme.typography.body,
-    fontSize: 14,
-    color: theme.colors.secondaryText,
+    ...theme.typography.caption,
     marginTop: theme.spacing.lg,
   },
   previewCard: {
@@ -384,8 +382,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    ...theme.typography.heading,
-    fontSize: 20,
+    ...theme.typography.subheading,
     color: theme.colors.text,
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.lg,
@@ -408,14 +405,18 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   successTitle: {
-    ...theme.typography.heading,
+    ...theme.typography.body,
+    fontWeight: '700',
+    marginBottom: theme.spacing.sm,
+    textAlign: 'center',
     color: theme.colors.text,
-    marginBottom: theme.spacing.xs,
   },
   successSubtitle: {
     ...theme.typography.body,
-    color: theme.colors.secondaryText,
+    fontStyle: 'italic',
     textAlign: 'center',
+    color: theme.colors.secondaryText,
+    marginBottom: theme.spacing.xl,
   },
   conceptText: {
     ...theme.typography.body,
@@ -426,11 +427,11 @@ const styles = StyleSheet.create({
   settingsCard: {
     marginBottom: theme.spacing.xl,
     padding: theme.spacing.lg,
-    borderRadius: 20,
+    borderRadius: theme.borderRadius.sm,
   },
   sectionTitle: {
-    ...theme.typography.heading,
-    fontSize: 16,
+    ...theme.typography.body,
+    fontWeight: '600',
     marginBottom: theme.spacing.md,
     color: theme.colors.text,
   },
@@ -441,8 +442,8 @@ const styles = StyleSheet.create({
   selectorItem: {
     flex: 1,
     paddingVertical: 12,
-    marginHorizontal: 4,
-    borderRadius: 12,
+    marginHorizontal: theme.spacing.xs,
+    borderRadius: theme.borderRadius.sm,
     backgroundColor: theme.colors.background,
     alignItems: 'center',
     borderWidth: 1,
@@ -453,8 +454,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.primary,
   },
   selectorText: {
-    ...theme.typography.body,
-    fontWeight: '600',
+    ...theme.typography.button,
     color: theme.colors.secondaryText,
   },
   selectorTextActive: {
@@ -482,19 +482,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.85)', // Standardized white overlay
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
+    padding: theme.spacing.xl,
   },
   successCard: {
     width: '100%',
     maxWidth: 500,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
-    paddingVertical: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.lg,
+    padding: theme.spacing.xl,
+    paddingTop: 48,
     alignItems: 'center',
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    overflow: 'hidden',
+    ...theme.shadows.glow,
   },
   successDismissHint: {
     ...theme.typography.caption,

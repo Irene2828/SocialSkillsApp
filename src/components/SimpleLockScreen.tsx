@@ -6,7 +6,7 @@ import { theme } from '../theme';
 export const SimpleLockScreen: React.FC = () => {
   return (
     <View style={styles.container}>
-      <Ionicons name="moon" size={64} color={theme.colors.primary} style={styles.icon} />
+      <Ionicons name="moon-outline" size={64} color={theme.colors.primary} style={styles.icon} />
       <Text style={styles.title}>Great work today!</Text>
       <Text style={styles.subtitle}>Come back tomorrow 😊</Text>
     </View>
@@ -25,14 +25,12 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.heading,
-    fontSize: 28,
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,
     textAlign: 'center',
   },
   subtitle: {
     ...theme.typography.body,
-    fontSize: 18,
     color: theme.colors.secondaryText,
     textAlign: 'center',
   },

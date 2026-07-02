@@ -5,7 +5,6 @@ import { Button } from '../components/Button';
 import { theme } from '../theme';
 import { useNavigation } from '@react-navigation/native';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
-import { AnimatedExplodingWord } from '../components/AnimatedExplodingWord';
 
 const useAttentionLoop = () => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -38,12 +37,6 @@ const useAttentionLoop = () => {
   return { fadeAnim, scaleAnim };
 };
 
-const PROMPTS = [
-  "Did you say please today?",
-  "How are you feeling right now?",
-  "Who did you help today?",
-  "Ready for an adventure?"
-];
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
@@ -51,14 +44,6 @@ export const HomeScreen = () => {
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
   
-  const [promptIndex, setPromptIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setPromptIndex((prev) => (prev + 1) % PROMPTS.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
 
 
   return (
@@ -79,7 +64,7 @@ export const HomeScreen = () => {
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', opacity: 0.8 }}>
               <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Social </Text>
-              <AnimatedExplodingWord word="Explorer" style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]} />
+              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Explorer</Text>
             </View>
           </View>
 
@@ -91,7 +76,7 @@ export const HomeScreen = () => {
               transform: [{ scale: scaleAnim }],
             }}
           >
-            <Text style={styles.startSubtitle}>{PROMPTS[promptIndex]}</Text>
+            <Text style={styles.startSubtitle}>Ready to test?</Text>
             <Button
               title="Start Quiz"
               onPress={() => navigation.navigate('NewQuiz')}

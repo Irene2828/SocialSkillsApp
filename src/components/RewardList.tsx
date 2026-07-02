@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Reward } from '../data/types';
 import { SwipeableRewardCard } from './SwipeableRewardCard';
 import { useRewards } from '../context/RewardsContext';
+import { useFeedback } from '../context/FeedbackContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -15,6 +16,7 @@ interface RewardListProps {
 
 export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess, onEdit, onDelete }) => {
   const { deductCoins, coinBalance } = useRewards();
+  const { showModal } = useFeedback();
   const [processingId, setProcessingId] = useState<string | null>(null);
 
   const handleRedeem = async (reward: Reward) => {
@@ -27,7 +29,7 @@ export const RewardList: React.FC<RewardListProps> = ({ rewards, onRedeemSuccess
     if (success) {
       if (onRedeemSuccess) onRedeemSuccess(reward);
     } else {
-      Alert.alert('Oops!', 'You need more coins to unlock this reward.');
+      showModal({ title: 'Oops!', message: 'You need more coins to unlock this reward.', type: 'error' });
     }
 
     setProcessingId(null);

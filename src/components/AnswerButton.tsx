@@ -22,13 +22,13 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
     case 'unselected-correct':
       buttonStyle = styles.correctButton;
       textStyle = styles.correctText;
-      iconName = 'checkmark-circle';
+      iconName = 'checkmark-circle-outline';
       iconColor = theme.colors.success;
       break;
     case 'selected-incorrect':
       buttonStyle = styles.incorrectButton;
       textStyle = styles.incorrectText;
-      iconName = 'close-circle';
+      iconName = 'close-circle-outline';
       iconColor = theme.colors.error;
       break;
     default:

@@ -18,7 +18,7 @@ export const QuickStartButton: React.FC<QuickStartButtonProps> = ({ onPress }) =
         end={{ x: 1, y: 1 }}
         style={styles.gradient}
       >
-        <Ionicons name="play-circle" size={32} color={theme.colors.text} style={styles.icon} />
+        <Ionicons name="play-circle-outline" size={32} color={theme.colors.text} style={styles.icon} />
         <Text style={styles.text}>Start Quick Quiz</Text>
       </LinearGradient>
     </ScalePressable>

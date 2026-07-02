@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Screenshot QA Review</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #1f2937;
+      color: #f9fafb;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      position: sticky;
+      top: 0;
+      background: rgba(31, 41, 55, 0.95);
+      padding: 10px 0;
+      z-index: 100;
+    }
+    .export-btn {
+      background: #bef264;
+      color: #111827;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .export-btn:hover {
+      background: #a3e635;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    .image-container {
+      position: relative;
+      background: #374151;
+      border-radius: 12px;
+      padding: 10px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+    .drag-handle {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      cursor: grab;
+      color: #9ca3af;
+      font-size: 16px;
+      z-index: 5;
+    }
+    .image-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #e5e7eb;
+      margin-left: 24px;
+      margin-right: 24px;
+      padding: 4px;
+      border: 1px dashed transparent;
+      border-radius: 4px;
+    }
+    .image-title:hover, .image-title:focus {
+      border-color: #9ca3af;
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .image-container.dragging {
+      opacity: 0.5;
+    }
+    .image-wrapper {
+      position: relative;
+      cursor: crosshair;
+    }
+    .screenshot {
+      width: 100%;
+      min-height: 200px;
+      height: auto;
+      border-radius: 8px;
+      display: block;
+      border: 1px solid #e5e7eb;
+      object-fit: contain;
+      background-color: #4b5563;
+      color: #9ca3af;
+      font-size: 14px;
+      text-align: center;
+      line-height: 200px; /* basic fallback alignment */
+    }
+    .image-wrapper.dragover {
+      outline: 4px dashed #bef264;
+      opacity: 0.8;
+    }
+    .pin {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: #ef8b8b;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: bold;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      z-index: 10;
+    }
+    .comment-box {
+      position: absolute;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 20;
+      width: 200px;
+    }
+    .comment-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 8px;
+      padding: 6px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-family: inherit;
+    }
+    .comment-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+    .comment-btn {
+      padding: 4px 8px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .save-btn { background: #bef264; color: #111827; }
+    .cancel-btn { background: #e5e7eb; color: #374151; }
+    
+    #export-area {
+      display: none;
+      width: 100%;
+      height: 200px;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      font-family: monospace;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>Screenshot QA Review</h1>
+    <button class="export-btn" onclick="exportComments()">Export Comments</button>
+  </div>
+
+  <textarea id="export-area" readonly></textarea>
+
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const images = [
+      '01-home.png',
+      '02-settings-reset-modal.png',
+      '03-quiz-library-general.png',
+      '04-ai-options-modal.png',
+      '05-my-rewards-all.png',
+      '06-parent-pin-empty.png',
+      '07-parent-pin-error-modal.png',
+      '08-add-reward-form.png',
+      '09-add-reward-success-toast.png',
+      '10-swipe-delete-reveal.png',
+      '11-quiz-feedback.png',
+      '12-redeem-success-toast.png'
+    ];
+
+    // Add 24 extra empty placeholders
+    for (let i = 1; i <= 24; i++) {
+      images.push(`Custom Screenshot ${i}`);
+    }
+
+    let comments = [];
+    let pinCounter = 1;
+    let activeBox = null;
+
+    const grid = document.getElementById('grid');
+
+    function createSlot(imgName, initialSrc, prepend = false) {
+      const container = document.createElement('div');
+      container.className = 'image-container';
+      
+      const handle = document.createElement('div');
+      handle.className = 'drag-handle';
+      handle.innerHTML = '&#9776;'; // Hamburger icon
+      
+      const title = document.createElement('div');
+      title.className = 'image-title';
+      title.textContent = imgName;
+      title.contentEditable = 'true';
+      title.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          title.blur();
+        }
+      });
+      
+      const wrapper = document.createElement('div');
+      wrapper.className = 'image-wrapper';
+      
+      const imageEl = document.createElement('img');
+      imageEl.src = initialSrc;
+      imageEl.className = 'screenshot';
+      imageEl.draggable = false;
+      imageEl.alt = 'Drag & drop or paste image here';
+      
+      imageEl.onerror = () => {
+        // Just show the alt text
+      };
+      
+      wrapper.appendChild(imageEl);
+
+      // Drag and drop support
+      wrapper.addEventListener('dragenter', (e) => {
+        e.preventDefault();
+      });
+      wrapper.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        wrapper.classList.add('dragover');
+      });
+      wrapper.addEventListener('dragleave', () => {
+        wrapper.classList.remove('dragover');
+      });
+      wrapper.addEventListener('drop', (e) => {
+        e.preventDefault();
+        wrapper.classList.remove('dragover');
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          const file = e.dataTransfer.files[0];
+          if (file.type.startsWith('image/')) {
+            imageEl.src = URL.createObjectURL(file);
+          }
+        }
+      });
+      
+      wrapper.addEventListener('click', (e) => {
+        // Don't trigger if clicking inside an existing comment box
+        if (e.target.closest('.comment-box')) return;
+        
+        // Remove any active un-saved box
+        if (activeBox) {
+          activeBox.remove();
+          activeBox = null;
+        }
+
+        const rect = wrapper.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const pinId = pinCounter++;
+        
+        const box = document.createElement('div');
+        box.className = 'comment-box';
+        // Keep box somewhat within bounds
+        const boxX = Math.min(x, rect.width - 200);
+        const boxY = Math.min(y, rect.height - 100);
+        box.style.left = boxX + 'px';
+        box.style.top = boxY + 'px';
+        
+        box.innerHTML = `
+          <div style="font-weight:bold;margin-bottom:5px;font-size:12px;">Pin #${pinId}</div>
+          <input type="text" class="comment-input" placeholder="Type comment..." autofocus>
+          <div class="comment-actions">
+            <button class="comment-btn cancel-btn">Cancel</button>
+            <button class="comment-btn save-btn">Save</button>
+          </div>
+        `;
+        
+        wrapper.appendChild(box);
+        activeBox = box;
+        
+        const input = box.querySelector('.comment-input');
+        input.focus();
+        
+        const save = () => {
+          const text = input.value.trim();
+          if (text) {
+            comments.push({
+              id: pinId,
+              image: img,
+              text: text
+            });
+            
+            // Place visual pin
+            const pin = document.createElement('div');
+            pin.className = 'pin';
+            pin.style.left = x + 'px';
+            pin.style.top = y + 'px';
+            pin.textContent = pinId;
+            wrapper.appendChild(pin);
+          }
+          box.remove();
+          activeBox = null;
+        };
+
+        box.querySelector('.save-btn').onclick = save;
+        input.onkeydown = (e) => { if (e.key === 'Enter') save(); };
+        
+        box.querySelector('.cancel-btn').onclick = () => {
+          box.remove();
+          activeBox = null;
+          pinCounter--;
+        };
+      });
+
+      container.appendChild(handle);
+      container.appendChild(title);
+      container.appendChild(wrapper);
+
+      // Reordering logic
+      container.draggable = true;
+      
+      container.addEventListener('dragstart', (e) => {
+        container.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        window.draggedContainer = container;
+      });
+      
+      container.addEventListener('dragend', () => {
+        container.classList.remove('dragging');
+        window.draggedContainer = null;
+      });
+
+      container.addEventListener('dragover', (e) => {
+        if (e.dataTransfer.types.includes('Files')) return; // Ignore files, let wrapper handle it
+        e.preventDefault(); // Allow container drop
+      });
+
+      container.addEventListener('drop', (e) => {
+        if (e.dataTransfer.types.includes('Files')) return; // Ignore files
+        e.preventDefault();
+        if (window.draggedContainer && window.draggedContainer !== container) {
+          const allContainers = [...grid.querySelectorAll('.image-container')];
+          const draggedIndex = allContainers.indexOf(window.draggedContainer);
+          const dropIndex = allContainers.indexOf(container);
+          
+          if (draggedIndex < dropIndex) {
+            container.parentNode.insertBefore(window.draggedContainer, container.nextSibling);
+          } else {
+            container.parentNode.insertBefore(window.draggedContainer, container);
+          }
+        }
+      });
+      
+      if (prepend) {
+        grid.insertBefore(container, grid.firstChild);
+      } else {
+        grid.appendChild(container);
+      }
+    }
+
+    // Initialize initial slots
+    images.forEach(img => createSlot(img, img));
+
+    // Prevent default drag behaviors globally so missing the box doesn't open the image
+    document.addEventListener('dragover', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => e.preventDefault());
+
+    // Global Paste Support
+    document.addEventListener('paste', (e) => {
+      const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      for (let index in items) {
+        const item = items[index];
+        if (item.kind === 'file' && item.type.startsWith('image/')) {
+          const blob = item.getAsFile();
+          const url = URL.createObjectURL(blob);
+          
+          const hoveredWrapper = document.querySelector('.image-wrapper:hover');
+          if (hoveredWrapper) {
+            hoveredWrapper.querySelector('img').src = url;
+          } else {
+            createSlot('Pasted Screenshot', url, true);
+          }
+        }
+      }
+    });
+
+    function exportComments() {
+      const area = document.getElementById('export-area');
+      if (comments.length === 0) {
+        area.value = "No comments added yet.";
+      } else {
+        // Group by image
+        const grouped = comments.reduce((acc, c) => {
+          if (!acc[c.image]) acc[c.image] = [];
+          acc[c.image].push(c);
+          return acc;
+        }, {});
+        
+        let out = "## Screenshot QA Feedback\n\n";
+        for (const [img, list] of Object.entries(grouped)) {
+          out += `**${img}**\n`;
+          list.forEach(c => {
+            out += `- Pin #${c.id}: ${c.text}\n`;
+          });
+          out += '\n';
+        }
+        area.value = out;
+      }
+      area.style.display = 'block';
+      area.select();
+      document.execCommand('copy');
+      
+      const btn = document.querySelector('.export-btn');
+      const originalText = btn.textContent;
+      btn.textContent = 'Copied to Clipboard!';
+      setTimeout(() => btn.textContent = originalText, 2000);
+    }
+  </script>
+</body>
+</html>

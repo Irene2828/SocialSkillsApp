@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, Alert, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager } from 'react-native';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -18,6 +18,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
+import { useFeedback } from '../context/FeedbackContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
@@ -25,6 +26,7 @@ import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
+  const { showModal, showToast } = useFeedback();
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
   const [showPinInput, setShowPinInput] = useState(false);
@@ -54,7 +56,6 @@ export const MyRewardsScreen = () => {
   const [addCost, setAddCost] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
 
-  const [successToast, setSuccessToast] = useState<{ message: string } | null>(null);
   const [highlightFirstItem, setHighlightFirstItem] = useState(false);
 
   const handleApproveReward = () => {
@@ -75,7 +76,7 @@ export const MyRewardsScreen = () => {
         setFulfillPin('');
         setRewardToFulfill(null);
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setFulfillPin('');
       }
     }
@@ -89,14 +90,13 @@ export const MyRewardsScreen = () => {
       if (newPin === '1111') {
         if (rewardToDelete) {
           deleteReward(rewardToDelete.id);
-          setSuccessToast({ message: 'Reward deleted' });
-          setTimeout(() => setSuccessToast(null), 3000);
+          showToast({ message: 'Reward deleted' });
         }
         setShowDeletePin(false);
         setDeletePin('');
         setRewardToDelete(null);
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setDeletePin('');
       }
     }
@@ -112,7 +112,7 @@ export const MyRewardsScreen = () => {
         setAddPin('');
         setShowAddForm(true);
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setAddPin('');
       }
     }
@@ -121,13 +121,12 @@ export const MyRewardsScreen = () => {
   const handleSaveAdd = () => {
     const costNum = parseInt(addCost, 10);
     if (!addTitle.trim() || isNaN(costNum) || costNum <= 0) {
-      Alert.alert('Invalid Input', 'Please enter a valid reward name and a cost greater than 0.');
+      showModal({ title: 'Invalid Input', message: 'Please enter a valid reward name and a cost greater than 0.', type: 'error' });
       return;
     }
 
     addReward({ title: addTitle.trim(), cost: costNum });
-    setSuccessToast({ message: 'Reward added!' });
-    setTimeout(() => setSuccessToast(null), 3000);
+    showToast({ message: 'Reward added!' });
     
     setShowAddForm(false);
     setAddTitle('');
@@ -146,7 +145,7 @@ export const MyRewardsScreen = () => {
         setEditCost(String(rewardToEdit?.cost || ''));
         setShowEditForm(true);
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setEditPin('');
       }
     }
@@ -155,14 +154,13 @@ export const MyRewardsScreen = () => {
   const handleSaveEdit = () => {
     const costNum = parseInt(editCost, 10);
     if (!editTitle.trim() || isNaN(costNum) || costNum <= 0) {
-      Alert.alert('Invalid Input', 'Please enter a valid reward name and a cost greater than 0.');
+      showModal({ title: 'Invalid Input', message: 'Please enter a valid reward name and a cost greater than 0.', type: 'error' });
       return;
     }
 
     if (rewardToEdit) {
       updateReward(rewardToEdit.id, { title: editTitle.trim(), cost: costNum });
-      setSuccessToast({ message: 'Reward updated' });
-      setTimeout(() => setSuccessToast(null), 3000);
+      showToast({ message: 'Reward updated' });
     }
     setShowEditForm(false);
     setRewardToEdit(null);
@@ -188,7 +186,7 @@ export const MyRewardsScreen = () => {
           }, 500);
         }
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setPin('');
       }
     }
@@ -244,7 +242,7 @@ export const MyRewardsScreen = () => {
                   </Text>
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift'} size={40} color={theme.colors.text} />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={40} color={theme.colors.text} />
                     </View>
                     <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
                   </View>
@@ -335,14 +333,6 @@ export const MyRewardsScreen = () => {
 
       </ScrollView>
       {renderSuccessModal()}
-      {successToast && (
-        <View style={styles.toastWrapper}>
-          <View style={styles.receivedChip}>
-            <Ionicons name="checkmark-circle" size={18} color={theme.colors.text} style={{ marginRight: 6 }} />
-            <Text style={styles.receivedText}>{successToast.message}</Text>
-          </View>
-        </View>
-      )}
       </ScreenWrapper>
 
       <Modal visible={showFulfillPin} transparent animationType="fade">
@@ -550,7 +540,7 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl,
   },
   topSection: {
-    marginBottom: 8,
+    marginBottom: theme.spacing.sm,
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,
@@ -566,8 +556,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   bannerTitle: {
-    ...theme.typography.heading,
-    fontSize: 16,
+    ...theme.typography.body,
+    fontWeight: '600',
     color: theme.colors.text,
     marginBottom: 4,
   },
@@ -581,7 +571,7 @@ const styles = StyleSheet.create({
   helpButton: {
     width: 32,
     height: 32,
-    borderRadius: 16,
+    borderRadius: theme.borderRadius.sm,
     borderWidth: 1.5,
     borderColor: theme.colors.border,
     justifyContent: 'center',
@@ -592,21 +582,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.85)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.xl,
+    padding: theme.spacing.xl,
   },
   successCard: {
     width: '100%',
     maxWidth: 500,
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
+    padding: theme.spacing.xl,
+    paddingTop: 48,
     borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    ...theme.shadows.glow,
   },
   successRewardRow: {
     flexDirection: 'row',
@@ -622,7 +612,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
   },
   successRewardLabel: {
-    ...theme.typography.subheading,
+    ...theme.typography.body,
+    fontWeight: '700',
     color: theme.colors.text,
     marginLeft: 12,
     textTransform: 'capitalize',
@@ -646,9 +637,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   pinTitle: {
-    ...theme.typography.subheading,
-    marginBottom: 24,
+    ...theme.typography.body,
+    fontWeight: '700',
+    marginBottom: theme.spacing.md,
     textAlign: 'center',
+    color: theme.colors.text,
   },
   pinInput: {
     width: 120,
@@ -666,22 +659,22 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
-    padding: 4,
+    padding: theme.spacing.xs,
     ...theme.shadows.soft,
   },
   tab: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: theme.spacing.sm,
     alignItems: 'center',
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: 'rgba(190, 242, 100, 0.8)', // vibrant green matching General tab
+    backgroundColor: theme.colors.primary,
+    opacity: 0.8,
   },
   tabText: {
     ...theme.typography.button,
     color: theme.colors.secondaryText,
-    letterSpacing: 0.15,
   },
   activeTabText: {
     color: theme.colors.text,
@@ -696,21 +689,22 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
+    padding: theme.spacing.xl,
+    paddingTop: 48,
     borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    ...theme.shadows.glow,
   },
   editInput: {
     width: '100%',
     height: 48,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
-    borderRadius: 12,
+    borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     ...theme.typography.body,
     backgroundColor: theme.colors.white,
@@ -723,18 +717,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10000,
   },
-  receivedChip: {
+  toastChip: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.full,
     ...theme.shadows.soft,
   },
-  receivedText: {
-    ...theme.typography.button,
-    fontSize: 14,
+  toastText: {
+    ...theme.typography.caption,
     color: theme.colors.text,
   },
   closeButton: {

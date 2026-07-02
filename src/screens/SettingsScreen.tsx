@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Card } from '../components/Card';
@@ -10,39 +10,33 @@ import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { useFeedback } from '../context/FeedbackContext';
 
 export const SettingsScreen = () => {
   const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge, totalQuizzesCompleted } = useProgress();
+  const { showModal, showToast } = useFeedback();
 
   const handleResetData = () => {
-    Alert.alert(
-      "Reset Progress?",
-      "Are you sure? This will reset all progress and quizzes.",
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Yes, Reset", 
-          style: "destructive",
-          onPress: () => {
-            Alert.alert(
-              "Final Confirmation",
-              "We are safely clearing the data. Continue?",
-              [
-                { text: "Cancel", style: "cancel" },
-                { 
-                  text: "Reset", 
-                  style: "destructive",
-                  onPress: () => {
-                    resetAllData();
-                    Alert.alert("Success", "We saved your progress safely (Reset complete).");
-                  }
-                }
-              ]
-            );
-          }
-        }
-      ]
-    );
+    showModal({
+      title: "Reset Progress?",
+      message: "Are you sure? This will reset all progress and quizzes.",
+      type: "confirm",
+      confirmText: "Yes, Reset",
+      onConfirm: () => {
+        setTimeout(() => {
+          showModal({
+            title: "Final Confirmation",
+            message: "We are safely clearing the data. Continue?",
+            type: "confirm",
+            confirmText: "Reset",
+            onConfirm: () => {
+              resetAllData();
+              showToast({ message: "Reset complete." });
+            }
+          });
+        }, 350); // wait for previous modal to fully close
+      }
+    });
   };
 
   return (

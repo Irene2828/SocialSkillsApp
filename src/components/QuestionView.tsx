@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
   },
   feedbackContainer: {
     padding: theme.spacing.xl,
+    paddingTop: 48,
     backgroundColor: 'transparent',
     alignItems: 'center',
   },

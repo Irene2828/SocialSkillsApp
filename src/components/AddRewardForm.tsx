@@ -1,26 +1,28 @@
 import React, { useState } from 'react';
-import { View, TextInput, StyleSheet, Alert } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import { Card } from './Card';
 import { Button } from './Button';
 import { theme } from '../theme';
 import { useRewards } from '../context/RewardsContext';
+import { useFeedback } from '../context/FeedbackContext';
 
 export const AddRewardForm = () => {
   const { addReward } = useRewards();
+  const { showModal, showToast } = useFeedback();
   const [title, setTitle] = useState('');
   const [costStr, setCostStr] = useState('');
 
   const handleAdd = () => {
     const cost = parseInt(costStr, 10);
     if (!title.trim() || isNaN(cost) || cost <= 0) {
-      Alert.alert('Invalid Input', 'Please enter a valid reward name and a cost greater than 0.');
+      showModal({ title: 'Invalid Input', message: 'Please enter a valid reward name and a cost greater than 0.', type: 'error' });
       return;
     }
 
     addReward({ title: title.trim(), cost });
     setTitle('');
     setCostStr('');
-    Alert.alert('Success', 'Custom reward added!');
+    showToast({ message: 'Custom reward added!' });
   };
 
   return (

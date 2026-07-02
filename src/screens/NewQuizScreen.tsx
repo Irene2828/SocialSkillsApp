@@ -15,9 +15,9 @@ import { questions as allQuestions } from '../data/questions';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
+import { useFeedback } from '../context/FeedbackContext';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
@@ -40,10 +40,10 @@ export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz } = useQuizContext();
+  const allCategories = useMemo(() => [...QUIZ_CATEGORIES, ...customCategories], [customCategories]);
+  const { showModal, showToast } = useFeedback();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
-
-  const allCategories = [...QUIZ_CATEGORIES, ...customCategories];
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -54,8 +54,6 @@ export const NewQuizScreen = () => {
   const [deletePin, setDeletePin] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
   
-  const [successToast, setSuccessToast] = useState<{ message: string, action?: { label: string, onPress: () => void } } | null>(null);
-
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Understanding the concept...');
@@ -105,10 +103,10 @@ export const NewQuizScreen = () => {
       
       addCustomQuiz(newCategory, questionsWithCategory);
       setAiGenerating(false);
-      Alert.alert('Success', 'AI Quiz generated and added to your library!');
+      showToast({ message: 'AI Quiz generated and added to your library!' });
     } catch (error: any) {
       setAiGenerating(false);
-      Alert.alert('Error', error.message || 'Failed to generate quiz.');
+      showModal({ title: 'Error', message: error.message || 'Failed to generate quiz.', type: 'error' });
     }
   };
 
@@ -116,7 +114,7 @@ export const NewQuizScreen = () => {
     setShowAiMenu(false);
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+      showModal({ title: 'Permission Denied', message: 'Sorry, we need camera roll permissions to make this work!', type: 'error' });
       return;
     }
 
@@ -136,7 +134,7 @@ export const NewQuizScreen = () => {
     setShowAiMenu(false);
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
-      Alert.alert('Permission Denied', 'Sorry, we need camera permissions to make this work!');
+      showModal({ title: 'Permission Denied', message: 'Sorry, we need camera permissions to make this work!', type: 'error' });
       return;
     }
 
@@ -158,33 +156,14 @@ export const NewQuizScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (quizToDelete) {
-          const cat = customCategories.find(c => c.id === quizToDelete);
-          const qs = customQuestions.filter(q => q.category === quizToDelete);
           removeCustomQuiz(quizToDelete);
-          if (cat) {
-            setSuccessToast({
-              message: 'Quiz deleted',
-              action: {
-                label: 'Undo',
-                onPress: () => {
-                  addCustomQuiz(cat, qs);
-                  setSuccessToast(null);
-                }
-              }
-            });
-            setTimeout(() => {
-              setSuccessToast(current => {
-                if (current?.message === 'Quiz deleted') return null;
-                return current;
-              });
-            }, 6000);
-          }
+          showToast({ message: 'Quiz deleted' });
         }
         setShowDeletePin(false);
         setDeletePin('');
         setQuizToDelete(null);
       } else {
-        Alert.alert('Incorrect PIN', 'Please try again.');
+        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
         setDeletePin('');
       }
     }
@@ -265,9 +244,9 @@ export const NewQuizScreen = () => {
   };
 
   const handleStartQuiz = (category: Category, questionCount: number) => {
-    let categoryQuestions = allQuestions.filter(q => q.category === category);
+    let categoryQuestions = allQuestions.filter((q: any) => q.category === category);
     if (categoryQuestions.length === 0) {
-      categoryQuestions = customQuestions.filter(q => q.category === category);
+      categoryQuestions = customQuestions.filter((q: any) => q.category === category);
     }
     const selected = buildQuestionSet(categoryQuestions, questionCount);
 
@@ -280,7 +259,7 @@ export const NewQuizScreen = () => {
   };
 
   const handleSelectQuizCategory = (category: Category) => {
-    handleStartQuiz(category, selectedLevel.questionCount);
+    handleStartQuiz(category, 5);
   };
 
   const handleContinue = async (isCorrect: boolean) => {
@@ -357,19 +336,15 @@ export const NewQuizScreen = () => {
         ) : (
           <>
             <View style={styles.bentoGrid}>
-              {displayCategories.map((category, index) => {
-                const isFeatured = index === 0 && activeTab === 'general';
+              {displayCategories.map((category: any) => {
                 return (
                   <View 
                     key={category.id} 
-                    style={[
-                      styles.bentoItem, 
-                      isFeatured && styles.featuredBentoItem
-                    ]}
+                    style={styles.bentoItem}
                   >
                     <QuizCard 
                       category={category} 
-                      isFeatured={isFeatured}
+                      isFeatured={false}
                       onPressStart={() => handleSelectQuizCategory(category.id)} 
                       onDelete={category.isCustom ? () => {
                         setQuizToDelete(category.id);
@@ -396,7 +371,7 @@ export const NewQuizScreen = () => {
   };
 
   const renderCoinJar = () => {
-    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || selectedCategory;
+    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     return (
       <View style={styles.coinJarContainer}>
         <FontAwesome5 
@@ -418,19 +393,19 @@ export const NewQuizScreen = () => {
     if (currentQuestions.length === 0) return null;
     const currentQuestion = currentQuestions[currentIndex];
 
-    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || selectedCategory;
+    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
 
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ alignItems: 'center', marginBottom: 16, zIndex: 1 }}>
+          <View style={{ alignItems: 'center', marginBottom: 8, zIndex: 1 }}>
             <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 'auto' }]}>
               <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
           </View>
           <Header 
             title=""
-            style={{ marginTop: 0, paddingTop: 24, marginBottom: 8, paddingHorizontal: 0 }} 
+            style={{ marginTop: 0, paddingTop: 12, marginBottom: 8, paddingHorizontal: 0 }} 
             leftElement={
               <Pressable style={styles.backButton} onPress={handleBackToHome}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
@@ -443,7 +418,7 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <Text style={[styles.questionCaption, { marginTop: -6, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+          <Text style={[styles.questionCaption, { marginTop: -14, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <QuestionView 
             question={currentQuestion} 
             onContinue={handleContinue} 
@@ -456,7 +431,7 @@ export const NewQuizScreen = () => {
   };
 
   const renderCompleted = () => {
-    const categoryName = allCategories.find(c => c.id === selectedCategory)?.title || '';
+    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || '';
     const total = currentQuestions.length;
     
     let message = "Good effort!";
@@ -470,6 +445,12 @@ export const NewQuizScreen = () => {
       <View style={styles.completedContainer}>
         <SilverDust />
         <Card style={styles.completedCard}>
+          <Pressable 
+            style={styles.closeButton} 
+            onPress={handleBackToHome}
+          >
+            <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
+          </Pressable>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             
             <Text style={[styles.messageText, { marginBottom: 48 }]}>{message}</Text>
@@ -527,7 +508,7 @@ export const NewQuizScreen = () => {
       <Modal visible={showAiMenu} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.levelCard} onPress={() => {}}>
+            <Pressable style={styles.uploadCard} onPress={() => {}}>
               <Pressable 
                 style={styles.closeButton} 
                 onPress={() => setShowAiMenu(false)}
@@ -539,31 +520,23 @@ export const NewQuizScreen = () => {
                 Upload a page or take a photo, and AI will create original quiz questions based on the concept.
               </Text>
               
-              <Pressable
-                style={styles.levelOption}
-                onPress={takePhoto}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 12 }} />
-                  <View>
-                    <Text style={styles.levelOptionTitle}>Take Photo</Text>
-                    <Text style={styles.levelOptionSub}>Use your camera</Text>
-                  </View>
-                </View>
-              </Pressable>
-
-              <Pressable
-                style={styles.levelOption}
-                onPress={pickImage}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Ionicons name="image-outline" size={24} color={theme.colors.text} style={{ marginRight: 12 }} />
-                  <View>
-                    <Text style={styles.levelOptionTitle}>Upload from Gallery</Text>
-                    <Text style={styles.levelOptionSub}>Choose an existing photo</Text>
-                  </View>
-                </View>
-              </Pressable>
+              <View style={styles.iconContainer}>
+                <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
+              </View>
+              
+              <Button 
+                title="Take Photo" 
+                onPress={takePhoto} 
+                style={styles.uploadButton}
+              />
+              
+              <Button 
+                title="Upload from Gallery" 
+                onPress={pickImage} 
+                variant="secondary"
+                style={styles.uploadButton}
+              />
+              <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
             </Pressable>
           </View>
         </Pressable>
@@ -573,7 +546,7 @@ export const NewQuizScreen = () => {
       <Modal visible={aiGenerating} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <Card style={[styles.levelCard, { alignItems: 'center', paddingVertical: 40 }]}>
-            <Ionicons name="sparkles" size={64} color={theme.colors.primary} />
+            <Ionicons name="sparkles-outline" size={64} color={theme.colors.primary} />
             <Text style={[styles.levelTitle, { marginTop: 16, marginBottom: 8 }]}>Generating Quiz...</Text>
             <Text style={[styles.questionCaption, { marginBottom: 24 }]}>{loadingText}</Text>
             <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -581,28 +554,7 @@ export const NewQuizScreen = () => {
         </View>
       </Modal>
 
-      {successToast && (
-        <View style={styles.toastWrapper}>
-          <View style={styles.receivedChip}>
-            <Ionicons name="checkmark-circle" size={18} color={theme.colors.text} style={{ marginRight: 6 }} />
-            <Text style={styles.receivedText}>{successToast.message}</Text>
-            {successToast.action && (
-              <Pressable 
-                onPress={successToast.action.onPress} 
-                style={{ 
-                  marginLeft: 12, 
-                  backgroundColor: 'rgba(17, 24, 39, 0.1)', 
-                  paddingHorizontal: 8, 
-                  paddingVertical: 4, 
-                  borderRadius: 8 
-                }}
-              >
-                <Text style={[styles.receivedText, { fontWeight: '700' }]}>{successToast.action.label}</Text>
-              </Pressable>
-            )}
-          </View>
-        </View>
-      )}
+
 
       <Modal visible={showDeletePin} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => {
@@ -662,24 +614,21 @@ const styles = StyleSheet.create({
   bentoItem: {
     width: '47%',
   },
-  featuredBentoItem: {
-    width: '100%',
-  },
   emptyAiContainer: {
     alignItems: 'center',
     paddingTop: theme.spacing.xl,
   },
   emptyAiText: {
-    ...theme.typography.heading,
-    fontSize: 20,
+    ...theme.typography.subheading,
     textAlign: 'center',
     color: theme.colors.text,
   },
   emptyAiSub: {
     ...theme.typography.body,
+    fontStyle: 'italic',
     textAlign: 'center',
     color: theme.colors.secondaryText,
-    marginTop: theme.spacing.xs,
+    marginBottom: theme.spacing.lg,
   },
   inProgressContainer: {
     flex: 1,
@@ -690,15 +639,24 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
     zIndex: 10,
   },
   completedCard: {
     width: '100%',
+    maxWidth: 500,
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
+    borderWidth: 1.5,
+    borderColor: theme.colors.stroke,
+    backgroundColor: theme.colors.white,
+    ...theme.shadows.glow,
     alignItems: 'center',
-    paddingVertical: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.md,
+    padding: theme.spacing.xl,
+    paddingTop: 48,
   },
   completedTitle: {
     ...theme.typography.heading,
@@ -807,21 +765,21 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.85)',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.xl,
+    padding: theme.spacing.xl,
   },
   pinCard: {
     width: '100%',
     maxWidth: 500,
     alignItems: 'center',
-    paddingHorizontal: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
+    padding: theme.spacing.xl,
+    paddingTop: 48,
     borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    ...theme.shadows.glow,
   },
   pinContainer: {
     width: '100%',
@@ -829,9 +787,11 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   pinTitle: {
-    ...theme.typography.subheading,
-    marginBottom: 24,
+    ...theme.typography.body,
+    fontWeight: '700',
+    marginBottom: theme.spacing.md,
     textAlign: 'center',
+    color: theme.colors.text,
   },
   pinInput: {
     width: 120,
@@ -856,28 +816,39 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     ...theme.typography.subheading,
-    textAlign: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
   },
-  levelOption: {
-    minHeight: 72,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.border,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.md,
-    marginBottom: theme.spacing.sm,
-    flexDirection: 'row',
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.md,
+    ...theme.shadows.soft,
   },
-  levelOptionTitle: {
-    ...theme.typography.button,
-    color: theme.colors.text,
+  uploadButton: {
+    width: '100%',
+    marginBottom: theme.spacing.md,
   },
-  levelOptionSub: {
+  supportedText: {
     ...theme.typography.caption,
+    marginTop: theme.spacing.xs,
     color: theme.colors.secondaryText,
-    marginTop: 2,
+    textAlign: 'center',
+  },
+  uploadCard: {
+    width: '100%',
+    maxWidth: 500,
+    padding: theme.spacing.xl,
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    borderWidth: 2,
+    borderColor: theme.colors.neutralGrey,
+    borderStyle: 'dashed',
+    borderRadius: theme.borderRadius.md,
   },
   levelQuestionCount: {
     ...theme.typography.button,
@@ -886,25 +857,25 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: 12,
+    marginBottom: theme.spacing.md,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
-    padding: 4,
+    padding: theme.spacing.xs,
     ...theme.shadows.soft,
   },
   tab: {
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: theme.spacing.sm,
     alignItems: 'center',
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: 'rgba(190, 242, 100, 0.8)', // vibrant green from previous topic card
+    backgroundColor: theme.colors.primary,
+    opacity: 0.8,
   },
   tabText: {
     ...theme.typography.button,
     color: theme.colors.secondaryText,
-    letterSpacing: 0.15,
   },
   activeTabText: {
     color: theme.colors.text,

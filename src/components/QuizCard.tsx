@@ -16,7 +16,7 @@ interface QuizCardProps {
 const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
   switch (id) {
     case 'Friendship': return { name: 'people-outline', family: 'Ionicons' };
-    case 'Manners': return { name: 'handshake', family: 'FontAwesome5' };
+    case 'Manners': return { name: 'hand-left-outline', family: 'Ionicons' };
     case 'Feelings': return { name: 'heart-outline', family: 'Ionicons' };
     case 'Playground': return { name: 'basketball-outline', family: 'Ionicons' };
     case 'Safety': return { name: 'shield-checkmark-outline', family: 'Ionicons' };
@@ -40,9 +40,9 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
         <View style={[styles.cardContent, isFeatured && styles.featuredCardContent]}>
           <View style={[styles.iconContainer, isFeatured && styles.featuredIconContainer]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName} size={isFeatured ? 36 : 32} color="#4B5563" style={styles.icon} />
+              <FontAwesome5 name={iconName} size={isFeatured ? 36 : 32} color={theme.colors.secondaryText} style={styles.icon} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 36 : 32} color="#4B5563" style={styles.icon} />
+              <Ionicons name={iconName as any} size={isFeatured ? 36 : 32} color={theme.colors.secondaryText} style={styles.icon} />
             )}
           </View>
 
@@ -72,7 +72,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
                 onDelete();
               }}
             >
-              <Ionicons name="remove" size={28} color={theme.colors.error} />
+              <Ionicons name="close-outline" size={28} color={theme.colors.error} />
             </ScalePressable>
           </View>
         )}

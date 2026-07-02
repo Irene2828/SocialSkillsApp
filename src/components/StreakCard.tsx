@@ -18,7 +18,7 @@ export const StreakCard: React.FC<StreakCardProps> = ({ streak }) => {
   return (
     <Card style={styles.card}>
       <View style={styles.iconContainer}>
-        <Ionicons name="flame" size={32} color={theme.colors.accent} />
+        <Ionicons name="flame-outline" size={32} color={theme.colors.accent} />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.streakText}>Streak: {streak} days</Text>

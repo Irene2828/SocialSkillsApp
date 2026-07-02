@@ -1,4 +1,4 @@
-const SYSTEM_PROMPT = `You are an educational quiz generator for children.
+const getSystemPrompt = (age: number) => `You are an educational quiz generator for children.
 
 The uploaded image is provided only to understand the educational concept being taught.
 
@@ -18,13 +18,13 @@ Requirements:
 • Never copy sentences from the image.
 • Never reveal or reconstruct the book's wording.
 • Focus on real-life situations children encounter.
-• Age: 7 years old.
+• Age: ${age} years old.
 • One correct answer.
 • Three plausible distractors.
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
 
-Create exactly 20 questions to allow the app to support different levels (5, 10, or 20 questions).
+Create exactly 5 questions.
 Each question must test the concept from a different real-life situation, perspective, or problem angle.
 Make the questions smart, diverse, and non-repetitive, ensuring they cover a wide variety of scenarios to help the child thoroughly understand and apply the concept in different contexts.
 
@@ -42,59 +42,88 @@ Return the response STRICTLY as a JSON object matching this schema:
 }
 No markdown wrappers, no backticks, just raw JSON.`;
 
-export const generateQuizFromImage = async (base64Image: string) => {
+const validateQuizData = (data: any) => {
+  if (!data || typeof data !== 'object') throw new Error("Root is not an object");
+  if (typeof data.concept !== 'string' || !data.concept.trim()) throw new Error("Invalid or empty concept");
+  if (!Array.isArray(data.questions) || data.questions.length !== 5) {
+    throw new Error(`Expected exactly 5 questions, got ${data.questions?.length}`);
+  }
+
+  for (const [index, q] of data.questions.entries()) {
+    if (typeof q.question !== 'string' || !q.question.trim()) throw new Error(`Question ${index} has invalid or empty text`);
+    if (!Array.isArray(q.options) || q.options.length !== 3) throw new Error(`Question ${index} must have exactly 3 options`);
+    for (const opt of q.options) {
+      if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Question ${index} has an empty option`);
+    }
+    if (typeof q.correctIndex !== 'number' || ![0, 1, 2].includes(q.correctIndex)) {
+      throw new Error(`Question ${index} has invalid correctIndex: ${q.correctIndex}`);
+    }
+    if (typeof q.explanation !== 'string' || !q.explanation.trim()) throw new Error(`Question ${index} has invalid or empty explanation`);
+  }
+};
+
+export const generateQuizFromImage = async (base64Image: string, age: number = 7) => {
   const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OpenAI API key is not configured in .env.local');
   }
 
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT
-          },
-          {
-            role: 'user',
-            content: [
-              {
-                type: 'image_url',
-                image_url: {
-                  url: base64Image
+  let lastError: any = null;
+
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: getSystemPrompt(age)
+            },
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'image_url',
+                  image_url: {
+                    url: base64Image
+                  }
                 }
-              }
-            ]
-          }
-        ],
-        response_format: { type: "json_object" },
-        max_tokens: 3500,
-      })
-    });
+              ]
+            }
+          ],
+          response_format: { type: "json_object" },
+          max_tokens: 5000,
+        })
+      });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('OpenAI Error Response:', errorData);
-      throw new Error(errorData?.error?.message || `API responded with status: ${response.status}`);
-    }
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.error?.message || `API responded with status: ${response.status}`);
+      }
 
-    const data = await response.json();
-    const messageContent = data.choices[0]?.message?.content;
-    
-    if (messageContent) {
-      return JSON.parse(messageContent);
+      const data = await response.json();
+      const messageContent = data.choices[0]?.message?.content;
+      
+      if (!messageContent) {
+        throw new Error('No content received from AI');
+      }
+
+      const parsedData = JSON.parse(messageContent);
+      validateQuizData(parsedData);
+      
+      return parsedData;
+
+    } catch (error: any) {
+      console.error(`Attempt ${attempt} failed generating quiz:`, error);
+      lastError = error;
     }
-    
-    throw new Error('No content received from AI');
-  } catch (error) {
-    console.error('Error generating quiz:', error);
-    throw error;
   }
+
+  throw lastError || new Error('Quiz generation failed after 2 attempts.');
 };

@@ -76,7 +76,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
         </View>
         {reward.isFulfilled ? (
           <View style={styles.receivedChip}>
-            <Ionicons name="checkmark-circle" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
+            <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
             <Text style={styles.receivedText}>Reward Received</Text>
           </View>
         ) : (
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: theme.spacing.sm,
-    paddingVertical: 6,
+    paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
     marginLeft: theme.spacing.md,
   },

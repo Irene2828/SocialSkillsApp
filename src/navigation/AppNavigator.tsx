@@ -6,7 +6,6 @@ import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
 import { HomeScreen } from '../screens/HomeScreen';
-import { DesignQABoard } from '../screens/DesignQABoard';
 import { theme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -23,13 +22,13 @@ export const AppNavigator = () => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
 
           if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = 'home-outline';
           } else if (route.name === 'NewQuiz') {
-            iconName = focused ? 'bulb' : 'bulb-outline';
+            iconName = 'bulb-outline';
           } else if (route.name === 'MyRewards') {
             return <FontAwesome5 name="coins" size={size - 2} color={color} />;
           } else if (route.name === 'AIQuiz') {
-            iconName = focused ? 'camera' : 'camera-outline';
+            iconName = 'camera-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -72,17 +71,6 @@ export const AppNavigator = () => {
         component={MyRewardsScreen} 
         options={{ tabBarLabel: 'My Rewards' }}
       />
-      {__DEV__ && (
-        <Tab.Screen 
-          name="DesignQA" 
-          component={DesignQABoard} 
-          options={{ 
-            tabBarButton: () => null,
-            tabBarStyle: { display: 'none' },
-            tabBarItemStyle: { display: 'none' }
-          }}
-        />
-      )}
     </Tab.Navigator>
   );
 };

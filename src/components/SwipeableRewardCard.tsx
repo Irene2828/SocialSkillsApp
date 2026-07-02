@@ -84,14 +84,14 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
           style={[styles.actionBtn, styles.editBtn]}
           onPress={() => { close(); onEdit(reward); }}
         >
-          <Ionicons name="pencil" size={22} color="#111827" />
+          <Ionicons name="pencil-outline" size={22} color={theme.colors.text} />
           <Text style={[styles.actionText, styles.editActionText]}>Edit</Text>
         </Pressable>
         <Pressable
           style={[styles.actionBtn, styles.deleteBtn]}
           onPress={() => { close(); onDelete(reward); }}
         >
-          <Ionicons name="trash-outline" size={22} color="#111827" />
+          <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
           <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
       </View>
@@ -104,7 +104,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
           <View style={styles.leftContent}>
             <View style={styles.iconContainer}>
-              <Ionicons name={reward.icon as any || 'gift'} size={24} color="#4B5563" />
+              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={theme.colors.secondaryText} />
             </View>
             <View style={styles.textContainer}>
               <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
@@ -156,12 +156,12 @@ const styles = StyleSheet.create({
     gap: theme.spacing.xs,
   },
   editBtn: {
-    backgroundColor: theme.colors.border,
+    backgroundColor: theme.colors.neutralGrey,
     borderTopLeftRadius: theme.borderRadius.md,
     borderBottomLeftRadius: theme.borderRadius.md,
   },
   deleteBtn: {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.danger,
     borderTopRightRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   deleteActionText: {
-    color: theme.colors.text,
+    color: theme.colors.white,
   },
   card: {
     backgroundColor: theme.colors.white,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.errorSoft,
-    paddingHorizontal: 12,
+    paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.sm,
     alignSelf: 'flex-start',
