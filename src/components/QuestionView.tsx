@@ -59,6 +59,14 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     }
   };
 
+  const handleCloseModal = () => {
+    if (displayIsCorrect) {
+      onContinue(!hasFailed);
+    } else {
+      setSelectedIndex(null);
+    }
+  };
+
   const isAnswered = selectedIndex !== null;
   const isCorrect = selectedIndex === question.correctAnswerIndex;
 
@@ -112,22 +120,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         transparent={true}
         animationType="fade"
       >
-        <View style={styles.modalOverlay}>
+        <Pressable style={styles.modalOverlay} onPress={handleCloseModal}>
           {displayIsCorrect && <SilverDust />}
-          <View style={styles.feedbackContainerBackground}>
+          <Pressable style={styles.feedbackContainerBackground} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
-              <Pressable 
-                style={styles.closeButton} 
-                onPress={() => {
-                  if (displayIsCorrect) {
-                    onContinue(!hasFailed);
-                  } else {
-                    setSelectedIndex(null);
-                  }
-                }}
-              >
-                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-              </Pressable>
               
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
@@ -170,8 +166,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                 />
               )}
             </View>
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
     </View>
   );
@@ -201,7 +197,7 @@ const styles = StyleSheet.create({
   },
   folderTabText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '800',
     fontSize: 14,
     color: theme.colors.text,
     letterSpacing: 0.5,
@@ -213,6 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
     padding: theme.spacing.xl,
     paddingVertical: theme.spacing.xxl,
+    backgroundColor: theme.colors.white,
   },
   scenarioText: {
     ...theme.typography.heading,
@@ -248,8 +245,6 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
     backgroundColor: theme.colors.white,
     ...theme.shadows.glow,
   },
@@ -268,8 +263,8 @@ const styles = StyleSheet.create({
   feedbackTitle: {
     ...theme.typography.body,
     fontWeight: '700',
-    fontSize: 18,
-    letterSpacing: 0.3,
+    fontSize: 20,
+    letterSpacing: 0.5,
     textAlign: 'center',
     color: theme.colors.text,
   },
@@ -296,11 +291,5 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.sm,
     width: '100%',
   },
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-    zIndex: 10,
-    padding: theme.spacing.xs,
-  },
+
 });

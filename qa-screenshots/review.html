@@ -421,12 +421,26 @@
       }
     }
 
-    // Initialize with 3 empty slots
-    for(let i=0; i<3; i++) {
-      addSlot();
-    }
+    // Initialize with screenshots
+    const files = [
+      '01-home.png',
+      '02-settings-reset-modal.png',
+      '03-quiz-library-general.png',
+      '04-ai-options-modal.png',
+      '05-my-rewards-all.png',
+      '06-parent-pin-empty.png',
+      '07-parent-pin-error-modal.png',
+      '08-add-reward-form.png',
+      '09-add-reward-success-toast.png',
+      '10-swipe-delete-reveal.png',
+      '11a-quiz-feedback.png',
+      '11b-quiz-completed.png',
+      '12-redeem-success-toast.png'
+    ];
 
-    // Prevent default drag behaviors globally so missing the box doesn't open the image
+    files.forEach(f => {
+      createSlot(f, f, false);
+    });
     document.addEventListener('dragover', (e) => e.preventDefault());
     document.addEventListener('drop', (e) => e.preventDefault());
 

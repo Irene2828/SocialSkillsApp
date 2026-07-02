@@ -22,28 +22,23 @@ async function runQAScreenshots() {
 
   async function clickText(text) {
     const elements = await page.$$('div, span, p, a, button');
+    let target = null;
     for (const el of elements) {
       const elText = await page.evaluate(e => e.innerText, el);
-      if (elText && elText.trim() === text) {
-        try { await el.click(); } catch(e) {}
-        await new Promise(r => setTimeout(r, 1200));
-        return true;
+      if (elText && (elText.trim() === text || elText.includes(text))) {
+        target = el;
       }
+    }
+    if (target) {
+      try { await target.click(); } catch(e) {}
+      await new Promise(r => setTimeout(r, 1200));
+      return true;
     }
     return false;
   }
   
   async function clickContainingText(text) {
-    const elements = await page.$$('div, span, p, a, button');
-    for (const el of elements) {
-      const elText = await page.evaluate(e => e.innerText, el);
-      if (elText && elText.includes(text)) {
-        try { await el.click(); } catch(e) {}
-        await new Promise(r => setTimeout(r, 1200));
-        return true;
-      }
-    }
-    return false;
+    return await clickText(text); // just reuse the new robust clickText
   }
 
   // 1. Home Screen
@@ -138,26 +133,37 @@ async function runQAScreenshots() {
   await clickText('Friendship');
   await new Promise(r => setTimeout(r, 2000));
 
-  console.log('Answering question...');
-  let answered = false;
-  const divs = await page.$$('div');
-  for (const div of divs) {
-    const text = await page.evaluate(e => e.innerText, div);
-    if (text && text.length > 5 && text.length < 100) {
-      const role = await page.evaluate(e => e.getAttribute('role'), div);
-      if (role === 'button') {
-        try {
-          await div.click();
-          await new Promise(r => setTimeout(r, 1500));
-          answered = true;
-          break;
-        } catch(e) {}
+  console.log('Answering questions...');
+  for (let i = 1; i <= 5; i++) {
+    console.log(`Question ${i}...`);
+    let answeredCorrectly = false;
+    let attempt = 0;
+    while (!answeredCorrectly && attempt < 4) {
+      const buttons = await page.$$('div[role="button"]');
+      try { 
+        if (buttons.length > attempt) {
+           await buttons[attempt].click();
+        }
+      } catch(e) {}
+      await new Promise(r => setTimeout(r, 1500));
+      
+      if (i === 1 && attempt === 0) {
+        await page.screenshot({ path: path.join(outputDir, '11a-quiz-feedback.png') });
+      }
+
+      if (await clickText('Continue')) {
+         answeredCorrectly = true;
+      } else if (await clickText('Try Again')) {
+         attempt++;
+      } else {
+         break;
       }
     }
   }
-  if (answered) {
-    await page.screenshot({ path: path.join(outputDir, '11-quiz-feedback.png') });
-  }
+  
+  await new Promise(r => setTimeout(r, 2000));
+  console.log('Capturing Completed Quiz...');
+  await page.screenshot({ path: path.join(outputDir, '11b-quiz-completed.png') });
 
   // 12. Redeem Success Toast
   await page.goto('http://localhost:8082', { waitUntil: 'networkidle0' });

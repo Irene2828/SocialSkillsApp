@@ -72,11 +72,8 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
 
     return (
       <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <Pressable style={styles.closeButton} onPress={closeModal}>
-              <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-            </Pressable>
+        <Pressable style={styles.modalOverlay} onPress={closeModal}>
+          <Pressable style={styles.modalContainer} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <Text style={styles.modalTitle}>{modalOptions.title}</Text>
             <Text style={styles.modalMessage}>{modalOptions.message}</Text>
             <Pressable 
@@ -90,8 +87,8 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
                 {modalOptions.confirmText || 'OK'}
               </Text>
             </Pressable>
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
     );
   };
@@ -135,17 +132,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
     ...theme.shadows.glow,
   },
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-    zIndex: 10,
-    padding: theme.spacing.xs,
-  },
+
   modalTitle: {
     ...theme.typography.body,
     fontWeight: '700',

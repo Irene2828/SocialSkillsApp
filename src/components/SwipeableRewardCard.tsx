@@ -124,8 +124,11 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
           <Button
             title={isProcessing ? 'Redeeming..' : 'Redeem'}
             onPress={() => onRedeem(reward)}
-            style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
-            variant={isProcessing ? 'outline' : (canAfford ? 'primary' : 'secondary')}
+            style={[
+              styles.redeemButton,
+              (canAfford || isProcessing) && styles.redeemButtonActive
+            ]}
+            variant="secondary"
             disabled={!canAfford || isProcessing}
           />
         </View>
@@ -234,10 +237,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: theme.spacing.md,
     alignSelf: 'center',
+    backgroundColor: theme.colors.white,
+    borderWidth: 1.5,
+    borderColor: theme.colors.stroke,
   },
   redeemButtonActive: {
-    backgroundColor: theme.colors.primarySoft,
-    borderWidth: 1.5,
+    backgroundColor: theme.colors.white,
     borderColor: theme.colors.primary,
   },
 });

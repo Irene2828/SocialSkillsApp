@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -22,6 +22,10 @@ import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { SilverDust } from '../components/SilverDust';
+
+if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 type QuizState = 'selection' | 'in-progress' | 'completed';
 type QuizLevel = {
@@ -53,6 +57,17 @@ export const NewQuizScreen = () => {
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
+
+  const shakeAnim = React.useRef(new Animated.Value(0)).current;
+
+  const triggerShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true })
+    ]).start();
+  };
   
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
@@ -163,7 +178,7 @@ export const NewQuizScreen = () => {
         setDeletePin('');
         setQuizToDelete(null);
       } else {
-        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
+        triggerShake();
         setDeletePin('');
       }
     }
@@ -317,13 +332,13 @@ export const NewQuizScreen = () => {
             style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom Quizzes</Text>
+            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom Quizes</Text>
           </Pressable>
         </View>
 
         {displayCategories.length === 0 ? (
           <View style={styles.emptyAiContainer}>
-            <Text style={styles.emptyAiText}>No AI quizzes yet.</Text>
+            <Text style={styles.emptyAiText}>No AI quizes yet.</Text>
             <Text style={styles.emptyAiSub}>Create your first one from a photo or concept!</Text>
             <View style={styles.createAiButtonContainer}>
               <Button
@@ -358,7 +373,7 @@ export const NewQuizScreen = () => {
             {activeTab === 'ai' && (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Create New AI Quiz"
+                  title="Add New Quiz"
                   style={styles.createAiButton}
                   onPress={() => setShowAiMenu(true)}
                 />
@@ -398,20 +413,19 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ alignItems: 'center', marginBottom: 8, zIndex: 1 }}>
-            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 'auto' }]}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, zIndex: 2 }}>
+            <Pressable style={styles.backButton} onPress={handleBackToHome}>
+              <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+              <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
+            </Pressable>
+            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
               <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
           </View>
+          
           <Header 
             title=""
-            style={{ marginTop: 0, paddingTop: 12, marginBottom: 8, paddingHorizontal: 0 }} 
-            leftElement={
-              <Pressable style={styles.backButton} onPress={handleBackToHome}>
-                <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-                <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
-              </Pressable>
-            }
+            style={{ marginTop: 0, paddingTop: 4, marginBottom: 12, paddingHorizontal: 0 }} 
             rightElement={renderCoinJar()}
           />
           <ProgressBar 
@@ -443,15 +457,9 @@ export const NewQuizScreen = () => {
     let coinsEarned = total;
 
     return (
-      <View style={styles.completedContainer}>
+      <Pressable style={styles.completedContainer} onPress={handleBackToHome}>
         <SilverDust />
-        <Card style={styles.completedCard}>
-          <Pressable 
-            style={styles.closeButton} 
-            onPress={handleBackToHome}
-          >
-            <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-          </Pressable>
+        <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             
             <Text style={[styles.messageText, { marginBottom: 48 }]}>{message}</Text>
@@ -489,8 +497,8 @@ export const NewQuizScreen = () => {
             variant="secondary"
             style={[styles.actionButton, { borderWidth: 0 }]}
           />
-        </Card>
-      </View>
+        </Pressable>
+      </Pressable>
     );
   };
 
@@ -509,14 +517,9 @@ export const NewQuizScreen = () => {
       <Modal visible={showAiMenu} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
           <View style={[styles.modalOverlay, { padding: 0 }]}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
-              <Pressable style={styles.uploadCard} onPress={() => {}}>
-              <Pressable 
-                style={styles.closeButton} 
-                onPress={() => setShowAiMenu(false)}
-              >
-                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-              </Pressable>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
+              <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
+                <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <Text style={styles.levelTitle}>Create AI Quiz</Text>
               <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: 16 }]}>
                 Upload a page or take a photo, and AI will create original quiz questions based on the concept.
@@ -539,6 +542,7 @@ export const NewQuizScreen = () => {
                 style={styles.uploadButton}
               />
               <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
+              </Pressable>
               </Pressable>
             </ScrollView>
           </View>
@@ -566,8 +570,8 @@ export const NewQuizScreen = () => {
           setQuizToDelete(null);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <View style={styles.pinContainer}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
                 <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
                 <TextInput
                   style={styles.pinInput}
@@ -582,7 +586,7 @@ export const NewQuizScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-              </View>
+              </Animated.View>
             </Pressable>
           </View>
         </Pressable>
@@ -660,8 +664,6 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
     backgroundColor: theme.colors.white,
     ...theme.shadows.glow,
     alignItems: 'center',
@@ -719,8 +721,9 @@ const styles = StyleSheet.create({
   },
   questionCaption: {
     ...theme.typography.body,
-    fontFamily: FONTS.bold,
-    fontWeight: '700',
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
+    letterSpacing: 0.5,
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginTop: 4,
@@ -744,18 +747,17 @@ const styles = StyleSheet.create({
     minWidth: 120, // Prevent wrapping
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
-    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderWidth: 0,
     zIndex: -1, // Drop it behind the coin jar if needed, or 0
   },
   screenFolderTabText: {
     ...theme.typography.body,
-    fontFamily: FONTS.bold,
+    fontFamily: FONTS.semiBold,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
+    letterSpacing: 0.5,
     color: theme.colors.text,
   },
   coinJarText: {
@@ -774,6 +776,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     ...theme.shadows.soft,
   },
+
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(255,255,255,0.85)',
@@ -791,8 +794,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
     ...theme.shadows.glow,
   },
   pinContainer: {
@@ -824,8 +825,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
     borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.white,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },
   levelTitle: {

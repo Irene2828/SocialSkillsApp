@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated } from 'react-native';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -27,6 +27,17 @@ export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();
+
+  const shakeAnim = React.useRef(new Animated.Value(0)).current;
+
+  const triggerShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true })
+    ]).start();
+  };
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
   const [showPinInput, setShowPinInput] = useState(false);
@@ -96,7 +107,7 @@ export const MyRewardsScreen = () => {
         setDeletePin('');
         setRewardToDelete(null);
       } else {
-        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
+        triggerShake();
         setDeletePin('');
       }
     }
@@ -112,7 +123,7 @@ export const MyRewardsScreen = () => {
         setAddPin('');
         setShowAddForm(true);
       } else {
-        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
+        triggerShake();
         setAddPin('');
       }
     }
@@ -145,7 +156,7 @@ export const MyRewardsScreen = () => {
         setEditCost(String(rewardToEdit?.cost || ''));
         setShowEditForm(true);
       } else {
-        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
+        triggerShake();
         setEditPin('');
       }
     }
@@ -186,7 +197,7 @@ export const MyRewardsScreen = () => {
           }, 500);
         }
       } else {
-        showModal({ title: 'Incorrect PIN', message: 'Please try again.', type: 'error' });
+        triggerShake();
         setPin('');
       }
     }
@@ -200,12 +211,7 @@ export const MyRewardsScreen = () => {
           <View style={styles.modalOverlay}>
             <SilverDust />
             <Pressable style={styles.successCard} onPress={() => {}}>
-              <Pressable 
-                style={styles.closeButton} 
-                onPress={() => setRedeemedReward(null)}
-              >
-                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-              </Pressable>
+
               {showPinInput ? (
                 <View style={styles.pinContainer}>
                   <Text style={styles.pinTitle}>Enter Parent PIN</Text>
@@ -267,7 +273,7 @@ export const MyRewardsScreen = () => {
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
-        <Header title="My Results" style={{ paddingHorizontal: 0, marginTop: 0, marginBottom: 8, paddingBottom: 8 }} />
+        {/* Results Header Removed */}
         <View style={styles.topSection}>
           <CoinBalanceCard balance={coinBalance} />
         </View>
@@ -284,7 +290,7 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Approved</Text>
+            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Redeemed</Text>
           </Pressable>
         </View>
 
@@ -306,7 +312,7 @@ export const MyRewardsScreen = () => {
           ) : (
             <View style={{ marginTop: 8 }}>
               {unlockedRewards.length === 0 ? (
-                <Text style={styles.emptyText}>No approved rewards yet.</Text>
+                <Text style={styles.emptyText}>No redeemed rewards yet.</Text>
               ) : (
                 [...unlockedRewards].sort((a, b) => {
                   if (a.isFulfilled === b.isFulfilled) {
@@ -340,8 +346,8 @@ export const MyRewardsScreen = () => {
           setRewardToFulfill(null);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.successCard} onPress={() => {}}>
-              <View style={styles.pinContainer}>
+            <Pressable style={styles.successCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
                 <Text style={styles.pinTitle}>Enter Parent PIN to Modify</Text>
                 <TextInput
                   style={styles.pinInput}
@@ -356,7 +362,7 @@ export const MyRewardsScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-              </View>
+              </Animated.View>
             </Pressable>
           </View>
         </Pressable>
@@ -370,8 +376,8 @@ export const MyRewardsScreen = () => {
           setRewardToDelete(null);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <View style={styles.pinContainer}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
                 <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
                 <TextInput
                   style={styles.pinInput}
@@ -386,7 +392,7 @@ export const MyRewardsScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-              </View>
+              </Animated.View>
             </Pressable>
           </View>
         </Pressable>
@@ -400,8 +406,8 @@ export const MyRewardsScreen = () => {
           setRewardToEdit(null);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <View style={styles.pinContainer}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
                 <Text style={styles.pinTitle}>Enter Parent PIN to Edit</Text>
                 <TextInput
                   style={styles.pinInput}
@@ -416,7 +422,7 @@ export const MyRewardsScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-              </View>
+              </Animated.View>
             </Pressable>
           </View>
         </Pressable>
@@ -429,16 +435,8 @@ export const MyRewardsScreen = () => {
           setRewardToEdit(null);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <Pressable 
-                style={styles.closeButton} 
-                onPress={() => {
-                  setShowEditForm(false);
-                  setRewardToEdit(null);
-                }}
-              >
-                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-              </Pressable>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+
               <Text style={styles.pinTitle}>Edit Reward</Text>
               <TextInput
                 style={[styles.editInput, { marginBottom: theme.spacing.md }]}
@@ -470,8 +468,8 @@ export const MyRewardsScreen = () => {
           setAddPin('');
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <View style={styles.pinContainer}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
                 <Text style={styles.pinTitle}>Enter Parent PIN to Add</Text>
                 <TextInput
                   style={styles.pinInput}
@@ -486,7 +484,7 @@ export const MyRewardsScreen = () => {
                   importantForAutofill="no"
                   textContentType="oneTimeCode"
                 />
-              </View>
+              </Animated.View>
             </Pressable>
           </View>
         </Pressable>
@@ -498,13 +496,8 @@ export const MyRewardsScreen = () => {
           setShowAddForm(false);
         }}>
           <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={() => {}}>
-              <Pressable 
-                style={styles.closeButton} 
-                onPress={() => setShowAddForm(false)}
-              >
-                <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-              </Pressable>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+
               <Text style={styles.pinTitle}>Add New Reward</Text>
               <TextInput
                 style={[styles.editInput, { marginBottom: theme.spacing.md }]}
@@ -548,7 +541,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: theme.spacing.lg,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    
   },
   bannerTextContainer: {
     flex: 1,
@@ -570,7 +563,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: theme.borderRadius.sm,
-    borderWidth: 1.5,
+    
     borderColor: theme.colors.border,
     justifyContent: 'center',
     alignItems: 'center',
@@ -592,8 +585,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
+    
+    
     ...theme.shadows.glow,
   },
   successRewardRow: {
@@ -646,7 +639,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 60,
     borderWidth: 2,
-    borderColor: theme.colors.stroke,
+    
     borderRadius: theme.borderRadius.md,
     fontSize: 32,
     textAlign: 'center',
@@ -694,15 +687,15 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
+    
+    
     ...theme.shadows.glow,
   },
   editInput: {
     width: '100%',
     height: 48,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     ...theme.typography.body,
@@ -729,11 +722,5 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
     color: theme.colors.text,
   },
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-    zIndex: 10,
-    padding: theme.spacing.xs,
-  },
+
 });

@@ -229,13 +229,7 @@ export const CreateQuizFromPhotoScreen = () => {
         onPress={() => setScreenState('idle')}
       >
         <SilverDust />
-        <Pressable onPress={() => {}} style={styles.successCard}>
-          <Pressable 
-            style={styles.closeButton} 
-            onPress={() => setScreenState('idle')}
-          >
-            <Ionicons name="close" size={24} color={theme.colors.secondaryText} />
-          </Pressable>
+        <Pressable onPress={(e) => { if (e && e.stopPropagation) e.stopPropagation(); }} style={styles.successCard}>
           <Text style={styles.successTitle}>Success!</Text>
           <Text style={styles.successSubtitle}>
             Your new quiz is added to your quiz library.
@@ -492,8 +486,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.xl,
     paddingTop: 48,
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
     overflow: 'hidden',
     ...theme.shadows.glow,
   },
@@ -504,11 +496,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     opacity: 0.7,
   },
-  closeButton: {
-    position: 'absolute',
-    top: theme.spacing.md,
-    right: theme.spacing.md,
-    zIndex: 10,
-    padding: theme.spacing.xs,
-  },
+
 });

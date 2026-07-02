@@ -20,6 +20,7 @@ const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'Font
     case 'Feelings': return { name: 'heart-outline', family: 'Ionicons' };
     case 'Playground': return { name: 'basketball-outline', family: 'Ionicons' };
     case 'Safety': return { name: 'shield-checkmark-outline', family: 'Ionicons' };
+    case 'create_ai': return { name: 'sparkles-outline', family: 'Ionicons' };
     default: return { name: 'book-outline', family: 'Ionicons' };
   }
 };
