@@ -52,7 +52,7 @@ export const AnimatedCubesBackground: React.FC = () => {
     <View style={styles.container} pointerEvents="none">
       {/* Soft gradient background */}
       <LinearGradient
-        colors={['#F0F1F3', '#FFFFFF']}
+        colors={['#FFFFFF', '#F3F4F6', '#FFFFFF']}
         style={StyleSheet.absoluteFill}
       />
 

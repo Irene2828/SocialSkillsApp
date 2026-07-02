@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
   },
   bannerSubtitle: {
     ...theme.typography.body,
-    fontSize: 16,
+    fontSize: 17,
     fontStyle: 'italic',
     color: theme.colors.secondaryText,
     textAlign: 'center',

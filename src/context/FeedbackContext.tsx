@@ -156,6 +156,7 @@ const styles = StyleSheet.create({
   modalMessage: {
     ...theme.typography.body,
     fontStyle: 'italic',
+    fontSize: 19,
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginBottom: theme.spacing.lg,

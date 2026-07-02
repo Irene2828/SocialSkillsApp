@@ -420,6 +420,7 @@ export const NewQuizScreen = () => {
           />
           <Text style={[styles.questionCaption, { marginTop: -14, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <QuestionView 
+            key={currentQuestion.id}
             question={currentQuestion} 
             onContinue={handleContinue} 
             disabled={isProcessing}
@@ -455,7 +456,7 @@ export const NewQuizScreen = () => {
             
             <Text style={[styles.messageText, { marginBottom: 48 }]}>{message}</Text>
 
-            <Text style={{ ...theme.typography.heading, fontSize: 16, color: theme.colors.text, marginBottom: 12 }}>
+            <Text style={{ ...theme.typography.heading, fontSize: 16, color: theme.colors.text, marginBottom: 12, letterSpacing: 0.3 }}>
               + {coinsEarned} points earned for this quiz!
             </Text>
 
@@ -507,8 +508,9 @@ export const NewQuizScreen = () => {
       {/* AI Quiz creation menu modal */}
       <Modal visible={showAiMenu} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
-          <View style={styles.modalOverlay}>
-            <Pressable style={styles.uploadCard} onPress={() => {}}>
+          <View style={[styles.modalOverlay, { padding: 0 }]}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
+              <Pressable style={styles.uploadCard} onPress={() => {}}>
               <Pressable 
                 style={styles.closeButton} 
                 onPress={() => setShowAiMenu(false)}
@@ -537,7 +539,8 @@ export const NewQuizScreen = () => {
                 style={styles.uploadButton}
               />
               <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
-            </Pressable>
+              </Pressable>
+            </ScrollView>
           </View>
         </Pressable>
       </Modal>
@@ -623,9 +626,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.text,
   },
-  emptyAiSub: {
+  pinSubtitle: {
     ...theme.typography.body,
     fontStyle: 'italic',
+    fontSize: 17,
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginBottom: theme.spacing.lg,
@@ -684,6 +688,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: theme.spacing.sm,
+    letterSpacing: 0.3,
   },
   coinsEarnedText: {
     ...theme.typography.heading,

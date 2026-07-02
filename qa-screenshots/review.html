@@ -22,18 +22,29 @@
       padding: 10px 0;
       z-index: 100;
     }
-    .export-btn {
+    .actions {
+      display: flex;
+      gap: 12px;
+    }
+    .btn {
       background: #bef264;
       color: #111827;
       border: none;
       padding: 10px 20px;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 16px;
+      font-size: 14px;
       cursor: pointer;
     }
-    .export-btn:hover {
+    .btn:hover {
       background: #a3e635;
+    }
+    .btn-secondary {
+      background: #4b5563;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #6b7280;
     }
     .grid {
       display: grid;
@@ -46,6 +57,12 @@
       border-radius: 12px;
       padding: 10px;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .image-container.dragging {
+      opacity: 0.5;
+      transform: scale(1.02);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
     }
     .drag-handle {
       position: absolute;
@@ -56,14 +73,31 @@
       font-size: 16px;
       z-index: 5;
     }
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
+      color: #9ca3af;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 5;
+    }
+    .delete-btn:hover {
+      color: #ef4444;
+    }
     .image-title {
       font-size: 14px;
       font-weight: 600;
       margin-bottom: 10px;
       text-align: center;
       color: #e5e7eb;
-      margin-left: 24px;
-      margin-right: 24px;
+      margin-left: 30px;
+      margin-right: 30px;
       padding: 4px;
       border: 1px dashed transparent;
       border-radius: 4px;
@@ -73,30 +107,33 @@
       outline: none;
       background: rgba(255, 255, 255, 0.1);
     }
-    .image-container.dragging {
-      opacity: 0.5;
-    }
     .image-wrapper {
       position: relative;
       cursor: crosshair;
     }
     .screenshot {
       width: 100%;
-      min-height: 200px;
+      min-height: 400px;
       height: auto;
       border-radius: 8px;
       display: block;
-      border: 1px solid #e5e7eb;
+      border: 2px dashed #6b7280;
       object-fit: contain;
-      background-color: #4b5563;
+      background-color: #1f2937;
       color: #9ca3af;
       font-size: 14px;
       text-align: center;
-      line-height: 200px; /* basic fallback alignment */
+      line-height: 400px; /* basic fallback alignment */
     }
-    .image-wrapper.dragover {
-      outline: 4px dashed #bef264;
-      opacity: 0.8;
+    .screenshot.has-image {
+      border: 1px solid #e5e7eb;
+      background-color: #4b5563;
+      min-height: 200px;
+      line-height: normal;
+    }
+    .image-wrapper.dragover .screenshot {
+      border-color: #bef264;
+      background-color: rgba(190, 242, 100, 0.1);
     }
     .pin {
       position: absolute;
@@ -159,14 +196,19 @@
       border: 1px solid #d1d5db;
       font-family: monospace;
       box-sizing: border-box;
+      background: #374151;
+      color: #f9fafb;
     }
   </style>
 </head>
 <body>
 
   <div class="header">
-    <h1>Screenshot QA Review</h1>
-    <button class="export-btn" onclick="exportComments()">Export Comments</button>
+    <h1>QA Board</h1>
+    <div class="actions">
+      <button class="btn btn-secondary" onclick="addSlot()">+ Add Placeholder</button>
+      <button class="btn export-btn" onclick="exportComments()">Export Comments</button>
+    </div>
   </div>
 
   <textarea id="export-area" readonly></textarea>
@@ -174,31 +216,16 @@
   <div class="grid" id="grid"></div>
 
   <script>
-    const images = [
-      '01-home.png',
-      '02-settings-reset-modal.png',
-      '03-quiz-library-general.png',
-      '04-ai-options-modal.png',
-      '05-my-rewards-all.png',
-      '06-parent-pin-empty.png',
-      '07-parent-pin-error-modal.png',
-      '08-add-reward-form.png',
-      '09-add-reward-success-toast.png',
-      '10-swipe-delete-reveal.png',
-      '11-quiz-feedback.png',
-      '12-redeem-success-toast.png'
-    ];
-
-    // Add 24 extra empty placeholders
-    for (let i = 1; i <= 24; i++) {
-      images.push(`Custom Screenshot ${i}`);
-    }
-
     let comments = [];
     let pinCounter = 1;
+    let slotCounter = 1;
     let activeBox = null;
 
     const grid = document.getElementById('grid');
+
+    function addSlot(prepend = false) {
+      createSlot(`Screen ${slotCounter++}`, null, prepend);
+    }
 
     function createSlot(imgName, initialSrc, prepend = false) {
       const container = document.createElement('div');
@@ -207,6 +234,13 @@
       const handle = document.createElement('div');
       handle.className = 'drag-handle';
       handle.innerHTML = '&#9776;'; // Hamburger icon
+      handle.title = "Drag to reorder";
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'delete-btn';
+      delBtn.innerHTML = '&times;';
+      delBtn.title = 'Remove screen';
+      delBtn.onclick = () => container.remove();
       
       const title = document.createElement('div');
       title.className = 'image-title';
@@ -223,13 +257,18 @@
       wrapper.className = 'image-wrapper';
       
       const imageEl = document.createElement('img');
-      imageEl.src = initialSrc;
       imageEl.className = 'screenshot';
       imageEl.draggable = false;
       imageEl.alt = 'Drag & drop or paste image here';
       
+      if (initialSrc) {
+        imageEl.src = initialSrc;
+        imageEl.classList.add('has-image');
+      }
+      
       imageEl.onerror = () => {
         // Just show the alt text
+        imageEl.classList.remove('has-image');
       };
       
       wrapper.appendChild(imageEl);
@@ -252,6 +291,12 @@
           const file = e.dataTransfer.files[0];
           if (file.type.startsWith('image/')) {
             imageEl.src = URL.createObjectURL(file);
+            imageEl.classList.add('has-image');
+            
+            // Auto update title if it's default
+            if (title.textContent.startsWith('Screen ') || title.textContent === 'Pasted Screenshot') {
+              title.textContent = file.name;
+            }
           }
         }
       });
@@ -260,6 +305,9 @@
         // Don't trigger if clicking inside an existing comment box
         if (e.target.closest('.comment-box')) return;
         
+        // Only allow pins if there's actually an image
+        if (!imageEl.classList.contains('has-image')) return;
+
         // Remove any active un-saved box
         if (activeBox) {
           activeBox.remove();
@@ -281,7 +329,7 @@
         box.style.top = boxY + 'px';
         
         box.innerHTML = `
-          <div style="font-weight:bold;margin-bottom:5px;font-size:12px;">Pin #${pinId}</div>
+          <div style="font-weight:bold;margin-bottom:5px;font-size:12px;color:#111827">Pin #${pinId}</div>
           <input type="text" class="comment-input" placeholder="Type comment..." autofocus>
           <div class="comment-actions">
             <button class="comment-btn cancel-btn">Cancel</button>
@@ -300,7 +348,7 @@
           if (text) {
             comments.push({
               id: pinId,
-              image: img,
+              image: title.textContent,
               text: text
             });
             
@@ -327,6 +375,7 @@
       });
 
       container.appendChild(handle);
+      container.appendChild(delBtn);
       container.appendChild(title);
       container.appendChild(wrapper);
 
@@ -372,8 +421,10 @@
       }
     }
 
-    // Initialize initial slots
-    images.forEach(img => createSlot(img, img));
+    // Initialize with 3 empty slots
+    for(let i=0; i<3; i++) {
+      addSlot();
+    }
 
     // Prevent default drag behaviors globally so missing the box doesn't open the image
     document.addEventListener('dragover', (e) => e.preventDefault());
@@ -390,9 +441,11 @@
           
           const hoveredWrapper = document.querySelector('.image-wrapper:hover');
           if (hoveredWrapper) {
-            hoveredWrapper.querySelector('img').src = url;
+            const imgEl = hoveredWrapper.querySelector('img');
+            imgEl.src = url;
+            imgEl.classList.add('has-image');
           } else {
-            createSlot('Pasted Screenshot', url, true);
+            createSlot('Pasted Screenshot', url, false);
           }
         }
       }

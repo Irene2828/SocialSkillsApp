@@ -201,9 +201,10 @@ const styles = StyleSheet.create({
   },
   folderTabText: {
     ...theme.typography.body,
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: 14,
     color: theme.colors.text,
+    letterSpacing: 0.5,
   },
   animatedContainer: {
     flex: 1,
@@ -267,12 +268,15 @@ const styles = StyleSheet.create({
   feedbackTitle: {
     ...theme.typography.body,
     fontWeight: '700',
+    fontSize: 18,
+    letterSpacing: 0.3,
     textAlign: 'center',
     color: theme.colors.text,
   },
   explanationText: {
     ...theme.typography.body,
     fontStyle: 'italic',
+    fontSize: 19,
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.secondaryText,

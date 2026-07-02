@@ -236,13 +236,11 @@ export const MyRewardsScreen = () => {
               ) : (
                 <>
                   <Text style={styles.successCuteCopy}>
-                    <Text style={{ ...theme.typography.heading, fontStyle: 'italic' }}>Hey parents!</Text>
-                    {'\n\n'}
-                    <Text style={{ fontWeight: 'bold' }}>I've just earned {redeemedReward.cost} coins</Text> for my social skills knowledge!
+                    I've just unlocked a reward for my social skills!{'\n\n'}Here's what I chose:
                   </Text>
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={40} color={theme.colors.text} />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color={theme.colors.text} />
                     </View>
                     <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
                   </View>
@@ -605,11 +603,11 @@ const styles = StyleSheet.create({
   },
   successIconWrapper: {
     backgroundColor: theme.colors.successGreenSoft,
-    width: 64,
-    height: 64,
+    width: 40,
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.md,
   },
   successRewardLabel: {
     ...theme.typography.body,
@@ -621,6 +619,7 @@ const styles = StyleSheet.create({
   successCuteCopy: {
     ...theme.typography.body,
     fontStyle: 'italic',
+    fontSize: 19,
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: 32,

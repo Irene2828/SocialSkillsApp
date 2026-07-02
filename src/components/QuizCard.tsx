@@ -72,7 +72,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
                 onDelete();
               }}
             >
-              <Ionicons name="close-outline" size={28} color={theme.colors.error} />
+              <Ionicons name="remove" size={28} color={theme.colors.error} />
             </ScalePressable>
           </View>
         )}
