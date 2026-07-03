@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
@@ -130,9 +131,17 @@ export const PuzzleScreen = () => {
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
+  useEffect(() => {
+    const loadPuzzles = async () => {
+      const stored = await safeStorage.get<PuzzleConfig[]>('@custom_puzzles', []);
+      setCustomPuzzles(stored);
+    };
+    loadPuzzles();
+  }, []);
+
   const allPuzzles = [...PUZZLES, ...customPuzzles];
 
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const boardSize = Math.min(screenWidth - 48, 400);
 
   const startPuzzle = (puzzle: PuzzleConfig) => {
@@ -226,7 +235,9 @@ export const PuzzleScreen = () => {
       rows: 3,
       difficulty: '9 Pieces',
     };
-    setCustomPuzzles([...customPuzzles, newPuzzle]);
+    const updatedPuzzles = [...customPuzzles, newPuzzle];
+    setCustomPuzzles(updatedPuzzles);
+    safeStorage.set('@custom_puzzles', updatedPuzzles);
     startPuzzle(newPuzzle);
   };
 
@@ -357,7 +368,7 @@ export const PuzzleScreen = () => {
             <View style={styles.gameContent}>
               {selectedPuzzle && (
                 <>
-                  <Text style={styles.headlineText}>Drag the pieces to solve a puzzle!</Text>
+                  {screenHeight > 700 && <Text style={styles.headlineText}>Drag the pieces to solve a puzzle!</Text>}
                   <View
                     style={[
                       styles.board,
@@ -412,12 +423,14 @@ export const PuzzleScreen = () => {
             </View>
 
             <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 16, paddingBottom: 16, marginTop: 'auto' }}>
-              <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
-                <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
-                  <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
-                  <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
-                </Pressable>
-              </Animated.View>
+              {screenHeight > 700 && (
+                <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
+                  <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
+                    <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
+                    <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
+                  </Pressable>
+                </Animated.View>
+              )}
             </View>
           </ScreenWrapper>
         </View>
