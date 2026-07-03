@@ -24,7 +24,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   }
 
   const content = (
-    <Text style={[styles.text, textStyle]}>
+    <Text style={[styles.text, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
       {title}
     </Text>
   );

@@ -50,6 +50,10 @@ const DraggablePiece = ({
   const curCol = piece.currentIndex % selectedPuzzle.cols;
   const curRow = Math.floor(piece.currentIndex / selectedPuzzle.cols);
 
+  // Store mutable refs so the PanResponder closure always reads fresh values
+  const latestRef = useRef({ curCol, curRow, currentIndex: piece.currentIndex, onSwap, colWidth, rowHeight, cols: selectedPuzzle.cols, rows: selectedPuzzle.rows });
+  latestRef.current = { curCol, curRow, currentIndex: piece.currentIndex, onSwap, colWidth, rowHeight, cols: selectedPuzzle.cols, rows: selectedPuzzle.rows };
+
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => true,
@@ -57,18 +61,19 @@ const DraggablePiece = ({
         setZIndex(100);
       },
       onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
-      onPanResponderRelease: (e, gesture) => {
+      onPanResponderRelease: (_e, gesture) => {
         setZIndex(1);
-        const dropX = curCol * colWidth + gesture.dx + colWidth / 2;
-        const dropY = curRow * rowHeight + gesture.dy + rowHeight / 2;
+        const { curCol: cc, curRow: cr, currentIndex, onSwap: swap, colWidth: cw, rowHeight: rh, cols, rows } = latestRef.current;
+        const dropX = cc * cw + gesture.dx + cw / 2;
+        const dropY = cr * rh + gesture.dy + rh / 2;
         
-        const targetCol = Math.floor(dropX / colWidth);
-        const targetRow = Math.floor(dropY / rowHeight);
+        const targetCol = Math.floor(dropX / cw);
+        const targetRow = Math.floor(dropY / rh);
         
-        if (targetCol >= 0 && targetCol < selectedPuzzle.cols && targetRow >= 0 && targetRow < selectedPuzzle.rows) {
-          const targetIndex = targetRow * selectedPuzzle.cols + targetCol;
-          if (targetIndex !== piece.currentIndex) {
-            onSwap(piece.currentIndex, targetIndex);
+        if (targetCol >= 0 && targetCol < cols && targetRow >= 0 && targetRow < rows) {
+          const targetIndex = targetRow * cols + targetCol;
+          if (targetIndex !== currentIndex) {
+            swap(currentIndex, targetIndex);
           }
         }
         
@@ -345,7 +350,7 @@ export const PuzzleScreen = () => {
                   <Button
                     title="Play More!"
                     onPress={() => setSelectedPuzzle(null)}
-                    style={{ width: '80%', marginTop: theme.spacing.lg }}
+                    style={{ marginTop: theme.spacing.lg, paddingHorizontal: 48 }}
                   />
                 </View>
               )}
@@ -503,7 +508,7 @@ const styles = StyleSheet.create({
   },
   brushUnderline: {
     position: 'absolute',
-    bottom: -4,
+    bottom: -8,
     left: '2%',
     right: '2%',
     height: 5.5,

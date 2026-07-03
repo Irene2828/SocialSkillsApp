@@ -468,17 +468,6 @@ export const NewQuizScreen = () => {
         ) : (
           <>
             <View ref={bentoGridRef} style={styles.bentoGrid}>
-              {!activeFolderId && currentTabFolders.map(folder => (
-                <View key={folder.id} style={styles.bentoItem}>
-                  <FolderCard
-                    name={folder.name}
-                    onPress={() => setActiveFolderId(folder.id)}
-                    onDelete={() => removeFolder(folder.id)}
-                    onLayout={(rect) => setFolderRects(prev => ({ ...prev, [folder.id]: rect }))}
-                  />
-                </View>
-              ))}
-
               {displayCategories.map((category: any) => {
                 return (
                   <View 
@@ -501,6 +490,17 @@ export const NewQuizScreen = () => {
                 );
               })}
 
+              {!activeFolderId && currentTabFolders.map(folder => (
+                <View key={folder.id} style={styles.bentoItem}>
+                  <FolderCard
+                    name={folder.name}
+                    onPress={() => setActiveFolderId(folder.id)}
+                    onEdit={() => {}} 
+                    onLayout={(rect) => setFolderRects(prev => ({ ...prev, [folder.id]: rect }))}
+                  />
+                </View>
+              ))}
+
               {!activeFolderId && (
                 <View 
                   style={styles.bentoItem}
@@ -511,7 +511,7 @@ export const NewQuizScreen = () => {
                     onPress={() => setShowFolderModal(true)}
                   >
                     <View style={styles.addFolderIconContainer}>
-                      <Ionicons name="add" size={32} color={theme.colors.primary} />
+                      <Ionicons name="add" size={32} color={theme.colors.secondaryText} style={{ opacity: 0.8 }} />
                     </View>
                     <Text style={styles.addFolderText}>New Folder</Text>
                   </Pressable>

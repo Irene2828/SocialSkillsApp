@@ -6,12 +6,12 @@ import { theme } from '../theme';
 interface FolderCardProps {
   name: string;
   onPress: () => void;
-  onDelete?: () => void;
+  onEdit?: () => void;
   onLayout?: (layout: any) => void;
   isDragTarget?: boolean;
 }
 
-export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onDelete, onLayout, isDragTarget }) => {
+export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, onLayout, isDragTarget }) => {
   const containerRef = useRef<View>(null);
 
   const handleLayout = () => {
@@ -26,13 +26,16 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onDelete,
     <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.iconContainer}>
-          <Ionicons name="folder-outline" size={32} color={theme.colors.primary} />
+          <Ionicons name="folder-outline" size={32} color={theme.colors.secondaryText} />
         </View>
         <Text style={styles.title} numberOfLines={2}>{name}</Text>
       </Pressable>
-      {onDelete && (
-        <Pressable onPress={onDelete} style={styles.deleteButton}>
-          <Ionicons name="trash-outline" size={16} color={theme.colors.error} />
+      {onEdit && (
+        <Pressable onPress={(e) => {
+          if (e && e.stopPropagation) e.stopPropagation();
+          onEdit();
+        }} style={styles.editButton}>
+          <Ionicons name="pencil-outline" size={16} color="#9CA3AF" />
         </Pressable>
       )}
     </View>
@@ -75,12 +78,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.text,
   },
-  deleteButton: {
+  editButton: {
     position: 'absolute',
     top: 8,
     right: 8,
-    padding: 4,
-    backgroundColor: '#FEE2E2',
-    borderRadius: 12,
+    padding: 8,
+    zIndex: 10,
   },
 });
