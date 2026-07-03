@@ -6,6 +6,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
 import { FolderCard } from '../components/FolderCard';
+import { DraggableFolderCard } from '../components/DraggableFolderCard';
 import { DraggableQuizCard } from '../components/DraggableQuizCard';
 import { ProgressBar } from '../components/ProgressBar';
 import { QuestionView } from '../components/QuestionView';
@@ -64,8 +65,9 @@ export const NewQuizScreen = () => {
     { id: 'iq_history', title: 'History', description: 'History quizzes', icon: 'time-outline', color: '#8B5CF6', isCustom: false },
   ];
 
-  const { folders, addFolder, removeFolder, moveQuizToFolder } = useQuizContext();
-  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+  const { folders, addFolder, removeFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
+  const [folderHistory, setFolderHistory] = useState<string[]>([]);
+  const activeFolderId = folderHistory.length > 0 ? folderHistory[folderHistory.length - 1] : null;
   const [folderRects, setFolderRects] = useState<Record<string, any>>({});
   const [isDraggingSomething, setIsDraggingSomething] = useState(false);
 
@@ -159,6 +161,37 @@ export const NewQuizScreen = () => {
       if (droppedInFolderId) {
         moveQuizToFolder(quizId, droppedInFolderId);
         showToast({ message: 'Moved to folder' });
+      }
+    });
+  };
+
+  const handleFolderDragEnd = (draggedFolderId: string, globalX: number, globalY: number) => {
+    if (!bentoGridRef.current) return;
+
+    bentoGridRef.current.measure((_x, _y, _width, _height, pageX, pageY) => {
+      const localX = globalX - pageX;
+      const localY = globalY - pageY;
+      
+      let droppedInFolderId: string | null = null;
+      
+      for (const [folderId, rect] of Object.entries(folderRects)) {
+        // Prevent dropping on itself or new-folder placeholder
+        if (folderId === draggedFolderId || folderId === 'new-folder') continue;
+
+        if (
+          localX >= rect.x &&
+          localX <= rect.x + rect.width &&
+          localY >= rect.y &&
+          localY <= rect.y + rect.height
+        ) {
+          droppedInFolderId = folderId;
+          break;
+        }
+      }
+
+      if (droppedInFolderId) {
+        moveFolderToFolder(draggedFolderId, droppedInFolderId);
+        showToast({ message: 'Folder moved!' });
       }
     });
   };
@@ -410,7 +443,7 @@ export const NewQuizScreen = () => {
     // }
 
     const baseCategories = activeTab === 'general' ? [...QUIZ_CATEGORIES, ...customCategories] : IQ_CATEGORIES;
-    const currentTabFolders = folders.filter(f => f.tab === activeTab);
+    const currentTabFolders = folders.filter(f => f.tab === activeTab && (f.parentId || null) === activeFolderId);
     
     // If inside a folder, only show quizzes for that folder
     const displayCategories = activeFolderId 
@@ -421,7 +454,7 @@ export const NewQuizScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {activeFolderId ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm, marginTop: 4 }}>
-            <Pressable onPress={() => setActiveFolderId(null)} style={{ padding: 8, marginRight: 8 }}>
+            <Pressable onPress={() => setFolderHistory(prev => prev.slice(0, -1))} style={{ padding: 8, marginRight: 8 }}>
               <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
             </Pressable>
             <Header title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} />
@@ -436,7 +469,7 @@ export const NewQuizScreen = () => {
               style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
               onPress={() => {
                 setActiveTab('general');
-                setActiveFolderId(null);
+                setFolderHistory([]);
               }}
             >
               <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizzes</Text>
@@ -445,7 +478,7 @@ export const NewQuizScreen = () => {
               style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
               onPress={() => {
                 setActiveTab('ai');
-                setActiveFolderId(null);
+                setFolderHistory([]);
               }}
             >
               <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizzes</Text>
@@ -492,13 +525,15 @@ export const NewQuizScreen = () => {
                 );
               })}
 
-              {!activeFolderId && currentTabFolders.map(folder => (
+              {currentTabFolders.map(folder => (
                 <View key={folder.id} style={styles.bentoItem}>
-                  <FolderCard
-                    name={folder.name}
-                    onPress={() => setActiveFolderId(folder.id)}
+                  <DraggableFolderCard
+                    folder={folder}
+                    onPressStart={() => setFolderHistory(prev => [...prev, folder.id])}
                     onEdit={() => {}} 
                     onLayout={(rect) => setFolderRects(prev => ({ ...prev, [folder.id]: rect }))}
+                    onDragEnd={handleFolderDragEnd}
+                    onDragStateChange={(dragging) => setIsDraggingSomething(dragging)}
                   />
                 </View>
               ))}

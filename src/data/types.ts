@@ -20,6 +20,7 @@ export interface QuizFolder {
   name: string;
   icon?: string;
   tab: 'general' | 'ai';
+  parentId?: string;
 }
 
 export interface QuizCategory {

@@ -10,6 +10,7 @@ interface QuizContextData {
   removeCustomQuiz: (categoryId: string) => void;
   renameCustomQuiz: (categoryId: string, newTitle: string) => void;
   moveQuizToFolder: (categoryId: string, folderId: string | undefined) => void;
+  moveFolderToFolder: (childFolderId: string, parentFolderId: string | undefined) => void;
   addFolder: (name: string, tab: 'general' | 'ai') => string;
   removeFolder: (folderId: string) => void;
 }
@@ -162,6 +163,26 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const moveFolderToFolder = (childFolderId: string, parentFolderId: string | undefined) => {
+    setFolders(prev => {
+      // Prevent circular nesting (e.g. moving a parent into its own child)
+      if (parentFolderId) {
+        let currentParent = prev.find(f => f.id === parentFolderId);
+        while (currentParent) {
+          if (currentParent.id === childFolderId) {
+            console.warn("Circular folder dependency prevented!");
+            return prev; // Do not allow circular nesting
+          }
+          currentParent = prev.find(f => f.id === currentParent?.parentId);
+        }
+      }
+
+      const newList = prev.map(f => f.id === childFolderId ? { ...f, parentId: parentFolderId } : f);
+      safeStorage.set('@quiz_folders', newList);
+      return newList;
+    });
+  };
+
   const addFolder = (name: string, tab: 'general' | 'ai') => {
     const newFolder: QuizFolder = { id: `folder_${Date.now()}`, name, tab };
     setFolders(prev => {
@@ -174,7 +195,10 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
 
   const removeFolder = (folderId: string) => {
     setFolders(prev => {
-      const newList = prev.filter(f => f.id !== folderId);
+      // Remove the folder, and for any children, reset their parentId so they move to root
+      const newList = prev
+        .filter(f => f.id !== folderId)
+        .map(f => f.parentId === folderId ? { ...f, parentId: undefined } : f);
       safeStorage.set('@quiz_folders', newList);
       return newList;
     });
@@ -196,7 +220,7 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   if (!isLoaded) return null;
 
   return (
-    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, addFolder, removeFolder }}>
+    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, moveFolderToFolder, addFolder, removeFolder }}>
       {children}
     </QuizContext.Provider>
   );
