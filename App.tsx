@@ -1,5 +1,10 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import 'intersection-observer';
+import ResizeObserver from 'resize-observer-polyfill';
+if (typeof window !== 'undefined' && !window.ResizeObserver) {
+  window.ResizeObserver = ResizeObserver;
+}
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';

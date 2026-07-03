@@ -18,13 +18,15 @@
     "expo-image-picker": "^56.0.18",
     "expo-linear-gradient": "~56.0.4",
     "expo-status-bar": "~56.0.4",
+    "intersection-observer": "^0.12.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-native": "0.85.3",
     "react-native-safe-area-context": "^5.8.0",
     "react-native-screens": "^4.25.2",
     "react-native-web": "^0.21.2",
-    "regenerator-runtime": "^0.14.1"
+    "regenerator-runtime": "^0.14.1",
+    "resize-observer-polyfill": "^1.5.1"
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
@@ -38,9 +40,10 @@
     "build": "expo export -p web"
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "ios >= 12",
+    "> 0.2%",
+    "last 4 versions",
+    "ios >= 10",
+    "safari >= 10",
     "not dead"
   ],
   "private": true
