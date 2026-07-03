@@ -430,26 +430,28 @@ export const NewQuizScreen = () => {
           <Header title="Select a Quiz" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
         )}
         
-        <View style={styles.tabContainer}>
-          <Pressable 
-            style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
-            onPress={() => {
-              setActiveTab('general');
-              setActiveFolderId(null);
-            }}
-          >
-            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizes</Text>
-          </Pressable>
-          <Pressable 
-            style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
-            onPress={() => {
-              setActiveTab('ai');
-              setActiveFolderId(null);
-            }}
-          >
-            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizes</Text>
-          </Pressable>
-        </View>
+        {!activeFolderId && (
+          <View style={styles.tabContainer}>
+            <Pressable 
+              style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
+              onPress={() => {
+                setActiveTab('general');
+                setActiveFolderId(null);
+              }}
+            >
+              <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizzes</Text>
+            </Pressable>
+            <Pressable 
+              style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
+              onPress={() => {
+                setActiveTab('ai');
+                setActiveFolderId(null);
+              }}
+            >
+              <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizzes</Text>
+            </Pressable>
+          </View>
+        )}
 
 
 
