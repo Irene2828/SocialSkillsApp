@@ -170,6 +170,15 @@ export const PuzzleScreen = () => {
     setSelectedPuzzle(puzzle);
   };
 
+  useEffect(() => {
+    if (pieces.length > 0 && isAlreadySolved(pieces) && !isSolved) {
+      const timer = setTimeout(() => {
+        setIsSolved(true);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [pieces, isSolved]);
+
   const isAlreadySolved = (arr: any[]) => {
     return arr.every((p, idx) => p.correctIndex === p.currentIndex);
   };
@@ -187,10 +196,6 @@ export const PuzzleScreen = () => {
       const temp = next[fromPos].currentIndex;
       next[fromPos].currentIndex = next[toPos].currentIndex;
       next[toPos].currentIndex = temp;
-
-      if (isAlreadySolved(next)) {
-        setIsSolved(true);
-      }
 
       return next;
     });

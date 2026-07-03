@@ -142,9 +142,18 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const updateReward = (id: string, updates: Partial<Pick<Reward, 'title' | 'cost'>>) => {
+    const originalReward = rewards.find(r => r.id === id);
     const newRewards = rewards.map(r => r.id === id ? { ...r, ...updates } : r);
     setRewards(newRewards);
     saveCustomRewards(newRewards);
+
+    if (originalReward && updates.title) {
+      const newUnlocked = unlockedRewards.map(ur => 
+        ur.title === originalReward.title ? { ...ur, title: updates.title! } : ur
+      );
+      setUnlockedRewards(newUnlocked);
+      saveUnlockedRewards(newUnlocked);
+    }
   };
 
   const addUnlockedReward = (reward: Reward) => {
