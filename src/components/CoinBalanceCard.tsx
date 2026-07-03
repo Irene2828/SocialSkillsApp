@@ -34,7 +34,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
             </Text>
             <Text style={styles.balanceLabel}>Coins</Text>
           </View>
-
+          <Text style={styles.subtitleText}>Redeem points for rewards of your choice anytime!</Text>
         </View>
       </View>
     </View>
@@ -91,6 +91,12 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     fontWeight: '500',
     marginLeft: theme.spacing.sm,
+  },
+  subtitleText: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    marginTop: 12,
+    textAlign: 'center',
   },
   textContainer: {
     alignItems: 'center',

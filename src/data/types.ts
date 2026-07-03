@@ -15,6 +15,13 @@ export interface Question {
   explanation: string;
 }
 
+export interface QuizFolder {
+  id: string;
+  name: string;
+  icon?: string;
+  tab: 'general' | 'ai';
+}
+
 export interface QuizCategory {
   id: Category;
   title: string;
@@ -23,6 +30,7 @@ export interface QuizCategory {
   icon?: string;
   color?: string;
   isCustom?: boolean;
+  folderId?: string;
 }
 
 export const QUIZ_CATEGORIES: QuizCategory[] = [

@@ -47,7 +47,6 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
       onPanResponderRelease: (_, gs) => {
         const currentX = gs.dx + (isOpen ? -ACTION_WIDTH : 0);
         if (currentX < -SWIPE_THRESHOLD) {
-          // Snap open
           Animated.spring(translateX, {
             toValue: -ACTION_WIDTH,
             useNativeDriver: true,
@@ -55,7 +54,6 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
             friction: 10,
           }).start(() => setIsOpen(true));
         } else {
-          // Snap closed
           Animated.spring(translateX, {
             toValue: 0,
             useNativeDriver: true,
@@ -63,6 +61,15 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
             friction: 10,
           }).start(() => setIsOpen(false));
         }
+      },
+      onPanResponderTerminationRequest: () => false,
+      onPanResponderTerminate: () => {
+        Animated.spring(translateX, {
+          toValue: 0,
+          useNativeDriver: true,
+          tension: 80,
+          friction: 10,
+        }).start(() => setIsOpen(false));
       },
     })
   ).current;

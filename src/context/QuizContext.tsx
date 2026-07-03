@@ -1,13 +1,17 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Question, QuizCategory } from '../data/types';
+import { Question, QuizCategory, QuizFolder } from '../data/types';
 import { safeStorage } from '../utils/storage';
 
 interface QuizContextData {
   customCategories: QuizCategory[];
   customQuestions: Question[];
+  folders: QuizFolder[];
   addCustomQuiz: (category: QuizCategory, questions: Question[]) => void;
   removeCustomQuiz: (categoryId: string) => void;
   renameCustomQuiz: (categoryId: string, newTitle: string) => void;
+  moveQuizToFolder: (categoryId: string, folderId: string | undefined) => void;
+  addFolder: (name: string, tab: 'general' | 'ai') => string;
+  removeFolder: (folderId: string) => void;
 }
 
 const QuizContext = createContext<QuizContextData | undefined>(undefined);
@@ -92,6 +96,7 @@ const MOCK_AI_QUESTIONS: Question[] = [
 export const QuizProvider = ({ children }: { children: ReactNode }) => {
   const [customCategories, setCustomCategories] = useState<QuizCategory[]>([]);
   const [customQuestions, setCustomQuestions] = useState<Question[]>([]);
+  const [folders, setFolders] = useState<QuizFolder[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -99,11 +104,13 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
       try {
         const storedCategories = await safeStorage.get<QuizCategory[]>('@custom_quiz_categories', []);
         const storedQuestions = await safeStorage.get<Question[]>('@custom_quiz_questions', []);
+        const storedFolders = await safeStorage.get<QuizFolder[]>('@quiz_folders', []);
         
         // Merge with our hardcoded AI mock so it's always there for testing if needed
         // but normally it would just load stored
         setCustomCategories([...MOCK_AI_CATEGORY ? [MOCK_AI_CATEGORY] : [], ...storedCategories.filter(c => c.id !== 'c_listening_ai')]);
         setCustomQuestions([...MOCK_AI_QUESTIONS ? MOCK_AI_QUESTIONS : [], ...storedQuestions.filter(q => q.category !== 'c_listening_ai')]);
+        setFolders(storedFolders);
       } catch (e) {
         console.error('Failed to load custom quizzes', e);
       } finally {
@@ -147,10 +154,49 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const moveQuizToFolder = (categoryId: string, folderId: string | undefined) => {
+    setCustomCategories(prev => {
+      const newList = prev.map(c => c.id === categoryId ? { ...c, folderId } : c);
+      safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
+      return newList;
+    });
+  };
+
+  const addFolder = (name: string, tab: 'general' | 'ai') => {
+    const newFolder: QuizFolder = { id: `folder_${Date.now()}`, name, tab };
+    setFolders(prev => {
+      const newList = [...prev, newFolder];
+      safeStorage.set('@quiz_folders', newList);
+      return newList;
+    });
+    return newFolder.id;
+  };
+
+  const removeFolder = (folderId: string) => {
+    setFolders(prev => {
+      const newList = prev.filter(f => f.id !== folderId);
+      safeStorage.set('@quiz_folders', newList);
+      return newList;
+    });
+    // Remove folderId from quizzes that were in this folder
+    setCustomCategories(prev => {
+      let changed = false;
+      const newList = prev.map(c => {
+        if (c.folderId === folderId) {
+          changed = true;
+          return { ...c, folderId: undefined };
+        }
+        return c;
+      });
+      if (changed) safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
+      return newList;
+    });
+  };
+
   if (!isLoaded) return null;
 
   return (
-    <QuizContext.Provider value={{ customCategories, customQuestions, addCustomQuiz, removeCustomQuiz, renameCustomQuiz }}>
+    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, addFolder, removeFolder }}>
       {children}
     </QuizContext.Provider>
   );

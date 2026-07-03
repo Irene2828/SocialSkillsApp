@@ -5,6 +5,8 @@ import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
+import { FolderCard } from '../components/FolderCard';
+import { DraggableQuizCard } from '../components/DraggableQuizCard';
 import { ProgressBar } from '../components/ProgressBar';
 import { QuestionView } from '../components/QuestionView';
 import { Button } from '../components/Button';
@@ -53,14 +55,19 @@ export const NewQuizScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
-  const IQ_CATEGORIES = [
-    { id: 'iq_math', title: 'Math', icon: 'calculator-outline', color: '#60A5FA', isCustom: false },
-    { id: 'iq_english', title: 'English', icon: 'book-outline', color: '#F87171', isCustom: false },
-    { id: 'iq_french', title: 'French', icon: 'language-outline', color: '#34D399', isCustom: false },
-    { id: 'iq_geography', title: 'Geography', icon: 'earth-outline', color: '#FBBF24', isCustom: false },
-    { id: 'iq_art', title: 'Art', icon: 'color-palette-outline', color: '#EC4899', isCustom: false },
-    { id: 'iq_history', title: 'History', icon: 'time-outline', color: '#8B5CF6', isCustom: false },
+  const IQ_CATEGORIES: QuizCategory[] = [
+    { id: 'iq_math', title: 'Math', description: 'Math quizzes', icon: 'calculator-outline', color: '#60A5FA', isCustom: false },
+    { id: 'iq_english', title: 'English', description: 'English quizzes', icon: 'book-outline', color: '#F87171', isCustom: false },
+    { id: 'iq_french', title: 'French', description: 'French quizzes', icon: 'language-outline', color: '#34D399', isCustom: false },
+    { id: 'iq_geography', title: 'Geography', description: 'Geography quizzes', icon: 'earth-outline', color: '#FBBF24', isCustom: false },
+    { id: 'iq_art', title: 'Art', description: 'Art quizzes', icon: 'color-palette-outline', color: '#EC4899', isCustom: false },
+    { id: 'iq_history', title: 'History', description: 'History quizzes', icon: 'time-outline', color: '#8B5CF6', isCustom: false },
   ];
+
+  const { folders, addFolder, removeFolder, moveQuizToFolder } = useQuizContext();
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+  const [folderRects, setFolderRects] = useState<Record<string, any>>({});
+  const [isDraggingSomething, setIsDraggingSomething] = useState(false);
 
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
@@ -101,6 +108,60 @@ export const NewQuizScreen = () => {
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Understanding the concept...');
+
+  const bentoGridRef = useRef<View>(null);
+
+  const [showFolderModal, setShowFolderModal] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [pendingDragQuizId, setPendingDragQuizId] = useState<string | null>(null);
+
+  const handleCreateFolder = () => {
+    if (newFolderName.trim()) {
+      const folderId = addFolder(newFolderName.trim(), activeTab);
+      setNewFolderName('');
+      setShowFolderModal(false);
+      
+      if (pendingDragQuizId) {
+        moveQuizToFolder(pendingDragQuizId, folderId);
+        showToast({ message: 'Folder created and quiz moved!' });
+        setPendingDragQuizId(null);
+      }
+    }
+  };
+
+  const handleDragEnd = (quizId: string, globalX: number, globalY: number) => {
+    if (!bentoGridRef.current) return;
+
+    bentoGridRef.current.measure((_x, _y, _width, _height, pageX, pageY) => {
+      const localX = globalX - pageX;
+      const localY = globalY - pageY;
+      
+      let droppedInFolderId: string | null = null;
+      
+      for (const [folderId, rect] of Object.entries(folderRects)) {
+        if (
+          localX >= rect.x &&
+          localX <= rect.x + rect.width &&
+          localY >= rect.y &&
+          localY <= rect.y + rect.height
+        ) {
+          droppedInFolderId = folderId;
+          break;
+        }
+      }
+
+      if (droppedInFolderId === 'new-folder') {
+        setPendingDragQuizId(quizId);
+        setShowFolderModal(true);
+        return;
+      }
+
+      if (droppedInFolderId) {
+        moveQuizToFolder(quizId, droppedInFolderId);
+        showToast({ message: 'Moved to folder' });
+      }
+    });
+  };
 
   useEffect(() => {
     if (aiGenerating) {
@@ -348,28 +409,51 @@ export const NewQuizScreen = () => {
     //   return <SimpleLockScreen />;
     // }
 
-    const displayCategories = activeTab === 'general' ? [...QUIZ_CATEGORIES, ...customCategories] : IQ_CATEGORIES;
+    const baseCategories = activeTab === 'general' ? [...QUIZ_CATEGORIES, ...customCategories] : IQ_CATEGORIES;
+    const currentTabFolders = folders.filter(f => f.tab === activeTab);
+    
+    // If inside a folder, only show quizzes for that folder
+    const displayCategories = activeFolderId 
+      ? baseCategories.filter(c => c.folderId === activeFolderId)
+      : baseCategories.filter(c => !c.folderId);
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <Header title="Select a Quiz" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
+        {activeFolderId ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm, marginTop: 4 }}>
+            <Pressable onPress={() => setActiveFolderId(null)} style={{ padding: 8, marginRight: 8 }}>
+              <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+            </Pressable>
+            <Header title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} />
+          </View>
+        ) : (
+          <Header title="Select a Quiz" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
+        )}
         
         <View style={styles.tabContainer}>
           <Pressable 
             style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
-            onPress={() => setActiveTab('general')}
+            onPress={() => {
+              setActiveTab('general');
+              setActiveFolderId(null);
+            }}
           >
             <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizes</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
-            onPress={() => setActiveTab('ai')}
+            onPress={() => {
+              setActiveTab('ai');
+              setActiveFolderId(null);
+            }}
           >
             <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizes</Text>
           </Pressable>
         </View>
 
-        {displayCategories.length === 0 ? (
+
+
+        {displayCategories.length === 0 && !activeFolderId && activeTab === 'ai' ? (
           <View style={styles.emptyAiContainer}>
             <Text style={styles.emptyAiText}>No AI quizes yet.</Text>
             <Text style={styles.emptyAiSub}>Create your first one from a photo or concept!</Text>
@@ -383,14 +467,25 @@ export const NewQuizScreen = () => {
           </View>
         ) : (
           <>
-            <View style={styles.bentoGrid}>
+            <View ref={bentoGridRef} style={styles.bentoGrid}>
+              {!activeFolderId && currentTabFolders.map(folder => (
+                <View key={folder.id} style={styles.bentoItem}>
+                  <FolderCard
+                    name={folder.name}
+                    onPress={() => setActiveFolderId(folder.id)}
+                    onDelete={() => removeFolder(folder.id)}
+                    onLayout={(rect) => setFolderRects(prev => ({ ...prev, [folder.id]: rect }))}
+                  />
+                </View>
+              ))}
+
               {displayCategories.map((category: any) => {
                 return (
                   <View 
                     key={category.id} 
                     style={styles.bentoItem}
                   >
-                    <QuizCard 
+                    <DraggableQuizCard 
                       category={category} 
                       isFeatured={false}
                       onPressStart={() => handleSelectQuizCategory(category.id)} 
@@ -399,12 +494,32 @@ export const NewQuizScreen = () => {
                         setQuizToDelete(category.id);
                         setShowDeletePin(true);
                       } : undefined}
+                      onDragEnd={handleDragEnd}
+                      onDragStateChange={(dragging) => setIsDraggingSomething(dragging)}
                     />
                   </View>
                 );
               })}
+
+              {!activeFolderId && (
+                <View 
+                  style={styles.bentoItem}
+                  onLayout={(rect) => setFolderRects(prev => ({ ...prev, 'new-folder': rect.nativeEvent.layout }))}
+                >
+                  <Pressable 
+                    style={styles.addFolderCard}
+                    onPress={() => setShowFolderModal(true)}
+                  >
+                    <View style={styles.addFolderIconContainer}>
+                      <Ionicons name="add" size={32} color={theme.colors.primary} />
+                    </View>
+                    <Text style={styles.addFolderText}>New Folder</Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
-            {activeTab === 'general' ? (
+            
+            {activeTab === 'general' && !activeFolderId && (
               <View style={styles.createAiButtonContainer}>
                 <Button
                   title="Create New EQ Quiz"
@@ -412,7 +527,16 @@ export const NewQuizScreen = () => {
                   onPress={() => setShowAiMenu(true)}
                 />
               </View>
-            ) : (
+            )}
+            
+            {activeFolderId && displayCategories.length === 0 && (
+              <View style={styles.emptyAiContainer}>
+                <Text style={styles.emptyAiText}>This folder is empty.</Text>
+                <Text style={styles.emptyAiSub}>Drag quizzes here to organize them.</Text>
+              </View>
+            )}
+
+            {activeTab !== 'general' && !activeFolderId && displayCategories.length > 0 && (
               <View style={styles.createAiButtonContainer}>
                 <Button
                   title="Create New IQ Quiz"
@@ -653,6 +777,34 @@ export const NewQuizScreen = () => {
             </Pressable>
           </View>
         </Pressable>
+      </Modal>
+
+      {/* New Folder Modal */}
+      <Modal
+        visible={showFolderModal}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>New Folder</Text>
+            <TextInput
+              style={styles.input}
+              value={newFolderName}
+              onChangeText={setNewFolderName}
+              placeholder="Folder Name"
+              autoFocus
+            />
+            <Button
+              title="Create"
+              onPress={handleCreateFolder}
+              style={{ width: '100%', marginTop: theme.spacing.md }}
+            />
+            <Pressable style={styles.linkButton} onPress={() => { setShowFolderModal(false); setPendingDragQuizId(null); }}>
+              <Text style={styles.linkButtonText}>Cancel</Text>
+            </Pressable>
+          </View>
+        </View>
       </Modal>
 
     </View>
@@ -1066,5 +1218,81 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
     color: theme.colors.text,
+  },
+  modalTitle: {
+    ...theme.typography.heading,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.md,
+    textAlign: 'center',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: theme.spacing.md,
+    gap: theme.spacing.sm,
+  },
+  modalButton: {
+    flex: 1,
+    padding: theme.spacing.md,
+    borderRadius: theme.borderRadius.md,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#F3F4F6',
+  },
+  cancelButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+  },
+  deleteButton: {
+    backgroundColor: theme.colors.primary,
+  },
+  deleteButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.white,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    ...theme.typography.body,
+    width: '100%',
+    backgroundColor: theme.colors.white,
+  },
+  modalContent: {
+    width: '100%',
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing.xl,
+    alignItems: 'center',
+    ...theme.shadows.soft,
+  },
+  addFolderCard: {
+    width: '100%',
+    aspectRatio: 1,
+    backgroundColor: '#F9FAFB',
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.md,
+  },
+  addFolderIconContainer: {
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.sm,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.sm,
+  },
+  addFolderText: {
+    ...theme.typography.button,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
   },
 });

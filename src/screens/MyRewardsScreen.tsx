@@ -653,7 +653,7 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.xl,
   },
   topSection: {
-    marginBottom: theme.spacing.sm,
+    marginBottom: 20, // Doubled from theme.spacing.sm (10)
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,
@@ -811,7 +811,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
     padding: theme.spacing.xs,

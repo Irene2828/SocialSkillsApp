@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Dimensions, Animated, PanResponder } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
-import { Card } from '../components/Card';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
-import { useRewards } from '../context/RewardsContext';
-import { useFeedback } from '../context/FeedbackContext';
-import { SilverDust } from '../components/SilverDust';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { SilverDust } from '../components/SilverDust';
 
 interface PuzzleConfig {
   id: string;
@@ -29,7 +26,6 @@ const PUZZLES: PuzzleConfig[] = [
   { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
   { id: 'p_fox', name: 'Clever Fox', image: require('../../assets/puzzles/fox.png'), icon: 'paw-outline', cols: 4, rows: 6, difficulty: '24 Pieces' },
 ];
-
 
 const DraggablePiece = ({
   piece,
@@ -51,8 +47,8 @@ const DraggablePiece = ({
 
   const origCol = piece.correctIndex % selectedPuzzle.cols;
   const origRow = Math.floor(piece.correctIndex / selectedPuzzle.cols);
-  const curCol = index % selectedPuzzle.cols;
-  const curRow = Math.floor(index / selectedPuzzle.cols);
+  const curCol = piece.currentIndex % selectedPuzzle.cols;
+  const curRow = Math.floor(piece.currentIndex / selectedPuzzle.cols);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -71,8 +67,8 @@ const DraggablePiece = ({
         
         if (targetCol >= 0 && targetCol < selectedPuzzle.cols && targetRow >= 0 && targetRow < selectedPuzzle.rows) {
           const targetIndex = targetRow * selectedPuzzle.cols + targetCol;
-          if (targetIndex !== index) {
-            onSwap(index, targetIndex);
+          if (targetIndex !== piece.currentIndex) {
+            onSwap(piece.currentIndex, targetIndex);
           }
         }
         
@@ -86,7 +82,7 @@ const DraggablePiece = ({
 
   useEffect(() => {
     pan.setValue({ x: 0, y: 0 });
-  }, [index, pan]);
+  }, [piece.currentIndex, pan]);
 
   return (
     <Animated.View
@@ -122,15 +118,14 @@ const DraggablePiece = ({
 
 export const PuzzleScreen = () => {
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleConfig | null>(null);
+  const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
-  
   const [isSolved, setIsSolved] = useState(false);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
   const { width: screenWidth } = useWindowDimensions();
   const boardSize = Math.min(screenWidth - 48, 400);
 
-  // Scramble the puzzle pieces
   const startPuzzle = (puzzle: PuzzleConfig) => {
     const totalPieces = puzzle.cols * puzzle.rows;
     let initialPieces = Array.from({ length: totalPieces }, (_, i) => ({
@@ -139,13 +134,14 @@ export const PuzzleScreen = () => {
       currentIndex: i,
     }));
 
-    // Scramble logic
     let scrambled = [...initialPieces];
     do {
       scrambled.sort(() => Math.random() - 0.5);
-    } while (isAlreadySolved(scrambled)); // ensure it's not solved at start
+      scrambled.forEach((p, idx) => {
+        p.currentIndex = idx;
+      });
+    } while (isAlreadySolved(scrambled));
 
-    // Update current index maps
     scrambled = scrambled.map((p, idx) => ({
       ...p,
       currentIndex: idx,
@@ -157,26 +153,43 @@ export const PuzzleScreen = () => {
   };
 
   const isAlreadySolved = (arr: any[]) => {
-    return arr.every((p, idx) => p.correctIndex === idx);
+    return arr.every((p, idx) => p.correctIndex === p.currentIndex);
   };
 
-  
   const handleSwapPieces = (fromIndex: number, toIndex: number) => {
     if (isSolved) return;
 
-    const newPieces = [...pieces];
-    const pieceA = newPieces[fromIndex];
-    const pieceB = newPieces[toIndex];
+    setPieces((prev) => {
+      const next = [...prev];
+      const fromPos = next.findIndex((p) => p.currentIndex === fromIndex);
+      const toPos = next.findIndex((p) => p.currentIndex === toIndex);
 
-    newPieces[fromIndex] = { ...pieceB, currentIndex: fromIndex };
-    newPieces[toIndex] = { ...pieceA, currentIndex: toIndex };
+      if (fromPos === -1 || toPos === -1) return prev;
 
-    setPieces(newPieces);
+      const temp = next[fromPos].currentIndex;
+      next[fromPos].currentIndex = next[toPos].currentIndex;
+      next[toPos].currentIndex = temp;
 
-    const solved = newPieces.every((p) => p.correctIndex === p.currentIndex);
-    if (solved) {
-      setIsSolved(true);
+      if (isAlreadySolved(next)) {
+        setIsSolved(true);
+      }
+
+      return next;
+    });
+  };
+
+  const changeDifficulty = (piecesCount: number) => {
+    if (!selectedPuzzle) return;
+    let newCols, newRows;
+    switch(piecesCount) {
+        case 4: newCols = 2; newRows = 2; break;
+        case 9: newCols = 3; newRows = 3; break;
+        case 16: newCols = 4; newRows = 4; break;
+        case 24: newCols = 4; newRows = 6; break;
+        default: return;
     }
+    const updatedPuzzle = { ...selectedPuzzle, cols: newCols, rows: newRows, difficulty: `${piecesCount} Pieces` };
+    startPuzzle(updatedPuzzle);
   };
 
   const handleNextPuzzle = () => {
@@ -208,16 +221,58 @@ export const PuzzleScreen = () => {
                 style={styles.card}
                 onPress={() => startPuzzle(puzzle)}
               >
-                <View style={styles.cardIconContainer}>
-                  <Ionicons name={puzzle.icon as any} size={32} color={theme.colors.secondaryText} />
+                <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
+                  <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
                 </View>
                 <Text style={styles.cardName}>{puzzle.name}</Text>
-                <Text style={styles.cardDifficulty}>{puzzle.difficulty}</Text>
               </Pressable>
             ))}
           </View>
+          
+          <View style={styles.createAiButtonContainer}>
+            <Button
+              title="Create New Puzzle"
+              style={styles.createAiButton}
+              onPress={() => setShowAiMenu(true)}
+            />
+          </View>
         </ScrollView>
       </ScreenWrapper>
+
+      {/* AI Puzzle creation menu modal */}
+      <Modal visible={showAiMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
+          <View style={[styles.modalOverlay, { padding: 0 }]}>
+            <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
+              <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
+                <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+                  <Text style={styles.levelTitle}>Create AI Puzzle</Text>
+                  <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: 16 }]}>
+                    Upload a page or take a photo, and AI will turn it into a fun puzzle.
+                  </Text>
+                  
+                  <View style={styles.iconContainer}>
+                    <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
+                  </View>
+                  
+                  <Button 
+                    title="Take Photo" 
+                    onPress={() => { setShowAiMenu(false); alert('AI Puzzle feature coming soon!'); }} 
+                    style={styles.uploadButton}
+                  />
+                  
+                  <Button 
+                    title="Upload Image" 
+                    onPress={() => { setShowAiMenu(false); alert('AI Puzzle feature coming soon!'); }} 
+                    style={[styles.uploadButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.stroke }]}
+                  />
+                  <Text style={styles.supportedText}>Supports JPG, PNG</Text>
+                </Pressable>
+              </Pressable>
+            </ScrollView>
+          </View>
+        </Pressable>
+      </Modal>
 
       {/* Puzzle Board Modal */}
       <Modal
@@ -262,6 +317,20 @@ export const PuzzleScreen = () => {
                       onSwap={handleSwapPieces}
                     />
                   ))}
+                  </View>
+                  <View style={styles.difficultySelector}>
+                    {[4, 9, 16, 24].map((num) => {
+                      const isSelected = selectedPuzzle.cols * selectedPuzzle.rows === num;
+                      return (
+                        <Pressable 
+                          key={num} 
+                          style={[styles.diffBtn, isSelected && styles.diffBtnSelected]}
+                          onPress={() => changeDifficulty(num)}
+                        >
+                          <Text style={[styles.diffBtnText, isSelected && styles.diffBtnTextSelected]}>{num}</Text>
+                        </Pressable>
+                      );
+                    })}
                   </View>
                 </>
               )}
@@ -442,5 +511,90 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     transform: [{ rotate: '-1.5deg' }],
     zIndex: -1,
+  },
+  difficultySelector: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: theme.spacing.lg,
+    gap: theme.spacing.md,
+  },
+  diffBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: theme.colors.white,
+    borderWidth: 2,
+    borderColor: theme.colors.stroke,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  diffBtnSelected: {
+    backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+  },
+  diffBtnText: {
+    ...theme.typography.button,
+    fontSize: 18,
+    color: theme.colors.secondaryText,
+  },
+  diffBtnTextSelected: {
+    color: theme.colors.text,
+  },
+  createAiButtonContainer: {
+    width: '100%',
+    marginTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
+    paddingBottom: theme.spacing.xxl,
+  },
+  createAiButton: {
+    width: '100%',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.lg,
+  },
+  uploadCard: {
+    width: '100%',
+    maxWidth: 500,
+    padding: theme.spacing.xl,
+    alignItems: 'center',
+    backgroundColor: theme.colors.white,
+    borderWidth: 2,
+    borderColor: theme.colors.neutralGrey,
+    borderStyle: 'dashed',
+    borderRadius: theme.borderRadius.md,
+  },
+  levelTitle: {
+    ...theme.typography.subheading,
+    marginBottom: theme.spacing.md,
+  },
+  questionCaption: {
+    ...theme.typography.caption,
+    textAlign: 'center',
+  },
+  iconContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.background,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.md,
+    ...theme.shadows.soft,
+  },
+  uploadButton: {
+    width: '100%',
+    marginBottom: theme.spacing.md,
+  },
+  supportedText: {
+    ...theme.typography.caption,
+    marginTop: theme.spacing.xs,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
   },
 });
