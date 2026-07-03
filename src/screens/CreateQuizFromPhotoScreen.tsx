@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView, Modal, TextInput } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
@@ -9,7 +9,7 @@ import { Card } from '../components/Card';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { generateQuizFromImage } from '../utils/aiQuizGenerator';
+import { generateQuizFromImage, generateQuizFromText } from '../utils/aiQuizGenerator';
 import { useNavigation } from '@react-navigation/native';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
@@ -26,6 +26,7 @@ export const CreateQuizFromPhotoScreen = () => {
   
   const [selectedAge, setSelectedAge] = useState('7-8');
   const [selectedDifficulty, setSelectedDifficulty] = useState('Medium');
+  const [textPrompt, setTextPrompt] = useState('');
 
   const [loadingText, setLoadingText] = useState('Understanding the concept...');
   const spinAnim = new Animated.Value(0);
@@ -146,6 +147,47 @@ export const CreateQuizFromPhotoScreen = () => {
     }
   };
 
+  const handleGenerateFromText = async () => {
+    if (!textPrompt.trim()) return;
+    
+    setScreenState('generating');
+    try {
+      const responseData = await generateQuizFromText(textPrompt.trim());
+      setGeneratedQuiz(responseData);
+      
+      // Save all 3 generated quizzes to context
+      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
+        const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
+        const newCategory = {
+          id: newCategoryId,
+          title: quiz.concept,
+          description: 'AI Generated Quiz',
+          icon: 'sparkles', // magical icon for AI generated
+          color: '#A78BFA', // Purple styling to stand out
+          isCustom: true
+        };
+        
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+          id: `${newCategoryId}-q${index}`,
+          category: newCategoryId,
+          difficulty: selectedDifficulty,
+          scenario: q.question,
+          options: q.options,
+          correctAnswerIndex: q.correctIndex,
+          explanation: q.explanation || 'Great job!'
+        }));
+        
+        addCustomQuiz(newCategory, questionsWithCategory);
+      });
+
+      setTextPrompt('');
+      setScreenState('success');
+    } catch (error: any) {
+      setErrorMessage(error.message || 'An error occurred while generating the quiz.');
+      setScreenState('error');
+    }
+  };
+
   const handleStartQuiz = () => {
     navigation.navigate('NewQuiz', { playCategory: generatedQuiz.concept });
     setScreenState('idle'); // reset for next time
@@ -153,9 +195,34 @@ export const CreateQuizFromPhotoScreen = () => {
 
   const renderIdle = () => (
     <View style={styles.idleContainer}>
+      <Card style={[styles.uploadCard, { marginBottom: theme.spacing.lg }]}>
+        <View style={styles.sectionHeaderRow}>
+          <Ionicons name="text-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
+          <Text style={styles.sectionHeaderTitle}>Type a Topic or Concept</Text>
+        </View>
+        <TextInput
+          style={styles.textInput}
+          value={textPrompt}
+          onChangeText={setTextPrompt}
+          placeholder="Create a quiz to test rejection reactions during recess at school"
+          placeholderTextColor="#9CA3AF"
+          multiline
+          numberOfLines={3}
+        />
+        <Button 
+          title="Generate from Text" 
+          onPress={handleGenerateFromText} 
+          disabled={!textPrompt.trim()}
+          style={styles.button}
+        />
+      </Card>
+
+      <Text style={styles.orText}>— OR —</Text>
+
       <Card style={styles.uploadCard}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
+        <View style={styles.sectionHeaderRow}>
+          <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
+          <Text style={styles.sectionHeaderTitle}>Upload a Photo</Text>
         </View>
         
         <Button 
@@ -170,8 +237,8 @@ export const CreateQuizFromPhotoScreen = () => {
           variant="secondary"
           style={styles.button}
         />
+        <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
       </Card>
-      <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
     </View>
   );
 
@@ -288,7 +355,7 @@ export const CreateQuizFromPhotoScreen = () => {
           {screenState !== 'generating' && screenState !== 'success' && (
             <View style={styles.headerSubtitleContainer}>
               <Text style={styles.headerSubtitle}>
-                Upload a page and AI will create original quiz questions based on the underlying concept.
+                Type a concept or upload a photo, and AI will create original quiz questions.
               </Text>
             </View>
           )}
@@ -499,6 +566,38 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     opacity: 0.7,
   },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.md,
+    alignSelf: 'flex-start',
+    width: '100%',
+  },
+  sectionHeaderTitle: {
+    ...theme.typography.subheading,
+    fontSize: 18,
+    color: theme.colors.text,
+  },
+  textInput: {
+    width: '100%',
+    minHeight: 80,
+    borderWidth: 1.5,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.sm,
+    padding: theme.spacing.md,
+    fontSize: 16,
+    color: theme.colors.text,
+    textAlignVertical: 'top',
+    backgroundColor: '#F9FAFB',
+    marginBottom: theme.spacing.md,
+  },
+  orText: {
+    ...theme.typography.label,
+    textAlign: 'center',
+    color: theme.colors.secondaryText,
+    marginVertical: theme.spacing.md,
+    fontWeight: '700',
+  },
   titleContainer: {
     position: 'relative',
     alignSelf: 'center',
@@ -506,10 +605,10 @@ const styles = StyleSheet.create({
   },
   brushUnderline: {
     position: 'absolute',
-    bottom: -2,
+    bottom: -4,
     left: '2%',
     right: '2%',
-    height: 8,
+    height: 5.5,
     backgroundColor: '#BEF264',
     borderRadius: 4,
     transform: [{ rotate: '-1.5deg' }],

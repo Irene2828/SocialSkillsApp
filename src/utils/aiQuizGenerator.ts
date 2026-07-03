@@ -151,3 +151,75 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
 
   throw lastError || new Error('Quiz generation failed after 2 attempts.');
 };
+
+export const generateQuizFromText = async (promptText: string, age: number = 7) => {
+  const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
+  if (!apiKey) {
+    throw new Error('OpenAI API key is not configured in .env.local');
+  }
+
+  let lastError: any = null;
+
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            {
+              role: 'system',
+              content: getSystemPrompt(age)
+            },
+            {
+              role: 'user',
+              content: `The user wants to generate quizzes for this topic/task description: "${promptText}". Please generate exactly 3 quizzes teaching this concept or closely related social/life skills.`
+            }
+          ],
+          response_format: { type: "json_object" },
+          max_tokens: 5000,
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.error?.message || `API responded with status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const messageContent = data.choices[0]?.message?.content;
+      
+      if (!messageContent) {
+        throw new Error('No content received from AI');
+      }
+
+      const parsedData = JSON.parse(messageContent);
+      
+      // Ensure each quiz concept name is mostly 2 words max
+      if (parsedData && Array.isArray(parsedData.quizzes)) {
+        for (const quiz of parsedData.quizzes) {
+          if (typeof quiz.concept === 'string') {
+            const words = quiz.concept.trim().split(/\s+/);
+            if (words.length > 2) {
+              quiz.concept = words.slice(0, 2).join(' ');
+            }
+          }
+        }
+      }
+
+      validateQuizData(parsedData);
+      
+      return parsedData;
+
+    } catch (error: any) {
+      console.error(`Attempt ${attempt} failed generating quiz from text:`, error);
+      lastError = error;
+    }
+  }
+
+  throw lastError || new Error('Quiz generation failed after 2 attempts.');
+};

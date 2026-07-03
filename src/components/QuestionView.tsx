@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   cardWrapper: {
     position: 'relative',
-    marginTop: theme.spacing.xs,
+    marginTop: 0,
   },
   folderTab: {
     position: 'absolute',

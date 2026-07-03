@@ -53,6 +53,15 @@ export const NewQuizScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
+  const IQ_CATEGORIES = [
+    { id: 'iq_math', title: 'Math', icon: 'calculator-outline', color: '#60A5FA', isCustom: false },
+    { id: 'iq_english', title: 'English', icon: 'book-outline', color: '#F87171', isCustom: false },
+    { id: 'iq_french', title: 'French', icon: 'language-outline', color: '#34D399', isCustom: false },
+    { id: 'iq_geography', title: 'Geography', icon: 'earth-outline', color: '#FBBF24', isCustom: false },
+    { id: 'iq_art', title: 'Art', icon: 'color-palette-outline', color: '#EC4899', isCustom: false },
+    { id: 'iq_history', title: 'History', icon: 'time-outline', color: '#8B5CF6', isCustom: false },
+  ];
+
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
@@ -208,7 +217,6 @@ export const NewQuizScreen = () => {
     if (route.params?.tab === 'ai') {
       setActiveTab('ai');
       setQuizState('selection');
-      // Clear param so it doesn't get stuck
       navigation.setParams({ tab: undefined });
     }
   }, [route.params?.tab]);
@@ -278,14 +286,19 @@ export const NewQuizScreen = () => {
     setQuizState('in-progress');
   };
 
-  const handleStartQuiz = (category: Category, questionCount: number) => {
-    let categoryQuestions = allQuestions.filter((q: any) => q.category === category);
+  const handleStartQuiz = (categoryId: string, questionCount: number) => {
+    if (categoryId.startsWith('iq_')) {
+      showToast({ message: 'IQ quizzes are coming soon!' });
+      return;
+    }
+    
+    let categoryQuestions = allQuestions.filter((q: any) => q.category === categoryId);
     if (categoryQuestions.length === 0) {
-      categoryQuestions = customQuestions.filter((q: any) => q.category === category);
+      categoryQuestions = customQuestions.filter((q: any) => q.category === categoryId);
     }
     const selected = buildQuestionSet(categoryQuestions, questionCount);
 
-    setSelectedCategory(category);
+    setSelectedCategory(categoryId as any);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
@@ -293,8 +306,8 @@ export const NewQuizScreen = () => {
     setQuizState('in-progress');
   };
 
-  const handleSelectQuizCategory = (category: Category) => {
-    handleStartQuiz(category, 5);
+  const handleSelectQuizCategory = (categoryId: string) => {
+    handleStartQuiz(categoryId, 5);
   };
 
   const handleContinue = async (isCorrect: boolean) => {
@@ -335,7 +348,7 @@ export const NewQuizScreen = () => {
     //   return <SimpleLockScreen />;
     // }
 
-    const displayCategories = activeTab === 'general' ? QUIZ_CATEGORIES : customCategories;
+    const displayCategories = activeTab === 'general' ? [...QUIZ_CATEGORIES, ...customCategories] : IQ_CATEGORIES;
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -346,13 +359,13 @@ export const NewQuizScreen = () => {
             style={[styles.tab, activeTab === 'general' && styles.activeTab]} 
             onPress={() => setActiveTab('general')}
           >
-            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>General Quizes</Text>
+            <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizes</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Custom</Text>
+            <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizes</Text>
           </Pressable>
         </View>
 
@@ -391,12 +404,20 @@ export const NewQuizScreen = () => {
                 );
               })}
             </View>
-            {activeTab === 'ai' && (
+            {activeTab === 'general' ? (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Add New Quiz"
+                  title="Create New EQ Quiz"
                   style={styles.createAiButton}
                   onPress={() => setShowAiMenu(true)}
+                />
+              </View>
+            ) : (
+              <View style={styles.createAiButtonContainer}>
+                <Button
+                  title="Create New IQ Quiz"
+                  style={styles.createAiButton}
+                  onPress={() => showToast({ message: 'IQ Quiz Creator is coming soon!' })}
                 />
               </View>
             )}
@@ -434,7 +455,7 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8, zIndex: 2, paddingHorizontal: 16 }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, zIndex: 2, paddingHorizontal: 16 }}>
             <Pressable style={styles.backButton} onPress={handleBackToHome}>
               <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
@@ -444,12 +465,12 @@ export const NewQuizScreen = () => {
             </View>
           </View>
           
-          <Text style={[styles.questionCaption, { marginTop: 8, marginBottom: 8 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+          <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 8 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
           <ProgressBar 
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, marginTop: -16, marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, marginTop: -16, marginBottom: 16 }}>
             {renderCoinJar()}
           </View>
           <QuestionView 
@@ -716,7 +737,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     color: theme.colors.text,
-    marginBottom: theme.spacing.lg,
+    marginBottom: 0,
   },
   completedCoinRow: {
     flexDirection: 'row',
@@ -804,6 +825,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderWidth: 0,
     zIndex: -1, // Drop it behind the coin jar if needed, or 0
+    borderRadius: 0,
   },
   screenFolderTabText: {
     ...theme.typography.body,
@@ -1020,10 +1042,10 @@ const styles = StyleSheet.create({
   },
   brushUnderline: {
     position: 'absolute',
-    bottom: -2,
+    bottom: -4,
     left: '2%',
     right: '2%',
-    height: 8,
+    height: 5.5,
     backgroundColor: '#BEF264',
     borderRadius: 4,
     transform: [{ rotate: '-1.5deg' }],

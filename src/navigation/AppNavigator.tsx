@@ -4,7 +4,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
-import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
+import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { theme } from '../theme';
 
@@ -27,8 +27,8 @@ export const AppNavigator = () => {
             iconName = 'bulb-outline';
           } else if (route.name === 'MyRewards') {
             return <FontAwesome5 name="coins" size={size - 2} color={color} />;
-          } else if (route.name === 'AIQuiz') {
-            iconName = 'camera-outline';
+          } else if (route.name === 'Puzzles') {
+            iconName = 'extension-puzzle-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -62,9 +62,9 @@ export const AppNavigator = () => {
         options={{ tabBarLabel: 'Quiz Library' }}
       />
       <Tab.Screen 
-        name="AIQuiz" 
-        component={CreateQuizFromPhotoScreen} 
-        options={{ tabBarLabel: 'AI Quiz' }}
+        name="Puzzles" 
+        component={PuzzleScreen} 
+        options={{ tabBarLabel: 'Puzzles' }}
       />
       <Tab.Screen 
         name="MyRewards" 

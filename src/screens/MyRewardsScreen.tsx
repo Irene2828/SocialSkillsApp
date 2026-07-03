@@ -74,30 +74,7 @@ export const MyRewardsScreen = () => {
   const handleToggleFulfilled = (id: string) => {
     const item = unlockedRewards.find(r => r.id === id);
     if (item) {
-      const wasFulfilled = item.isFulfilled;
       toggleRewardFulfilled(id);
-
-      if (!wasFulfilled) {
-        // Just marked as fulfilled, offer undo
-        setUndoState({ type: 'fulfill', itemId: id });
-        setShowUndo(true);
-
-        if (undoTimeoutRef.current) {
-          clearTimeout(undoTimeoutRef.current);
-        }
-
-        undoTimeoutRef.current = setTimeout(() => {
-          setShowUndo(false);
-          setUndoState(null);
-        }, 5000);
-      } else {
-        // Toggled back to unfulfilled, hide undo toast
-        setShowUndo(false);
-        setUndoState(null);
-        if (undoTimeoutRef.current) {
-          clearTimeout(undoTimeoutRef.current);
-        }
-      }
     }
   };
 
@@ -357,8 +334,12 @@ export const MyRewardsScreen = () => {
               ) : (
                 <>
                   <View style={styles.successTitleContainer}>
-                    <Text style={styles.successTitle}>Reward Unlocked!</Text>
-                    <View style={styles.brushUnderline} />
+                    <Text style={styles.successTitleNormal}>Reward </Text>
+                    <View style={styles.underlinedWordContainer}>
+                      <Text style={styles.successTitleHighlighted}>Unlocked</Text>
+                      <View style={styles.brushUnderline} />
+                    </View>
+                    <Text style={styles.successTitleNormal}>!</Text>
                   </View>
                   
                   <View style={styles.successRewardRow}>
@@ -370,7 +351,7 @@ export const MyRewardsScreen = () => {
 
                   <View style={styles.successCopyBox}>
                     <Text style={styles.successCuteCopy}>
-                      Great job practicing your social skills!{"\n\n"}Ask a parent to approve this reward for you.
+                      Ask a parent to approve this reward for you.
                     </Text>
                   </View>
 
@@ -747,23 +728,32 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     textTransform: 'capitalize',
   },
-  successTitle: {
+  successTitleNormal: {
     ...theme.typography.subheading,
-    textAlign: 'center',
     color: theme.colors.text,
-    marginBottom: 0,
+  },
+  successTitleHighlighted: {
+    ...theme.typography.subheading,
+    color: theme.colors.text,
+  },
+  underlinedWordContainer: {
+    position: 'relative',
+  },
+  celebrationIcon: {
+    fontSize: 22,
   },
   successTitleContainer: {
-    position: 'relative',
-    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing.lg,
   },
   brushUnderline: {
     position: 'absolute',
-    bottom: -2,
+    bottom: -4,
     left: '2%',
     right: '2%',
-    height: 8,
+    height: 5.5,
     backgroundColor: '#BEF264',
     borderRadius: 4,
     transform: [{ rotate: '-1.5deg' }],

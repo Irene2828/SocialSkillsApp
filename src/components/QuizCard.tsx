@@ -69,7 +69,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
                 }} 
                 style={styles.dotsButton}
               >
-                <Ionicons name="ellipsis-horizontal" size={20} color={theme.colors.secondaryText} />
+                <Ionicons name="pencil-outline" size={16} color="#9CA3AF" />
               </Pressable>
             )}
             {isFeatured && category.description && (

@@ -22,7 +22,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gs) =>
-        Math.abs(gs.dx) > 8 && Math.abs(gs.dy) < 20,
+        Math.abs(gs.dx) > 10 && Math.abs(gs.dx) > Math.abs(gs.dy),
       onPanResponderMove: (_, gs) => {
         const x = Math.min(0, gs.dx);
         translateX.setValue(x);
@@ -96,7 +96,11 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           reward.isFulfilled && styles.containerFulfilled,
           isHighlighted && { borderColor: borderGlowColor, borderWidth: 2 }
         ]} 
-        onPress={() => onToggle(reward.id)}
+        onPress={() => {
+          if (!reward.isFulfilled) {
+            onToggle(reward.id);
+          }
+        }}
       >
         <View style={[styles.iconContainer, reward.isFulfilled && styles.iconContainerFulfilled]}>
           <Ionicons 
@@ -116,9 +120,20 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           )}
         </View>
         {reward.isFulfilled ? (
-          <View style={styles.receivedChip}>
-            <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
-            <Text style={styles.receivedText}>Reward Received</Text>
+          <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
+            <View style={styles.receivedChip}>
+              <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
+              <Text style={styles.receivedText}>Reward Received</Text>
+            </View>
+            <Pressable 
+              onPress={(e) => {
+                e.stopPropagation();
+                onToggle(reward.id);
+              }}
+              style={{ marginTop: 8, padding: 4, marginRight: 4 }}
+            >
+              <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
+            </Pressable>
           </View>
         ) : (
           <View style={styles.checkbox} />

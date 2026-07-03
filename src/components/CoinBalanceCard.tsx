@@ -12,6 +12,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
     <View style={styles.cardContainer}>
       <View style={styles.card}>
         <View style={styles.content}>
+          <Text style={styles.earnedText}>You've earned:</Text>
           <View style={styles.balanceRow}>
             <FontAwesome5 
               name="coins" 
@@ -61,8 +62,14 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: theme.spacing.xl,
+    paddingVertical: theme.spacing.lg,
     paddingHorizontal: theme.spacing.lg,
+  },
+  earnedText: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    letterSpacing: 0.1,
+    marginBottom: theme.spacing.xs,
   },
   balanceRow: {
     flexDirection: 'row',
