@@ -125,6 +125,7 @@ export const PuzzleScreen = () => {
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
   
   const [isSolved, setIsSolved] = useState(false);
+  const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
   const { width: screenWidth } = useWindowDimensions();
   const boardSize = Math.min(screenWidth - 48, 400);
@@ -178,6 +179,21 @@ export const PuzzleScreen = () => {
     }
   };
 
+  const handleNextPuzzle = () => {
+    if (!selectedPuzzle) return;
+    const currentIndex = PUZZLES.findIndex(p => p.id === selectedPuzzle.id);
+    if (currentIndex === -1 || currentIndex === PUZZLES.length - 1) {
+      Animated.sequence([
+        Animated.timing(shakeNextAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeNextAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeNextAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+        Animated.timing(shakeNextAnim, { toValue: 0, duration: 50, useNativeDriver: true })
+      ]).start();
+    } else {
+      startPuzzle(PUZZLES[currentIndex + 1]);
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <AnimatedCubesBackground />
@@ -219,7 +235,7 @@ export const PuzzleScreen = () => {
                 <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
               </Pressable>
               <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
-                <Text style={styles.screenFolderTabText} numberOfLines={1}>{selectedPuzzle?.name}</Text>
+                <Text style={styles.screenFolderTabText} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
               </View>
             </View>
 
@@ -266,6 +282,17 @@ export const PuzzleScreen = () => {
               )}
             </View>
           </ScreenWrapper>
+          <Animated.View style={{
+            position: 'absolute',
+            bottom: 32,
+            right: 16,
+            transform: [{ translateX: shakeNextAnim }]
+          }}>
+            <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
+              <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
+              <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
+            </Pressable>
+          </Animated.View>
         </View>
       </Modal>
     </View>

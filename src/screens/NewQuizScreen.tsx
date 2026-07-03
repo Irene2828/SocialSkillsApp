@@ -441,7 +441,7 @@ export const NewQuizScreen = () => {
             textShadowRadius: 1
           }}
         />
-        <Text style={styles.coinJarText}>{coinBalance}</Text>
+        <Text style={styles.coinJarText}>{score}</Text>
       </View>
     );
   };
@@ -719,7 +719,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xl,
     zIndex: 10,
   },
   completedCard: {
@@ -729,7 +730,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: theme.colors.white,
     alignItems: 'center',
-    padding: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.md,
+    paddingBottom: theme.spacing.xl,
     paddingTop: 48,
   },
   completedTitle: {
@@ -746,7 +748,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
   },
   completedCoinText: {
-    ...theme.typography.subheading,
+    ...theme.typography.body,
+    fontWeight: '700',
+    fontSize: 20,
+    letterSpacing: 0.5,
+    textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,
   },

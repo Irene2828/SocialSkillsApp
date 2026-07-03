@@ -291,7 +291,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   coinRewardText: {
-    ...theme.typography.subheading,
+    ...theme.typography.body,
+    fontWeight: '700',
+    fontSize: 20,
+    letterSpacing: 0.5,
+    textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,
   },

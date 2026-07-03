@@ -16,44 +16,6 @@ const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, onToggle, onDelete, isHighlighted }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const borderGlow = useRef(new Animated.Value(0)).current;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const swipeOpacity = useRef(new Animated.Value(1)).current;
-
-  const panResponder = useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gs) =>
-        Math.abs(gs.dx) > 10 && Math.abs(gs.dx) > Math.abs(gs.dy),
-      onPanResponderMove: (_, gs) => {
-        const x = Math.min(0, gs.dx);
-        translateX.setValue(x);
-      },
-      onPanResponderRelease: (_, gs) => {
-        if (gs.dx < -100) {
-          // Swipe out and trigger delete
-          Animated.parallel([
-            Animated.timing(translateX, {
-              toValue: -500,
-              duration: 200,
-              useNativeDriver: true,
-            }),
-            Animated.timing(swipeOpacity, {
-              toValue: 0,
-              duration: 200,
-              useNativeDriver: true,
-            })
-          ]).start(() => {
-            onDelete(reward.id);
-          });
-        } else {
-          // Snap back
-          Animated.spring(translateX, {
-            toValue: 0,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    })
-  ).current;
 
   useEffect(() => {
     if (isHighlighted) {
@@ -89,7 +51,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
   });
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }, { translateX }], opacity: swipeOpacity }} {...panResponder.panHandlers}>
+    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <AnimatedPressable 
         style={[
           styles.container, 
@@ -125,15 +87,26 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
               <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
               <Text style={styles.receivedText}>Reward Received</Text>
             </View>
-            <Pressable 
-              onPress={(e) => {
-                e.stopPropagation();
-                onToggle(reward.id);
-              }}
-              style={{ marginTop: 8, padding: 4, marginRight: 4 }}
-            >
-              <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
-            </Pressable>
+            <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+              <Pressable 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onDelete(reward.id);
+                }}
+                style={{ padding: 4, marginRight: 8 }}
+              >
+                <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
+              </Pressable>
+              <Pressable 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onToggle(reward.id);
+                }}
+                style={{ padding: 4, marginRight: 4 }}
+              >
+                <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
+              </Pressable>
+            </View>
           </View>
         ) : (
           <View style={styles.checkbox} />

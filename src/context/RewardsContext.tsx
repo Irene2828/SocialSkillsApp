@@ -51,7 +51,21 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
 
         const storedRewards = await safeStorage.get<Reward[]>('@custom_rewards', []);
-        setRewards([...DEFAULT_REWARDS, ...storedRewards]);
+        
+        // Merge stored rewards with defaults
+        const mergedRewards = [...DEFAULT_REWARDS];
+        storedRewards.forEach(stored => {
+          const index = mergedRewards.findIndex(r => r.id === stored.id);
+          if (index >= 0) {
+            mergedRewards[index] = stored;
+          } else {
+            mergedRewards.push(stored);
+          }
+        });
+        
+        // Filter out any default rewards that were deleted if we ever want to support that,
+        // but for now this fixes edits not persisting.
+        setRewards(mergedRewards);
 
         const storedUnlocked = await safeStorage.get<UnlockedReward[]>('@unlocked_rewards', []);
         setUnlockedRewards(storedUnlocked);
@@ -77,8 +91,7 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const saveCustomRewards = async (newRewards: Reward[]) => {
-    const customOnly = newRewards.filter(r => r.isCustom);
-    const success = await safeStorage.set('@custom_rewards', customOnly);
+    const success = await safeStorage.set('@custom_rewards', newRewards);
     if (!success) {
       logger.warn('Failed to save custom rewards');
     }

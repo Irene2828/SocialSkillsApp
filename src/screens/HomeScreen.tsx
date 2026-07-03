@@ -54,7 +54,7 @@ export const HomeScreen = () => {
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', opacity: 0.8 }}>
-              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Social </Text>
+              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Smart </Text>
               <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Explorer</Text>
             </View>
           </View>
