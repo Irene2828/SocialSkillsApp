@@ -154,11 +154,16 @@ export const PuzzleScreen = () => {
 
     let scrambled = [...initialPieces];
     do {
-      scrambled.sort(() => Math.random() - 0.5);
+      for (let i = scrambled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = scrambled[i];
+        scrambled[i] = scrambled[j];
+        scrambled[j] = temp;
+      }
       scrambled.forEach((p, idx) => {
         p.currentIndex = idx;
       });
-    } while (isAlreadySolved(scrambled));
+    } while (isAlreadySolved(scrambled) && scrambled.length > 1);
 
     scrambled = scrambled.map((p, idx) => ({
       ...p,
