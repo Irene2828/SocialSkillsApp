@@ -61,17 +61,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             <Text style={[styles.title, isFeatured && styles.featuredTitle]}>
               {category.title}
             </Text>
-            {category.isCustom && onRename && (
-              <Pressable 
-                onPress={(e) => {
-                  if (e && e.stopPropagation) e.stopPropagation();
-                  onRename();
-                }} 
-                style={styles.dotsButton}
-              >
-                <Ionicons name="pencil-outline" size={16} color="#9CA3AF" />
-              </Pressable>
-            )}
             {isFeatured && category.description && (
               <Text style={styles.descriptionText}>
                 {category.description}
@@ -79,6 +68,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             )}
           </View>
         </View>
+
+        {category.isCustom && onRename && (
+          <Pressable 
+            onPress={(e) => {
+              if (e && e.stopPropagation) e.stopPropagation();
+              onRename();
+            }} 
+            style={styles.dotsButton}
+          >
+            <Ionicons name="pencil-outline" size={16} color="#9CA3AF" />
+          </Pressable>
+        )}
 
 
       </Card>
@@ -199,9 +200,10 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   dotsButton: {
-    marginTop: 6,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: 4,
-    alignSelf: 'center',
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    padding: 8,
+    zIndex: 10,
   },
 });

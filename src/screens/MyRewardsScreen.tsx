@@ -394,7 +394,7 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Redeemed</Text>
+            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Unlocked</Text>
           </Pressable>
         </View>
 

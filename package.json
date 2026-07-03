@@ -35,5 +35,11 @@
     "web": "expo start --web",
     "build": "expo export -p web"
   },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "ios >= 12",
+    "not dead"
+  ],
   "private": true
 }

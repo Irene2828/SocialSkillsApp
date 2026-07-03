@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { Button } from '../components/Button';
@@ -126,7 +127,10 @@ export const PuzzleScreen = () => {
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
   const [isSolved, setIsSolved] = useState(false);
+  const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
+
+  const allPuzzles = [...PUZZLES, ...customPuzzles];
 
   const { width: screenWidth } = useWindowDimensions();
   const boardSize = Math.min(screenWidth - 48, 400);
@@ -199,8 +203,8 @@ export const PuzzleScreen = () => {
 
   const handleNextPuzzle = () => {
     if (!selectedPuzzle) return;
-    const currentIndex = PUZZLES.findIndex(p => p.id === selectedPuzzle.id);
-    if (currentIndex === -1 || currentIndex === PUZZLES.length - 1) {
+    const currentIndex = allPuzzles.findIndex(p => p.id === selectedPuzzle.id);
+    if (currentIndex === -1 || currentIndex === allPuzzles.length - 1) {
       Animated.sequence([
         Animated.timing(shakeNextAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
         Animated.timing(shakeNextAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
@@ -208,7 +212,58 @@ export const PuzzleScreen = () => {
         Animated.timing(shakeNextAnim, { toValue: 0, duration: 50, useNativeDriver: true })
       ]).start();
     } else {
-      startPuzzle(PUZZLES[currentIndex + 1]);
+      startPuzzle(allPuzzles[currentIndex + 1]);
+    }
+  };
+
+  const createCustomPuzzle = (uri: string) => {
+    const newPuzzle: PuzzleConfig = {
+      id: 'p_custom_' + Date.now(),
+      name: 'My Custom Puzzle',
+      image: { uri },
+      icon: 'image-outline',
+      cols: 3,
+      rows: 3,
+      difficulty: '9 Pieces',
+    };
+    setCustomPuzzles([...customPuzzles, newPuzzle]);
+    startPuzzle(newPuzzle);
+  };
+
+  const takePhoto = async () => {
+    setShowAiMenu(false);
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]?.uri) {
+      createCustomPuzzle(result.assets[0].uri);
+    }
+  };
+
+  const pickImage = async () => {
+    setShowAiMenu(false);
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ['images'],
+      allowsEditing: true,
+      quality: 0.8,
+    });
+
+    if (!result.canceled && result.assets[0]?.uri) {
+      createCustomPuzzle(result.assets[0].uri);
     }
   };
 
@@ -220,7 +275,7 @@ export const PuzzleScreen = () => {
           <Header title="Solve a Puzzle" style={{ marginBottom: theme.spacing.md, marginTop: 4 }} />
           
           <View style={styles.grid}>
-            {PUZZLES.map((puzzle) => (
+            {allPuzzles.map((puzzle) => (
               <Pressable
                 key={puzzle.id}
                 style={styles.card}
@@ -262,13 +317,13 @@ export const PuzzleScreen = () => {
                   
                   <Button 
                     title="Take Photo" 
-                    onPress={() => { setShowAiMenu(false); alert('AI Puzzle feature coming soon!'); }} 
+                    onPress={takePhoto} 
                     style={styles.uploadButton}
                   />
                   
                   <Button 
                     title="Upload Image" 
-                    onPress={() => { setShowAiMenu(false); alert('AI Puzzle feature coming soon!'); }} 
+                    onPress={pickImage} 
                     style={[styles.uploadButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.stroke }]}
                   />
                   <Text style={styles.supportedText}>Supports JPG, PNG</Text>
@@ -289,7 +344,7 @@ export const PuzzleScreen = () => {
         <View style={{ flex: 1, backgroundColor: '#F0F1F3' }}>
           <AnimatedCubesBackground />
           <ScreenWrapper transparent>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, zIndex: 2, paddingHorizontal: 16, marginTop: 16 }}>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, zIndex: 2, paddingHorizontal: 16 }}>
               <Pressable style={styles.backButton} onPress={() => setSelectedPuzzle(null)}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
                 <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
@@ -355,18 +410,16 @@ export const PuzzleScreen = () => {
                 </View>
               )}
             </View>
+
+            <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 16, paddingBottom: 16, marginTop: 'auto' }}>
+              <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
+                <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
+                  <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
+                  <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
+                </Pressable>
+              </Animated.View>
+            </View>
           </ScreenWrapper>
-          <Animated.View style={{
-            position: 'absolute',
-            bottom: 32,
-            right: 16,
-            transform: [{ translateX: shakeNextAnim }]
-          }}>
-            <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
-              <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
-              <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
-            </Pressable>
-          </Animated.View>
         </View>
       </Modal>
     </View>
@@ -464,7 +517,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 60, // Shift up slightly
   },
   board: {
     position: 'relative',
