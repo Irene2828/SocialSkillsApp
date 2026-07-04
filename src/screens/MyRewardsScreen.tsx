@@ -1,3 +1,4 @@
+import { theme } from '../theme';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated } from 'react-native';
 
@@ -417,7 +418,7 @@ export const MyRewardsScreen = () => {
               <Button 
                 title="Add New Reward" 
                 onPress={() => setShowAddPin(true)} 
-                style={{ marginTop: 16, width: '100%', backgroundColor: '#BEF264' }}
+                style={{ marginTop: theme.spacing.md, width: '100%', backgroundColor: '#BEF264' }}
               />
             </View>
           ) : (
@@ -702,7 +703,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     alignItems: 'center',
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     zIndex: 1000,
@@ -789,7 +790,7 @@ const styles = StyleSheet.create({
   pinContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: theme.spacing.md,
   },
   pinTitle: {
     ...theme.typography.body,
@@ -845,7 +846,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     alignItems: 'center',
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     zIndex: 1000,

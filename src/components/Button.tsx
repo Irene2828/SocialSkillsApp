@@ -83,9 +83,8 @@ const styles = StyleSheet.create({
   secondaryButton: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
-    backgroundColor: 'transparent',
-    borderWidth: 1.5,
-    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.errorSoft,
+    borderWidth: 0,
     borderRadius: theme.borderRadius.full,
   },
   outlineButton: {

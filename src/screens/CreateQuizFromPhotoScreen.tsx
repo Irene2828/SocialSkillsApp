@@ -316,7 +316,7 @@ export const CreateQuizFromPhotoScreen = () => {
             style={styles.generateButton}
           />
           <Pressable 
-            style={{ marginTop: 16 }}
+            style={{ marginTop: theme.spacing.md }}
             onPress={() => {
                setScreenState('idle');
             }} 
@@ -554,7 +554,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     alignItems: 'center',
     overflow: 'hidden',
     ...theme.shadows.glow,
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
   successDismissHint: {
     ...theme.typography.caption,
     color: theme.colors.secondaryText,
-    marginTop: 24,
+    marginTop: theme.spacing.lg,
     textAlign: 'center',
     opacity: 0.7,
   },

@@ -135,7 +135,7 @@ export const DesignReviewScreen = () => {
           <View style={styles.screenWrapper}>
             <Text style={styles.label}>4. Active Quiz Question</Text>
             <View style={styles.screenBox}>
-              <View style={{ flex: 1, backgroundColor: '#FAFAF8', padding: 16, paddingTop: 40 }}>
+              <View style={{ flex: 1, backgroundColor: '#FAFAF8', padding: theme.spacing.md, paddingTop: 40 }}>
                 <QuestionView 
                   question={mockQuestion} 
                   onContinue={() => {}} 
@@ -212,15 +212,15 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 16,
+    marginBottom: theme.spacing.md,
   },
   toolbar: {
     flexDirection: 'row',
-    gap: 16,
-    marginBottom: 16,
+    gap: theme.spacing.md,
+    marginBottom: theme.spacing.md,
   },
   toolButton: {
-    paddingVertical: 10,
+    paddingVertical: theme.spacing.sm,
     paddingHorizontal: 20,
     backgroundColor: '#334155',
     borderRadius: 8,
@@ -256,13 +256,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 16,
+    marginBottom: theme.spacing.md,
   },
   screenBox: {
     width: 390,
     height: 844, // standard iPhone height
     backgroundColor: 'white',
-    borderRadius: 40,
+    borderRadius: theme.borderRadius.xl,
     overflow: 'hidden',
     borderWidth: 8,
     borderColor: '#0F172A',

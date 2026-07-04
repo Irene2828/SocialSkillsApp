@@ -328,7 +328,7 @@ export const PuzzleScreen = () => {
               <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
                 <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                   <Text style={styles.levelTitle}>Create AI Puzzle</Text>
-                  <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: 16 }]}>
+                  <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
                     Upload a page or take a photo, and AI will turn it into a fun puzzle.
                   </Text>
                   
@@ -365,7 +365,7 @@ export const PuzzleScreen = () => {
         <View style={{ flex: 1, backgroundColor: '#F0F1F3' }}>
           <AnimatedCubesBackground />
           <ScreenWrapper transparent>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, zIndex: 2, paddingHorizontal: 16 }}>
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
               <Pressable style={styles.backButton} onPress={() => setSelectedPuzzle(null)}>
                 <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
                 <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
@@ -426,13 +426,13 @@ export const PuzzleScreen = () => {
                   <Button
                     title="Play More!"
                     onPress={() => setSelectedPuzzle(null)}
-                    style={{ marginTop: theme.spacing.lg, paddingHorizontal: 48 }}
+                    style={{ marginTop: theme.spacing.lg, paddingHorizontal: theme.spacing.xxl }}
                   />
                 </View>
               )}
             </View>
 
-            <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: 16, paddingBottom: 16, marginTop: 'auto' }}>
+            <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: theme.spacing.md, paddingBottom: theme.spacing.md, marginTop: 'auto' }}>
               {screenHeight > 700 && (
                 <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
                   <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
@@ -517,7 +517,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: theme.spacing.xs,
     borderWidth: 0,
     borderRadius: 0,
   },

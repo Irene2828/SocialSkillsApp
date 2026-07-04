@@ -1,3 +1,4 @@
+import { theme } from '../theme';
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable } from 'react-native';
 import { Question } from '../data/types';
@@ -186,8 +187,8 @@ const styles = StyleSheet.create({
     top: -30,
     right: 20,
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
     borderWidth: 1,
@@ -249,7 +250,7 @@ const styles = StyleSheet.create({
   },
   feedbackContainer: {
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     backgroundColor: 'transparent',
     alignItems: 'center',
   },

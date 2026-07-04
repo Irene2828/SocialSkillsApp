@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   ageButton: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.border,
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   avatarButton: {
     width: 64,
     height: 64,
-    borderRadius: 32,
+    borderRadius: theme.borderRadius.lg,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.border,

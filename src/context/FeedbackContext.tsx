@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     alignItems: 'center',
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     zIndex: 1000,

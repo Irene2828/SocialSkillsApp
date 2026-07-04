@@ -1,3 +1,4 @@
+import { theme } from '../theme';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
@@ -616,7 +617,7 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, zIndex: 2, paddingHorizontal: 16 }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
             <Pressable style={styles.backButton} onPress={handleBackToHome}>
               <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
               <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
@@ -631,7 +632,7 @@ export const NewQuizScreen = () => {
             current={currentIndex + 1} 
             total={currentQuestions.length} 
           />
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: 16, marginTop: -16, marginBottom: 16 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: theme.spacing.md, marginTop: -16, marginBottom: theme.spacing.md }}>
             {renderCoinJar()}
           </View>
           <QuestionView 
@@ -720,7 +721,7 @@ export const NewQuizScreen = () => {
               <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
                 <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <Text style={styles.levelTitle}>Create AI Quiz</Text>
-              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: 16 }]}>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
                 Upload a page or take a photo, and AI will create original quiz questions based on the concept.
               </Text>
               
@@ -753,8 +754,8 @@ export const NewQuizScreen = () => {
         <View style={styles.modalOverlay}>
           <Card style={[styles.levelCard, { alignItems: 'center', paddingVertical: 40 }]}>
             <Ionicons name="sparkles-outline" size={64} color={theme.colors.primary} />
-            <Text style={[styles.levelTitle, { marginTop: 16, marginBottom: 8 }]}>Generating Quiz...</Text>
-            <Text style={[styles.questionCaption, { marginBottom: 24 }]}>{loadingText}</Text>
+            <Text style={[styles.levelTitle, { marginTop: theme.spacing.md, marginBottom: 8 }]}>Generating Quiz...</Text>
+            <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg }]}>{loadingText}</Text>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </Card>
         </View>
@@ -921,7 +922,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
   },
   completedTitle: {
     ...theme.typography.heading,
@@ -952,7 +953,7 @@ const styles = StyleSheet.create({
   scoreContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 48, // Doubled from original theme.spacing.lg
+    marginBottom: theme.spacing.xxl, // Doubled from original theme.spacing.lg
   },
   scoreText: {
     ...theme.typography.heading,
@@ -1017,7 +1018,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: theme.spacing.xs,
     borderWidth: 0,
     zIndex: -1, // Drop it behind the coin jar if needed, or 0
     borderRadius: 0,
@@ -1059,7 +1060,7 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     alignItems: 'center',
     padding: theme.spacing.xl,
-    paddingTop: 48,
+    paddingTop: theme.spacing.xxl,
     borderRadius: theme.borderRadius.lg,
     overflow: 'hidden',
     zIndex: 1000,
@@ -1068,7 +1069,7 @@ const styles = StyleSheet.create({
   pinContainer: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 16,
+    paddingVertical: theme.spacing.md,
   },
   pinTitle: {
     ...theme.typography.body,
@@ -1203,8 +1204,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: theme.colors.primary,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.full,
     ...theme.shadows.soft,
   },

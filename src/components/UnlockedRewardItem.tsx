@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 48,
     height: 48,
-    borderRadius: 24,
+    borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.errorSoft, // solid light grey
     justifyContent: 'center',
     alignItems: 'center',
