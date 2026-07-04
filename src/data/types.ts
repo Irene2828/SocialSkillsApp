@@ -1,7 +1,7 @@
 // We allow string so custom AI concepts can be used as categories
 export type Category = "Friendship" | "Manners" | "School" | "Feelings" | "Playground" | "Safety" | string;
 
-export type Difficulty = "Easy" | "Medium";
+export type Difficulty = "Easy" | "Medium" | "Hard";
 
 export interface Question {
   id: string;
@@ -13,6 +13,9 @@ export interface Question {
   options: string[];
   correctAnswerIndex: number;
   explanation: string;
+  whyOptions?: string[];
+  correctWhyIndex?: number;
+  whyConfirmation?: string;
 }
 
 export interface QuizFolder {
@@ -58,4 +61,20 @@ export interface UnlockedReward {
   icon: string;
   timestamp: number;
   isFulfilled: boolean;
+}
+
+export interface Step {
+  id: string;
+  prompt: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface StepBasedQuestion {
+  id: string;
+  category: string;
+  problemText: string;
+  steps: Step[];
+  finalAnswer?: string;
 }

@@ -8,7 +8,8 @@ interface DraggableQuizCardProps {
   onPressStart: () => void;
   onRename?: () => void;
   onDelete?: () => void;
-  onDragEnd: (quizId: string, x: number, y: number) => void;
+  onDragEnd: (quizId: string) => void;
+  onDragMove?: (quizId: string, x: number, y: number) => void;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
@@ -19,6 +20,7 @@ export const DraggableQuizCard: React.FC<DraggableQuizCardProps> = ({
   onRename,
   onDelete,
   onDragEnd,
+  onDragMove,
   onDragStateChange,
 }) => {
   const pan = useRef(new Animated.ValueXY()).current;
@@ -29,7 +31,7 @@ export const DraggableQuizCard: React.FC<DraggableQuizCardProps> = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_, gestureState) => {
-        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 10;
+        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 15;
       },
       onPanResponderGrant: (evt) => {
         setIsDragging(true);
@@ -38,26 +40,27 @@ export const DraggableQuizCard: React.FC<DraggableQuizCardProps> = ({
         pan.setValue({ x: 0, y: 0 });
         startPos.current = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
       },
-      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
+      onPanResponderMove: (evt, gestureState) => {
+        Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false })(evt, gestureState);
+        if (onDragMove) {
+          onDragMove(category.id, gestureState.moveX, gestureState.moveY);
+        }
+      },
       onPanResponderRelease: (evt, gestureState) => {
-        setIsDragging(false);
-        onDragStateChange?.(false);
-        const dropX = evt.nativeEvent.pageX;
-        const dropY = evt.nativeEvent.pageY;
-
         Animated.spring(pan, {
           toValue: { x: 0, y: 0 },
           useNativeDriver: false,
           friction: 5,
         }).start();
 
-        // If it was a meaningful drag, check for drop
         if (Math.abs(gestureState.dx) > 20 || Math.abs(gestureState.dy) > 20) {
-          onDragEnd(category.id, dropX, dropY);
+          onDragEnd(category.id);
         } else {
-          // It was a tap
           onPressStart();
         }
+
+        setIsDragging(false);
+        onDragStateChange?.(false);
       },
       onPanResponderTerminate: () => {
         setIsDragging(false);

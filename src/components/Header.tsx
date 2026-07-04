@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   contentContainer: {
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

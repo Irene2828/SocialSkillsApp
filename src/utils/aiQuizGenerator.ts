@@ -1,4 +1,4 @@
-const getSystemPrompt = (age: number) => `You are an educational quiz generator for children.
+const getSocialSystemPrompt = (age: number) => `You are an educational quiz generator for children.
 
 The uploaded image is provided only to understand the educational concept being taught.
 
@@ -45,6 +45,50 @@ Return the response STRICTLY as a JSON object matching this schema:
 }
 No markdown wrappers, no backticks, just raw JSON.`;
 
+const getMathSystemPrompt = (age: number) => `You are an educational math quiz generator for children.
+
+The uploaded image is provided only to understand the mathematical concept being taught.
+
+Instead of text summarization:
+
+1. Identify the underlying math concept (e.g., Addition, Place Value, Patterns, Counting, Subtraction).
+
+2. Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.
+
+Requirements for each of the 3 quizzes:
+
+• The "concept" field must be extremely concise: strictly 2 words max (e.g. "Basic Addition", "Finding Patterns", "Word Problems").
+• Questions must be original math challenges.
+• Age: ${age} years old.
+• One correct answer.
+• Three plausible distractors (common math mistakes).
+• Friendly, encouraging language.
+• Format: The "scenario" field should contain the math problem itself (e.g. "What is 5 + 3?" or "What comes next? 2, 4, 6, ___").
+
+Create exactly 5 math problems for each of the 3 quizzes.
+
+Return the response STRICTLY as a JSON object matching this schema:
+{
+  "quizzes": [
+    {
+      "concept": "Name of the concept/topic (strictly 1 to 2 words max)",
+      "questions": [
+        {
+          "question": "Math problem text (string)",
+          "options": ["Option 1", "Option 2", "Option 3"],
+          "correctIndex": 0, // Integer 0, 1, or 2 representing correct option
+          "explanation": "Explanation for why this is correct (string)"
+        }
+      ]
+    }
+  ]
+}
+No markdown wrappers, no backticks, just raw JSON.`;
+
+const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social') => {
+  return topicType === 'math' ? getMathSystemPrompt(age) : getSocialSystemPrompt(age);
+};
+
 const validateQuizData = (data: any) => {
   if (!data || typeof data !== 'object') throw new Error("Root is not an object");
   if (!Array.isArray(data.quizzes) || data.quizzes.length !== 3) {
@@ -73,7 +117,7 @@ const validateQuizData = (data: any) => {
   }
 };
 
-export const generateQuizFromImage = async (base64Image: string, age: number = 7) => {
+export const generateQuizFromImage = async (base64Image: string, age: number = 7, topicType: 'social' | 'math' = 'social') => {
   const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OpenAI API key is not configured in .env.local');
@@ -94,7 +138,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
           messages: [
             {
               role: 'system',
-              content: getSystemPrompt(age)
+              content: getSystemPrompt(age, topicType)
             },
             {
               role: 'user',
@@ -152,7 +196,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
   throw lastError || new Error('Quiz generation failed after 2 attempts.');
 };
 
-export const generateQuizFromText = async (promptText: string, age: number = 7) => {
+export const generateQuizFromText = async (promptText: string, age: number = 7, topicType: 'social' | 'math' = 'social') => {
   const apiKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error('OpenAI API key is not configured in .env.local');
@@ -173,11 +217,11 @@ export const generateQuizFromText = async (promptText: string, age: number = 7) 
           messages: [
             {
               role: 'system',
-              content: getSystemPrompt(age)
+              content: getSystemPrompt(age, topicType)
             },
             {
               role: 'user',
-              content: `The user wants to generate quizzes for this topic/task description: "${promptText}". Please generate exactly 3 quizzes teaching this concept or closely related social/life skills.`
+              content: `The user wants to generate quizzes for this topic/task description: "${promptText}". Please generate exactly 3 quizzes teaching this concept.`
             }
           ],
           response_format: { type: "json_object" },

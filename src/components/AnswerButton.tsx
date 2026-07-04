@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     minHeight: theme.layout.minTouchTarget,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: theme.borderRadius.lg,
     marginBottom: theme.spacing.md,
     flexDirection: 'row',
     alignItems: 'center',

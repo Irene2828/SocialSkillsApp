@@ -50,11 +50,6 @@ export const AnimatedCubesBackground: React.FC = () => {
 
   return (
     <View style={styles.container} pointerEvents="none">
-      {/* Soft gradient background */}
-      <LinearGradient
-        colors={['#FFFFFF', '#F3F4F6', '#FFFFFF']}
-        style={StyleSheet.absoluteFill}
-      />
 
       {cubes.map(c => {
         const translateY = c.animValue.interpolate({
@@ -103,7 +98,6 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: -1, 
     overflow: 'hidden',
   },
   cube: {

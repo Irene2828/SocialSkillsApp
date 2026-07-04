@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
 import { useNavigation } from '@react-navigation/native';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { Ionicons } from '@expo/vector-icons';
+import { SettingsModal } from '../components/SettingsModal';
+import { GlobalBackground } from '../components/GlobalBackground';
 
 const useAttentionLoop = () => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -43,13 +45,19 @@ export const HomeScreen = () => {
   const { fadeAnim, scaleAnim } = useAttentionLoop();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
+  const [showSettings, setShowSettings] = useState(false);
   
 
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+      <GlobalBackground />
       <ScreenWrapper transparent>
+        <View style={{ position: 'absolute', top: 16, right: theme.spacing.lg, zIndex: 100 }}>
+          <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
+            <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+          </Pressable>
+        </View>
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
@@ -75,6 +83,7 @@ export const HomeScreen = () => {
             />
           </Animated.View>
         </View>
+        <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
       </ScreenWrapper>
     </View>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView, Modal, TextInput } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { GlobalBackground } from '../components/GlobalBackground';
 import { SilverDust } from '../components/SilverDust';
 import { Button } from '../components/Button';
 import { Card } from '../components/Card';
@@ -346,7 +346,7 @@ export const CreateQuizFromPhotoScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+      <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Header 

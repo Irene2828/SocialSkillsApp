@@ -22,7 +22,6 @@ const MOCK_AI_CATEGORY: QuizCategory = {
   title: 'Active Listening',
   description: 'Practice being a good listener!',
   icon: 'ear-outline',
-  color: '#A78BFA',
   isCustom: true
 };
 

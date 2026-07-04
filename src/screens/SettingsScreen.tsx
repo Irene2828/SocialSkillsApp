@@ -9,7 +9,7 @@ import { Button } from '../components/Button';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { GlobalBackground } from '../components/GlobalBackground';
 import { useFeedback } from '../context/FeedbackContext';
 
 export const SettingsScreen = () => {
@@ -41,7 +41,7 @@ export const SettingsScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+      <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {/* Achievements (Topic Progress) */}

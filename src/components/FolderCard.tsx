@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface FolderCardProps {
   name: string;
@@ -13,6 +14,8 @@ interface FolderCardProps {
 
 export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, onLayout, isDragTarget }) => {
   const containerRef = useRef<View>(null);
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
 
   const handleLayout = () => {
     if (onLayout && containerRef.current) {
@@ -25,7 +28,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
   return (
     <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
       <Pressable onPress={onPress} style={styles.pressable}>
-        <View style={styles.iconContainer}>
+        <View style={[styles.iconContainer, { borderColor: theme.colors.stroke, backgroundColor: theme.colors.errorSoft }]}>
           <Ionicons name="folder-outline" size={32} color={theme.colors.secondaryText} />
         </View>
         <Text style={styles.title} numberOfLines={2}>{name}</Text>
@@ -45,10 +48,10 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    aspectRatio: 1,
+    height: 140,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
     position: 'relative',

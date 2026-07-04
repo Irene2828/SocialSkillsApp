@@ -3,6 +3,7 @@ import { Text, StyleSheet, PressableProps, View } from 'react-native';
 import { ScalePressable } from './ScalePressable';
 import { theme } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   title: string;
@@ -12,6 +13,9 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
 
 export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, ...props }) => {
   const [isPressed, setIsPressed] = useState(false);
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
   const isOutline = variant === 'outline';
@@ -43,10 +47,10 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
     <ScalePressable
       style={[
         styles.button,
-        isPrimary && styles.primaryButtonContainer,
+        isPrimary && [styles.primaryButtonContainer, { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary }],
         isSecondary && styles.secondaryButton,
         isOutline && styles.outlineButton,
-        isOutline && isPressed && styles.outlineButtonPressed,
+        isOutline && isPressed && [styles.outlineButtonPressed, { backgroundColor: theme.colors.primary }],
         style,
       ]}
       onPressIn={handlePressIn}

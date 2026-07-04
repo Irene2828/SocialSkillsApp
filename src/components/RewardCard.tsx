@@ -24,13 +24,20 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
           <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
             {reward.title}
           </Text>
-          <Button 
-            title={isProcessing ? "Redeeming points.." : "Redeem"} 
-            onPress={() => onRedeem(reward)} 
-            style={[styles.redeemButton, canAfford && styles.redeemButtonActive]}
-            variant={canAfford ? "primary" : "secondary"}
-            disabled={!canAfford || isProcessing}
-          />
+          {canAfford ? (
+            <Button 
+              title={isProcessing ? "Redeeming points.." : "Redeem"} 
+              onPress={() => onRedeem(reward)} 
+              style={[styles.redeemButton, styles.redeemButtonActive]}
+              variant="primary"
+              disabled={isProcessing}
+            />
+          ) : (
+            <View style={styles.lockedButton}>
+              <Ionicons name="lock-closed" size={14} color={theme.colors.secondaryText} style={{ marginRight: 4 }} />
+              <Text style={styles.lockedButtonText}>Locked</Text>
+            </View>
+          )}
         </View>
       </View>
       <View style={styles.costContainer}>
@@ -113,5 +120,22 @@ const styles = StyleSheet.create({
   },
   redeemButtonActive: {
     // Managed by primary variant
+  },
+  lockedButton: {
+    minWidth: 80,
+    borderRadius: theme.borderRadius.full,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.md,
+    alignSelf: 'flex-start',
+    marginTop: 4,
+    backgroundColor: theme.colors.neutralGrey,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lockedButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+    fontSize: 14,
   },
 });

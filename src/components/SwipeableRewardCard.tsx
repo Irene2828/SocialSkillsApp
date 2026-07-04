@@ -128,16 +128,23 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
               </View>
             </View>
           </View>
-          <Button
-            title={isProcessing ? 'Redeeming..' : 'Redeem'}
-            onPress={() => onRedeem(reward)}
-            style={[
-              styles.redeemButton,
-              (canAfford || isProcessing) && styles.redeemButtonActive
-            ]}
-            variant="secondary"
-            disabled={!canAfford || isProcessing}
-          />
+          {canAfford ? (
+            <Button
+              title={isProcessing ? 'Redeeming..' : 'Redeem'}
+              onPress={() => onRedeem(reward)}
+              style={[
+                styles.redeemButton,
+                styles.redeemButtonActive
+              ]}
+              variant="secondary"
+              disabled={isProcessing}
+            />
+          ) : (
+            <View style={styles.lockedButton}>
+              <Ionicons name="lock-closed" size={14} color={theme.colors.secondaryText} style={{ marginRight: 4 }} />
+              <Text style={styles.lockedButtonText}>Locked</Text>
+            </View>
+          )}
         </View>
       </Animated.View>
     </View>
@@ -249,7 +256,22 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.stroke,
   },
   redeemButtonActive: {
-    backgroundColor: theme.colors.white,
     borderColor: theme.colors.primary,
+  },
+  lockedButton: {
+    minWidth: 80,
+    borderRadius: theme.borderRadius.full,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.md,
+    alignSelf: 'center',
+    backgroundColor: theme.colors.neutralGrey,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  lockedButtonText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+    fontSize: 14,
   },
 });

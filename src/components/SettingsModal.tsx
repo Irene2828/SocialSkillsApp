@@ -32,10 +32,10 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   if (!visible) return null;
 
   const moods: { id: MoodType; title: string; icon: keyof typeof Ionicons.glyphMap; color: string }[] = [
-    { id: 'default', title: 'Classic', icon: 'cube-outline', color: '#6B7280' },
-    { id: 'space', title: 'Space Explorer', icon: 'planet-outline', color: '#334155' },
-    { id: 'nature', title: 'Forest Adventure', icon: 'leaf-outline', color: '#10B981' },
-    { id: 'feminine', title: 'Sparkle Magic', icon: 'sparkles-outline', color: '#F472B6' },
+    { id: 'botanical', title: 'Botanical', icon: 'leaf-outline', color: '#8FBC8F' }, // Muted green
+    { id: 'celestial', title: 'Celestial', icon: 'moon-outline', color: '#B19CD9' }, // Muted purple
+    { id: 'astronaut', title: 'Astronaut', icon: 'planet-outline', color: '#775B7B' }, // Deep muted violet
+    { id: 'rocket', title: 'Rocket', icon: 'rocket-outline', color: '#708090' }, // Slate grey blue
   ];
 
   return (

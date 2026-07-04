@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { QuizCategory } from '../data/types';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
@@ -14,8 +15,11 @@ interface QuizCardProps {
   isFeatured?: boolean;
 }
 
-const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
-  switch (id) {
+const getCategoryIcon = (category: QuizCategory): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
+  if (category.icon) {
+    return { name: category.icon, family: 'Ionicons' };
+  }
+  switch (category.id) {
     case 'Friendship': return { name: 'people-outline', family: 'Ionicons' };
     case 'Manners': return { name: 'hand-left-outline', family: 'Ionicons' };
     case 'Feelings': return { name: 'heart-outline', family: 'Ionicons' };
@@ -28,7 +32,13 @@ const getCategoryIcon = (id: string): { name: string; family: 'Ionicons' | 'Font
 
 
 export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete, onRename, isFeatured }) => {
-  const { name: iconName, family: iconFamily } = getCategoryIcon(category.id);
+  const { name: iconName, family: iconFamily } = getCategoryIcon(category);
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const cardBorderColor = category.color || theme.colors.stroke;
+  const iconBorderColor = theme.colors.stroke;
+  const iconBackgroundColor = theme.colors.errorSoft;
+  const iconColor = theme.colors.secondaryText;
 
   return (
     <ScalePressable 
@@ -36,7 +46,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
       onLongPress={onDelete}
       style={[styles.container, isFeatured && styles.featuredContainer]}
     >
-      <Card style={[styles.card, isFeatured && styles.featuredCard]}>
+      <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
@@ -44,11 +54,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
         )}
 
         <View style={[styles.cardContent, isFeatured && styles.featuredCardContent]}>
-          <View style={[styles.iconContainer, isFeatured && styles.featuredIconContainer]}>
+          <View style={[
+            styles.iconContainer, 
+            isFeatured && styles.featuredIconContainer,
+            {
+              borderColor: iconBorderColor,
+              backgroundColor: iconBackgroundColor
+            }
+          ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName} size={isFeatured ? 36 : 32} color={theme.colors.secondaryText} style={styles.icon} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 28 : 32} color={iconColor} style={styles.icon} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 36 : 32} color={theme.colors.secondaryText} style={styles.icon} />
+              <Ionicons name={iconName as any} size={isFeatured ? 28 : 32} color={iconColor} style={styles.icon} />
             )}
           </View>
 
@@ -90,19 +107,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: theme.spacing.xs,
   },
   featuredContainer: {
     width: '100%',
-    margin: theme.spacing.xs,
   },
   card: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing.lg,
-    minHeight: 140,
+    height: 140,
     position: 'relative',
+    borderWidth: 0,
   },
   featuredCard: {
     minHeight: 110,
@@ -166,11 +182,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: '#F7FEE7',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1,
   },
   featuredIconContainer: {
     marginBottom: 0,

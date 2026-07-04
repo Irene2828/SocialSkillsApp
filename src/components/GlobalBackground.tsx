@@ -1,22 +1,40 @@
 import React from 'react';
+import { View, StyleSheet } from 'react-native';
 import { useMood } from '../context/MoodContext';
+import { BotanicalBackground } from './BotanicalBackground';
+import { CelestialBackground } from './CelestialBackground';
+import { AstronautBackground } from './AstronautBackground';
+import { RocketBackground } from './RocketBackground';
 import { AnimatedCubesBackground } from './AnimatedCubesBackground';
-import { SpaceBackground } from './SpaceBackground';
-import { NatureBackground } from './NatureBackground';
-import { FeminineBackground } from './FeminineBackground';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export const GlobalBackground: React.FC = () => {
   const { mood } = useMood();
 
-  switch (mood) {
-    case 'space':
-      return <SpaceBackground />;
-    case 'nature':
-      return <NatureBackground />;
-    case 'feminine':
-      return <FeminineBackground />;
-    case 'default':
-    default:
-      return <AnimatedCubesBackground />;
-  }
+  const renderMood = () => {
+    switch (mood) {
+      case 'celestial':
+        return <CelestialBackground />;
+      case 'astronaut':
+        return <AstronautBackground />;
+      case 'rocket':
+        return <RocketBackground />;
+      case 'botanical':
+      default:
+        return <BotanicalBackground />;
+    }
+  };
+
+  return (
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <LinearGradient
+        colors={['#FFFFFF', '#F3F4F6', '#FFFFFF']}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      />
+      {renderMood()}
+      <AnimatedCubesBackground />
+    </View>
+  );
 };

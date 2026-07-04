@@ -7,9 +7,11 @@ interface DraggableFolderCardProps {
   folder: QuizFolder;
   onPressStart: () => void;
   onEdit?: () => void;
-  onDragEnd: (folderId: string, x: number, y: number) => void;
+  onDragEnd: (folderId: string) => void;
+  onDragMove?: (folderId: string, x: number, y: number) => void;
   onDragStateChange?: (isDragging: boolean) => void;
   onLayout?: (rect: any) => void;
+  isHovered?: boolean;
 }
 
 export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
@@ -17,8 +19,10 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
   onPressStart,
   onEdit,
   onDragEnd,
+  onDragMove,
   onDragStateChange,
   onLayout,
+  isHovered,
 }) => {
   const pan = useRef(new Animated.ValueXY()).current;
   const [isDragging, setIsDragging] = useState(false);
@@ -28,10 +32,10 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
       onMoveShouldSetPanResponder: (_, gestureState) => {
-        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
+        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 15;
       },
       onMoveShouldSetPanResponderCapture: (_, gestureState) => {
-        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
+        return Math.abs(gestureState.dx) > 10 || Math.abs(gestureState.dy) > 15;
       },
       onPanResponderGrant: (evt) => {
         setIsDragging(true);
@@ -40,26 +44,26 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
         pan.setValue({ x: 0, y: 0 });
         startPos.current = { x: evt.nativeEvent.pageX, y: evt.nativeEvent.pageY };
       },
-      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false }),
+      onPanResponderMove: (evt, gestureState) => {
+        Animated.event([null, { dx: pan.x, dy: pan.y }], { useNativeDriver: false })(evt, gestureState);
+        if (onDragMove) {
+          onDragMove(folder.id, gestureState.moveX, gestureState.moveY);
+        }
+      },
       onPanResponderRelease: (evt, gestureState) => {
-        setIsDragging(false);
-        onDragStateChange?.(false);
-        const dropX = evt.nativeEvent.pageX;
-        const dropY = evt.nativeEvent.pageY;
-
         Animated.spring(pan, {
           toValue: { x: 0, y: 0 },
           useNativeDriver: false,
-          friction: 5,
         }).start();
 
-        // If it was a meaningful drag, check for drop
         if (Math.abs(gestureState.dx) > 20 || Math.abs(gestureState.dy) > 20) {
-          onDragEnd(folder.id, dropX, dropY);
+          onDragEnd(folder.id);
         } else {
-          // It was a tap
           onPressStart();
         }
+
+        setIsDragging(false);
+        onDragStateChange?.(false);
       },
       onPanResponderTerminate: () => {
         setIsDragging(false);
@@ -82,6 +86,7 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
       style={[
         { transform: [{ translateX: pan.x }, { translateY: pan.y }] },
         isDragging && styles.dragging,
+        isHovered && styles.hovered,
       ]}
     >
       <FolderCard
@@ -102,5 +107,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.3,
     shadowRadius: 15,
+  },
+  hovered: {
+    transform: [{ scale: 1.05 }],
+    shadowColor: '#3B82F6', // Blue highlight
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.8,
+    shadowRadius: 12,
+    elevation: 8,
   }
 });

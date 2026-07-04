@@ -18,6 +18,8 @@ interface QuestionViewProps {
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
+  const [whySelectedIndex, setWhySelectedIndex] = useState<number | null>(null);
+  const [hasWhyFailed, setWhyFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
@@ -25,6 +27,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   if (question.id !== currentQuestionId) {
     setSelectedIndex(null);
     setHasFailed(false);
+    setWhySelectedIndex(null);
+    setWhyFailed(false);
     setCurrentQuestionId(question.id);
   }
   
@@ -59,8 +63,20 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     }
   };
 
+  const handleWhySelect = (index: number) => {
+    if (whySelectedIndex !== question.correctWhyIndex) {
+      setWhySelectedIndex(index);
+      if (index !== question.correctWhyIndex) {
+        setWhyFailed(true);
+      }
+    }
+  };
+
   const handleCloseModal = () => {
     if (displayIsCorrect) {
+      if (question.whyOptions && whySelectedIndex !== question.correctWhyIndex) {
+        return; // Do not close if why step is not correct
+      }
       onContinue(!hasFailed);
     } else {
       setSelectedIndex(null);
@@ -75,6 +91,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     displayIsCorrectRef.current = isCorrect;
   }
   const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
+  
+  const isWhyCorrect = whySelectedIndex === question.correctWhyIndex;
 
   return (
     <View style={styles.container}>
@@ -147,23 +165,64 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                 </View>
               )}
 
-              {displayIsCorrect && (
-                <Text style={styles.explanationText}>{question.explanation}</Text>
-              )}
+              {displayIsCorrect && question.whyOptions ? (
+                <View style={{ width: '100%', marginTop: theme.spacing.xl }}>
+                  <Text style={[styles.feedbackTitle, { marginBottom: theme.spacing.md, fontStyle: 'italic' }]}>
+                    {hasWhyFailed && !isWhyCorrect ? "Not quite, try again!" : "Why is that the right choice?"}
+                  </Text>
+                  
+                  {question.whyOptions.map((option, index) => {
+                    let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
+                    if (whySelectedIndex === index) {
+                      state = index === question.correctWhyIndex ? 'selected-correct' : 'selected-incorrect';
+                    } else if (isWhyCorrect && index === question.correctWhyIndex) {
+                      state = 'unselected-correct';
+                    }
 
-              {displayIsCorrect ? (
-                <Button
-                  title="Continue"
-                  onPress={() => onContinue(!hasFailed)}
-                  style={styles.continueButton}
-                  disabled={disabled}
-                />
+                    return (
+                      <View key={index} style={{ marginBottom: theme.spacing.sm }}>
+                        <AnswerButton
+                          text={option}
+                          onPress={() => handleWhySelect(index)}
+                          state={state}
+                          disabled={isWhyCorrect}
+                        />
+                      </View>
+                    );
+                  })}
+                  
+                  {isWhyCorrect && (
+                    <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+                      <Button
+                        title="Continue"
+                        onPress={handleCloseModal}
+                        style={styles.continueButton}
+                        disabled={disabled}
+                      />
+                    </Animated.View>
+                  )}
+                </View>
               ) : (
-                <Button
-                  title="Try Again"
-                  onPress={() => setSelectedIndex(null)}
-                  style={styles.continueButton}
-                />
+                <>
+                  {displayIsCorrect && (
+                    <Text style={styles.explanationText}>{question.explanation}</Text>
+                  )}
+
+                  {displayIsCorrect ? (
+                    <Button
+                      title="Continue"
+                      onPress={handleCloseModal}
+                      style={styles.continueButton}
+                      disabled={disabled}
+                    />
+                  ) : (
+                    <Button
+                      title="Try Again"
+                      onPress={() => setSelectedIndex(null)}
+                      style={styles.continueButton}
+                    />
+                  )}
+                </>
               )}
             </View>
           </Pressable>

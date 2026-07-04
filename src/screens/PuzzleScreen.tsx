@@ -10,7 +10,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { SettingsModal } from '../components/SettingsModal';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { SilverDust } from '../components/SilverDust';
 
 interface PuzzleConfig {
@@ -29,17 +28,17 @@ const PUZZLES: PuzzleConfig[] = [
   { id: 'p_koala', name: 'Sleepy Koala', image: require('../../assets/puzzles/koala.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
   { id: 'p_rabbit', name: 'Fluffy Rabbit', image: require('../../assets/puzzles/rabbit.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
   { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_fox', name: 'Clever Fox', image: require('../../assets/puzzles/fox.png'), icon: 'paw-outline', cols: 4, rows: 6, difficulty: '24 Pieces' },
+  { id: 'p_fox', name: 'Clever Fox', image: require('../../assets/puzzles/fox.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
   { id: 'p_elephant', name: 'Baby Elephant', image: require('../../assets/puzzles/elephant.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
   { id: 'p_giraffe', name: 'Happy Giraffe', image: require('../../assets/puzzles/giraffe.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
   { id: 'p_penguin', name: 'Waving Penguin', image: require('../../assets/puzzles/penguin.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
   { id: 'p_turtle', name: 'Sea Turtle', image: require('../../assets/puzzles/turtle.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
   { id: 'p_tiger', name: 'Tiger Cub', image: require('../../assets/puzzles/tiger.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_dolphin', name: 'Jumping Dolphin', image: require('../../assets/puzzles/dolphin.png'), icon: 'paw-outline', cols: 4, rows: 6, difficulty: '24 Pieces' },
+  { id: 'p_dolphin', name: 'Jumping Dolphin', image: require('../../assets/puzzles/dolphin.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
   { id: 'p_owl', name: 'Wise Owl', image: require('../../assets/puzzles/owl.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
   { id: 'p_bear', name: 'Cuddly Bear', image: require('../../assets/puzzles/bear.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
   { id: 'p_hippo', name: 'Baby Hippo', image: require('../../assets/puzzles/hippo.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 4, rows: 6, difficulty: '24 Pieces' },
+  { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
 ];
 
 const DraggablePiece = ({
@@ -144,7 +143,29 @@ export const PuzzleScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
+  const [isEditMode, setIsEditMode] = useState(false);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
+  const wiggleAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (isEditMode) {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(wiggleAnim, { toValue: -1, duration: 150, useNativeDriver: true }),
+          Animated.timing(wiggleAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
+          Animated.timing(wiggleAnim, { toValue: 0, duration: 150, useNativeDriver: true })
+        ])
+      ).start();
+    } else {
+      wiggleAnim.stopAnimation();
+      wiggleAnim.setValue(0);
+    }
+  }, [isEditMode]);
+
+  const wiggleRotation = wiggleAnim.interpolate({
+    inputRange: [-1, 1],
+    outputRange: ['-2deg', '2deg']
+  });
 
   useEffect(() => {
     const loadPuzzles = async () => {
@@ -255,7 +276,7 @@ export const PuzzleScreen = () => {
         case 4: newCols = 2; newRows = 2; break;
         case 9: newCols = 3; newRows = 3; break;
         case 16: newCols = 4; newRows = 4; break;
-        case 24: newCols = 4; newRows = 6; break;
+        case 25: newCols = 5; newRows = 5; break;
         default: return;
     }
     const updatedPuzzle = { ...selectedPuzzle, cols: newCols, rows: newRows, difficulty: `${piecesCount} Pieces` };
@@ -334,29 +355,50 @@ export const PuzzleScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
+        <View style={{ position: 'absolute', top: 16, right: theme.spacing.lg, zIndex: 100, flexDirection: 'row', alignItems: 'center' }}>
+          {isEditMode && (
+            <Pressable onPress={() => setIsEditMode(false)} style={{ padding: 8, marginRight: 8, backgroundColor: theme.colors.primary, borderRadius: 16, paddingHorizontal: 12 }}>
+              <Text style={{ ...theme.typography.button, color: theme.colors.white }}>Done</Text>
+            </Pressable>
+          )}
+          <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
+            <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+          </Pressable>
+        </View>
+
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           <Header 
             title="Have Fun Solving Puzzles" 
             style={{ marginBottom: theme.spacing.md, marginTop: 4 }} 
-            rightElement={
-              <Pressable onPress={() => setShowSettings(true)}>
-                <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
-              </Pressable>
-            }
           />
           
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
               <Pressable
                 key={puzzle.id}
-                style={styles.card}
-                onPress={() => startPuzzle(puzzle)}
-                onLongPress={() => handleDeletePuzzle(puzzle)}
+                style={{ width: '48%', marginBottom: theme.spacing.md }}
+                onPress={() => {
+                  if (isEditMode) return;
+                  startPuzzle(puzzle);
+                }}
+                onLongPress={() => {
+                  if (!isEditMode) setIsEditMode(true);
+                }}
               >
-                <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
-                  <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
-                </View>
-                <Text style={styles.cardName}>{puzzle.name}</Text>
+                <Animated.View style={[styles.card, isEditMode && { transform: [{ rotate: wiggleRotation }] }]}>
+                  {isEditMode && (
+                    <Pressable 
+                      style={styles.deleteBadge}
+                      onPress={() => handleDeletePuzzle(puzzle)}
+                    >
+                      <Ionicons name="close" size={16} color={theme.colors.white} />
+                    </Pressable>
+                  )}
+                  <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
+                    <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                  </View>
+                  <Text style={styles.cardName}>{puzzle.name}</Text>
+                </Animated.View>
               </Pressable>
             ))}
           </View>
@@ -414,7 +456,7 @@ export const PuzzleScreen = () => {
         onRequestClose={() => setSelectedPuzzle(null)}
       >
         <View style={{ flex: 1, backgroundColor: '#F0F1F3' }}>
-          <AnimatedCubesBackground />
+          <GlobalBackground />
           <ScreenWrapper transparent>
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
               <Pressable style={styles.backButton} onPress={() => setSelectedPuzzle(null)}>
@@ -451,7 +493,7 @@ export const PuzzleScreen = () => {
                   ))}
                   </View>
                   <View style={styles.difficultySelector}>
-                    {[4, 9, 16, 24].map((num) => {
+                    {[4, 9, 16, 25].map((num) => {
                       const isSelected = selectedPuzzle.cols * selectedPuzzle.rows === num;
                       return (
                         <Pressable 
@@ -463,6 +505,10 @@ export const PuzzleScreen = () => {
                         </Pressable>
                       );
                     })}
+                  </View>
+                  <View style={styles.mascotContainer}>
+                    <Ionicons name="extension-puzzle-outline" size={32} color={theme.colors.secondaryText} style={{ opacity: 0.5 }} />
+                    <Text style={styles.mascotText}>Piece it together!</Text>
                   </View>
                 </>
               )}
@@ -512,26 +558,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.xs,
   },
   card: {
-    width: '48%',
+    width: '100%',
+    height: 140,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.md,
+    padding: theme.spacing.lg,
     alignItems: 'center',
-    marginBottom: theme.spacing.md,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    justifyContent: 'center',
+    borderWidth: 0,
     ...theme.shadows.soft,
   },
-  cardIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: theme.borderRadius.sm,
-    backgroundColor: '#F7FEE7',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
+  deleteBadge: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: theme.colors.danger,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: theme.spacing.sm,
+    zIndex: 10,
+    borderWidth: 2,
+    borderColor: theme.colors.white,
+  },
+  cardIconContainer: {
+    marginBottom: theme.spacing.md,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
   },
   cardIcon: {
     fontSize: 32,
@@ -729,4 +787,14 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
     textAlign: 'center',
   },
+  mascotContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: theme.spacing.xl,
+  },
+  mascotText: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    fontStyle: 'italic',
+  }
 });

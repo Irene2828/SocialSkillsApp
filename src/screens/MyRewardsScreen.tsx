@@ -379,14 +379,6 @@ export const MyRewardsScreen = () => {
       <ScreenWrapper transparent>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
-        <Header 
-          title="Reward Shop" 
-          rightElement={
-            <Pressable onPress={() => setShowSettings(true)}>
-              <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
-            </Pressable>
-          } 
-        />
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
         <View style={styles.topSection}>
