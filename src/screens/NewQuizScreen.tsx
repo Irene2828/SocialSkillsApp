@@ -218,32 +218,35 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     try {
       const dataUri = `data:image/jpeg;base64,${base64Data}`;
-      const quiz = await generateQuizFromImage(dataUri);
+      const responseData = await generateQuizFromImage(dataUri);
       
-      const newCategoryId = `custom_ai_${Date.now()}`;
-      const newCategory = {
-        id: newCategoryId,
-        title: quiz.concept,
-        description: 'AI Generated Quiz',
-        icon: 'sparkles',
-        color: '#A78BFA',
-        isCustom: true,
-        folderId: activeFolderId || undefined
-      };
+      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
+        const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
+        const newCategory = {
+          id: newCategoryId,
+          title: quiz.concept,
+          description: 'AI Generated Quiz',
+          icon: 'sparkles',
+          color: '#A78BFA',
+          isCustom: true,
+          folderId: activeFolderId || undefined
+        };
+        
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+          id: `${newCategoryId}-q${index}`,
+          category: newCategoryId,
+          difficulty: 'Medium',
+          scenario: q.question,
+          options: q.options,
+          correctAnswerIndex: q.correctIndex,
+          explanation: q.explanation || 'Great job!'
+        }));
+        
+        addCustomQuiz(newCategory, questionsWithCategory);
+      });
       
-      const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-        id: `${newCategoryId}-q${index}`,
-        category: newCategoryId,
-        difficulty: 'Medium',
-        scenario: q.question,
-        options: q.options,
-        correctAnswerIndex: q.correctIndex,
-        explanation: q.explanation || 'Great job!'
-      }));
-      
-      addCustomQuiz(newCategory, questionsWithCategory);
       setAiGenerating(false);
-      showToast({ message: 'AI Quiz generated and added to your library!' });
+      showToast({ message: 'AI Quizzes generated and added to your library!' });
     } catch (error: any) {
       setAiGenerating(false);
       showModal({ title: 'Error', message: error.message || 'Failed to generate quiz.', type: 'error' });
