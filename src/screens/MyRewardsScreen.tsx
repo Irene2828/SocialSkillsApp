@@ -1,4 +1,3 @@
-import { theme } from '../theme';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated } from 'react-native';
 

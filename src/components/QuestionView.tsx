@@ -1,4 +1,3 @@
-import { theme } from '../theme';
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable } from 'react-native';
 import { Question } from '../data/types';
