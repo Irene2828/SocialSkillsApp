@@ -464,7 +464,7 @@ export const NewQuizScreen = () => {
             <Header title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} />
           </View>
         ) : (
-          <Header title="Select a Quiz" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
+          <Header title="Test Your Knowledge" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
         )}
         
         {!activeFolderId && (
@@ -476,7 +476,7 @@ export const NewQuizScreen = () => {
                 setFolderHistory([]);
               }}
             >
-              <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>EQ Quizzes</Text>
+              <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
             </Pressable>
             <Pressable 
               style={[styles.tab, activeTab === 'ai' && styles.activeTab]} 
@@ -485,7 +485,7 @@ export const NewQuizScreen = () => {
                 setFolderHistory([]);
               }}
             >
-              <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>IQ Quizzes</Text>
+              <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
             </Pressable>
           </View>
         )}
@@ -530,12 +530,15 @@ export const NewQuizScreen = () => {
               })}
 
               {currentTabFolders.map(folder => (
-                <View key={folder.id} style={styles.bentoItem}>
+                <View 
+                  key={folder.id} 
+                  style={styles.bentoItem}
+                  onLayout={(e) => setFolderRects(prev => ({ ...prev, [folder.id]: e.nativeEvent.layout }))}
+                >
                   <DraggableFolderCard
                     folder={folder}
                     onPressStart={() => setFolderHistory(prev => [...prev, folder.id])}
                     onEdit={() => {}} 
-                    onLayout={(rect) => setFolderRects(prev => ({ ...prev, [folder.id]: rect }))}
                     onDragEnd={handleFolderDragEnd}
                     onDragStateChange={(dragging) => setIsDraggingSomething(dragging)}
                   />
@@ -563,7 +566,7 @@ export const NewQuizScreen = () => {
             {activeTab === 'general' && !activeFolderId && (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Create New EQ Quiz"
+                  title="Create New Social Skills Quiz"
                   style={styles.createAiButton}
                   onPress={() => setShowAiMenu(true)}
                 />
@@ -580,9 +583,9 @@ export const NewQuizScreen = () => {
             {activeTab !== 'general' && !activeFolderId && displayCategories.length > 0 && (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Create New IQ Quiz"
+                  title="Create New Math Skills Quiz"
                   style={styles.createAiButton}
-                  onPress={() => showToast({ message: 'IQ Quiz Creator is coming soon!' })}
+                  onPress={() => showToast({ message: 'Math Skills Quiz Creator is coming soon!' })}
                 />
               </View>
             )}

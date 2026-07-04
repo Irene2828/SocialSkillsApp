@@ -139,17 +139,45 @@ export const PuzzleScreen = () => {
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
   const [isSolved, setIsSolved] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
+  const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const loadPuzzles = async () => {
-      const stored = await safeStorage.get<PuzzleConfig[]>('@custom_puzzles', []);
-      setCustomPuzzles(stored);
+      const storedCustom = await safeStorage.get<PuzzleConfig[]>('@custom_puzzles', []);
+      const storedHidden = await safeStorage.get<string[]>('@hidden_puzzles', []);
+      setCustomPuzzles(storedCustom);
+      setHiddenPuzzles(storedHidden);
     };
     loadPuzzles();
   }, []);
 
-  const allPuzzles = [...PUZZLES, ...customPuzzles];
+  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles];
+
+  const handleDeletePuzzle = (puzzle: PuzzleConfig) => {
+    Alert.alert(
+      "Delete Puzzle",
+      `Are you sure you want to delete "${puzzle.name}"?`,
+      [
+        { text: "Cancel", style: "cancel" },
+        { 
+          text: "Delete", 
+          style: "destructive", 
+          onPress: () => {
+            if (puzzle.id.startsWith('p_')) {
+              const newHidden = [...hiddenPuzzles, puzzle.id];
+              setHiddenPuzzles(newHidden);
+              safeStorage.set('@hidden_puzzles', newHidden);
+            } else {
+              const newCustom = customPuzzles.filter(p => p.id !== puzzle.id);
+              setCustomPuzzles(newCustom);
+              safeStorage.set('@custom_puzzles', newCustom);
+            }
+          }
+        }
+      ]
+    );
+  };
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const boardSize = Math.min(screenWidth - 48, 400);
@@ -303,7 +331,7 @@ export const PuzzleScreen = () => {
       <AnimatedCubesBackground />
       <ScreenWrapper transparent>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <Header title="Solve a Puzzle" style={{ marginBottom: theme.spacing.md, marginTop: 4 }} />
+          <Header title="Have Fun Solving Puzzles" style={{ marginBottom: theme.spacing.md, marginTop: 4 }} />
           
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
@@ -311,6 +339,7 @@ export const PuzzleScreen = () => {
                 key={puzzle.id}
                 style={styles.card}
                 onPress={() => startPuzzle(puzzle)}
+                onLongPress={() => handleDeletePuzzle(puzzle)}
               >
                 <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
                   <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
@@ -495,10 +524,10 @@ const styles = StyleSheet.create({
     fontSize: 32,
   },
   cardName: {
-    ...theme.typography.button,
+    ...theme.typography.body,
     color: theme.colors.text,
     textAlign: 'center',
-    fontWeight: '700',
+    fontWeight: '600',
   },
   cardDifficulty: {
     ...theme.typography.caption,
