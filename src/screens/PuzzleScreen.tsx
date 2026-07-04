@@ -7,6 +7,9 @@ import { Header } from '../components/Header';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
+import { GlobalBackground } from '../components/GlobalBackground';
+import { SimpleLockScreen } from '../components/SimpleLockScreen';
+import { SettingsModal } from '../components/SettingsModal';
 import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
 import { SilverDust } from '../components/SilverDust';
 
@@ -138,6 +141,7 @@ export const PuzzleScreen = () => {
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
   const [isSolved, setIsSolved] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
@@ -328,10 +332,18 @@ export const PuzzleScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+      <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <Header title="Have Fun Solving Puzzles" style={{ marginBottom: theme.spacing.md, marginTop: 4 }} />
+          <Header 
+            title="Have Fun Solving Puzzles" 
+            style={{ marginBottom: theme.spacing.md, marginTop: 4 }} 
+            rightElement={
+              <Pressable onPress={() => setShowSettings(true)}>
+                <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+              </Pressable>
+            }
+          />
           
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
@@ -484,6 +496,7 @@ export const PuzzleScreen = () => {
           </ScreenWrapper>
         </View>
       </Modal>
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
   );
 };

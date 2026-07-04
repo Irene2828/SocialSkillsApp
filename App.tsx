@@ -13,6 +13,7 @@ import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
 import { FeedbackProvider } from './src/context/FeedbackContext';
+import { MoodProvider } from './src/context/MoodContext';
 import {
   useFonts,
   InstrumentSans_400Regular,
@@ -47,16 +48,18 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <FeedbackProvider>
-        <ProgressProvider>
-          <RewardsProvider>
-            <QuizProvider>
-              <NavigationContainer>
-                <RootNavigator />
-                <StatusBar style="auto" />
-              </NavigationContainer>
-            </QuizProvider>
-          </RewardsProvider>
-        </ProgressProvider>
+        <MoodProvider>
+          <ProgressProvider>
+            <RewardsProvider>
+              <QuizProvider>
+                <NavigationContainer>
+                  <RootNavigator />
+                  <StatusBar style="auto" />
+                </NavigationContainer>
+              </QuizProvider>
+            </RewardsProvider>
+          </ProgressProvider>
+        </MoodProvider>
       </FeedbackProvider>
     </SafeAreaProvider>
   );

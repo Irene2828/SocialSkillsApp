@@ -21,7 +21,8 @@ import { useProgress } from '../context/ProgressContext';
 import { useFeedback } from '../context/FeedbackContext';
 import { theme, FONTS } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { GlobalBackground } from '../components/GlobalBackground';
+import { SettingsModal } from '../components/SettingsModal';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
@@ -140,6 +141,8 @@ export const MyRewardsScreen = () => {
     ]).start();
   };
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const [editingRewardId, setEditingRewardId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
   const [showPinInput, setShowPinInput] = useState(false);
   const [pin, setPin] = useState('');
@@ -371,11 +374,19 @@ export const MyRewardsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+      <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
+        <Header 
+          title="Reward Shop" 
+          rightElement={
+            <Pressable onPress={() => setShowSettings(true)}>
+              <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+            </Pressable>
+          } 
+        />
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
         <View style={styles.topSection}>
@@ -643,7 +654,7 @@ export const MyRewardsScreen = () => {
           </View>
         </View>
       )}
-
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
   );
 };

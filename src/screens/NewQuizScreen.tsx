@@ -23,7 +23,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
-import { AnimatedCubesBackground } from '../components/AnimatedCubesBackground';
+import { GlobalBackground } from '../components/GlobalBackground';
+import { SettingsModal } from '../components/SettingsModal';
 import { SilverDust } from '../components/SilverDust';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -108,6 +109,7 @@ export const NewQuizScreen = () => {
   };
   
   const [showAiMenu, setShowAiMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Understanding the concept...');
 
@@ -464,7 +466,15 @@ export const NewQuizScreen = () => {
             <Header title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} />
           </View>
         ) : (
-          <Header title="Test Your Knowledge" style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} />
+          <Header 
+            title="Test Your Knowledge" 
+            style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} 
+            rightElement={
+              <Pressable onPress={() => setShowSettings(true)}>
+                <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
+              </Pressable>
+            }
+          />
         )}
         
         {!activeFolderId && (
@@ -710,7 +720,8 @@ export const NewQuizScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <AnimatedCubesBackground />
+      <GlobalBackground />
+      
       <ScreenWrapper transparent>
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
@@ -718,6 +729,7 @@ export const NewQuizScreen = () => {
           {quizState === 'completed' && renderCompleted()}
         </View>
       </ScreenWrapper>
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
       {/* AI Quiz creation menu modal */}
       <Modal visible={showAiMenu} transparent animationType="fade">
