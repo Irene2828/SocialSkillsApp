@@ -227,7 +227,8 @@ export const NewQuizScreen = () => {
         description: 'AI Generated Quiz',
         icon: 'sparkles',
         color: '#A78BFA',
-        isCustom: true
+        isCustom: true,
+        folderId: activeFolderId || undefined
       };
       
       const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({

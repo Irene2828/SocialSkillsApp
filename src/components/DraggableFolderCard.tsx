@@ -75,6 +75,10 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
   return (
     <Animated.View
       {...panResponder.panHandlers}
+      onLayout={(e) => {
+        const { x, y, width, height } = e.nativeEvent.layout;
+        onLayout?.({ x, y, width, height });
+      }}
       style={[
         { transform: [{ translateX: pan.x }, { translateY: pan.y }] },
         isDragging && styles.dragging,
@@ -84,7 +88,6 @@ export const DraggableFolderCard: React.FC<DraggableFolderCardProps> = ({
         name={folder.name}
         onPress={onPressStart}
         onEdit={onEdit}
-        onLayout={onLayout}
       />
     </Animated.View>
   );
