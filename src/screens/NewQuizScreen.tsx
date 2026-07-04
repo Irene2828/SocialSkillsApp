@@ -1,4 +1,3 @@
-import { theme } from '../theme';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
