@@ -473,7 +473,8 @@ export const NewQuizScreen = () => {
   const handleStartQuiz = (categoryId: string, questionCount: number, difficulty?: string) => {
     if (categoryId.startsWith('wp_quiz_')) {
       const categoryQuestions = wordProblems.filter((q: any) => q.category === categoryId);
-      const selected = buildQuestionSet(categoryQuestions as any, questionCount);
+      const actualCount = Math.min(questionCount, categoryQuestions.length);
+      const selected = buildQuestionSet(categoryQuestions as any, actualCount);
 
       if (selected.length === 0) {
         showToast({ message: `Coming soon! This quiz is under construction.` });
