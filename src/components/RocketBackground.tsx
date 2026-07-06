@@ -1,36 +1,50 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { theme } from '../theme';
+import React, { useMemo } from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
+const { width, height } = Dimensions.get('window');
+
+const generateStars = (count: number) => {
+  const stars = [];
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      id: i,
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 2 + 0.8,
+      opacity: Math.random() * 0.35 + 0.15,
+    });
+  }
+  return stars;
+};
 
 export const RocketBackground = () => {
+  // Slightly denser star field for rocket
+  const stars = useMemo(() => generateStars(50), []);
+
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
-
-      <Ionicons 
-        name="rocket-outline" 
-        size={200} 
-        color="#CBD5E1" 
-        style={[styles.icon, { top: -20, right: -40, transform: [{ rotate: '45deg' }], opacity: 0.25 }]} 
+      <LinearGradient
+        colors={['#061224', '#0B1B36', '#080C16']}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0, y: 0.2 }}
+        end={{ x: 1, y: 0.8 }}
       />
-      <Ionicons 
-        name="cloud-outline" 
-        size={140} 
-        color="#CBD5E1" 
-        style={[styles.icon, { bottom: 60, left: -30, opacity: 0.2 }]} 
-      />
-      <Ionicons 
-        name="cloud-outline" 
-        size={100} 
-        color="#CBD5E1" 
-        style={[styles.icon, { bottom: -20, left: 80, opacity: 0.15 }]} 
-      />
+      {stars.map(star => (
+        <View
+          key={star.id}
+          style={{
+            position: 'absolute',
+            left: star.x,
+            top: star.y,
+            width: star.size,
+            height: star.size,
+            borderRadius: star.size / 2,
+            backgroundColor: '#E2E8F0', // Slightly bluer/cooler white
+            opacity: star.opacity,
+          }}
+        />
+      ))}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  icon: {
-    position: 'absolute',
-  }
-});

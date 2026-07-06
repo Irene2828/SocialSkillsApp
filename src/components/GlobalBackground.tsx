@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useMood } from '../context/MoodContext';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { BotanicalBackground } from './BotanicalBackground';
 import { CelestialBackground } from './CelestialBackground';
 import { AstronautBackground } from './AstronautBackground';
@@ -19,20 +19,26 @@ export const GlobalBackground: React.FC = () => {
         return <AstronautBackground />;
       case 'rocket':
         return <RocketBackground />;
+      case 'none':
+        return null;
       case 'botanical':
       default:
         return <BotanicalBackground />;
     }
   };
 
+  const moodColors = getMoodColors(mood);
+
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      <LinearGradient
-        colors={['#FFFFFF', '#F3F4F6', '#FFFFFF']}
-        style={StyleSheet.absoluteFill}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-      />
+      {!moodColors.isDark && (
+        <LinearGradient
+          colors={['#FFFFFF', '#F3F4F6', '#FFFFFF']}
+          style={StyleSheet.absoluteFill}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        />
+      )}
       {renderMood()}
       <AnimatedCubesBackground />
     </View>

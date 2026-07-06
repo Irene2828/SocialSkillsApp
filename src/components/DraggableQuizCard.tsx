@@ -6,8 +6,7 @@ interface DraggableQuizCardProps {
   category: any;
   isFeatured: boolean;
   onPressStart: () => void;
-  onRename?: () => void;
-  onDelete?: () => void;
+  onOptionsPress?: () => void;
   onDragEnd: (quizId: string) => void;
   onDragMove?: (quizId: string, x: number, y: number) => void;
   onDragStateChange?: (isDragging: boolean) => void;
@@ -17,8 +16,7 @@ export const DraggableQuizCard: React.FC<DraggableQuizCardProps> = ({
   category,
   isFeatured,
   onPressStart,
-  onRename,
-  onDelete,
+  onOptionsPress,
   onDragEnd,
   onDragMove,
   onDragStateChange,
@@ -85,8 +83,7 @@ export const DraggableQuizCard: React.FC<DraggableQuizCardProps> = ({
         category={category}
         isFeatured={isFeatured}
         onPressStart={onPressStart}
-        onRename={onRename}
-        onDelete={onDelete}
+        onOptionsPress={onOptionsPress}
       />
     </Animated.View>
   );

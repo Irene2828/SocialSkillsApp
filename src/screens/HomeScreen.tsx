@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { SettingsModal } from '../components/SettingsModal';
+import { useMood, getMoodColors } from '../context/MoodContext';
+import { TopBar } from '../components/TopBar';
 import { GlobalBackground } from '../components/GlobalBackground';
 
 const useAttentionLoop = () => {
@@ -45,26 +46,23 @@ export const HomeScreen = () => {
   const { fadeAnim, scaleAnim } = useAttentionLoop();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
-  const [showSettings, setShowSettings] = useState(false);
   
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const titleColor = moodColors.isDark ? '#FFFFFF' : theme.colors.text;
+  const subtitleColor = moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
 
 
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <View style={{ position: 'absolute', top: 16, right: theme.spacing.lg, zIndex: 100 }}>
-          <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
-            <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
-          </Pressable>
-        </View>
+        <TopBar title="" />
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', opacity: 0.8 }}>
-              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Smart </Text>
-              <Text style={[styles.startTitle, isSmallScreen && { lineHeight: 42 }, { color: theme.colors.text }]}>Explorer</Text>
-            </View>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.regularItalic, fontWeight: '400', color: titleColor }]}>Smart</Text>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.regularItalic, fontWeight: '400', color: titleColor }]}>Explorer</Text>
           </View>
 
           <Animated.View
@@ -75,7 +73,7 @@ export const HomeScreen = () => {
               transform: [{ scale: scaleAnim }],
             }}
           >
-            <Text style={styles.startSubtitle}>Ready to test?</Text>
+            <Text style={[styles.startSubtitle, { color: subtitleColor }]}>Ready to test?</Text>
             <Button
               title="Start Quiz"
               onPress={() => navigation.navigate('NewQuiz')}
@@ -83,7 +81,6 @@ export const HomeScreen = () => {
             />
           </Animated.View>
         </View>
-        <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
       </ScreenWrapper>
     </View>
   );

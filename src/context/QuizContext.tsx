@@ -11,8 +11,9 @@ interface QuizContextData {
   renameCustomQuiz: (categoryId: string, newTitle: string) => void;
   moveQuizToFolder: (categoryId: string, folderId: string | undefined) => void;
   moveFolderToFolder: (childFolderId: string, parentFolderId: string | undefined) => void;
-  addFolder: (name: string, tab: 'general' | 'ai') => string;
+  addFolder: (name: string, tab: 'general' | 'ai', parentId?: string) => string;
   removeFolder: (folderId: string) => void;
+  renameFolder: (folderId: string, newName: string) => void;
 }
 
 const QuizContext = createContext<QuizContextData | undefined>(undefined);
@@ -182,14 +183,22 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const addFolder = (name: string, tab: 'general' | 'ai') => {
-    const newFolder: QuizFolder = { id: `folder_${Date.now()}`, name, tab };
+  const addFolder = (name: string, tab: 'general' | 'ai', parentId?: string) => {
+    const newFolder: QuizFolder = { id: `folder_${Date.now()}`, name, tab, parentId };
     setFolders(prev => {
       const newList = [...prev, newFolder];
       safeStorage.set('@quiz_folders', newList);
       return newList;
     });
     return newFolder.id;
+  };
+
+  const renameFolder = (folderId: string, newName: string) => {
+    setFolders(prev => {
+      const newList = prev.map(f => f.id === folderId ? { ...f, name: newName } : f);
+      safeStorage.set('@quiz_folders', newList);
+      return newList;
+    });
   };
 
   const removeFolder = (folderId: string) => {
@@ -219,7 +228,7 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   if (!isLoaded) return null;
 
   return (
-    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, moveFolderToFolder, addFolder, removeFolder }}>
+    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, moveFolderToFolder, addFolder, removeFolder, renameFolder }}>
       {children}
     </QuizContext.Provider>
   );

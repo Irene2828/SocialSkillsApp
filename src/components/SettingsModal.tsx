@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, StyleSheet, Pressable, ScrollView, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../theme';
 import { useMood, MoodType } from '../context/MoodContext';
 
@@ -36,6 +37,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
     { id: 'celestial', title: 'Celestial', icon: 'moon-outline', color: '#B19CD9' }, // Muted purple
     { id: 'astronaut', title: 'Astronaut', icon: 'planet-outline', color: '#775B7B' }, // Deep muted violet
     { id: 'rocket', title: 'Rocket', icon: 'rocket-outline', color: '#708090' }, // Slate grey blue
+    { id: 'none', title: 'No Background', icon: 'image-outline', color: '#9CA3AF' }, // Neutral gray
   ];
 
   return (
@@ -64,8 +66,19 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                   ]}
                   onPress={() => setMood(m.id)}
                 >
-                  <View style={[styles.iconContainer, { backgroundColor: m.color + '20' }]}>
-                    <Ionicons name={m.icon} size={32} color={m.color} />
+                  <View style={[
+                    styles.iconContainer, 
+                    m.id !== 'astronaut' && m.id !== 'rocket' && { backgroundColor: m.color + '20' }
+                  ]}>
+                    {(m.id === 'astronaut' || m.id === 'rocket') && (
+                      <LinearGradient
+                        colors={m.id === 'astronaut' ? ['#0B0F19', '#1A112A', '#0A0A0E'] : ['#061224', '#0B1B36', '#080C16']}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                        style={[StyleSheet.absoluteFill, { borderRadius: 32 }]}
+                      />
+                    )}
+                    <Ionicons name={m.icon} size={32} color={m.id === 'astronaut' || m.id === 'rocket' ? '#FFFFFF' : m.color} style={{ zIndex: 1 }} />
                   </View>
                   <Text style={[styles.moodTitle, mood === m.id && { color: m.color }]}>
                     {m.title}
@@ -96,6 +109,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     maxWidth: 400,
+    maxHeight: '85%',
     backgroundColor: '#FFFFFF',
     borderRadius: 24,
     overflow: 'hidden',

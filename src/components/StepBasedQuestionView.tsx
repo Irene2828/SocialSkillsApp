@@ -26,7 +26,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   const slideAnim = useRef(new Animated.Value(10)).current;
 
   const currentStep = currentStepIndex < question.steps.length ? question.steps[currentStepIndex] : null;
-  const isCompletionState = currentStepIndex === question.steps.length;
+  const isFinalStep = currentStepIndex === question.steps.length - 1;
 
   // Reset state and trigger animation when question changes
   useEffect(() => {
@@ -74,7 +74,11 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 
   const handleCloseModal = () => {
     if (displayIsCorrect) {
-      handleContinueStep();
+      if (isFinalStep) {
+        onContinue(true);
+      } else {
+        handleContinueStep();
+      }
     } else {
       setSelectedIndex(null);
     }
@@ -93,8 +97,10 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     <View style={styles.container}>
       <Card style={styles.mainCard}>
         {/* Persistent Problem Text */}
-        <Text style={styles.sectionLabel}>Problem:</Text>
+        <Text style={styles.situationalLabel}>Situational problem:</Text>
         <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }]}>{question.problemText}</Text>
+        <Text style={styles.microcopy}>(Don't answer yet, follow steps below first)</Text>
+      </Card>
         
         {/* Subtle Step Indicator (Dots) - Only show if > 1 step */}
         {question.steps.length > 1 && (
@@ -111,69 +117,44 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
             ))}
           </View>
         )}
-
         <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-          {isCompletionState ? (
-            <View style={styles.completionStateContainer}>
-              <View style={styles.coinRewardContainer}>
-                <FontAwesome5 
-                  name="coins" 
-                  size={32} 
-                  color={theme.colors.primary} 
-                  style={{
-                    textShadowColor: '#9CA3AF',
-                    textShadowOffset: { width: -0.5, height: 0.5 },
-                    textShadowRadius: 1
-                  }}
-                />
-                <Text style={styles.completionCoinText}>+1 Coin Earned!</Text>
-              </View>
-              
-              <Text style={styles.finalAnswerText}>Answer: {question.finalAnswer}</Text>
-              
-              <Button
-                title="Next Problem"
-                onPress={() => onContinue(!hasFailed)}
-                style={styles.nextProblemButton}
-                disabled={disabled}
-              />
-            </View>
-          ) : currentStep ? (
-            <>
-              <Text style={styles.sectionLabel}>Step {currentStepIndex + 1}:</Text>
+          <Card style={styles.mainCard}>
+            {currentStep ? (
               <View style={styles.promptContainer}>
-                <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }]}>{currentStep.prompt}</Text>
+                <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }]}>{currentStep.prompt}</Text>
               </View>
+            ) : null}
+          </Card>
+        
+          {/* Options outside the Card */}
+          {currentStep && (
+          <View style={styles.optionsContainer}>
+            {currentStep.options.map((option: string, index: number) => {
+              let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
 
-              <View style={styles.optionsContainer}>
-                {currentStep.options.map((option: string, index: number) => {
-                  let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
-
-                  if (isAnswered) {
-                    if (isCorrect) {
-                      state = index === currentStep.correctIndex ? 'selected-correct' : 'default';
-                    } else {
-                      if (index === selectedIndex) {
-                        state = 'selected-incorrect';
-                      }
-                    }
+              if (isAnswered) {
+                if (isCorrect) {
+                  state = index === currentStep.correctIndex ? 'selected-correct' : 'default';
+                } else {
+                  if (index === selectedIndex) {
+                    state = 'selected-incorrect';
                   }
+                }
+              }
 
-                  return (
-                    <AnswerButton
-                      key={index}
-                      text={option}
-                      onPress={() => handleSelect(index)}
-                      state={state}
-                      disabled={isAnswered}
-                    />
-                  );
-                })}
-              </View>
-            </>
-          ) : null}
+              return (
+                <AnswerButton
+                  key={index}
+                  text={option}
+                  onPress={() => handleSelect(index)}
+                  state={state}
+                  disabled={isAnswered}
+                />
+              );
+            })}
+          </View>
+        )}
         </Animated.View>
-      </Card>
 
       <Modal
         visible={isAnswered}
@@ -190,18 +171,38 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   {displayIsCorrect ? 'Correct!' : "Not quite, try again!"}
                 </Text>
               </View>
-              
+
+              {displayIsCorrect && isFinalStep && (
+                <View style={styles.coinRewardContainer}>
+                  <FontAwesome5 
+                    name="coins" 
+                    size={24} 
+                    color={theme.colors.primary} 
+                    style={{
+                      textShadowColor: '#9CA3AF',
+                      textShadowOffset: { width: -0.5, height: 0.5 },
+                      textShadowRadius: 1
+                    }}
+                  />
+                  <Text style={styles.coinRewardText}>+1 Coin Earned!</Text>
+                </View>
+              )}
+
               {displayIsCorrect && currentStep && (
-                <Text style={styles.explanationText}>{currentStep.explanation}</Text>
+                <View style={styles.dashedExplanationContainer}>
+                  <Text style={styles.explanationText}>{currentStep.explanation}</Text>
+                </View>
               )}
 
               {displayIsCorrect ? (
-                <Button
-                  title="Continue"
-                  onPress={handleContinueStep}
-                  style={styles.continueButton}
-                  disabled={disabled}
-                />
+                <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
+                  <Button
+                    title="Continue"
+                    onPress={handleCloseModal}
+                    style={styles.continueButton}
+                    disabled={disabled}
+                  />
+                </Animated.View>
               ) : (
                 <Button
                   title="Try Again"
@@ -220,13 +221,25 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal: theme.spacing.md,
+  },
+  animatedContainer: {
+    width: '100%',
   },
   mainCard: {
     padding: theme.spacing.lg,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
+    marginBottom: theme.spacing.lg,
+  },
+  situationalLabel: {
+    ...theme.typography.body,
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
+    letterSpacing: 0.5,
+    color: theme.colors.secondaryText,
+    marginBottom: 8,
+    textAlign: 'left',
   },
   sectionLabel: {
     ...theme.typography.label,
@@ -240,6 +253,13 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     textAlign: 'left',
     color: theme.colors.text,
+    marginBottom: theme.spacing.md,
+  },
+  microcopy: {
+    ...theme.typography.body,
+    color: theme.colors.secondaryText,
+    fontSize: 14,
+    textAlign: 'left',
     marginBottom: theme.spacing.lg,
   },
   dotsContainer: {
@@ -266,9 +286,7 @@ const styles = StyleSheet.create({
   inactiveDot: {
     backgroundColor: theme.colors.stroke,
   },
-  animatedContainer: {
-    width: '100%',
-  },
+
   promptContainer: {
     marginBottom: theme.spacing.lg,
     paddingHorizontal: theme.spacing.xs,
@@ -319,30 +337,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.text,
   },
-  explanationText: {
-    ...theme.typography.heading,
-    fontFamily: FONTS.regular,
-    fontSize: 19,
-    fontWeight: '400',
-    lineHeight: 26,
-    letterSpacing: 0.2,
-    textAlign: 'center',
-    color: '#111827',
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: theme.colors.stroke,
-    borderRadius: theme.borderRadius.sm,
-    padding: theme.spacing.md,
+  dashedExplanationContainer: {
     width: '100%',
-    marginBottom: theme.spacing.md,
+    padding: theme.spacing.lg,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.md,
   },
-  finalAnswerText: {
-    ...theme.typography.heading,
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: theme.colors.primary,
-    marginBottom: theme.spacing.md,
+  explanationText: {
+    ...theme.typography.body,
+    fontSize: 18,
     textAlign: 'center',
+    color: theme.colors.text,
   },
   coinRewardContainer: {
     flexDirection: 'row',
@@ -361,21 +371,6 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     marginTop: theme.spacing.sm,
-    width: '100%',
-  },
-  completionStateContainer: {
-    paddingVertical: theme.spacing.xl,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  completionCoinText: {
-    ...theme.typography.heading,
-    fontSize: 24,
-    color: theme.colors.text,
-    marginLeft: theme.spacing.sm,
-  },
-  nextProblemButton: {
-    marginTop: theme.spacing.xl,
     width: '100%',
   }
 });

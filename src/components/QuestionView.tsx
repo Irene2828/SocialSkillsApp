@@ -18,8 +18,6 @@ interface QuestionViewProps {
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
-  const [whySelectedIndex, setWhySelectedIndex] = useState<number | null>(null);
-  const [hasWhyFailed, setWhyFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
@@ -27,8 +25,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   if (question.id !== currentQuestionId) {
     setSelectedIndex(null);
     setHasFailed(false);
-    setWhySelectedIndex(null);
-    setWhyFailed(false);
     setCurrentQuestionId(question.id);
   }
   
@@ -63,20 +59,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     }
   };
 
-  const handleWhySelect = (index: number) => {
-    if (whySelectedIndex !== question.correctWhyIndex) {
-      setWhySelectedIndex(index);
-      if (index !== question.correctWhyIndex) {
-        setWhyFailed(true);
-      }
-    }
-  };
-
   const handleCloseModal = () => {
     if (displayIsCorrect) {
-      if (question.whyOptions && whySelectedIndex !== question.correctWhyIndex) {
-        return; // Do not close if why step is not correct
-      }
       onContinue(!hasFailed);
     } else {
       setSelectedIndex(null);
@@ -91,8 +75,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     displayIsCorrectRef.current = isCorrect;
   }
   const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
-  
-  const isWhyCorrect = whySelectedIndex === question.correctWhyIndex;
 
   return (
     <View style={styles.container}>
@@ -165,64 +147,26 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                 </View>
               )}
 
-              {displayIsCorrect && question.whyOptions ? (
-                <View style={{ width: '100%', marginTop: theme.spacing.xl }}>
-                  <Text style={[styles.feedbackTitle, { marginBottom: theme.spacing.md, fontStyle: 'italic' }]}>
-                    {hasWhyFailed && !isWhyCorrect ? "Not quite, try again!" : "Why is that the right choice?"}
-                  </Text>
-                  
-                  {question.whyOptions.map((option, index) => {
-                    let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
-                    if (whySelectedIndex === index) {
-                      state = index === question.correctWhyIndex ? 'selected-correct' : 'selected-incorrect';
-                    } else if (isWhyCorrect && index === question.correctWhyIndex) {
-                      state = 'unselected-correct';
-                    }
-
-                    return (
-                      <View key={index} style={{ marginBottom: theme.spacing.sm }}>
-                        <AnswerButton
-                          text={option}
-                          onPress={() => handleWhySelect(index)}
-                          state={state}
-                          disabled={isWhyCorrect}
-                        />
-                      </View>
-                    );
-                  })}
-                  
-                  {isWhyCorrect && (
-                    <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-                      <Button
-                        title="Continue"
-                        onPress={handleCloseModal}
-                        style={styles.continueButton}
-                        disabled={disabled}
-                      />
-                    </Animated.View>
-                  )}
-                </View>
-              ) : (
+              {displayIsCorrect ? (
                 <>
-                  {displayIsCorrect && (
+                  <View style={styles.dashedExplanationContainer}>
                     <Text style={styles.explanationText}>{question.explanation}</Text>
-                  )}
-
-                  {displayIsCorrect ? (
+                  </View>
+                  <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
                     <Button
                       title="Continue"
                       onPress={handleCloseModal}
                       style={styles.continueButton}
                       disabled={disabled}
                     />
-                  ) : (
-                    <Button
-                      title="Try Again"
-                      onPress={() => setSelectedIndex(null)}
-                      style={styles.continueButton}
-                    />
-                  )}
+                  </Animated.View>
                 </>
+              ) : (
+                <Button
+                  title="Try Again"
+                  onPress={() => setSelectedIndex(null)}
+                  style={styles.continueButton}
+                />
               )}
             </View>
           </Pressable>
@@ -289,6 +233,23 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     marginTop: theme.spacing.md,
   },
+  dashedExplanationContainer: {
+    width: '100%',
+    padding: theme.spacing.lg,
+    borderWidth: 2,
+    borderColor: '#E5E7EB',
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    backgroundColor: '#F9FAFB',
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.md,
+  },
+  explanationText: {
+    ...theme.typography.body,
+    fontSize: 18,
+    textAlign: 'center',
+    color: theme.colors.text,
+  },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
   },
@@ -326,23 +287,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.text,
   },
-  explanationText: {
-    ...theme.typography.heading,
-    fontFamily: FONTS.regular,
-    fontSize: 19,
-    fontWeight: '400',
-    lineHeight: 26,
-    letterSpacing: 0.2,
-    textAlign: 'center',
-    color: '#111827',
-    borderWidth: 1.5,
-    borderStyle: 'dashed',
-    borderColor: theme.colors.stroke,
-    borderRadius: theme.borderRadius.sm,
-    padding: theme.spacing.md,
-    width: '100%',
-    marginBottom: theme.spacing.md,
-  },
+
   coinRewardContainer: {
     flexDirection: 'row',
     alignItems: 'center',

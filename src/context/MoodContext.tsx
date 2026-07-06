@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { safeStorage } from '../utils/storage';
 
-export type MoodType = 'botanical' | 'celestial' | 'astronaut' | 'rocket';
+export type MoodType = 'botanical' | 'celestial' | 'astronaut' | 'rocket' | 'none';
 
 interface MoodContextData {
   mood: MoodType;
@@ -15,12 +15,13 @@ const MoodContext = createContext<MoodContextData>({
 
 export const getMoodColors = (mood: MoodType) => {
   switch (mood) {
-    case 'celestial': return { primary: '#B19CD9', bg: '#F3E8FF' }; // Muted purple, soft purple bg
-    case 'astronaut': return { primary: '#775B7B', bg: '#FDF4FF' }; // Deep violet, soft pinkish bg
-    case 'rocket': return { primary: '#708090', bg: '#F1F5F9' }; // Slate, soft slate bg
+    case 'celestial': return { primary: '#B19CD9', bg: '#F3E8FF', isDark: false }; // Muted purple, soft purple bg
+    case 'astronaut': return { primary: '#775B7B', bg: '#0B0F19', isDark: true }; // Deep violet, navy dark bg
+    case 'rocket': return { primary: '#708090', bg: '#061224', isDark: true }; // Slate, indigo dark bg
+    case 'none': return { primary: '#9CA3AF', bg: '#F9FAFB', isDark: false }; // Neutral gray, light gray bg
     case 'botanical':
     default:
-      return { primary: '#8FBC8F', bg: '#F7FEE7' }; // Muted green, soft green bg
+      return { primary: '#8FBC8F', bg: '#F7FEE7', isDark: false }; // Muted green, soft green bg
   }
 };
 

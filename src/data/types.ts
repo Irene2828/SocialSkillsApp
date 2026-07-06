@@ -74,6 +74,7 @@ export interface Step {
 export interface StepBasedQuestion {
   id: string;
   category: string;
+  difficulty?: Difficulty;
   problemText: string;
   steps: Step[];
   finalAnswer?: string;

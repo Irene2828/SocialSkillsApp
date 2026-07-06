@@ -1,17 +1,17 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { TopBar } from '../components/TopBar';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
 import { FolderCard } from '../components/FolderCard';
-import { DraggableFolderCard } from '../components/DraggableFolderCard';
-import { DraggableQuizCard } from '../components/DraggableQuizCard';
 import { ProgressBar } from '../components/ProgressBar';
 import { QuestionView } from '../components/QuestionView';
 import { StepBasedQuestionView } from '../components/StepBasedQuestionView';
 import { Button } from '../components/Button';
+import { generateQuizFromText } from '../utils/aiQuizGenerator';
 import { Card } from '../components/Card';
 import { theme, FONTS } from '../theme';
 import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types';
@@ -34,7 +34,7 @@ if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
-type QuizState = 'selection' | 'difficulty-selection' | 'in-progress' | 'completed';
+type QuizState = 'selection' | 'difficulty-selection' | 'in-progress' | 'completed' | 'word-problems-list';
 type QuizLevel = {
   label: string;
   difficulty: string;
@@ -51,11 +51,13 @@ export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
   const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz } = useQuizContext();
-  const allCategories = useMemo(() => [...QUIZ_CATEGORIES, ...customCategories], [customCategories]);
   const { showModal, showToast } = useFeedback();
   const navigation = useNavigation<any>();
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
+  const isDark = moodColors.isDark;
+  const baseTextColor = isDark ? '#FFFFFF' : theme.colors.text;
+  const subTextColor = isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
   const route = useRoute<any>();
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
@@ -75,15 +77,40 @@ export const NewQuizScreen = () => {
     { id: 'iq_place_value', title: 'Place Value', description: 'Ones, tens & hundreds', icon: 'calculator-outline', isCustom: false },
   ];
 
-  const { folders, addFolder, removeFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
+  const allCategories = useMemo(() => [...QUIZ_CATEGORIES, ...IQ_CATEGORIES, ...customCategories], [customCategories]);
+
+  const { folders, addFolder, removeFolder, renameFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
   const [folderHistory, setFolderHistory] = useState<string[]>([]);
   const activeFolderId = folderHistory.length > 0 ? folderHistory[folderHistory.length - 1] : null;
   const [folderRects, setFolderRects] = useState<Record<string, any>>({});
   const [isDraggingSomething, setIsDraggingSomething] = useState(false);
 
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [actionMenuCategory, setActionMenuCategory] = useState<any>(null);
+  const [showMoveFolderMenu, setShowMoveFolderMenu] = useState(false);
+
+  const [showAiMenu, setShowAiMenu] = useState(false);
+  const [showPhotoMenu, setShowPhotoMenu] = useState(false);
+
+  const handleOpenActionMenu = (category: any) => {
+    setActionMenuCategory(category);
+    setShowActionMenu(true);
+  };
+  const [aiPromptText, setAiPromptText] = useState('');
+  const [selectedImageBase64, setSelectedImageBase64] = useState<string | null>(null);
+  const [selectedImageUri, setSelectedImageUri] = useState<string | null>(null);
+
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [quizToDelete, setQuizToDelete] = useState<string | null>(null);
   const [deletePin, setDeletePin] = useState('');
+  const [deletedCategories, setDeletedCategories] = useState<Set<string>>(new Set());
+  const [deletedFolders, setDeletedFolders] = useState<Set<string>>(new Set());
+
+  const [aiPromptSituation, setAiPromptSituation] = useState('');
+  const [aiPromptAge, setAiPromptAge] = useState('');
+  const [aiPromptContext, setAiPromptContext] = useState('');
+  const [generatedQuizzes, setGeneratedQuizzes] = useState<any[] | null>(null);
+  const [showFolderSelection, setShowFolderSelection] = useState(false);
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -117,8 +144,6 @@ export const NewQuizScreen = () => {
     ]).start();
   };
   
-  const [showAiMenu, setShowAiMenu] = useState(false);
-
   const [aiGenerating, setAiGenerating] = useState(false);
   const [loadingText, setLoadingText] = useState('Understanding the concept...');
 
@@ -129,6 +154,23 @@ export const NewQuizScreen = () => {
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [pendingDragQuizId, setPendingDragQuizId] = useState<string | null>(null);
+
+  const [actionMenuFolder, setActionMenuFolder] = useState<any>(null);
+  const [showFolderActionMenu, setShowFolderActionMenu] = useState(false);
+  const [showMoveFolderMenu2, setShowMoveFolderMenu2] = useState(false);
+
+  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [renameFolderName, setRenameFolderName] = useState('');
+
+  const handleSaveFolderRename = () => {
+    if (actionMenuFolder?.id && renameFolderName.trim()) {
+      renameFolder(actionMenuFolder.id, renameFolderName.trim());
+      showToast({ message: 'Folder renamed!' });
+    }
+    setShowRenameFolderModal(false);
+    setActionMenuFolder(null);
+    setRenameFolderName('');
+  };
 
   const handleCreateFolder = () => {
     if (newFolderName.trim()) {
@@ -182,15 +224,16 @@ export const NewQuizScreen = () => {
     }
   }, [aiGenerating]);
 
-  const handleGenerate = async (base64Data: string) => {
-    setLoadingText('Understanding the concept...');
+  const handleGenerateFromImage = async (base64Image: string) => {
+    setShowPhotoMenu(false);
+    setLoadingText('Analyzing the image...');
     setAiGenerating(true);
+    
     try {
-      const dataUri = `data:image/jpeg;base64,${base64Data}`;
       const topicType = activeTab === 'general' ? 'social' : 'math';
-      const responseData = await generateQuizFromImage(dataUri, 7, topicType);
+      const responseData = await generateQuizFromImage(base64Image, 7, topicType);
       
-      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
+      const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
         const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
         const newCategoryId = `${prefix}_${Date.now()}_${quizIndex}`;
         const newCategory = {
@@ -213,54 +256,125 @@ export const NewQuizScreen = () => {
           explanation: q.explanation || 'Great job!'
         }));
         
-        addCustomQuiz(newCategory, questionsWithCategory);
+        return { category: newCategory, questions: questionsWithCategory };
       });
       
+      setGeneratedQuizzes(newQuizzes);
       setAiGenerating(false);
-      showToast({ message: 'AI Quizzes generated and added to your library!' });
+      setShowFolderSelection(true);
+    } catch (error) {
+      console.error('Failed to generate quiz from image:', error);
+      setAiGenerating(false);
+      Alert.alert('Error', 'Failed to generate quiz. Please try again.');
+    }
+  };
+
+  const handlePickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setSelectedImageBase64(result.assets[0].base64!);
+      setSelectedImageUri(result.assets[0].uri);
+    }
+  };
+
+  const handleTakePhoto = async () => {
+    const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert("Permission Required", "You need to grant camera permissions to use this feature.");
+      return;
+    }
+    
+    const result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+      quality: 0.8,
+      base64: true,
+    });
+    
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      setSelectedImageBase64(result.assets[0].base64!);
+      setSelectedImageUri(result.assets[0].uri);
+    }
+  };
+
+  const handleGenerateFromSelectedImage = () => {
+    if (selectedImageBase64) {
+      handleGenerateFromImage(selectedImageBase64);
+    }
+  };
+
+  const handleGenerateFromText = async () => {
+    if (!aiPromptSituation.trim() || !aiPromptAge) return;
+    
+    const assembledPrompt = `Create a quiz for a ${aiPromptAge} year old about ${aiPromptSituation.trim()}.${aiPromptContext.trim() ? ' ' + aiPromptContext.trim() : ''}`;
+    
+    setShowAiMenu(false);
+    setLoadingText('Understanding the concept...');
+    setAiGenerating(true);
+    
+    try {
+      const topicType = activeTab === 'general' ? 'social' : 'math';
+      const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
+      
+      const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
+        const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
+        const newCategoryId = `${prefix}_${Date.now()}_${quizIndex}`;
+        const newCategory = {
+          id: newCategoryId,
+          title: quiz.concept,
+          description: 'AI Generated Quiz',
+          icon: 'sparkles',
+          color: '#A78BFA',
+          isCustom: true,
+          folderId: activeFolderId || undefined // default, will be overridden if they choose
+        };
+        
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
+          id: `${newCategoryId}-q${index}`,
+          category: newCategoryId,
+          difficulty: 'Medium',
+          scenario: q.question,
+          options: q.options,
+          correctAnswerIndex: q.correctIndex,
+          explanation: q.explanation || 'Great job!'
+        }));
+        
+        return { category: newCategory, questions: questionsWithCategory };
+      });
+      
+      setGeneratedQuizzes(newQuizzes);
+      setAiGenerating(false);
+      setShowFolderSelection(true);
+      
     } catch (error: any) {
       setAiGenerating(false);
       showModal({ title: 'Error', message: error.message || 'Failed to generate quiz.', type: 'error' });
     }
   };
 
-  const pickImage = async () => {
-    setShowAiMenu(false);
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== 'granted') {
-      showModal({ title: 'Permission Denied', message: 'Sorry, we need camera roll permissions to make this work!', type: 'error' });
-      return;
-    }
-
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      quality: 0.8,
-      base64: true,
-    });
-
-    if (!result.canceled && result.assets[0]?.base64) {
-      handleGenerate(result.assets[0].base64);
+  const handleSaveToFolder = (targetFolderId: string | undefined) => {
+    if (generatedQuizzes) {
+      generatedQuizzes.forEach((quizSet) => {
+        const categoryToSave = { ...quizSet.category, folderId: targetFolderId };
+        addCustomQuiz(categoryToSave, quizSet.questions);
+      });
+      setGeneratedQuizzes(null);
+      setShowFolderSelection(false);
+      setAiPromptText('');
+      showToast({ message: 'AI Quizzes generated and saved!' });
     }
   };
 
-  const takePhoto = async () => {
-    setShowAiMenu(false);
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== 'granted') {
-      showModal({ title: 'Permission Denied', message: 'Sorry, we need camera permissions to make this work!', type: 'error' });
-      return;
-    }
-
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      quality: 0.8,
-      base64: true,
-    });
-
-    if (!result.canceled && result.assets[0]?.base64) {
-      handleGenerate(result.assets[0].base64);
-    }
+  const cancelFolderSelection = () => {
+    setGeneratedQuizzes(null);
+    setShowFolderSelection(false);
+    setAiPromptText('');
   };
 
   const handleDeletePinChange = (text: string) => {
@@ -357,8 +471,14 @@ export const NewQuizScreen = () => {
   };
 
   const handleStartQuiz = (categoryId: string, questionCount: number, difficulty?: string) => {
-    if (categoryId === 'iq_word_problems') {
-      const selected = buildQuestionSet(wordProblems as any, questionCount);
+    if (categoryId.startsWith('wp_quiz_')) {
+      const categoryQuestions = wordProblems.filter((q: any) => q.category === categoryId);
+      const selected = buildQuestionSet(categoryQuestions as any, questionCount);
+
+      if (selected.length === 0) {
+        showToast({ message: `Coming soon! This quiz is under construction.` });
+        return;
+      }
       setSelectedCategory(categoryId as any);
       setCurrentQuestions(selected);
       setCurrentIndex(0);
@@ -393,7 +513,9 @@ export const NewQuizScreen = () => {
   };
 
   const handleSelectQuizCategory = (categoryId: string) => {
-    if (categoryId.startsWith('iq_') && categoryId !== 'iq_word_problems') {
+    if (categoryId === 'iq_word_problems') {
+      setQuizState('word-problems-list');
+    } else if (categoryId.startsWith('iq_')) {
       setSelectedCategory(categoryId as any);
       setQuizState('difficulty-selection');
     } else {
@@ -432,58 +554,60 @@ export const NewQuizScreen = () => {
   };
 
   const renderDifficultySelection = () => {
-    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
-
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: theme.spacing.xl }}>
-        <Card style={[styles.levelCard, { alignItems: 'center', paddingVertical: 40, width: '100%', maxWidth: 500 }]}>
-          <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xs }]}>Choose Difficulty</Text>
-          <Text style={[styles.questionCaption, { marginBottom: theme.spacing.xl, fontSize: 16 }]}>
-            {categoryName}
-          </Text>
-
-          <View style={[styles.levelChipsContainer, { width: '100%', marginBottom: theme.spacing.xxl }]}>
+      <View style={{ flex: 1 }}>
+        <TopBar title="Choose Difficulty" onBack={handleBackToHome} />
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: theme.spacing.xl, paddingBottom: 80 }}>
+          <View style={{ width: '100%', maxWidth: 280, gap: theme.spacing.lg }}>
             {QUIZ_LEVELS.map((level, index) => (
-              <Pressable
+              <Button
                 key={index}
-                style={[
-                  styles.levelChip,
-                  selectedLevel.difficulty === level.difficulty && styles.levelChipSelected
-                ]}
-                onPress={() => setSelectedLevel(level)}
-              >
-                <Text style={[
-                  styles.levelChipText,
-                  selectedLevel.difficulty === level.difficulty && styles.levelChipTextSelected
-                ]}>
-                  {level.label}
-                </Text>
-              </Pressable>
+                title={level.label}
+                variant="outline"
+                style={{ width: '100%', paddingVertical: 20, borderColor: theme.colors.primary, borderWidth: 2, backgroundColor: theme.colors.white }}
+                onPress={() => {
+                  if (selectedCategory) {
+                    handleStartQuiz(selectedCategory, 5, level.difficulty);
+                  }
+                }}
+              />
             ))}
           </View>
-
-          <Button 
-            title="Start Quiz" 
-            onPress={() => {
-              if (selectedCategory) {
-                handleStartQuiz(selectedCategory, 5, selectedLevel.difficulty);
-              }
-            }} 
-            style={{ width: '100%' }}
-          />
-
-          <Pressable 
-            style={[styles.actionButton, { marginTop: theme.spacing.md }]} 
-            onPress={handleBackToHome}
-          >
-            <Text style={[styles.levelChipText, { textAlign: 'center' }]}>Cancel</Text>
-          </Pressable>
-        </Card>
+        </View>
       </View>
     );
   };
 
   // (renderStart moved to HomeScreen)
+
+  const renderWordProblemsList = () => {
+    const quizzes = Array.from({ length: 20 }, (_, i) => ({
+      id: `wp_quiz_${i + 1}`,
+      title: `Quiz ${i + 1}`,
+      description: '5 questions',
+      icon: 'book-outline',
+      category: 'iq_word_problems'
+    }));
+
+    return (
+      <View style={{ flex: 1 }}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <TopBar title="Word Problems" onBack={() => setQuizState('selection')} />
+          <View style={[styles.bentoGrid, { marginTop: theme.spacing.md }]}>
+            {quizzes.map(quiz => (
+              <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+                <QuizCard 
+                  category={quiz as any} 
+                  isFeatured={false}
+                  onPressStart={() => handleStartQuiz(quiz.id, 5)} 
+                />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  };
 
   const renderSelection = () => {
     // Temporarily disable daily limit for testing
@@ -504,19 +628,12 @@ export const NewQuizScreen = () => {
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         {activeFolderId ? (
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm, marginTop: 4 }}>
-            <Pressable onPress={() => setFolderHistory(prev => prev.slice(0, -1))} style={{ padding: 8, marginRight: 8 }}>
-              <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-            </Pressable>
-            <Header title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} />
-          </View>
+          <TopBar 
+            title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} 
+            onBack={() => setFolderHistory(prev => prev.slice(0, -1))} 
+          />
         ) : (
-          <View>
-            <Header 
-              title="Test Your Knowledge" 
-              style={{ marginBottom: theme.spacing.sm, marginTop: 4 }} 
-            />
-          </View>
+          <TopBar title="Library" />
         )}
         
         {!activeFolderId && (
@@ -528,7 +645,7 @@ export const NewQuizScreen = () => {
                 setFolderHistory([]);
               }}
             >
-              <Text style={[styles.tabText, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
             </Pressable>
             <Pressable 
               style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
@@ -537,7 +654,7 @@ export const NewQuizScreen = () => {
                 setFolderHistory([]);
               }}
             >
-              <Text style={[styles.tabText, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
             </Pressable>
           </View>
         )}
@@ -545,10 +662,11 @@ export const NewQuizScreen = () => {
 
 
         {displayCategories.length === 0 && !activeFolderId && activeTab === 'ai' ? (
-          <View style={styles.emptyAiContainer}>
-            <Text style={styles.emptyAiText}>No AI quizes yet.</Text>
-            <Text style={styles.emptyAiSub}>Create your first one from a photo or concept!</Text>
-            <View style={styles.createAiButtonContainer}>
+          <View style={{ alignItems: 'center', marginTop: 40, paddingHorizontal: theme.spacing.xl }}>
+            <Ionicons name="sparkles-outline" size={48} color={moodColors.primary} style={{ marginBottom: theme.spacing.md }} />
+            <Text style={[styles.emptyAiText, { color: baseTextColor }]}>No AI quizes yet.</Text>
+            <Text style={[styles.emptyAiSub, { color: subTextColor }]}>Create your first one from a photo or concept!</Text>
+            <View style={{ marginTop: theme.spacing.xl, width: '100%', maxWidth: 300 }}>
               <Button
                 title="Create AI Quiz"
                 style={styles.createAiButton}
@@ -563,47 +681,21 @@ export const NewQuizScreen = () => {
                 return (
                   <View 
                     key={category.id} 
-                    style={styles.bentoItem}
+                    style={[styles.bentoItem, { width: '47%' }]}
                   >
-                    <DraggableQuizCard 
+                    <QuizCard 
                       category={category} 
                       isFeatured={false}
+                      isDeleted={deletedCategories.has(category.id)}
+                      onUndo={() => {
+                        setDeletedCategories(prev => {
+                          const newSet = new Set(prev);
+                          newSet.delete(category.id);
+                          return newSet;
+                        });
+                      }}
                       onPressStart={() => handleSelectQuizCategory(category.id)} 
-                      onRename={() => handleOpenRename(category)}
-                      onDelete={category.isCustom ? () => {
-                        setQuizToDelete(category.id);
-                        setShowDeletePin(true);
-                      } : undefined}
-                      onDragMove={(quizId, x, y) => {
-                        const localX = x - bentoGridPosRef.current.pageX;
-                        const localY = y - bentoGridPosRef.current.pageY;
-                        let currentHover: string | null = null;
-                        for (const [folderId, rect] of Object.entries(folderRects)) {
-                          if (
-                            localX >= rect.x &&
-                            localX <= rect.x + rect.width &&
-                            localY >= rect.y &&
-                            localY <= rect.y + rect.height
-                          ) {
-                            currentHover = folderId;
-                            break;
-                          }
-                        }
-                        if (hoveredFolderId !== currentHover) {
-                          setHoveredFolderId(currentHover);
-                        }
-                      }}
-                      onDragEnd={handleDragEnd}
-                      onDragStateChange={(dragging) => {
-                        setIsDraggingSomething(dragging);
-                        if (dragging && bentoGridRef.current) {
-                          bentoGridRef.current.measure((_x, _y, _width, _height, pageX, pageY) => {
-                            bentoGridPosRef.current = { pageX, pageY };
-                          });
-                        } else if (!dragging) {
-                          setHoveredFolderId(null);
-                        }
-                      }}
+                      onOptionsPress={() => handleOpenActionMenu(category)}
                     />
                   </View>
                 );
@@ -612,52 +704,24 @@ export const NewQuizScreen = () => {
               {currentTabFolders.map(folder => (
                 <View 
                   key={folder.id} 
-                  style={styles.bentoItem}
+                  style={[styles.bentoItem, { width: '47%' }]}
                   onLayout={(e) => setFolderRects(prev => ({ ...prev, [folder.id]: e.nativeEvent.layout }))}
                 >
-                  <DraggableFolderCard 
-                    folder={folder} 
-                    onPressStart={() => setFolderHistory(prev => [...prev, folder.id])}
-                    onEdit={() => {}}
-                    onDragEnd={handleFolderDragEnd}
-                    onDragMove={(draggedFolderId, x, y) => {
-                      const localX = x - bentoGridPosRef.current.pageX;
-                      const localY = y - bentoGridPosRef.current.pageY;
-                      let currentHover: string | null = null;
-                      for (const [fId, rect] of Object.entries(folderRects)) {
-                        if (fId === draggedFolderId || fId === 'new-folder') continue;
-                        if (
-                          localX >= rect.x &&
-                          localX <= rect.x + rect.width &&
-                          localY >= rect.y &&
-                          localY <= rect.y + rect.height
-                        ) {
-                          currentHover = fId;
-                          break;
-                        }
-                      }
-                      if (hoveredFolderId !== currentHover) {
-                        setHoveredFolderId(currentHover);
-                      }
+                  <FolderCard 
+                    name={folder.name} 
+                    onPress={() => setFolderHistory(prev => [...prev, folder.id])}
+                    onEdit={() => {
+                      setActionMenuFolder(folder);
+                      setShowFolderActionMenu(true);
                     }}
-                    onDragStateChange={(dragging) => {
-                      setIsDraggingSomething(dragging);
-                      if (dragging && bentoGridRef.current) {
-                        bentoGridRef.current.measure((_x, _y, _width, _height, pageX, pageY) => {
-                          bentoGridPosRef.current = { pageX, pageY };
-                        });
-                      } else if (!dragging) {
-                        setHoveredFolderId(null);
-                      }
-                    }}
-                    isHovered={hoveredFolderId === folder.id}
+                    onDelete={() => removeFolder(folder.id)}
                   />
                 </View>
               ))}
 
               {!activeFolderId && (
                 <View 
-                  style={styles.bentoItem}
+                  style={[styles.bentoItem, { width: '47%' }]}
                   onLayout={(rect) => setFolderRects(prev => ({ ...prev, 'new-folder': rect.nativeEvent.layout }))}
                 >
                   <Pressable 
@@ -687,25 +751,46 @@ export const NewQuizScreen = () => {
             {activeTab === 'general' && !activeFolderId && (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Create a New Quiz with AI"
-                  style={styles.createAiButton}
+                  title="Turn Screenshot into a Quiz"
+                  style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
+                  onPress={() => {
+                    setSelectedImageBase64(null);
+                    setSelectedImageUri(null);
+                    setShowPhotoMenu(true);
+                  }}
+                />
+                <Button
+                  title="Turn Prompt into a Quiz"
+                  variant="outline"
+                  style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
                   onPress={() => setShowAiMenu(true)}
                 />
               </View>
             )}
             
             {activeFolderId && displayCategories.length === 0 && (
-              <View style={styles.emptyAiContainer}>
-                <Text style={styles.emptyAiText}>This folder is empty.</Text>
-                <Text style={styles.emptyAiSub}>Drag quizzes here to organize them.</Text>
+              <View style={{ alignItems: 'center', marginTop: 40, paddingHorizontal: theme.spacing.xl }}>
+                <Ionicons name="folder-open-outline" size={48} color={moodColors.primary} style={{ marginBottom: theme.spacing.md, opacity: 0.5 }} />
+                <Text style={[styles.emptyAiText, { color: baseTextColor }]}>This folder is empty.</Text>
+                <Text style={[styles.emptyAiSub, { color: subTextColor }]}>Add quizzes here to organize them.</Text>
               </View>
             )}
 
             {activeTab !== 'general' && !activeFolderId && displayCategories.length > 0 && (
               <View style={styles.createAiButtonContainer}>
                 <Button
-                  title="Create a New Quiz with AI"
-                  style={styles.createAiButton}
+                  title="Turn Screenshot into a Quiz"
+                  style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
+                  onPress={() => {
+                    setSelectedImageBase64(null);
+                    setSelectedImageUri(null);
+                    setShowPhotoMenu(true);
+                  }}
+                />
+                <Button
+                  title="Turn Prompt into a Quiz"
+                  variant="outline"
+                  style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
                   onPress={() => setShowAiMenu(true)}
                 />
               </View>
@@ -744,13 +829,13 @@ export const NewQuizScreen = () => {
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2 }}>
             <Pressable style={styles.backButton} onPress={handleBackToHome}>
-              <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-              <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
+              <Ionicons name="arrow-back" size={24} color={baseTextColor} />
+              <Text style={{ marginLeft: 4, ...theme.typography.button, color: baseTextColor }}>Back</Text>
             </Pressable>
             <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
-              <Text style={styles.screenFolderTabText} numberOfLines={1}>Topic: {categoryName}</Text>
+              <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
           </View>
           
@@ -762,7 +847,7 @@ export const NewQuizScreen = () => {
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: theme.spacing.md, marginTop: -16, marginBottom: theme.spacing.md }}>
             {renderCoinJar()}
           </View>
-          {selectedCategory === 'iq_word_problems' ? (
+          {selectedCategory === 'iq_word_problems' || (typeof selectedCategory === 'string' && selectedCategory.startsWith('wp_quiz_')) ? (
             <StepBasedQuestionView
               question={currentQuestion as any}
               onContinue={handleContinue}
@@ -843,12 +928,55 @@ export const NewQuizScreen = () => {
       <ScreenWrapper transparent>
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
+          {quizState === 'word-problems-list' && renderWordProblemsList()}
           {quizState === 'difficulty-selection' && renderDifficultySelection()}
           {quizState === 'in-progress' && renderInProgress()}
           {quizState === 'completed' && renderCompleted()}
         </View>
       </ScreenWrapper>
 
+
+      {/* AI Photo Menu Modal */}
+      <Modal visible={showPhotoMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowPhotoMenu(false)}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.levelTitle}>Create a Quiz from a Screenshot</Text>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
+                Turn a screenshot into an interactive social or math quiz automatically.
+              </Text>
+              
+              {!selectedImageUri ? (
+                <View style={{ width: '100%', gap: theme.spacing.md, marginBottom: theme.spacing.lg }}>
+                  <Pressable style={styles.photoOutlineButton} onPress={handleTakePhoto}>
+                    <Ionicons name="camera-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: theme.spacing.sm }} />
+                    <Text style={styles.photoOutlineText}>Take Photo</Text>
+                  </Pressable>
+                  
+                  <Pressable style={styles.photoOutlineButton} onPress={handlePickImage}>
+                    <Ionicons name="images-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: theme.spacing.sm }} />
+                    <Text style={styles.photoOutlineText}>Upload from Gallery</Text>
+                  </Pressable>
+                </View>
+              ) : (
+                <View style={{ width: '100%', alignItems: 'center', marginBottom: theme.spacing.lg }}>
+                  <Image source={{ uri: selectedImageUri }} style={{ width: 120, height: 120, borderRadius: theme.borderRadius.sm, marginBottom: theme.spacing.md }} />
+                  <Pressable style={styles.linkButton} onPress={() => { setSelectedImageUri(null); setSelectedImageBase64(null); }}>
+                    <Text style={styles.linkButtonText}>Choose different photo</Text>
+                  </Pressable>
+                </View>
+              )}
+              
+              <Button 
+                title="Generate Quiz" 
+                onPress={handleGenerateFromSelectedImage} 
+                style={styles.uploadButton}
+                disabled={!selectedImageBase64}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
 
       {/* AI Quiz creation menu modal */}
       <Modal visible={showAiMenu} transparent animationType="fade">
@@ -857,28 +985,47 @@ export const NewQuizScreen = () => {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
               <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
                 <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-              <Text style={styles.levelTitle}>Create AI Quiz</Text>
-              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
-                Upload a page or take a photo, and AI will create original quiz questions based on the concept.
-              </Text>
+              <Text style={styles.levelTitle}>Create a Quiz from a Prompt</Text>
               
-              <View style={styles.iconContainer}>
-                <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
+              <Text style={styles.inputLabel}>What situation or skill should this quiz cover? *</Text>
+              <TextInput
+                style={[styles.input, { marginBottom: theme.spacing.md }]}
+                placeholder="e.g. sharing toys at recess..."
+                placeholderTextColor={theme.colors.secondaryText}
+                value={aiPromptSituation}
+                onChangeText={setAiPromptSituation}
+              />
+              
+              <Text style={styles.inputLabel}>How old is your child? *</Text>
+              <View style={[styles.levelChipsContainer, { marginBottom: theme.spacing.md, paddingHorizontal: 0 }]}>
+                {['4-5', '6-7', '8-9', '10+'].map(age => (
+                  <Pressable
+                    key={age}
+                    style={[styles.levelChip, aiPromptAge === age && styles.levelChipSelected]}
+                    onPress={() => setAiPromptAge(age)}
+                  >
+                    <Text style={[styles.levelChipText, aiPromptAge === age && styles.levelChipTextSelected]}>{age}</Text>
+                  </Pressable>
+                ))}
               </View>
               
-              <Button 
-                title="Take Photo" 
-                onPress={takePhoto} 
-                style={styles.uploadButton}
+              <Text style={styles.inputLabel}>Anything specific to keep in mind? (optional)</Text>
+              <TextInput
+                style={[styles.input, { minHeight: 80, textAlignVertical: 'top', marginBottom: theme.spacing.xl }]}
+                placeholder="e.g. gets frustrated easily..."
+                placeholderTextColor={theme.colors.secondaryText}
+                value={aiPromptContext}
+                onChangeText={setAiPromptContext}
+                multiline
+                numberOfLines={3}
               />
               
               <Button 
-                title="Upload from Gallery" 
-                onPress={pickImage} 
-                variant="secondary"
+                title="Generate Quiz" 
+                onPress={handleGenerateFromText} 
                 style={styles.uploadButton}
+                disabled={!aiPromptSituation.trim() || !aiPromptAge}
               />
-              <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
               </Pressable>
               </Pressable>
             </ScrollView>
@@ -899,6 +1046,284 @@ export const NewQuizScreen = () => {
       </Modal>
 
 
+
+      {/* Folder Selection Modal after AI Generation */}
+      <Modal visible={showFolderSelection} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={cancelFolderSelection}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.levelTitle}>Select a Folder</Text>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg }]}>
+                Where would you like to save these generated quizzes?
+              </Text>
+              
+              <ScrollView style={{ width: '100%', maxHeight: 300 }}>
+                {folders.map(folder => (
+                  <Pressable 
+                    key={folder.id} 
+                    style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                    onPress={() => handleSaveToFolder(folder.id)}
+                  >
+                    <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={styles.modalOptionText}>{folder.name}</Text>
+                  </Pressable>
+                ))}
+                <Pressable 
+                  style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                  onPress={() => handleSaveToFolder(undefined)}
+                >
+                  <Ionicons name="home-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Main Library (No Folder)</Text>
+                </Pressable>
+              </ScrollView>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={cancelFolderSelection} 
+                style={{ width: '100%', marginTop: theme.spacing.md }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Action Menu Modal */}
+      <Modal visible={showActionMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowActionMenu(false)}>
+          <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
+            <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>{actionMenuCategory?.title || 'Options'}</Text>
+              
+              <View style={{ width: '100%', gap: theme.spacing.sm }}>
+                <Pressable 
+                  style={[styles.modalOptionCard, !actionMenuCategory?.isCustom && { opacity: 0.5 }]}
+                  disabled={!actionMenuCategory?.isCustom}
+                  onPress={() => {
+                    setShowActionMenu(false);
+                    handleOpenRename(actionMenuCategory);
+                  }}
+                >
+                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Rename</Text>
+                </Pressable>
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowActionMenu(false);
+                    setShowMoveFolderMenu(true);
+                  }}
+                >
+                  <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Move to Folder</Text>
+                </Pressable>
+
+                {actionMenuCategory?.folderId && (
+                  <Pressable 
+                    style={styles.modalOptionCard}
+                    onPress={() => {
+                      moveQuizToFolder(actionMenuCategory.id, undefined);
+                      showToast({ message: 'Removed from folder' });
+                      setShowActionMenu(false);
+                    }}
+                  >
+                    <Ionicons name="log-out-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={styles.modalOptionText}>Remove from Folder</Text>
+                  </Pressable>
+                )}
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowActionMenu(false);
+                    setDeletedCategories(prev => {
+                      const newSet = new Set(prev);
+                      newSet.add(actionMenuCategory.id);
+                      return newSet;
+                    });
+                    if (actionMenuCategory?.isCustom) {
+                      setQuizToDelete(actionMenuCategory.id);
+                      setShowDeletePin(true);
+                    }
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Delete</Text>
+                </Pressable>
+              </View>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={() => setShowActionMenu(false)} 
+                style={{ width: '100%', marginTop: theme.spacing.xl }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Folder Action Menu Modal */}
+      <Modal visible={showFolderActionMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowFolderActionMenu(false)}>
+          <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
+            <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>{actionMenuFolder?.name || 'Folder Options'}</Text>
+              
+              <View style={{ width: '100%', gap: theme.spacing.sm }}>
+                <Pressable 
+                  style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                  onPress={() => {
+                    setShowFolderActionMenu(false);
+                    setRenameFolderName(actionMenuFolder?.name || '');
+                    setShowRenameFolderModal(true);
+                  }}
+                >
+                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Rename</Text>
+                </Pressable>
+                
+                <Pressable 
+                  style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                  onPress={() => {
+                    setShowFolderActionMenu(false);
+                    setShowMoveFolderMenu2(true);
+                  }}
+                >
+                  <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Move to Folder</Text>
+                </Pressable>
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowFolderActionMenu(false);
+                    removeFolder(actionMenuFolder?.id);
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Delete</Text>
+                </Pressable>
+              </View>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={() => setShowFolderActionMenu(false)} 
+                style={{ width: '100%', marginTop: theme.spacing.xl }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Move to Folder Selection Modal */}
+      <Modal visible={showMoveFolderMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowMoveFolderMenu(false)}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.levelTitle}>Select a Folder</Text>
+              
+              <ScrollView style={{ width: '100%', maxHeight: 300, marginTop: theme.spacing.md }}>
+                {folders.filter(f => f.tab === activeTab).length === 0 && (
+                  <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, marginBottom: theme.spacing.md, fontStyle: 'italic' }}>
+                    No folders created yet.
+                  </Text>
+                )}
+                {folders.filter(f => f.tab === activeTab).map(folder => (
+                  <Pressable 
+                    key={folder.id} 
+                    style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                    onPress={() => {
+                      moveQuizToFolder(actionMenuCategory.id, folder.id);
+                      showToast({ message: 'Moved to folder' });
+                      setShowMoveFolderMenu(false);
+                    }}
+                  >
+                    <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={styles.modalOptionText}>{folder.name}</Text>
+                  </Pressable>
+                ))}
+                
+                <Pressable 
+                  style={[styles.modalOptionCard, { marginBottom: 8, justifyContent: 'center' }]}
+                  onPress={() => {
+                    setShowMoveFolderMenu(false);
+                    setShowFolderModal(true);
+                    setPendingDragQuizId(actionMenuCategory?.id);
+                  }}
+                >
+                  <Ionicons name="add-circle-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 8 }} />
+                  <Text style={[styles.modalOptionText, { color: theme.colors.text }]}>Create New Folder</Text>
+                </Pressable>
+              </ScrollView>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={() => setShowMoveFolderMenu(false)} 
+                style={{ width: '100%', marginTop: theme.spacing.md }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Move Folder to Folder Selection Modal */}
+      <Modal visible={showMoveFolderMenu2} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowMoveFolderMenu2(false)}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.levelTitle}>Move Folder To...</Text>
+              
+              <ScrollView style={{ width: '100%', maxHeight: 300, marginTop: theme.spacing.md }}>
+                {folders.filter(f => f.tab === activeTab && f.id !== actionMenuFolder?.id && !f.parentId).length === 0 && (
+                  <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, marginBottom: theme.spacing.md, fontStyle: 'italic' }}>
+                    No other folders available.
+                  </Text>
+                )}
+                {/* Option to move back to Root Level */}
+                {actionMenuFolder?.parentId && (
+                  <Pressable 
+                    style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                    onPress={() => {
+                      moveFolderToFolder(actionMenuFolder.id, undefined);
+                      showToast({ message: 'Moved to main library' });
+                      setShowMoveFolderMenu2(false);
+                    }}
+                  >
+                    <Ionicons name="home-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={styles.modalOptionText}>Main Library (Root)</Text>
+                  </Pressable>
+                )}
+                
+                {folders.filter(f => f.tab === activeTab && f.id !== actionMenuFolder?.id && !f.parentId).map(folder => (
+                  <Pressable 
+                    key={folder.id} 
+                    style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                    onPress={() => {
+                      moveFolderToFolder(actionMenuFolder.id, folder.id);
+                      showToast({ message: 'Moved to folder' });
+                      setShowMoveFolderMenu2(false);
+                    }}
+                  >
+                    <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={styles.modalOptionText}>{folder.name}</Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={() => setShowMoveFolderMenu2(false)} 
+                style={{ width: '100%', marginTop: theme.spacing.md }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
 
       <Modal visible={showDeletePin} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => {
@@ -982,6 +1407,30 @@ export const NewQuizScreen = () => {
         </View>
       </Modal>
 
+      {/* Rename Folder Modal */}
+      <Modal visible={showRenameFolderModal} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowRenameFolderModal(false)}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.pinTitle}>Rename Folder</Text>
+              
+              <TextInput
+                style={[styles.input, { width: '100%', marginBottom: theme.spacing.lg }]}
+                value={renameFolderName}
+                onChangeText={setRenameFolderName}
+                placeholder="Folder Name"
+                maxLength={40}
+              />
+              <Button
+                title="Save"
+                onPress={handleSaveFolderRename}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
     </View>
   );
 };
@@ -1009,7 +1458,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.md,
   },
   bentoItem: {
-    width: '47%',
+    width: '100%',
   },
   emptyAiContainer: {
     alignItems: 'center',
@@ -1237,6 +1686,16 @@ const styles = StyleSheet.create({
     ...theme.typography.subheading,
     marginBottom: theme.spacing.md,
   },
+  photoIconContainer: {
+    marginBottom: theme.spacing.md,
+    width: 60,
+    height: 60,
+    borderRadius: theme.borderRadius.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+  },
   iconContainer: {
     width: 120,
     height: 120,
@@ -1394,11 +1853,35 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.colors.text,
   },
+  photoOutlineButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.full,
+    borderWidth: 2,
+    borderColor: theme.colors.neutralGrey,
+    borderStyle: 'dashed',
+    width: '100%',
+  },
+  photoOutlineText: {
+    ...theme.typography.button,
+    color: theme.colors.text,
+  },
   modalTitle: {
     ...theme.typography.heading,
     color: theme.colors.text,
     marginBottom: theme.spacing.md,
     textAlign: 'center',
+  },
+  inputLabel: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.text,
+    marginBottom: theme.spacing.xs,
+    alignSelf: 'flex-start',
   },
   modalActions: {
     flexDirection: 'row',
@@ -1447,13 +1930,13 @@ const styles = StyleSheet.create({
   addFolderCard: {
     width: '100%',
     height: 140,
-    backgroundColor: 'transparent',
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
-    borderWidth: 2,
-    borderColor: '#94A3B8',
-    borderStyle: 'dashed',
+    borderWidth: 0,
+    borderColor: theme.colors.stroke,
     alignItems: 'center',
     justifyContent: 'center',
+    ...theme.shadows.soft,
   },
   addFolderIconContainer: {
     width: 60,
@@ -1470,5 +1953,19 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
     textAlign: 'center',
     color: theme.colors.secondaryText,
+  },
+  modalOptionCard: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+  },
+  modalOptionText: {
+    ...theme.typography.body,
+    color: theme.colors.text,
   },
 });

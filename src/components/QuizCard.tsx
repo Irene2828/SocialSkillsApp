@@ -10,9 +10,10 @@ import { ScalePressable } from './ScalePressable';
 interface QuizCardProps {
   category: QuizCategory;
   onPressStart: () => void;
-  onDelete?: () => void;
-  onRename?: () => void;
+  onOptionsPress?: () => void;
   isFeatured?: boolean;
+  isDeleted?: boolean;
+  onUndo?: () => void;
 }
 
 const getCategoryIcon = (category: QuizCategory): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
@@ -31,7 +32,7 @@ const getCategoryIcon = (category: QuizCategory): { name: string; family: 'Ionic
 };
 
 
-export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDelete, onRename, isFeatured }) => {
+export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOptionsPress, isFeatured, isDeleted, onUndo }) => {
   const { name: iconName, family: iconFamily } = getCategoryIcon(category);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -40,13 +41,26 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
   const iconBackgroundColor = theme.colors.errorSoft;
   const iconColor = theme.colors.secondaryText;
 
+  if (isDeleted) {
+    return (
+      <View style={[styles.container, isFeatured && styles.featuredContainer]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor, opacity: 0.5, alignItems: 'center', justifyContent: 'center' }]}>
+          <Text style={styles.title}>Deleted</Text>
+          <Pressable onPress={onUndo} style={{ marginTop: 8, padding: 8, backgroundColor: theme.colors.primarySoft, borderRadius: 8 }}>
+            <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Undo</Text>
+          </Pressable>
+        </Card>
+      </View>
+    );
+  }
+
   return (
-    <ScalePressable 
-      onPress={onPressStart} 
-      onLongPress={onDelete}
-      style={[styles.container, isFeatured && styles.featuredContainer]}
-    >
-      <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor }]}>
+    <View style={[styles.container, isFeatured && styles.featuredContainer]}>
+      <ScalePressable 
+        onPress={onPressStart} 
+        style={{ flex: 1 }}
+      >
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
@@ -59,23 +73,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
             isFeatured && styles.featuredIconContainer,
             {
               borderColor: iconBorderColor,
-              backgroundColor: iconBackgroundColor
+              backgroundColor: iconBackgroundColor,
+              justifyContent: 'center',
+              alignItems: 'center'
             }
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 28 : 32} color={iconColor} style={styles.icon} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 28 : 32} color={iconColor} style={styles.icon} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
+            <Text style={{ fontSize: 10, color: theme.colors.secondaryText, fontWeight: '600' }}>1 quiz</Text>
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
-            {isFeatured && (
-              <View style={styles.recommendedBadge}>
-                <Text style={styles.recommendedBadgeText}>RECOMMENDED</Text>
-              </View>
-            )}
-            <Text style={[styles.title, isFeatured && styles.featuredTitle]}>
+            <Text style={[styles.title, isFeatured && styles.featuredTitle]} numberOfLines={2}>
               {category.title}
             </Text>
             {isFeatured && category.description && (
@@ -86,37 +98,47 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onDe
           </View>
         </View>
 
-        {category.isCustom && onRename && (
+        </Card>
+      </ScalePressable>
+
+      {onOptionsPress && (
+        <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
           <Pressable 
-            onPress={(e) => {
-              if (e && e.stopPropagation) e.stopPropagation();
-              onRename();
+            hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+            onPress={(e) => { 
+              if (e && e.stopPropagation) e.stopPropagation(); 
+              onOptionsPress(); 
             }} 
-            style={styles.dotsButton}
+            style={({ pressed }) => [
+              {
+                padding: 6,
+                borderRadius: 20,
+                backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }
+            ]}
           >
-            <Ionicons name="pencil-outline" size={16} color="#9CA3AF" />
+            <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
           </Pressable>
-        )}
-
-
-      </Card>
-    </ScalePressable>
+        </View>
+      )}
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
   },
   featuredContainer: {
     width: '100%',
   },
   card: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing.lg,
-    height: 140,
+    padding: theme.spacing.md,
+    height: 150,
     position: 'relative',
     borderWidth: 0,
   },
@@ -139,6 +161,8 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     width: '100%',
+    height: 40,
+    justifyContent: 'flex-start',
   },
   featuredTextContainer: {
     alignItems: 'flex-start',
@@ -178,7 +202,7 @@ const styles = StyleSheet.create({
     color: '#3F6212', // Darker green for readability
   },
   iconContainer: {
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,

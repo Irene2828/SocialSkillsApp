@@ -22,7 +22,7 @@ import { useFeedback } from '../context/FeedbackContext';
 import { theme, FONTS } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
-import { SettingsModal } from '../components/SettingsModal';
+import { TopBar } from '../components/TopBar';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
@@ -141,7 +141,7 @@ export const MyRewardsScreen = () => {
     ]).start();
   };
   const [redeemedReward, setRedeemedReward] = useState<any>(null);
-  const [showSettings, setShowSettings] = useState(false);
+
   const [editingRewardId, setEditingRewardId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'available' | 'unlocked'>('available');
   const [showPinInput, setShowPinInput] = useState(false);
@@ -377,6 +377,7 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
+        <TopBar title="Rewards" />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
@@ -646,7 +647,7 @@ export const MyRewardsScreen = () => {
           </View>
         </View>
       )}
-      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+
     </View>
   );
 };

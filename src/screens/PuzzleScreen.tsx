@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowD
 import * as ImagePicker from 'expo-image-picker';
 import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Header } from '../components/Header';
+import { TopBar } from '../components/TopBar';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
@@ -355,22 +355,18 @@ export const PuzzleScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <View style={{ position: 'absolute', top: 16, right: theme.spacing.lg, zIndex: 100, flexDirection: 'row', alignItems: 'center' }}>
-          {isEditMode && (
-            <Pressable onPress={() => setIsEditMode(false)} style={{ padding: 8, marginRight: 8, backgroundColor: theme.colors.primary, borderRadius: 16, paddingHorizontal: 12 }}>
-              <Text style={{ ...theme.typography.button, color: theme.colors.white }}>Done</Text>
-            </Pressable>
-          )}
-          <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
-            <Ionicons name="settings-outline" size={24} color={theme.colors.text} />
-          </Pressable>
-        </View>
+        <TopBar 
+          title="Puzzles"
+          rightComponent={
+            isEditMode ? (
+              <Pressable onPress={() => setIsEditMode(false)} style={{ padding: 8, marginRight: 8, backgroundColor: theme.colors.primary, borderRadius: 16, paddingHorizontal: 12 }}>
+                <Text style={{ ...theme.typography.button, color: theme.colors.white }}>Done</Text>
+              </Pressable>
+            ) : undefined
+          }
+        />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <Header 
-            title="Have Fun Solving Puzzles" 
-            style={{ marginBottom: theme.spacing.md, marginTop: 4 }} 
-          />
           
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
