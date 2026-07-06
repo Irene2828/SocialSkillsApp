@@ -30,7 +30,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
     <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
-          <View style={[styles.iconContainer, { borderColor: theme.colors.stroke, backgroundColor: theme.colors.errorSoft }]}>
+          <View style={styles.iconContainer}>
             <Ionicons name="folder-outline" size={32} color={theme.colors.secondaryText} />
           </View>
           <View style={styles.textContainer}>
@@ -94,16 +94,13 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     width: '100%',
-    height: 40,
+    height: 56,
     justifyContent: 'flex-start',
   },
   iconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: theme.borderRadius.sm,
-    backgroundColor: '#F7FEE7',
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
+    marginTop: 12,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.sm,

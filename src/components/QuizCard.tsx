@@ -71,24 +71,20 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
           <View style={[
             styles.iconContainer, 
             isFeatured && styles.featuredIconContainer,
-            {
-              borderColor: iconBorderColor,
-              backgroundColor: iconBackgroundColor,
-              justifyContent: 'center',
-              alignItems: 'center'
-            }
           ]}>
             {iconFamily === 'FontAwesome5' ? (
               <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
               <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
-            <Text style={{ fontSize: 10, color: theme.colors.secondaryText, fontWeight: '600' }}>1 quiz</Text>
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text style={[styles.title, isFeatured && styles.featuredTitle]} numberOfLines={2}>
               {category.title}
+            </Text>
+            <Text style={{ fontSize: 10, color: theme.colors.secondaryText, fontWeight: '600', marginTop: 2 }}>
+              1 quiz
             </Text>
             {isFeatured && category.description && (
               <Text style={styles.descriptionText}>
@@ -161,7 +157,7 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     width: '100%',
-    height: 40,
+    height: 56,
     justifyContent: 'flex-start',
   },
   featuredTextContainer: {
@@ -202,13 +198,12 @@ const styles = StyleSheet.create({
     color: '#3F6212', // Darker green for readability
   },
   iconContainer: {
+    marginTop: 12,
     marginBottom: theme.spacing.sm,
-    width: 60,
-    height: 60,
-    borderRadius: theme.borderRadius.sm,
+    width: 44,
+    height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
   },
   featuredIconContainer: {
     marginBottom: 0,
