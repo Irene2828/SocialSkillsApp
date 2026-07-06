@@ -83,7 +83,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             <Text style={[styles.title, isFeatured && styles.featuredTitle]} numberOfLines={2}>
               {category.title}
             </Text>
-            <Text style={{ fontSize: 10, color: theme.colors.secondaryText, fontWeight: '600', marginTop: 2 }}>
+            <Text style={{ fontSize: 12, color: theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
               1 quiz
             </Text>
             {isFeatured && category.description && (
