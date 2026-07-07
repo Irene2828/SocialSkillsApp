@@ -10,7 +10,7 @@ interface ScreenWrapperProps extends ViewProps {
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, transparent, ...props }) => {
   return (
     <LinearGradient
-      colors={transparent ? ['transparent', 'transparent'] : ['#F7FEE7', '#FFFFFF']}
+      colors={transparent ? ['transparent', 'transparent', 'transparent'] : ['#FFFFFF', theme.colors.primarySoft, '#FFFFFF']}
       style={{ flex: 1 }}
     >
       <SafeAreaView style={[styles.safeArea, { backgroundColor: 'transparent' }]}>

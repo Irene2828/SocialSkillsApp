@@ -85,6 +85,7 @@ export const NewQuizScreen = () => {
   const [isDraggingSomething, setIsDraggingSomething] = useState(false);
 
   const [showActionMenu, setShowActionMenu] = useState(false);
+  const [showGenerateMenu, setShowGenerateMenu] = useState(false);
   const [actionMenuCategory, setActionMenuCategory] = useState<any>(null);
   const [showMoveFolderMenu, setShowMoveFolderMenu] = useState(false);
 
@@ -623,25 +624,13 @@ export const NewQuizScreen = () => {
           })}
         </View>
 
-        {activeTab === 'general' && (
-          <View style={styles.createAiButtonContainer}>
-            <Button
-              title="Turn Screenshot into a Quiz"
-              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
-              onPress={() => {
-                setSelectedImageBase64(null);
-                setSelectedImageUri(null);
-                setShowPhotoMenu(true);
-              }}
-            />
-            <Button
-              title="Turn Prompt into a Quiz"
-              variant="outline"
-              style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
-              onPress={() => setShowAiMenu(true)}
-            />
-          </View>
-        )}
+        <View style={styles.createAiButtonContainer}>
+          <Button
+            title="Generate New Quiz"
+            style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
+            onPress={() => setShowGenerateMenu(true)}
+          />
+        </View>
       </ScrollView>
     );
   };
@@ -1011,6 +1000,50 @@ export const NewQuizScreen = () => {
                 onPress={cancelFolderSelection} 
                 style={{ width: '100%', marginTop: theme.spacing.md }}
               />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Generate Menu Modal */}
+      <Modal visible={showGenerateMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowGenerateMenu(false)}>
+          <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
+            <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>Generate New Quiz</Text>
+              
+              <View style={{ width: '100%', gap: theme.spacing.sm }}>
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowGenerateMenu(false);
+                    setSelectedImageBase64(null);
+                    setSelectedImageUri(null);
+                    setShowPhotoMenu(true);
+                  }}
+                >
+                  <Ionicons name="camera-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Generate from Screenshot</Text>
+                </Pressable>
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowGenerateMenu(false);
+                    setShowAiMenu(true);
+                  }}
+                >
+                  <Ionicons name="sparkles-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Generate from Prompt</Text>
+                </Pressable>
+                
+                <Pressable 
+                  style={[styles.modalOptionCard, { justifyContent: 'center', marginTop: 12 }]}
+                  onPress={() => setShowGenerateMenu(false)}
+                >
+                  <Text style={[styles.modalOptionText, { color: theme.colors.danger, textAlign: 'center' }]}>Cancel</Text>
+                </Pressable>
+              </View>
             </Pressable>
           </View>
         </Pressable>
