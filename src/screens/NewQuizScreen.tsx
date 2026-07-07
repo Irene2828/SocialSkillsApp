@@ -593,16 +593,16 @@ export const NewQuizScreen = () => {
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'general' && { backgroundColor: '#BAE6FD', opacity: 0.4 }]} 
+            style={[styles.tab, activeTab === 'general' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
             onPress={() => setActiveTab('general')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: theme.colors.text }]}>Social Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: '#374151', fontWeight: '700' }]}>Social Skills</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'ai' && { backgroundColor: '#BAE6FD', opacity: 0.4 }]} 
+            style={[styles.tab, activeTab === 'ai' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: theme.colors.text }]}>Math Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: '#374151', fontWeight: '700' }]}>Math Skills</Text>
           </Pressable>
         </View>
 

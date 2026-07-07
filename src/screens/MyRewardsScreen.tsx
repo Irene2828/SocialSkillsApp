@@ -397,13 +397,13 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
             onPress={() => setActiveTab('available')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: theme.colors.text }]}>All Rewards</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontWeight: '700' }]}>All Rewards</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: theme.colors.text }]}>Unlocked</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontWeight: '700' }]}>Unlocked</Text>
           </Pressable>
         </View>
 
@@ -833,8 +833,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: '#BAE6FD',
-    opacity: 0.4,
+    backgroundColor: 'rgba(186, 230, 253, 0.4)',
+    borderColor: '#BAE6FD',
+    borderWidth: 1,
   },
   tabText: {
     ...theme.typography.button,
