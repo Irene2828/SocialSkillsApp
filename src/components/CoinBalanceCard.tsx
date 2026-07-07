@@ -41,7 +41,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
               color="#84CC16" 
               style={{ 
                 marginRight: theme.spacing.md,
-                textShadowColor: '#9CA3AF',
+                textShadowColor: '#4B5563',
                 textShadowOffset: { width: -0.5, height: 0.5 },
                 textShadowRadius: 1 
               }} 

@@ -754,11 +754,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 40,
     borderRadius: 20,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.shadows.soft,
   },
   screenFolderTab: {
     minWidth: 120,

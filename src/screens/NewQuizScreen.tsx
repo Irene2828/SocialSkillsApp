@@ -659,7 +659,7 @@ export const NewQuizScreen = () => {
           size={20} 
           color="#84CC16" 
           style={{
-            textShadowColor: '#9CA3AF',
+            textShadowColor: '#4B5563',
             textShadowOffset: { width: -0.5, height: 0.5 },
             textShadowRadius: 1
           }}
@@ -833,9 +833,9 @@ export const NewQuizScreen = () => {
               <FontAwesome5 
                 name="coins" 
                 size={24} 
-                color={theme.colors.primary} 
+                color="#84CC16" 
                 style={{
-                  textShadowColor: '#9CA3AF',
+                  textShadowColor: '#4B5563',
                   textShadowOffset: { width: -0.5, height: 0.5 },
                   textShadowRadius: 1
                 }}
@@ -1557,11 +1557,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     height: 40,
     borderRadius: 20,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    ...theme.shadows.soft,
   },
 
   modalOverlay: {
