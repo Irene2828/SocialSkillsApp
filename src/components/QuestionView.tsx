@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable, ScrollView } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -23,6 +23,8 @@ interface QuestionViewProps {
   showPart2?: boolean;
   /** Called when Part 1 is answered correctly and has a Part 2 */
   onPart1Complete?: () => void;
+  /** Ref to parent ScrollView for auto-scrolling to Part 2 */
+  scrollViewRef?: React.RefObject<ScrollView | null>;
 }
 
 export const QuestionView: React.FC<QuestionViewProps> = ({
@@ -36,6 +38,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   whyQuestion,
   showPart2 = false,
   onPart1Complete,
+  scrollViewRef,
 }) => {
   const { mood } = useMood();
   const isRocket = mood === 'rocket';
@@ -86,7 +89,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
     ]).start();
   }, [question.id]);
 
-  // Animate Part 2 in when showPart2 becomes true
+  // Animate Part 2 in when showPart2 becomes true, and auto-scroll
   useEffect(() => {
     if (showPart2) {
       part2FadeAnim.setValue(0);
@@ -95,6 +98,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         duration: 400,
         useNativeDriver: true,
       }).start();
+      // Auto-scroll to bottom to show Part 2
+      setTimeout(() => {
+        scrollViewRef?.current?.scrollToEnd?.({ animated: true });
+      }, 150);
     }
   }, [showPart2]);
 
@@ -288,12 +295,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
       {/* ===== PART 2 (inline, appears below Part 1 when showPart2 is true) ===== */}
       {showPart2 && whyQuestion && (
-        <Animated.View style={[styles.animatedContainer, { opacity: part2FadeAnim }]}>
-          <View style={styles.part2Divider}>
-            <View style={styles.part2DividerLine} />
-            <Text style={[styles.part2DividerText, isRocket && { color: 'rgba(255,255,255,0.6)' }]}>Part 2</Text>
-            <View style={styles.part2DividerLine} />
-          </View>
+        <Animated.View style={[styles.animatedContainer, { opacity: part2FadeAnim, marginTop: theme.spacing.md }]}>
 
           <View style={styles.cardWrapper}>
             <Card style={styles.scenarioCard}>

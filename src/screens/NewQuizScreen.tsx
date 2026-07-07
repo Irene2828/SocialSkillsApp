@@ -60,6 +60,7 @@ export const NewQuizScreen = () => {
   const baseTextColor = isDark ? '#FFFFFF' : theme.colors.text;
   const subTextColor = isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
   const route = useRoute<any>();
+  const quizScrollRef = useRef<ScrollView>(null);
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -731,22 +732,20 @@ export const NewQuizScreen = () => {
             </View>
           </View>
 
-          {/* Progress bar row: coins left, bar fills right */}
+          {/* Progress bar row: bar left-aligned with back button, coins on right, vertically centered */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-            {renderCoinJar()}
-            <View style={{ flex: 1 }}>
-              {selectedCategory === 'iq_word_problems' ? (
-                <ProgressBar 
-                  current={currentWordProblemStep + 1} 
-                  total={totalWordProblemSteps} 
-                />
-              ) : (
-                <ProgressBar 
-                  current={currentIndex + 1} 
-                  total={currentQuestions.length} 
-                />
-              )}
+            <View style={{ flex: 1, marginBottom: 0 }}>
+              <View style={{ marginBottom: 0, paddingHorizontal: 0 }}>
+                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden' }}>
+                  {selectedCategory === 'iq_word_problems' ? (
+                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                  ) : (
+                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                  )}
+                </View>
+              </View>
             </View>
+            {renderCoinJar()}
           </View>
 
           {/* Caption below progress bar */}
@@ -762,7 +761,7 @@ export const NewQuizScreen = () => {
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
+        <ScrollView ref={quizScrollRef} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
           {selectedCategory === 'iq_word_problems' ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -800,6 +799,7 @@ export const NewQuizScreen = () => {
                 whyQuestion={whyQ}
                 showPart2={isWhyPhase}
                 onPart1Complete={() => setIsWhyPhase(true)}
+                scrollViewRef={quizScrollRef}
               />
             );
           })()}
