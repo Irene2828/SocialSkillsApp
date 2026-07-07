@@ -192,7 +192,7 @@ export const PuzzleScreen = () => {
         setShowDeletePin(false);
         setDeletePin('');
         if (actionMenuPuzzle) {
-          if (actionMenuPuzzle.id.startsWith('p_')) {
+          if (PUZZLES.some(p => p.id === actionMenuPuzzle.id)) {
             const newHidden = [...hiddenPuzzles, actionMenuPuzzle.id];
             setHiddenPuzzles(newHidden);
             safeStorage.set('@hidden_puzzles', newHidden);

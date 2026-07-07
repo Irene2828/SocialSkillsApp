@@ -750,11 +750,11 @@ export const NewQuizScreen = () => {
 
           {/* Caption below progress bar */}
           {selectedCategory === 'iq_word_problems' ? (
-            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
+            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
               Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
             </Text>
           ) : (
-            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
+            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
               Question {currentIndex + 1} of {currentQuestions.length}
             </Text>
           )}
