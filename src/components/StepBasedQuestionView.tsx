@@ -7,6 +7,7 @@ import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
+import { useMood } from '../context/MoodContext';
 
 interface StepBasedQuestionViewProps {
   question: StepBasedQuestion;
@@ -16,12 +17,20 @@ interface StepBasedQuestionViewProps {
 }
 
 export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
+  const { mood } = useMood();
+  const isRocket = mood === 'rocket';
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
@@ -108,9 +117,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     <View style={styles.container}>
       <Card style={styles.mainCard}>
         {/* Persistent Problem Text */}
-        <Text style={styles.situationalLabel}>Situational problem:</Text>
-        <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }]}>{question.problemText}</Text>
-        <Text style={styles.microcopy}>(Don't answer yet, follow steps below first)</Text>
+        <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
+        <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
+        <Text style={[styles.microcopy, isRocket && { color: 'rgba(255, 255, 255, 0.6)' }]}>(Don't answer yet, follow steps below first)</Text>
         
         {/* Subtle Step Indicator (Dots) - inside the card */}
         {question.steps.length > 1 && (
@@ -133,7 +142,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           {currentStep ? (
             <View style={styles.promptContainer}>
               <View style={styles.stepDivider} />
-              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }]}>{currentStep.prompt}</Text>
+              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{currentStep.prompt}</Text>
             </View>
           ) : null}
         </Animated.View>
@@ -175,13 +184,20 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={styles.modalOverlay} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && isFinalStep && <SilverDust />}
-          <Pressable style={styles.feedbackContainerBackground} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+          <Pressable style={[
+            styles.feedbackContainerBackground,
+            isRocket && {
+              backgroundColor: 'rgba(255, 255, 255, 0.35)',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              borderWidth: 1.5,
+            }
+          ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               
               <View style={styles.feedbackTitleContainer}>
-                <Text style={styles.feedbackTitle}>
+                <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
                     ? (isFinalStep ? 'Correct!' : "That's right!") 
                     : "Not quite, try again!"}
@@ -200,13 +216,13 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                       textShadowRadius: 1
                     }}
                   />
-                  <Text style={styles.coinRewardText}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
               {displayIsCorrect && currentStep && (
-                <View style={styles.dashedExplanationContainer}>
-                  <Text style={styles.explanationText}>{currentStep.explanation}</Text>
+                <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
+                  <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{currentStep.explanation}</Text>
                 </View>
               )}
 

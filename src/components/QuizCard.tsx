@@ -84,7 +84,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             <Text style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} numberOfLines={2}>
               {category.title}
             </Text>
-            <Text style={{ fontSize: 12, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
+            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
               1 quiz
             </Text>
             {isFeatured && category.description && (

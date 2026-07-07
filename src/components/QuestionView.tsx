@@ -7,6 +7,7 @@ import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
+import { useMood } from '../context/MoodContext';
 
 interface QuestionViewProps {
   question: Question;
@@ -19,11 +20,19 @@ interface QuestionViewProps {
 }
 
 export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName, showCoinReward = true, showExplanation = true, partLabel }) => {
+  const { mood } = useMood();
+  const isRocket = mood === 'rocket';
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
 
   if (question.id !== currentQuestionId) {
     setSelectedIndex(null);
@@ -88,11 +97,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         <View style={styles.cardWrapper}>
           <Card style={styles.scenarioCard}>
             {partLabel && (
-              <Text style={styles.partLabelText}>{partLabel}</Text>
+              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{partLabel}</Text>
             )}
-            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }]}>{question.scenario}</Text>
+            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.scenario}</Text>
           {question.prompt && (
-            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }]}>{question.prompt}</Text>
+            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.prompt}</Text>
           )}
           </Card>
         </View>
@@ -129,13 +138,20 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={styles.modalOverlay} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && <SilverDust />}
-          <Pressable style={styles.feedbackContainerBackground} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+          <Pressable style={[
+            styles.feedbackContainerBackground,
+            isRocket && {
+              backgroundColor: 'rgba(255, 255, 255, 0.35)',
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              borderWidth: 1.5,
+            }
+          ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               
               <View style={styles.feedbackTitleContainer}>
-                <Text style={styles.feedbackTitle}>
+                <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
                     ? (showCoinReward ? 'Correct!' : "That's correct!") 
                     : "Not quite, try again!"}
@@ -154,15 +170,15 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
                       textShadowRadius: 1
                     }}
                   />
-                  <Text style={styles.coinRewardText}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
               {displayIsCorrect ? (
                 <>
                   {showExplanation && (
-                    <View style={styles.dashedExplanationContainer}>
-                      <Text style={styles.explanationText}>{question.explanation}</Text>
+                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
+                      <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.explanation}</Text>
                     </View>
                   )}
                   <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>

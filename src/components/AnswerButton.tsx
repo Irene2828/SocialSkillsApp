@@ -3,6 +3,7 @@ import { Text, StyleSheet, View } from 'react-native';
 import { theme } from '../theme';
 import { ScalePressable } from './ScalePressable';
 import { Ionicons } from '@expo/vector-icons';
+import { useMood } from '../context/MoodContext';
 
 interface AnswerButtonProps {
   text: string;
@@ -12,6 +13,9 @@ interface AnswerButtonProps {
 }
 
 export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state, disabled }) => {
+  const { mood } = useMood();
+  const isRocket = mood === 'rocket';
+
   let buttonStyle = styles.defaultButton;
   let textStyle = styles.defaultText;
   let iconName: keyof typeof Ionicons.glyphMap = 'radio-button-off';
@@ -35,15 +39,33 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       break;
   }
 
+  // Glass style overrides for Rocket theme (default state only)
+  const glassButton = isRocket && state === 'default' ? {
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderWidth: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 12,
+    shadowOpacity: 0.08,
+  } : {};
+
+  const glassText = isRocket && state === 'default' ? {
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
+
   return (
     <ScalePressable
-      style={[styles.button, buttonStyle]}
+      style={[styles.button, buttonStyle, glassButton]}
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.text, textStyle]}>{text}</Text>
+      <Text style={[styles.text, textStyle, glassText]}>{text}</Text>
       {state === 'default' ? (
-        <View style={styles.checkboxCircle} />
+        <View style={[styles.checkboxCircle, isRocket && { borderColor: 'rgba(255, 255, 255, 0.6)' }]} />
       ) : (
         <Ionicons name={iconName} size={24} color={iconColor} />
       )}

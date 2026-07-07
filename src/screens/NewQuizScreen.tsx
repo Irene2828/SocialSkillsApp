@@ -56,6 +56,7 @@ export const NewQuizScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
+  const isRocket = mood === 'rocket';
   const baseTextColor = isDark ? '#FFFFFF' : theme.colors.text;
   const subTextColor = isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
   const route = useRoute<any>();
@@ -622,6 +623,7 @@ export const NewQuizScreen = () => {
                   category={category} 
                   isFeatured={false}
                   onPressStart={() => handleSelectQuizCategory(category.id)} 
+                  onOptionsPress={() => handleOpenActionMenu(category)}
                 />
               </View>
             );
@@ -654,7 +656,14 @@ export const NewQuizScreen = () => {
   const renderCoinJar = () => {
     const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     return (
-      <View style={styles.coinJarContainer}>
+      <View style={[
+        styles.coinJarContainer,
+        isRocket && {
+          backgroundColor: 'rgba(255, 255, 255, 0.35)',
+          borderColor: 'rgba(255, 255, 255, 0.3)',
+          borderWidth: 1.5,
+        }
+      ]}>
         <FontAwesome5 
           name="coins" 
           size={20} 
@@ -665,7 +674,7 @@ export const NewQuizScreen = () => {
             textShadowRadius: 1
           }}
         />
-        <Text style={styles.coinJarText}>{score}</Text>
+        <Text style={[styles.coinJarText, isRocket && { color: '#FFFFFF' }]}>{score}</Text>
       </View>
     );
   };
@@ -719,7 +728,15 @@ export const NewQuizScreen = () => {
       <View style={styles.inProgressContainer}>
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2 }}>
-            <Pressable style={styles.backButton} onPress={handleBackToHome}>
+            <Pressable style={[
+              styles.backButton,
+              isRocket && {
+                backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                borderWidth: 1.5,
+                shadowOpacity: 0,
+              }
+            ]} onPress={handleBackToHome}>
               <Ionicons name="arrow-back" size={24} color={baseTextColor} />
               <Text style={{ marginLeft: 4, ...theme.typography.button, color: baseTextColor }}>Back</Text>
             </Pressable>
@@ -730,7 +747,7 @@ export const NewQuizScreen = () => {
           
           {selectedCategory === 'iq_word_problems' ? (
             <>
-              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4 }]}>
+              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4, color: subTextColor }]}>
                 Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
               </Text>
               <ProgressBar 
@@ -740,7 +757,7 @@ export const NewQuizScreen = () => {
             </>
           ) : (
             <>
-              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4, color: subTextColor }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
               <ProgressBar 
                 current={currentIndex + 1} 
                 total={currentQuestions.length} 
