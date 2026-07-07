@@ -78,10 +78,10 @@ export const HomeScreen = () => {
               adjustsFontSizeToFit
               numberOfLines={1}
             >
-              Practice your skills!
+              Turn Knowledge into Rewards!
             </Text>
             <Button
-              title="Start Quiz"
+              title="Start Now"
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
