@@ -75,8 +75,7 @@ const useFloatAnim = () => {
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
-      ]),
-      { iterations: 2 }
+      ])
     ).start();
   }, [floatAnim]);
 
@@ -87,47 +86,59 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // 6 seconds for the full wave to pass
-    Animated.loop(
+    Animated.sequence([
       Animated.timing(anim, {
-        toValue: 1,
-        duration: 6000,
+        toValue: 1, // Full wave pass
+        duration: 4000,
         easing: Easing.linear,
         useNativeDriver: false,
+      }),
+      Animated.timing(anim, {
+        toValue: 2, // Fade to static gradient
+        duration: 1000,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: false,
       })
-    ).start();
+    ]).start();
   }, [anim]);
+
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
 
   return (
     <View style={{ flexDirection: 'row' }}>
       {text.split('').map((char, index) => {
         const center = (startIndex + index) / totalLetters;
         const spread = 0.15; // 15% of the text glows at once
+        const staticGradientColor = gradientColors[startIndex + index] || '#1E3A8A';
 
         const color = anim.interpolate({
           inputRange: [
-            center - 1 - spread, center - 1, center - 1 + spread,
+            -1, // Dummy to ensure strictly increasing
             center - spread, center, center + spread,
-            center + 1 - spread, center + 1, center + 1 + spread,
+            1.5, 2
           ],
           outputRange: [
+            style.color || '#1E3A8A', 
             style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
-            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
-            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
+            style.color || '#1E3A8A', staticGradientColor
           ],
           extrapolate: 'clamp',
         });
         
         const shadowColor = anim.interpolate({
           inputRange: [
-            center - 1 - spread, center - 1, center - 1 + spread,
+            -1,
             center - spread, center, center + spread,
-            center + 1 - spread, center + 1, center + 1 + spread,
+            1.5, 2
           ],
           outputRange: [
+            'rgba(56, 189, 248, 0)',
             'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
+            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0)', // No shadow in static mode
           ],
           extrapolate: 'clamp',
         });
@@ -203,7 +214,7 @@ export const HomeScreen = () => {
             </Text>
 
             <Button
-              title="START NOW"
+              title="Start Now"
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
