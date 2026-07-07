@@ -143,7 +143,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 <FontAwesome5
                   name="coins"
                   size={14}
-                  color={theme.colors.primary}
+                  color="#84CC16"
                   style={{ textShadowColor: '#9CA3AF', textShadowOffset: { width: -0.5, height: 0.5 }, textShadowRadius: 1 }}
                 />
                 <Text style={[styles.costText, isRocket && { color: '#FFFFFF' }]}>{reward.cost}</Text>

@@ -61,7 +61,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         onPress={onPressStart} 
         style={{ flex: 1 }}
       >
-        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor }]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: theme.colors.text }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     minHeight: 150,
     position: 'relative',
-    borderWidth: 0,
+    borderWidth: 1,
   },
   featuredCard: {
     minHeight: 110,
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginTop: 12,
-    marginBottom: theme.spacing.sm,
+    marginBottom: 4,
     width: 44,
     height: 44,
     justifyContent: 'center',

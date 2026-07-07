@@ -38,7 +38,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
             <FontAwesome5 
               name="coins" 
               size={34} 
-              color={theme.colors.primary} 
+              color="#84CC16" 
               style={{ 
                 marginRight: theme.spacing.md,
                 textShadowColor: '#9CA3AF',
