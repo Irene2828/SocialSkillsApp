@@ -562,6 +562,9 @@ export const NewQuizScreen = () => {
       pool = customQuestions;
     } else if (categoryId === 'iq_word_problems') {
       pool = wordProblems;
+    } else {
+      // Individual AI-generated quiz category — pull its questions from customQuestions
+      pool = customQuestions.filter(q => q.category === categoryId);
     }
 
     if (pool.length === 0) {
@@ -570,7 +573,7 @@ export const NewQuizScreen = () => {
     }
 
     const currentOffset = quizOffsets[categoryId] || 0;
-    const limit = categoryId === 'iq_word_problems' ? 1 : 5;
+    const limit = categoryId === 'iq_word_problems' ? 1 : Math.min(5, pool.length);
     let selected: any[] = [];
 
     // Slice questions, wrapping around if necessary
@@ -638,13 +641,32 @@ export const NewQuizScreen = () => {
     setIsWhyPhase(false);
   };
 
-  const renderSelection = () => {
-    // Only display categories meant for the current tab
-    let displayCategories = activeTab === 'general' 
-      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0) || c.id === 'new_folder_1' || c.id === 'new_folder_2')
-      : allCategories.filter(c => c.id === 'iq_word_problems');
+  const [openFolderIds, setOpenFolderIds] = useState<Set<string>>(new Set());
+  const toggleFolder = (folderId: string) => {
+    setOpenFolderIds(prev => {
+      const next = new Set(prev);
+      if (next.has(folderId)) next.delete(folderId);
+      else next.add(folderId);
+      return next;
+    });
+  };
 
-    displayCategories = displayCategories.filter(c => !hiddenCategories.includes(c.id));
+  const renderSelection = () => {
+    // Built-in categories for the current tab
+    const tabFilter = activeTab === 'general' ? 'general' : 'ai';
+    let builtInCategories = activeTab === 'general' 
+      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0))
+      : allCategories.filter(c => c.id === 'iq_word_problems');
+    builtInCategories = builtInCategories.filter(c => !hiddenCategories.includes(c.id));
+
+    // Folders for the current tab (root level only)
+    const tabFolders = folders.filter(f => f.tab === tabFilter && !f.parentId);
+
+    // AI-generated quizzes NOT inside any folder
+    const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
+    const looseCategoryCards = customCategories.filter(
+      c => c.id.startsWith(prefix) && !c.folderId
+    );
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -666,22 +688,64 @@ export const NewQuizScreen = () => {
         </View>
 
         <View ref={bentoGridRef} style={styles.bentoGrid}>
-          {displayCategories.map((category: any) => {
+          {/* Built-in categories */}
+          {builtInCategories.map((category: any) => (
+            <View key={category.id} style={[styles.bentoItem, { width: '47%' }]}>
+              <QuizCard 
+                category={category} 
+                isFeatured={false}
+                onPressStart={() => handleSelectQuizCategory(category.id)} 
+                onOptionsPress={() => handleOpenActionMenu(category)}
+              />
+            </View>
+          ))}
+
+          {/* Folders */}
+          {tabFolders.map(folder => {
+            const quizzesInFolder = customCategories.filter(c => c.folderId === folder.id);
+            const isOpen = openFolderIds.has(folder.id);
+            const quizCount = quizzesInFolder.length;
             return (
-              <View 
-                key={category.id} 
-                style={[styles.bentoItem, { width: '47%' }]}
-              >
-                <QuizCard 
-                  category={category} 
-                  isFeatured={false}
-                  onPressStart={() => handleSelectQuizCategory(category.id)} 
-                  onOptionsPress={() => handleOpenActionMenu(category)}
-                />
-              </View>
+              <React.Fragment key={folder.id}>
+                <View style={[styles.bentoItem, { width: '47%' }]}>
+                  <FolderCard 
+                    name={`${folder.name} (${quizCount})`}
+                    onPress={() => toggleFolder(folder.id)}
+                    onEdit={() => {
+                      setActionMenuFolder(folder);
+                      setShowFolderActionMenu(true);
+                    }}
+                    isDragTarget={hoveredFolderId === folder.id}
+                  />
+                </View>
+                {/* Expanded folder: show quizzes inside */}
+                {isOpen && quizzesInFolder.map(quiz => (
+                  <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+                    <QuizCard 
+                      category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
+                      isFeatured={false}
+                      onPressStart={() => handleStartQuiz(quiz.id)} 
+                      onOptionsPress={() => handleOpenActionMenu(quiz)}
+                    />
+                  </View>
+                ))}
+              </React.Fragment>
             );
           })}
+
+          {/* Loose AI quizzes (not in any folder) */}
+          {looseCategoryCards.map(quiz => (
+            <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+              <QuizCard 
+                category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
+                isFeatured={false}
+                onPressStart={() => handleStartQuiz(quiz.id)} 
+                onOptionsPress={() => handleOpenActionMenu(quiz)}
+              />
+            </View>
+          ))}
           
+          {/* Add Folder placeholder */}
           <View style={[styles.bentoItem, { width: '47%' }]}>
             <Pressable onPress={() => setShowFolderModal(true)}>
               <Card style={{ 
@@ -1080,7 +1144,10 @@ export const NewQuizScreen = () => {
               </Text>
               
               <ScrollView style={{ width: '100%', maxHeight: 200, marginBottom: theme.spacing.lg }}>
-                {folders.map(folder => (
+                {folders.filter(f => f.tab === (activeTab === 'general' ? 'general' : 'ai')).length === 0 && (
+                  <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, fontStyle: 'italic', marginBottom: theme.spacing.md }}>No folders yet. We'll create a new one for you.</Text>
+                )}
+                {folders.filter(f => f.tab === (activeTab === 'general' ? 'general' : 'ai')).map(folder => (
                   <Pressable 
                     key={folder.id} 
                     style={[
