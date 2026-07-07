@@ -16,7 +16,7 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
   iconColor?: string;
 }
 
-export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, ...props }) => {
   const [isPressed, setIsPressed] = useState(false);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -76,7 +76,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
       {isPrimary && (
         <LinearGradient
           colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-          style={StyleSheet.absoluteFillObject}
+          style={StyleSheet.absoluteFill}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
         />
