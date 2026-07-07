@@ -434,7 +434,7 @@ export const NewQuizScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (quizToDelete) {
-          const isBuiltIn = [...QUIZ_CATEGORIES, ...IQ_CATEGORIES].some(c => c.id === quizToDelete);
+          const isBuiltIn = [...QUIZ_CATEGORIES, ...IQ_CATEGORIES, { id: 'new_folder_1' }, { id: 'new_folder_2' }].some(c => c.id === quizToDelete);
           if (isBuiltIn) {
             const newHidden = [...hiddenCategories, quizToDelete];
             setHiddenCategories(newHidden);
@@ -681,24 +681,25 @@ export const NewQuizScreen = () => {
           })}
           
           <View style={[styles.bentoItem, { width: '47%' }]}>
-            <Pressable 
-              style={[
-                styles.quizCard, 
-                { 
-                  justifyContent: 'center', 
-                  alignItems: 'center', 
-                  borderStyle: 'dashed', 
-                  borderWidth: 2, 
-                  backgroundColor: 'transparent',
-                  borderColor: theme.colors.stroke 
-                }
-              ]}
-              onPress={() => setShowFolderModal(true)}
-            >
-              <View style={[styles.iconContainer, { backgroundColor: 'transparent', marginBottom: 8 }]}>
-                <Ionicons name="add" size={32} color={theme.colors.secondaryText} />
-              </View>
-              <Text style={[styles.cardTitle, { color: theme.colors.secondaryText, textAlign: 'center' }]}>Add Folder</Text>
+            <Pressable onPress={() => setShowFolderModal(true)}>
+              <Card style={{ 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                padding: theme.spacing.md,
+                minHeight: 150,
+                borderStyle: 'dashed',
+                borderWidth: 2,
+                borderColor: theme.colors.stroke,
+                backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                opacity: 0.8
+              }}>
+                <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+                  <Ionicons name="add" size={32} color={theme.colors.secondaryText} />
+                </View>
+                <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
+                  <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
+                </View>
+              </Card>
             </Pressable>
           </View>
         </View>
