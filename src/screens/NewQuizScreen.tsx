@@ -657,7 +657,7 @@ export const NewQuizScreen = () => {
         <FontAwesome5 
           name="coins" 
           size={20} 
-          color={theme.colors.primary} 
+          color="#84CC16" 
           style={{
             textShadowColor: '#9CA3AF',
             textShadowOffset: { width: -0.5, height: 0.5 },
@@ -670,15 +670,6 @@ export const NewQuizScreen = () => {
   };
 
 
-  // Phrasing variants for the why-question intro (short — Part 1 is still visible above)
-  const WHY_PROMPTS = [
-    (answer: string) => `Why is "${answer}" the right thing to do?`,
-    (answer: string) => `Why is "${answer}" the best choice?`,
-    (answer: string) => `Why is "${answer}" a good choice here?`,
-    (answer: string) => `Why is "${answer}" the correct answer?`,
-    (answer: string) => `Why is "${answer}" the right move?`,
-  ];
-
   const getDisplayQuestion = (): Question => {
     const baseQuestion = currentQuestions[currentIndex] as Question;
     const hasWhyData = baseQuestion && baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
@@ -687,12 +678,14 @@ export const NewQuizScreen = () => {
 
     if (isWhyPhase) {
       const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
-      const promptFn = WHY_PROMPTS[currentIndex % WHY_PROMPTS.length];
+      const questionText = (baseQuestion.prompt || baseQuestion.scenario).toLowerCase();
+      const isSaying = correctAnswer.includes('"') || questionText.includes('say') || questionText.includes('tell');
+      const actionText = isSaying ? "thing to say" : "thing to do";
 
       return {
         ...baseQuestion,
         id: `${baseQuestion.id}-why`,
-        scenario: promptFn(correctAnswer),
+        scenario: `Now tell me: why this is the right ${actionText}?`,
         prompt: undefined,
         options: baseQuestion.whyOptions!,
         correctAnswerIndex: baseQuestion.correctWhyIndex!,
@@ -738,9 +731,9 @@ export const NewQuizScreen = () => {
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
                 <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden' }}>
                   {selectedCategory === 'iq_word_problems' ? (
-                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: '#84CC16', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   ) : (
-                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: '#84CC16', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   )}
                 </View>
               </View>
@@ -776,11 +769,13 @@ export const NewQuizScreen = () => {
             // Build the Part 2 (why) question inline if applicable
             const whyQ = hasWhyData ? (() => {
               const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
-              const promptFn = WHY_PROMPTS[currentIndex % WHY_PROMPTS.length];
+              const questionText = (baseQuestion.prompt || baseQuestion.scenario).toLowerCase();
+              const isSaying = correctAnswer.includes('"') || questionText.includes('say') || questionText.includes('tell');
+              const actionText = isSaying ? "thing to say" : "thing to do";
               return {
                 ...baseQuestion,
                 id: `${baseQuestion.id}-why`,
-                scenario: promptFn(correctAnswer),
+                scenario: `Now tell me: why this is the right ${actionText}?`,
                 prompt: undefined,
                 options: baseQuestion.whyOptions!,
                 correctAnswerIndex: baseQuestion.correctWhyIndex!,

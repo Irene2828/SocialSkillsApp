@@ -50,6 +50,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
   // Part 2 state
   const [part2SelectedIndex, setPart2SelectedIndex] = useState<number | null>(null);
+  const [part2Y, setPart2Y] = useState<number | null>(null);
   const [part2HasFailed, setPart2HasFailed] = useState(false);
   const part2FadeAnim = useRef(new Animated.Value(0)).current;
 
@@ -89,7 +90,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
     ]).start();
   }, [question.id]);
 
-  // Animate Part 2 in when showPart2 becomes true, and auto-scroll
+  // Animate Part 2 in when showPart2 becomes true
   useEffect(() => {
     if (showPart2) {
       part2FadeAnim.setValue(0);
@@ -98,12 +99,17 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         duration: 400,
         useNativeDriver: true,
       }).start();
-      // Auto-scroll to bottom to show Part 2
-      setTimeout(() => {
-        scrollViewRef?.current?.scrollToEnd?.({ animated: true });
-      }, 150);
     }
   }, [showPart2]);
+
+  // Auto-scroll to eye-level when Part 2 layout is known
+  useEffect(() => {
+    if (showPart2 && part2Y !== null) {
+      setTimeout(() => {
+        scrollViewRef?.current?.scrollTo?.({ y: part2Y - 80, animated: true });
+      }, 50);
+    }
+  }, [showPart2, part2Y]);
 
   const handleSelect = (index: number) => {
     if (selectedIndex === null) {
@@ -253,7 +259,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <FontAwesome5 
                       name="coins" 
                       size={24} 
-                      color={theme.colors.primary} 
+                      color="#84CC16" 
                       style={{
                         textShadowColor: '#9CA3AF',
                         textShadowOffset: { width: -0.5, height: 0.5 },
@@ -295,7 +301,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
       {/* ===== PART 2 (inline, appears below Part 1 when showPart2 is true) ===== */}
       {showPart2 && whyQuestion && (
-        <Animated.View style={[styles.animatedContainer, { opacity: part2FadeAnim, marginTop: theme.spacing.md }]}>
+        <Animated.View 
+          onLayout={(e) => setPart2Y(e.nativeEvent.layout.y)}
+          style={[styles.animatedContainer, { opacity: part2FadeAnim, marginTop: theme.spacing.md }]}
+        >
 
           <View style={styles.cardWrapper}>
             <Card style={styles.scenarioCard}>
