@@ -40,7 +40,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
   const cardBorderColor = category.color || theme.colors.stroke;
   const iconBorderColor = theme.colors.stroke;
   const iconBackgroundColor = theme.colors.errorSoft;
-  const iconColor = theme.colors.stroke;
+  const iconColor = '#7DD3FC'; // 20% darker than stroke (#BAE6FD)
 
   if (isDeleted) {
     return (
