@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
   },
   icon: {
+    opacity: 0.9,
   },
   title: {
     ...theme.typography.body,
