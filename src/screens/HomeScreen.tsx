@@ -61,8 +61,8 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.regularItalic, fontWeight: '400', color: titleColor }]}>Smart</Text>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.regularItalic, fontWeight: '400', color: titleColor }]}>Explorer</Text>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Smart</Text>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Explorer</Text>
           </View>
 
           <Animated.View
@@ -73,7 +73,13 @@ export const HomeScreen = () => {
               transform: [{ scale: scaleAnim }],
             }}
           >
-            <Text style={[styles.startSubtitle, { color: subtitleColor }]}>Ready to test your knowledge?</Text>
+            <Text 
+              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center' }]}
+              adjustsFontSizeToFit
+              numberOfLines={1}
+            >
+              Ready to test your knowledge?
+            </Text>
             <Button
               title="Start Quiz"
               onPress={() => navigation.navigate('NewQuiz')}
