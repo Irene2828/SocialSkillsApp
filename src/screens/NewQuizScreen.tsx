@@ -483,7 +483,8 @@ export const NewQuizScreen = () => {
   };
 
   const handleStartQuickQuiz = () => {
-    const shuffled = shuffleArray(allQuestions);
+    const socialSkillsPool = allQuestions.filter(q => !q.category.toString().startsWith('iq_'));
+    const shuffled = shuffleArray(socialSkillsPool);
     const selected = shuffled.slice(0, 5).map(q => injectFallbackWhy(q));
     
     setSelectedCategory(null);
@@ -498,7 +499,7 @@ export const NewQuizScreen = () => {
   const handleStartQuiz = async (categoryId: string) => {
     let pool: any[] = [];
     if (categoryId === 'general_quiz') {
-      pool = allQuestions;
+      pool = allQuestions.filter(q => !q.category.toString().startsWith('iq_'));
     } else if (categoryId === 'custom_quiz') {
       pool = customQuestions;
     } else if (categoryId === 'iq_word_problems') {
