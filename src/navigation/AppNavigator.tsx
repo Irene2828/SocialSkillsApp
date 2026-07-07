@@ -20,7 +20,7 @@ export const AppNavigator = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const footerBgColor = isRocket ? moodColors.bg : '#F3F4F6';
+  const footerBgColor = isRocket ? moodColors.bg : '#FFFFFF';
   const activeColor = isRocket ? '#FFFFFF' : theme.colors.text;
   const inactiveColor = isRocket ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.5)';
 

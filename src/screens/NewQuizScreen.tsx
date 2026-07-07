@@ -73,7 +73,9 @@ export const NewQuizScreen = () => {
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
     ...IQ_CATEGORIES,
-    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'sparkles-outline', isCustom: true }
+    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'sparkles-outline', isCustom: true },
+    { id: 'new_folder_1', title: 'New Folder', description: '0 quizzes', icon: 'folder-outline', isCustom: false },
+    { id: 'new_folder_2', title: 'New Folder 2', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
   ], []);
 
   const { folders, addFolder, removeFolder, renameFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
@@ -580,7 +582,7 @@ export const NewQuizScreen = () => {
   const renderSelection = () => {
     // Only display categories meant for the current tab
     const displayCategories = activeTab === 'general' 
-      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0))
+      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0) || c.id === 'new_folder_1' || c.id === 'new_folder_2')
       : allCategories.filter(c => c.id === 'iq_word_problems');
 
     return (
@@ -1499,7 +1501,7 @@ const styles = StyleSheet.create({
   },
   createAiButtonContainer: {
     width: '100%',
-    marginTop: theme.spacing.lg,
+    marginTop: theme.spacing.lg * 2,
     paddingHorizontal: theme.spacing.xl,
   },
   primaryButton: {
