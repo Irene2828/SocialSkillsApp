@@ -324,7 +324,8 @@ export const NewQuizScreen = () => {
 
   const handleGenerateFromSelectedImage = () => {
     if (selectedImageBase64) {
-      handleGenerateFromImage(selectedImageBase64);
+      const dataUri = `data:image/jpeg;base64,${selectedImageBase64}`;
+      handleGenerateFromImage(dataUri);
     }
   };
 
