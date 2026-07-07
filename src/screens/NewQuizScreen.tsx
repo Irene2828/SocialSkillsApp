@@ -105,6 +105,15 @@ export const NewQuizScreen = () => {
   const [deletePin, setDeletePin] = useState('');
   const [deletedCategories, setDeletedCategories] = useState<Set<string>>(new Set());
   const [deletedFolders, setDeletedFolders] = useState<Set<string>>(new Set());
+  const [hiddenCategories, setHiddenCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadHidden = async () => {
+      const stored = await safeStorage.get<string[]>('@hidden_categories', []);
+      setHiddenCategories(stored);
+    };
+    loadHidden();
+  }, []);
 
   const [aiPromptSituation, setAiPromptSituation] = useState('');
   const [aiPromptAge, setAiPromptAge] = useState('');
@@ -425,8 +434,16 @@ export const NewQuizScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (quizToDelete) {
-          removeCustomQuiz(quizToDelete);
-          showToast({ message: 'Quiz deleted' });
+          const isBuiltIn = [...QUIZ_CATEGORIES, ...IQ_CATEGORIES].some(c => c.id === quizToDelete);
+          if (isBuiltIn) {
+            const newHidden = [...hiddenCategories, quizToDelete];
+            setHiddenCategories(newHidden);
+            safeStorage.set('@hidden_categories', newHidden);
+            showToast({ message: 'Quiz hidden' });
+          } else {
+            removeCustomQuiz(quizToDelete);
+            showToast({ message: 'Quiz deleted' });
+          }
         }
         setShowDeletePin(false);
         setDeletePin('');
@@ -621,9 +638,11 @@ export const NewQuizScreen = () => {
 
   const renderSelection = () => {
     // Only display categories meant for the current tab
-    const displayCategories = activeTab === 'general' 
+    let displayCategories = activeTab === 'general' 
       ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0) || c.id === 'new_folder_1' || c.id === 'new_folder_2')
       : allCategories.filter(c => c.id === 'iq_word_problems');
+
+    displayCategories = displayCategories.filter(c => !hiddenCategories.includes(c.id));
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -660,6 +679,28 @@ export const NewQuizScreen = () => {
               </View>
             );
           })}
+          
+          <View style={[styles.bentoItem, { width: '47%' }]}>
+            <Pressable 
+              style={[
+                styles.quizCard, 
+                { 
+                  justifyContent: 'center', 
+                  alignItems: 'center', 
+                  borderStyle: 'dashed', 
+                  borderWidth: 2, 
+                  backgroundColor: 'transparent',
+                  borderColor: theme.colors.stroke 
+                }
+              ]}
+              onPress={() => setShowFolderModal(true)}
+            >
+              <View style={[styles.iconContainer, { backgroundColor: 'transparent', marginBottom: 8 }]}>
+                <Ionicons name="add" size={32} color={theme.colors.secondaryText} />
+              </View>
+              <Text style={[styles.cardTitle, { color: theme.colors.secondaryText, textAlign: 'center' }]}>Add Folder</Text>
+            </Pressable>
+          </View>
         </View>
 
         <View style={styles.createAiButtonContainer}>
@@ -712,7 +753,7 @@ export const NewQuizScreen = () => {
       return {
         ...baseQuestion,
         id: `${baseQuestion.id}-why`,
-        scenario: `Now tell me: why this is the right ${actionText}?`,
+        scenario: `Now tell me: why is this the right ${actionText}?`,
         prompt: undefined,
         options: baseQuestion.whyOptions!,
         correctAnswerIndex: baseQuestion.correctWhyIndex!,
@@ -802,7 +843,7 @@ export const NewQuizScreen = () => {
               return {
                 ...baseQuestion,
                 id: `${baseQuestion.id}-why`,
-                scenario: `Now tell me: why this is the right ${actionText}?`,
+                scenario: `Now tell me: why is this the right ${actionText}?`,
                 prompt: undefined,
                 options: baseQuestion.whyOptions!,
                 correctAnswerIndex: baseQuestion.correctWhyIndex!,
@@ -1203,15 +1244,8 @@ export const NewQuizScreen = () => {
                   style={styles.modalOptionCard}
                   onPress={() => {
                     setShowActionMenu(false);
-                    setDeletedCategories(prev => {
-                      const newSet = new Set(prev);
-                      newSet.add(actionMenuCategory.id);
-                      return newSet;
-                    });
-                    if (actionMenuCategory?.isCustom) {
-                      setQuizToDelete(actionMenuCategory.id);
-                      setShowDeletePin(true);
-                    }
+                    setQuizToDelete(actionMenuCategory.id);
+                    setShowDeletePin(true);
                   }}
                 >
                   <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
@@ -1631,6 +1665,7 @@ const styles = StyleSheet.create({
   createAiButtonContainer: {
     width: '100%',
     marginTop: theme.spacing.lg * 2,
+    paddingHorizontal: theme.spacing.xl,
   },
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system

@@ -38,10 +38,35 @@ const useAttentionLoop = () => {
   return { fadeAnim, scaleAnim };
 };
 
+const useFloatAnim = () => {
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -8,
+          duration: 1500,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 8,
+          duration: 1500,
+          easing: Easing.inOut(Easing.sin),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [floatAnim]);
+
+  return floatAnim;
+};
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
   const { fadeAnim, scaleAnim } = useAttentionLoop();
+  const floatAnim = useFloatAnim();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
   
@@ -63,9 +88,9 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Image 
+            <Animated.Image 
               source={require('../../assets/mascot_v2_transparent.png')} 
-              style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10 }} 
+              style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10, transform: [{ translateY: floatAnim }] }} 
             />
             <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]}>Smart</Text>
             <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Explorer</Text>

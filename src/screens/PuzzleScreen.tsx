@@ -941,6 +941,7 @@ const styles = StyleSheet.create({
   createAiButtonContainer: {
     width: '100%',
     marginTop: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl,
     paddingBottom: theme.spacing.xxl,
   },
   createAiButton: {

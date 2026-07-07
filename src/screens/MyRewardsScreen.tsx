@@ -423,12 +423,14 @@ export const MyRewardsScreen = () => {
                   handleDeleteReward(reward);
                 }}
               />
-              <Button 
-                title="Add New Reward" 
-                iconName="gift-outline"
-                onPress={() => setShowAddPin(true)} 
-                style={{ marginTop: theme.spacing.md, width: '100%', backgroundColor: '#BEF264' }}
-              />
+              <View style={{ width: '100%', paddingHorizontal: theme.spacing.xl }}>
+                <Button 
+                  title="Add New Reward" 
+                  iconName="gift-outline"
+                  onPress={() => setShowAddPin(true)} 
+                  style={{ marginTop: theme.spacing.md, width: '100%', backgroundColor: '#BEF264' }}
+                />
+              </View>
             </View>
           ) : (
             <View style={{ marginTop: 8 }}>
