@@ -122,7 +122,7 @@ export const CreateQuizFromPhotoScreen = () => {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
-          icon: 'sparkles', // magical icon for AI generated
+          icon: 'color-wand', // magical icon for AI generated
           color: '#A78BFA', // Purple styling to stand out
           isCustom: true
         };
@@ -165,7 +165,7 @@ export const CreateQuizFromPhotoScreen = () => {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
-          icon: 'sparkles', // magical icon for AI generated
+          icon: 'color-wand', // magical icon for AI generated
           color: '#A78BFA', // Purple styling to stand out
           isCustom: true
         };
@@ -217,7 +217,7 @@ export const CreateQuizFromPhotoScreen = () => {
         />
         <Button 
           title="Generate from Text" 
-          iconName="sparkles-outline"
+          iconName="color-wand-outline"
           iconSize={18} 
           onPress={handleGenerateFromText} 
           disabled={!textPrompt.trim()}
@@ -277,7 +277,7 @@ export const CreateQuizFromPhotoScreen = () => {
       
       <Button 
         title="Generate Quiz" 
-        iconName="sparkles-outline"
+        iconName="color-wand-outline"
         iconSize={18} 
         onPress={handleGenerate} 
         style={styles.generateButton}
@@ -288,7 +288,7 @@ export const CreateQuizFromPhotoScreen = () => {
   const renderGenerating = () => (
     <View style={styles.generatingContainer}>
       <Animated.View style={{ transform: [{ rotate: spin }] }}>
-        <Ionicons name="sparkles-outline" size={64} color={theme.colors.primary} />
+        <Ionicons name="color-wand-outline" size={64} color={theme.colors.primary} />
       </Animated.View>
       <Text style={styles.loadingText}>{loadingText}</Text>
       <View style={styles.progressContainer}>

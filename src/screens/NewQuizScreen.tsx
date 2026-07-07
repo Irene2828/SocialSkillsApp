@@ -73,7 +73,7 @@ export const NewQuizScreen = () => {
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
     ...IQ_CATEGORIES,
-    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'sparkles-outline', isCustom: true },
+    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'color-wand-outline', isCustom: true },
     { id: 'new_folder_1', title: 'New Folder', description: '0 quizzes', icon: 'folder-outline', isCustom: false },
     { id: 'new_folder_2', title: 'New Quiz', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
   ], []);
@@ -240,7 +240,7 @@ export const NewQuizScreen = () => {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
-          icon: 'sparkles',
+          icon: 'color-wand',
           color: '#A78BFA',
           isCustom: true,
           folderId: activeFolderId || undefined
@@ -329,7 +329,7 @@ export const NewQuizScreen = () => {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
-          icon: 'sparkles',
+          icon: 'color-wand',
           color: '#A78BFA',
           isCustom: true,
           folderId: activeFolderId || undefined // default, will be overridden if they choose
@@ -627,7 +627,7 @@ export const NewQuizScreen = () => {
         <View style={styles.createAiButtonContainer}>
           <Button
             title="Generate New Quiz"
-            iconName="sparkles-outline"
+            iconName="color-wand-outline"
             iconSize={18}
             style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
             onPress={() => setShowGenerateMenu(true)}
@@ -888,7 +888,7 @@ export const NewQuizScreen = () => {
               
               <Button 
                 title="Generate Quiz" 
-                iconName="sparkles-outline"
+                iconName="color-wand-outline"
                 iconSize={18} 
                 onPress={handleGenerateFromSelectedImage} 
                 style={styles.uploadButton}
@@ -943,7 +943,7 @@ export const NewQuizScreen = () => {
               
               <Button 
                 title="Generate Quiz" 
-                iconName="sparkles-outline"
+                iconName="color-wand-outline"
                 iconSize={18} 
                 onPress={handleGenerateFromText} 
                 style={styles.uploadButton}
@@ -960,7 +960,7 @@ export const NewQuizScreen = () => {
       <Modal visible={aiGenerating} transparent animationType="fade">
         <View style={styles.modalOverlay}>
           <Card style={[styles.levelCard, { alignItems: 'center', paddingVertical: 40 }]}>
-            <Ionicons name="sparkles-outline" size={64} color={theme.colors.primary} />
+            <Ionicons name="color-wand-outline" size={64} color={theme.colors.primary} />
             <Text style={[styles.levelTitle, { marginTop: theme.spacing.md, marginBottom: 8 }]}>Generating Quiz...</Text>
             <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg }]}>{loadingText}</Text>
             <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -1039,7 +1039,7 @@ export const NewQuizScreen = () => {
                     setShowAiMenu(true);
                   }}
                 >
-                  <Ionicons name="sparkles-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="color-wand-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Generate from Prompt</Text>
                 </Pressable>
                 
