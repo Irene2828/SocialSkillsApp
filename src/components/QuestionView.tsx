@@ -269,8 +269,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 {displayIsCorrect ? (
                   <>
                     {showExplanation && part1ShowCoin && (
-                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                        <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.explanation}</Text>
+                      <View style={{ marginBottom: theme.spacing.lg }}>
+                        <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow, { marginBottom: 0 }]}>{question.explanation}</Text>
                       </View>
                     )}
                     <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
@@ -375,8 +375,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   )}
 
                   {part2DisplayIsCorrect && (
-                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                      <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.explanation}</Text>
+                    <View style={{ marginBottom: theme.spacing.lg }}>
+                      <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow, { marginBottom: 0 }]}>{whyQuestion.explanation}</Text>
                     </View>
                   )}
 

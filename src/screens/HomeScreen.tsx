@@ -18,22 +18,20 @@ const useAttentionLoop = () => {
 
     const pulse = () => {
       Animated.parallel([
-        Animated.timing(fadeAnim, { toValue: 0, duration: 350, easing: Easing.in(Easing.ease), useNativeDriver: true }),
-        Animated.timing(scaleAnim, { toValue: 0.92, duration: 350, easing: Easing.in(Easing.ease), useNativeDriver: true }),
+        Animated.timing(fadeAnim, { toValue: 0.7, duration: 800, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+        Animated.timing(scaleAnim, { toValue: 0.95, duration: 800, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
       ]).start(() => {
-        setTimeout(() => {
-          Animated.parallel([
-            Animated.timing(fadeAnim, { toValue: 1, duration: 500, easing: Easing.out(Easing.back(1.6)), useNativeDriver: true }),
-            Animated.timing(scaleAnim, { toValue: 1, duration: 500, easing: Easing.out(Easing.back(1.6)), useNativeDriver: true }),
-          ]).start(() => {
-            const delay = 3000 + Math.random() * 3000;
-            timeoutId = setTimeout(pulse, delay);
-          });
-        }, 120);
+        Animated.parallel([
+          Animated.timing(fadeAnim, { toValue: 1, duration: 800, easing: Easing.inOut(Easing.ease), useNativeDriver: true }),
+          Animated.timing(scaleAnim, { toValue: 1, duration: 800, easing: Easing.out(Easing.back(1.2)), useNativeDriver: true }),
+        ]).start(() => {
+          const delay = 6000 + Math.random() * 4000;
+          timeoutId = setTimeout(pulse, delay);
+        });
       });
     };
 
-    timeoutId = setTimeout(pulse, 4000);
+    timeoutId = setTimeout(pulse, 6000);
     return () => clearTimeout(timeoutId);
   }, []);
 

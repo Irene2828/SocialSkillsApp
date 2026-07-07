@@ -252,8 +252,8 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               )}
 
               {displayIsCorrect && currentStep && (
-                <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                  <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{currentStep.explanation}</Text>
+                <View style={{ marginBottom: theme.spacing.lg }}>
+                  <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow, { marginBottom: 0 }]}>{currentStep.explanation}</Text>
                 </View>
               )}
 
