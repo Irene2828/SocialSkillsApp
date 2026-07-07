@@ -21,8 +21,10 @@ interface ProgressContextType {
   setParentPin: (pin: string) => void;
   unlockParentMode: (pin: string) => boolean;
   lockParentMode: () => void;
-  recordQuizCompletion: (correctAnswersCount: number, earnedCoins: number) => Promise<void>;
+  quizOffsets: Record<string, number>;
+  setQuizOffset: (categoryId: string, offset: number) => Promise<void>;
   resetAllData: () => Promise<void>;
+  recordQuizCompletion: (correctAnswersCount: number, earnedCoins: number) => Promise<void>;
 }
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -42,6 +44,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [hasOnboarded, setHasOnboardedState] = useState(false);
   const [childName, setChildNameState] = useState('Explorer');
   const [childAge, setChildAgeState] = useState(7);
+  const [quizOffsets, setQuizOffsetsState] = useState<Record<string, number>>({});
 
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -79,6 +82,9 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
         const storedAge = await safeStorage.get<number>('@childAge', 7);
         setChildAgeState(storedAge);
+
+        const storedOffsets = await safeStorage.get<Record<string, number>>('@quizOffsets', {});
+        setQuizOffsetsState(storedOffsets || {});
 
         const storedQuizzesToday = await safeStorage.get<number>('@quizzesTakenToday', 0);
         if (storedDate === getTodayString()) {
@@ -189,6 +195,12 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     await safeStorage.set('@hasOnboarded', true);
   };
 
+  const setQuizOffset = async (categoryId: string, offset: number) => {
+    const newOffsets = { ...quizOffsets, [categoryId]: offset };
+    setQuizOffsetsState(newOffsets);
+    await safeStorage.set('@quizOffsets', newOffsets);
+  };
+
   const setParentPin = (pin: string) => {
     setParentPinState(pin);
     saveData('@parentPin', pin);
@@ -217,7 +229,8 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       ['@coin_balance', 0], 
       ['@hasOnboarded', false],
       ['@childName', 'Explorer'],
-      ['@childAge', 7]
+      ['@childAge', 7],
+      ['@quizOffsets', {}]
     ]);
     if (success) {
       setStreak(0);
@@ -229,6 +242,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setHasOnboardedState(false);
       setChildNameState('Explorer');
       setChildAgeState(7);
+      setQuizOffsetsState({});
     }
   };
 
@@ -248,6 +262,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       hasOnboarded,
       childName,
       childAge,
+      quizOffsets,
       setChildProfile,
       setOnboarded,
       setDailyLimit,
@@ -255,6 +270,7 @@ export const ProgressProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       unlockParentMode,
       lockParentMode,
       recordQuizCompletion,
+      setQuizOffset,
       resetAllData
     }}>
       {children}

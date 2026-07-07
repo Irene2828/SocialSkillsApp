@@ -12,9 +12,10 @@ interface StepBasedQuestionViewProps {
   question: StepBasedQuestion;
   onContinue: (isCorrect: boolean) => void;
   disabled?: boolean;
+  onStepChange?: (currentIndex: number, totalSteps: number) => void;
 }
 
-export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled }) => {
+export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
@@ -28,16 +29,23 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   const currentStep = currentStepIndex < question.steps.length ? question.steps[currentStepIndex] : null;
   const isFinalStep = currentStepIndex === question.steps.length - 1;
 
-  // Reset state and trigger animation when question changes
-  useEffect(() => {
+  const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
+
+  if (question.id !== currentQuestionId) {
     setCurrentStepIndex(0);
     setSelectedIndex(null);
     setHasFailed(false);
+    setCurrentQuestionId(question.id);
+  }
+
+  // Reset state and trigger animation when question changes
+  useEffect(() => {
     animateIn();
   }, [question.id]);
 
   useEffect(() => {
     animateIn();
+    onStepChange?.(currentStepIndex, question.steps.length);
   }, [currentStepIndex]);
 
   const animateIn = () => {
@@ -75,6 +83,8 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   const handleCloseModal = () => {
     if (displayIsCorrect) {
       if (isFinalStep) {
+        setSelectedIndex(null);
+        setHasFailed(false);
         onContinue(true);
       } else {
         handleContinueStep();
@@ -84,8 +94,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     }
   };
 
-  const isAnswered = selectedIndex !== null;
-  const isCorrect = currentStep ? selectedIndex === currentStep.correctIndex : false;
+  const isIdChanged = question.id !== currentQuestionId;
+  const isAnswered = selectedIndex !== null && !isIdChanged;
+  const isCorrect = currentStep && isAnswered ? selectedIndex === currentStep.correctIndex : false;
 
   const displayIsCorrectRef = useRef(isCorrect);
   if (isAnswered) {
@@ -100,9 +111,8 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Text style={styles.situationalLabel}>Situational problem:</Text>
         <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }]}>{question.problemText}</Text>
         <Text style={styles.microcopy}>(Don't answer yet, follow steps below first)</Text>
-      </Card>
         
-        {/* Subtle Step Indicator (Dots) - Only show if > 1 step */}
+        {/* Subtle Step Indicator (Dots) - inside the card */}
         {question.steps.length > 1 && (
           <View style={styles.dotsContainer}>
             {question.steps.map((_: any, index: number) => (
@@ -117,17 +127,21 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
             ))}
           </View>
         )}
-        <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-          <Card style={styles.mainCard}>
-            {currentStep ? (
-              <View style={styles.promptContainer}>
-                <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }]}>{currentStep.prompt}</Text>
-              </View>
-            ) : null}
-          </Card>
+
+        {/* Current Step Question - inside the same card */}
+        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+          {currentStep ? (
+            <View style={styles.promptContainer}>
+              <View style={styles.stepDivider} />
+              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }]}>{currentStep.prompt}</Text>
+            </View>
+          ) : null}
+        </Animated.View>
+      </Card>
         
-          {/* Options outside the Card */}
-          {currentStep && (
+      {/* Options outside the Card */}
+      <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+        {currentStep && (
           <View style={styles.optionsContainer}>
             {currentStep.options.map((option: string, index: number) => {
               let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
@@ -154,7 +168,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
             })}
           </View>
         )}
-        </Animated.View>
+      </Animated.View>
 
       <Modal
         visible={isAnswered}
@@ -162,13 +176,15 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         animationType="fade"
       >
         <Pressable style={styles.modalOverlay} onPress={handleCloseModal}>
-          {displayIsCorrect && <SilverDust />}
+          {displayIsCorrect && isFinalStep && <SilverDust />}
           <Pressable style={styles.feedbackContainerBackground} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
-                  {displayIsCorrect ? 'Correct!' : "Not quite, try again!"}
+                  {displayIsCorrect 
+                    ? (isFinalStep ? 'Correct!' : "That's right!") 
+                    : "Not quite, try again!"}
                 </Text>
               </View>
 
@@ -226,7 +242,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mainCard: {
-    padding: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: 12,
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
@@ -265,7 +282,8 @@ const styles = StyleSheet.create({
   dotsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: theme.spacing.xl,
+    justifyContent: 'center',
+    marginBottom: theme.spacing.md,
   },
   dot: {
     width: 8,
@@ -288,8 +306,12 @@ const styles = StyleSheet.create({
   },
 
   promptContainer: {
-    marginBottom: theme.spacing.lg,
     paddingHorizontal: theme.spacing.xs,
+  },
+  stepDivider: {
+    height: 1,
+    backgroundColor: '#E5E7EB',
+    marginBottom: theme.spacing.md,
   },
   promptText: {
     ...theme.typography.heading,

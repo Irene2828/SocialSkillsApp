@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -139,33 +139,27 @@ export const PuzzleScreen = () => {
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleConfig | null>(null);
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
+  const [showActionMenu, setShowActionMenu] = useState(false);
+  const [actionMenuPuzzle, setActionMenuPuzzle] = useState<PuzzleConfig | null>(null);
+  const [showRenameModal, setShowRenameModal] = useState(false);
+  const [renameTitle, setRenameTitle] = useState('');
+  const [showDeletePin, setShowDeletePin] = useState(false);
+  const [deletePin, setDeletePin] = useState('');
+  const shakeAnim = useRef(new Animated.Value(0)).current;
+
+  const triggerShake = () => {
+    Animated.sequence([
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: -10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 10, duration: 50, useNativeDriver: true }),
+      Animated.timing(shakeAnim, { toValue: 0, duration: 50, useNativeDriver: true })
+    ]).start();
+  };
   const [isSolved, setIsSolved] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
-  const [isEditMode, setIsEditMode] = useState(false);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
-  const wiggleAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (isEditMode) {
-      Animated.loop(
-        Animated.sequence([
-          Animated.timing(wiggleAnim, { toValue: -1, duration: 150, useNativeDriver: true }),
-          Animated.timing(wiggleAnim, { toValue: 1, duration: 150, useNativeDriver: true }),
-          Animated.timing(wiggleAnim, { toValue: 0, duration: 150, useNativeDriver: true })
-        ])
-      ).start();
-    } else {
-      wiggleAnim.stopAnimation();
-      wiggleAnim.setValue(0);
-    }
-  }, [isEditMode]);
-
-  const wiggleRotation = wiggleAnim.interpolate({
-    inputRange: [-1, 1],
-    outputRange: ['-2deg', '2deg']
-  });
 
   useEffect(() => {
     const loadPuzzles = async () => {
@@ -180,28 +174,46 @@ export const PuzzleScreen = () => {
   const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles];
 
   const handleDeletePuzzle = (puzzle: PuzzleConfig) => {
-    Alert.alert(
-      "Delete Puzzle",
-      `Are you sure you want to delete "${puzzle.name}"?`,
-      [
-        { text: "Cancel", style: "cancel" },
-        { 
-          text: "Delete", 
-          style: "destructive", 
-          onPress: () => {
-            if (puzzle.id.startsWith('p_')) {
-              const newHidden = [...hiddenPuzzles, puzzle.id];
-              setHiddenPuzzles(newHidden);
-              safeStorage.set('@hidden_puzzles', newHidden);
-            } else {
-              const newCustom = customPuzzles.filter(p => p.id !== puzzle.id);
-              setCustomPuzzles(newCustom);
-              safeStorage.set('@custom_puzzles', newCustom);
-            }
+    setActionMenuPuzzle(puzzle);
+    setShowDeletePin(true);
+  };
+
+  const handleDeletePinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setDeletePin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        setShowDeletePin(false);
+        setDeletePin('');
+        if (actionMenuPuzzle) {
+          if (actionMenuPuzzle.id.startsWith('p_')) {
+            const newHidden = [...hiddenPuzzles, actionMenuPuzzle.id];
+            setHiddenPuzzles(newHidden);
+            safeStorage.set('@hidden_puzzles', newHidden);
+          } else {
+            const newCustom = customPuzzles.filter(p => p.id !== actionMenuPuzzle.id);
+            setCustomPuzzles(newCustom);
+            safeStorage.set('@custom_puzzles', newCustom);
           }
+          setActionMenuPuzzle(null);
         }
-      ]
-    );
+      } else {
+        triggerShake();
+        setDeletePin('');
+      }
+    }
+  };
+
+  const handleSaveRename = () => {
+    if (actionMenuPuzzle && renameTitle.trim()) {
+      const updated = customPuzzles.map(p => p.id === actionMenuPuzzle.id ? { ...p, name: renameTitle.trim() } : p);
+      setCustomPuzzles(updated);
+      safeStorage.set('@custom_puzzles', updated);
+    }
+    setShowRenameModal(false);
+    setActionMenuPuzzle(null);
+    setRenameTitle('');
   };
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
@@ -357,45 +369,51 @@ export const PuzzleScreen = () => {
       <ScreenWrapper transparent>
         <TopBar 
           title="Puzzles"
-          rightComponent={
-            isEditMode ? (
-              <Pressable onPress={() => setIsEditMode(false)} style={{ padding: 8, marginRight: 8, backgroundColor: theme.colors.primary, borderRadius: 16, paddingHorizontal: 12 }}>
-                <Text style={{ ...theme.typography.button, color: theme.colors.white }}>Done</Text>
-              </Pressable>
-            ) : undefined
-          }
         />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
-              <Pressable
+              <View
                 key={puzzle.id}
-                style={{ width: '48%', marginBottom: theme.spacing.md }}
-                onPress={() => {
-                  if (isEditMode) return;
-                  startPuzzle(puzzle);
-                }}
-                onLongPress={() => {
-                  if (!isEditMode) setIsEditMode(true);
-                }}
+                style={{ width: '48%', marginBottom: theme.spacing.md, position: 'relative' }}
               >
-                <Animated.View style={[styles.card, isEditMode && { transform: [{ rotate: wiggleRotation }] }]}>
-                  {isEditMode && (
-                    <Pressable 
-                      style={styles.deleteBadge}
-                      onPress={() => handleDeletePuzzle(puzzle)}
-                    >
-                      <Ionicons name="close" size={16} color={theme.colors.white} />
-                    </Pressable>
-                  )}
-                  <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
-                    <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
-                  </View>
-                  <Text style={styles.cardName}>{puzzle.name}</Text>
-                </Animated.View>
-              </Pressable>
+                <Pressable
+                  onPress={() => {
+                    startPuzzle(puzzle);
+                  }}
+                >
+                  <Animated.View style={[styles.card]}>
+                    <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
+                      <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                    </View>
+                    <Text style={styles.cardName}>{puzzle.name}</Text>
+                  </Animated.View>
+                </Pressable>
+
+                <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
+                  <Pressable 
+                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                    onPress={(e) => { 
+                      if (e && e.stopPropagation) e.stopPropagation(); 
+                      setActionMenuPuzzle(puzzle);
+                      setShowActionMenu(true);
+                    }} 
+                    style={({ pressed }) => [
+                      {
+                        padding: 6,
+                        borderRadius: 20,
+                        backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }
+                    ]}
+                  >
+                    <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
+                  </Pressable>
+                </View>
+              </View>
             ))}
           </View>
           
@@ -440,6 +458,106 @@ export const PuzzleScreen = () => {
                 </Pressable>
               </Pressable>
             </ScrollView>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Puzzle Action Menu Modal */}
+      <Modal visible={showActionMenu} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => setShowActionMenu(false)}>
+          <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
+            <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40, borderStyle: 'solid', borderWidth: 0 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>{actionMenuPuzzle?.name || 'Options'}</Text>
+              
+              <View style={{ width: '100%', gap: theme.spacing.sm }}>
+                <Pressable 
+                  style={[styles.modalOptionCard, actionMenuPuzzle?.id.startsWith('p_') && { opacity: 0.5 }]}
+                  disabled={actionMenuPuzzle?.id.startsWith('p_')}
+                  onPress={() => {
+                    setShowActionMenu(false);
+                    setRenameTitle(actionMenuPuzzle?.name || '');
+                    setShowRenameModal(true);
+                  }}
+                >
+                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Rename</Text>
+                </Pressable>
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowActionMenu(false);
+                    setShowDeletePin(true);
+                  }}
+                >
+                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Delete</Text>
+                </Pressable>
+              </View>
+              
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={() => setShowActionMenu(false)} 
+                style={{ width: '100%', marginTop: theme.spacing.xl }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Delete Pin Verification Modal */}
+      <Modal visible={showDeletePin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowDeletePin(false);
+          setDeletePin('');
+          setActionMenuPuzzle(null);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={deletePin}
+                  onChangeText={handleDeletePinChange}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                  textContentType="oneTimeCode"
+                />
+              </Animated.View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
+
+      {/* Rename Puzzle Modal */}
+      <Modal visible={showRenameModal} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowRenameModal(false);
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.pinTitle}>Rename Puzzle</Text>
+              <TextInput
+                style={[styles.editInput, { marginBottom: theme.spacing.lg }]}
+                value={renameTitle}
+                onChangeText={setRenameTitle}
+                placeholder="Puzzle Name"
+                maxLength={40}
+                autoFocus
+              />
+              <Button
+                title="Save"
+                onPress={handleSaveRename}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
+              />
+            </Pressable>
           </View>
         </Pressable>
       </Modal>
@@ -792,5 +910,63 @@ const styles = StyleSheet.create({
     ...theme.typography.caption,
     color: theme.colors.secondaryText,
     fontStyle: 'italic',
-  }
+  },
+  pinCard: {
+    width: '100%',
+    maxWidth: 500,
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+    paddingTop: theme.spacing.xxl,
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden',
+    zIndex: 1000,
+    backgroundColor: theme.colors.white,
+  },
+  pinContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.md,
+  },
+  pinTitle: {
+    ...theme.typography.body,
+    fontWeight: '700',
+    marginBottom: theme.spacing.md,
+    textAlign: 'center',
+    color: theme.colors.text,
+  },
+  pinInput: {
+    width: 120,
+    height: 60,
+    borderWidth: 2,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.sm,
+    textAlign: 'center',
+    ...theme.typography.heading,
+    marginBottom: theme.spacing.md,
+    color: theme.colors.text,
+  },
+  editInput: {
+    width: '100%',
+    height: 48,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing.md,
+    fontSize: 16,
+    color: theme.colors.text,
+  },
+  modalOptionCard: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+  },
+  modalOptionText: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+  },
 });

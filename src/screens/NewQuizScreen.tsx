@@ -49,7 +49,7 @@ const QUIZ_LEVELS: QuizLevel[] = [
 
 export const NewQuizScreen = () => {
   const { addCoins, coinBalance } = useRewards();
-  const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName } = useProgress();
+  const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();
   const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz } = useQuizContext();
   const { showModal, showToast } = useFeedback();
   const navigation = useNavigation<any>();
@@ -65,19 +65,14 @@ export const NewQuizScreen = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
   const IQ_CATEGORIES: QuizCategory[] = [
-    { id: 'iq_counting', title: 'Counting', description: 'Number recognition', icon: 'list-outline', isCustom: false },
-    { id: 'iq_addition', title: 'Addition', description: 'Multi-digit & regrouping', icon: 'add-circle-outline', isCustom: false },
-    { id: 'iq_subtraction', title: 'Subtraction', description: 'Multi-digit & regrouping', icon: 'remove-circle-outline', isCustom: false },
-    { id: 'iq_multiplication', title: 'Multiplication', description: 'Times tables & groups', icon: 'close-circle-outline', isCustom: false },
-    { id: 'iq_division', title: 'Division', description: 'Basic facts & sharing', icon: 'pie-chart-outline', isCustom: false },
-    { id: 'iq_shapes', title: 'Shapes', description: '2D & 3D properties', icon: 'shapes-outline', isCustom: false },
-    { id: 'iq_measurement', title: 'Measurement', description: 'Length, weight & time', icon: 'scale-outline', isCustom: false },
-    { id: 'iq_patterns', title: 'Patterns', description: 'Visual & number sequences', icon: 'grid-outline', isCustom: false },
     { id: 'iq_word_problems', title: 'Word Problems', description: 'Story-style math', icon: 'text-outline', isCustom: false },
-    { id: 'iq_place_value', title: 'Place Value', description: 'Ones, tens & hundreds', icon: 'calculator-outline', isCustom: false },
   ];
 
-  const allCategories = useMemo(() => [...QUIZ_CATEGORIES, ...IQ_CATEGORIES, ...customCategories], [customCategories]);
+  const allCategories = useMemo(() => [
+    ...QUIZ_CATEGORIES, 
+    ...IQ_CATEGORIES,
+    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'sparkles-outline', isCustom: true }
+  ], []);
 
   const { folders, addFolder, removeFolder, renameFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
   const [folderHistory, setFolderHistory] = useState<string[]>([]);
@@ -342,7 +337,10 @@ export const NewQuizScreen = () => {
           scenario: q.question,
           options: q.options,
           correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!'
+          explanation: q.explanation || 'Great job!',
+          whyOptions: q.whyOptions,
+          correctWhyIndex: q.correctWhyIndex,
+          whyConfirmation: q.whyConfirmation,
         }));
         
         return { category: newCategory, questions: questionsWithCategory };
@@ -408,6 +406,9 @@ export const NewQuizScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isWhyPhase, setIsWhyPhase] = useState(false);
+  const [currentWordProblemStep, setCurrentWordProblemStep] = useState(0);
+  const [totalWordProblemSteps, setTotalWordProblemSteps] = useState(0);
 
   const completionFadeAnim = useRef(new Animated.Value(0)).current;
   const completionSlideAnim = useRef(new Animated.Value(20)).current;
@@ -458,77 +459,107 @@ export const NewQuizScreen = () => {
     }));
   };
 
+  const injectFallbackWhy = (question: Question): Question => {
+    if (question.whyOptions && question.whyOptions.length > 0) {
+      return question;
+    }
+    if (question.category.toString().startsWith('iq_') || question.category === 'iq_word_problems') {
+      return question;
+    }
+    return {
+      ...question,
+      whyOptions: [
+        'It helps others feel heard and shows we care',
+        'Because they will stop talking sooner',
+        'Because it is a strict rule'
+      ],
+      correctWhyIndex: 0,
+      whyConfirmation: 'Doing the kind and respectful thing helps everyone get along and feel happy.'
+    };
+  };
+
   const handleStartQuickQuiz = () => {
     const shuffled = shuffleArray(allQuestions);
-    const selected = shuffled.slice(0, 5);
+    const selected = shuffled.slice(0, 5).map(q => injectFallbackWhy(q));
     
     setSelectedCategory(null);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
     setIsProcessing(false);
+    setIsWhyPhase(false);
     setQuizState('in-progress');
   };
 
-  const handleStartQuiz = (categoryId: string, questionCount: number, difficulty?: string) => {
-    if (categoryId.startsWith('wp_quiz_')) {
-      const categoryQuestions = wordProblems.filter((q: any) => q.category === categoryId);
-      const actualCount = Math.min(questionCount, categoryQuestions.length);
-      const selected = buildQuestionSet(categoryQuestions as any, actualCount);
+  const handleStartQuiz = async (categoryId: string) => {
+    let pool: any[] = [];
+    if (categoryId === 'general_quiz') {
+      pool = allQuestions;
+    } else if (categoryId === 'custom_quiz') {
+      pool = customQuestions;
+    } else if (categoryId === 'iq_word_problems') {
+      pool = wordProblems;
+    }
 
-      if (selected.length === 0) {
-        showToast({ message: `Coming soon! This quiz is under construction.` });
-        return;
-      }
-      setSelectedCategory(categoryId as any);
-      setCurrentQuestions(selected);
-      setCurrentIndex(0);
-      setScore(0);
-      setIsProcessing(false);
-      setQuizState('in-progress');
+    if (pool.length === 0) {
+      showToast({ message: 'No questions available for this category!' });
       return;
     }
 
+    const currentOffset = quizOffsets[categoryId] || 0;
+    const limit = categoryId === 'iq_word_problems' ? 1 : 5;
+    let selected: any[] = [];
 
-    let categoryQuestions = allQuestions.filter((q: any) => q.category === categoryId);
-    if (difficulty) {
-      categoryQuestions = categoryQuestions.filter((q: any) => q.difficulty === difficulty);
+    // Slice questions, wrapping around if necessary
+    for (let i = 0; i < limit; i++) {
+      const idx = (currentOffset + i) % pool.length;
+      selected.push(injectFallbackWhy({
+        ...pool[idx],
+        id: `${pool[idx].id}-${currentOffset}-${i}`,
+      }));
     }
-    if (categoryQuestions.length === 0) {
-      categoryQuestions = customQuestions.filter((q: any) => q.category === categoryId);
-    }
-    const selected = buildQuestionSet(categoryQuestions, questionCount);
 
-    if (selected.length === 0) {
-      showToast({ message: `No ${difficulty || 'more'} questions available for this category!` });
-      setIsProcessing(false);
-      return;
-    }
+    const newOffset = (currentOffset + limit) % pool.length;
+    await setQuizOffset(categoryId, newOffset);
 
     setSelectedCategory(categoryId as any);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
     setIsProcessing(false);
+    setIsWhyPhase(false);
     setQuizState('in-progress');
   };
 
   const handleSelectQuizCategory = (categoryId: string) => {
-    if (categoryId === 'iq_word_problems') {
-      setQuizState('word-problems-list');
-    } else if (categoryId.startsWith('iq_')) {
-      setSelectedCategory(categoryId as any);
-      setQuizState('difficulty-selection');
-    } else {
-      handleStartQuiz(categoryId, 5);
-    }
+    handleStartQuiz(categoryId);
   };
 
   const handleContinue = async (isCorrect: boolean) => {
     if (isProcessing) return;
+
+    const currentQuestion = currentQuestions[currentIndex] as Question;
+    const hasWhyData = currentQuestion.whyOptions && currentQuestion.whyOptions.length > 0;
+
+    // If we just finished the "what" phase and this question has a why follow-up,
+    // enter the why phase. The modal only closes on a correct answer, so we always
+    // transition here. We stash the isCorrect (first-try) flag for later scoring.
+    if (!isWhyPhase && hasWhyData) {
+      setIsWhyPhase(true);
+      // Don't advance index or award coin yet
+      return;
+    }
+
+    // Award score: once per completed scenario (based on whether they got
+    // the "what" AND "why" both right on first try — but since we stash nothing,
+    // we use the isCorrect from whichever phase just completed).
+    // Simpler: award 1 point per scenario completed.
     if (isCorrect) {
       setScore(prev => prev + 1);
     }
+
+    // Reset why phase for next question
+    setIsWhyPhase(false);
 
     if (currentIndex + 1 < currentQuestions.length) {
       setCurrentIndex(prev => prev + 1);
@@ -552,251 +583,69 @@ export const NewQuizScreen = () => {
     setCurrentQuestions([]);
     setCurrentIndex(0);
     setScore(0);
-  };
-
-  const renderDifficultySelection = () => {
-    return (
-      <View style={{ flex: 1 }}>
-        <TopBar title="Choose Difficulty" onBack={handleBackToHome} />
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: theme.spacing.xl, paddingBottom: 80 }}>
-          <View style={{ width: '100%', maxWidth: 280, gap: theme.spacing.lg }}>
-            {QUIZ_LEVELS.map((level, index) => (
-              <Button
-                key={index}
-                title={level.label}
-                variant="outline"
-                style={{ width: '100%', paddingVertical: 20, borderColor: theme.colors.primary, borderWidth: 2, backgroundColor: theme.colors.white }}
-                onPress={() => {
-                  if (selectedCategory) {
-                    handleStartQuiz(selectedCategory, 5, level.difficulty);
-                  }
-                }}
-              />
-            ))}
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  // (renderStart moved to HomeScreen)
-
-  const renderWordProblemsList = () => {
-    const quizzes = Array.from({ length: 20 }, (_, i) => ({
-      id: `wp_quiz_${i + 1}`,
-      title: `Quiz ${i + 1}`,
-      description: '5 questions',
-      icon: 'book-outline',
-      category: 'iq_word_problems'
-    }));
-
-    return (
-      <View style={{ flex: 1 }}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <TopBar title="Word Problems" onBack={() => setQuizState('selection')} />
-          <View style={[styles.bentoGrid, { marginTop: theme.spacing.md }]}>
-            {quizzes.map(quiz => (
-              <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
-                <QuizCard 
-                  category={quiz as any} 
-                  isFeatured={false}
-                  onPressStart={() => handleStartQuiz(quiz.id, 5)} 
-                />
-              </View>
-            ))}
-          </View>
-        </ScrollView>
-      </View>
-    );
+    setIsWhyPhase(false);
   };
 
   const renderSelection = () => {
-    // Temporarily disable daily limit for testing
-    // if (quizzesTakenToday >= dailyLimit) {
-    //   return <SimpleLockScreen />;
-    // }
-
-    const socialCustom = customCategories.filter((c: any) => !c.id.startsWith('math_ai_'));
-    const mathCustom = customCategories.filter((c: any) => c.id.startsWith('math_ai_'));
-    const baseCategories = activeTab === 'general' ? [...QUIZ_CATEGORIES, ...socialCustom] : [...IQ_CATEGORIES, ...mathCustom];
-    const currentTabFolders = folders.filter(f => f.tab === activeTab && (f.parentId || null) === activeFolderId);
-    
-    // If inside a folder, only show quizzes for that folder
-    const displayCategories = activeFolderId 
-      ? baseCategories.filter(c => c.folderId === activeFolderId)
-      : baseCategories.filter(c => !c.folderId);
+    // Only display categories meant for the current tab
+    const displayCategories = activeTab === 'general' 
+      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0))
+      : allCategories.filter(c => c.id === 'iq_word_problems');
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {activeFolderId ? (
-          <TopBar 
-            title={folders.find(f => f.id === activeFolderId)?.name || 'Folder'} 
-            onBack={() => setFolderHistory(prev => prev.slice(0, -1))} 
-          />
-        ) : (
-          <TopBar title="Library" />
-        )}
+        <TopBar title="Library" />
         
-        {!activeFolderId && (
-          <View style={styles.tabContainer}>
-            <Pressable 
-              style={[styles.tab, activeTab === 'general' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
+        <View style={styles.tabContainer}>
+          <Pressable 
+            style={[styles.tab, activeTab === 'general' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
+            onPress={() => setActiveTab('general')}
+          >
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
+          </Pressable>
+          <Pressable 
+            style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
+            onPress={() => setActiveTab('ai')}
+          >
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
+          </Pressable>
+        </View>
+
+        <View ref={bentoGridRef} style={styles.bentoGrid}>
+          {displayCategories.map((category: any) => {
+            return (
+              <View 
+                key={category.id} 
+                style={[styles.bentoItem, { width: '47%' }]}
+              >
+                <QuizCard 
+                  category={category} 
+                  isFeatured={false}
+                  onPressStart={() => handleSelectQuizCategory(category.id)} 
+                />
+              </View>
+            );
+          })}
+        </View>
+
+        {activeTab === 'general' && (
+          <View style={styles.createAiButtonContainer}>
+            <Button
+              title="Turn Screenshot into a Quiz"
+              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
               onPress={() => {
-                setActiveTab('general');
-                setFolderHistory([]);
+                setSelectedImageBase64(null);
+                setSelectedImageUri(null);
+                setShowPhotoMenu(true);
               }}
-            >
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
-            </Pressable>
-            <Pressable 
-              style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
-              onPress={() => {
-                setActiveTab('ai');
-                setFolderHistory([]);
-              }}
-            >
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
-            </Pressable>
+            />
+            <Button
+              title="Turn Prompt into a Quiz"
+              variant="outline"
+              style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
+              onPress={() => setShowAiMenu(true)}
+            />
           </View>
-        )}
-
-
-
-        {displayCategories.length === 0 && !activeFolderId && activeTab === 'ai' ? (
-          <View style={{ alignItems: 'center', marginTop: 40, paddingHorizontal: theme.spacing.xl }}>
-            <Ionicons name="sparkles-outline" size={48} color={moodColors.primary} style={{ marginBottom: theme.spacing.md }} />
-            <Text style={[styles.emptyAiText, { color: baseTextColor }]}>No AI quizes yet.</Text>
-            <Text style={[styles.emptyAiSub, { color: subTextColor }]}>Create your first one from a photo or concept!</Text>
-            <View style={{ marginTop: theme.spacing.xl, width: '100%', maxWidth: 300 }}>
-              <Button
-                title="Create AI Quiz"
-                style={styles.createAiButton}
-                onPress={() => setShowAiMenu(true)}
-              />
-            </View>
-          </View>
-        ) : (
-          <>
-            <View ref={bentoGridRef} style={styles.bentoGrid}>
-              {displayCategories.map((category: any) => {
-                return (
-                  <View 
-                    key={category.id} 
-                    style={[styles.bentoItem, { width: '47%' }]}
-                  >
-                    <QuizCard 
-                      category={category} 
-                      isFeatured={false}
-                      isDeleted={deletedCategories.has(category.id)}
-                      onUndo={() => {
-                        setDeletedCategories(prev => {
-                          const newSet = new Set(prev);
-                          newSet.delete(category.id);
-                          return newSet;
-                        });
-                      }}
-                      onPressStart={() => handleSelectQuizCategory(category.id)} 
-                      onOptionsPress={() => handleOpenActionMenu(category)}
-                    />
-                  </View>
-                );
-              })}
-
-              {currentTabFolders.map(folder => (
-                <View 
-                  key={folder.id} 
-                  style={[styles.bentoItem, { width: '47%' }]}
-                  onLayout={(e) => setFolderRects(prev => ({ ...prev, [folder.id]: e.nativeEvent.layout }))}
-                >
-                  <FolderCard 
-                    name={folder.name} 
-                    onPress={() => setFolderHistory(prev => [...prev, folder.id])}
-                    onEdit={() => {
-                      setActionMenuFolder(folder);
-                      setShowFolderActionMenu(true);
-                    }}
-                    onDelete={() => removeFolder(folder.id)}
-                  />
-                </View>
-              ))}
-
-              {!activeFolderId && (
-                <View 
-                  style={[styles.bentoItem, { width: '47%' }]}
-                  onLayout={(rect) => setFolderRects(prev => ({ ...prev, 'new-folder': rect.nativeEvent.layout }))}
-                >
-                  <Pressable 
-                    style={[
-                      styles.addFolderCard,
-                      hoveredFolderId === 'new-folder' && {
-                        transform: [{ scale: 1.05 }],
-                        shadowColor: moodColors.primary,
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.8,
-                        shadowRadius: 12,
-                        elevation: 8,
-                      },
-                      { borderColor: theme.colors.stroke, backgroundColor: 'transparent' }
-                    ]}
-                    onPress={() => setShowFolderModal(true)}
-                  >
-                    <View style={[styles.addFolderIconContainer, { borderColor: theme.colors.stroke, backgroundColor: theme.colors.errorSoft }]}>
-                      <Ionicons name="add" size={32} color={theme.colors.secondaryText} style={{ opacity: 0.8 }} />
-                    </View>
-                    <Text style={styles.addFolderText}>New Folder</Text>
-                  </Pressable>
-                </View>
-              )}
-            </View>
-            
-            {activeTab === 'general' && !activeFolderId && (
-              <View style={styles.createAiButtonContainer}>
-                <Button
-                  title="Turn Screenshot into a Quiz"
-                  style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
-                  onPress={() => {
-                    setSelectedImageBase64(null);
-                    setSelectedImageUri(null);
-                    setShowPhotoMenu(true);
-                  }}
-                />
-                <Button
-                  title="Turn Prompt into a Quiz"
-                  variant="outline"
-                  style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
-                  onPress={() => setShowAiMenu(true)}
-                />
-              </View>
-            )}
-            
-            {activeFolderId && displayCategories.length === 0 && (
-              <View style={{ alignItems: 'center', marginTop: 40, paddingHorizontal: theme.spacing.xl }}>
-                <Ionicons name="folder-open-outline" size={48} color={moodColors.primary} style={{ marginBottom: theme.spacing.md, opacity: 0.5 }} />
-                <Text style={[styles.emptyAiText, { color: baseTextColor }]}>This folder is empty.</Text>
-                <Text style={[styles.emptyAiSub, { color: subTextColor }]}>Add quizzes here to organize them.</Text>
-              </View>
-            )}
-
-            {activeTab !== 'general' && !activeFolderId && displayCategories.length > 0 && (
-              <View style={styles.createAiButtonContainer}>
-                <Button
-                  title="Turn Screenshot into a Quiz"
-                  style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
-                  onPress={() => {
-                    setSelectedImageBase64(null);
-                    setSelectedImageUri(null);
-                    setShowPhotoMenu(true);
-                  }}
-                />
-                <Button
-                  title="Turn Prompt into a Quiz"
-                  variant="outline"
-                  style={[styles.createAiButton, { borderColor: theme.colors.primary }]}
-                  onPress={() => setShowAiMenu(true)}
-                />
-              </View>
-            )}
-          </>
         )}
       </ScrollView>
     );
@@ -821,11 +670,50 @@ export const NewQuizScreen = () => {
     );
   };
 
+
+  // Phrasing variants for the why-question intro
+  const WHY_PROMPTS = [
+    (answer: string) => `Now that you answered "${answer}", why is that the right thing to do?`,
+    (answer: string) => `Now that you answered "${answer}", why is that the best choice?`,
+    (answer: string) => `Now that you answered "${answer}", what makes that the right move?`,
+    (answer: string) => `Now that you answered "${answer}", why is that a good choice here?`,
+    (answer: string) => `Now that you answered "${answer}", why is that the correct option?`,
+  ];
+
+  const getDisplayQuestion = (): Question => {
+    const baseQuestion = currentQuestions[currentIndex] as Question;
+    const hasWhyData = baseQuestion && baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
+
+    if (!hasWhyData) return baseQuestion;
+
+    if (isWhyPhase) {
+      const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
+      const promptFn = WHY_PROMPTS[currentIndex % WHY_PROMPTS.length];
+
+      return {
+        ...baseQuestion,
+        id: `${baseQuestion.id}-why`,
+        scenario: promptFn(correctAnswer),
+        prompt: undefined,
+        options: baseQuestion.whyOptions!,
+        correctAnswerIndex: baseQuestion.correctWhyIndex!,
+        explanation: baseQuestion.whyConfirmation!,
+      };
+    }
+
+    return baseQuestion;
+  };
+
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
-    const currentQuestion = currentQuestions[currentIndex];
+    const baseQuestion = currentQuestions[currentIndex] as Question;
+    const displayQuestion = getDisplayQuestion();
+    const hasWhyData = baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
 
     const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
+
+    // Suppress coin reward during Part 1 when Part 2 (why) is coming
+    const shouldShowCoinReward = !hasWhyData || isWhyPhase;
 
     return (
       <View style={styles.inProgressContainer}>
@@ -840,26 +728,47 @@ export const NewQuizScreen = () => {
             </View>
           </View>
           
-          <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 8 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
-          <ProgressBar 
-            current={currentIndex + 1} 
-            total={currentQuestions.length} 
-          />
+          {selectedCategory === 'iq_word_problems' ? (
+            <>
+              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4 }]}>
+                Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
+              </Text>
+              <ProgressBar 
+                current={currentWordProblemStep + 1} 
+                total={totalWordProblemSteps} 
+              />
+            </>
+          ) : (
+            <>
+              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4 }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
+              <ProgressBar 
+                current={currentIndex + 1} 
+                total={currentQuestions.length} 
+              />
+            </>
+          )}
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: theme.spacing.md, marginTop: -16, marginBottom: theme.spacing.md }}>
             {renderCoinJar()}
           </View>
-          {selectedCategory === 'iq_word_problems' || (typeof selectedCategory === 'string' && selectedCategory.startsWith('wp_quiz_')) ? (
+          {selectedCategory === 'iq_word_problems' ? (
             <StepBasedQuestionView
-              question={currentQuestion as any}
+              question={baseQuestion as any}
               onContinue={handleContinue}
               disabled={isProcessing}
+              onStepChange={(idx, total) => {
+                setCurrentWordProblemStep(idx);
+                setTotalWordProblemSteps(total);
+              }}
             />
           ) : (
             <QuestionView
-              question={currentQuestion as Question}
+              question={displayQuestion}
               onContinue={handleContinue}
               disabled={isProcessing}
               topicName={allCategories.find(c => c.id === selectedCategory)?.title}
+              showCoinReward={shouldShowCoinReward}
+              showExplanation={shouldShowCoinReward}
+              partLabel={hasWhyData ? (isWhyPhase ? 'Part 2' : 'Part 1') : undefined}
             />
           )}
         </ScrollView>
@@ -929,8 +838,6 @@ export const NewQuizScreen = () => {
       <ScreenWrapper transparent>
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
-          {quizState === 'word-problems-list' && renderWordProblemsList()}
-          {quizState === 'difficulty-selection' && renderDifficultySelection()}
           {quizState === 'in-progress' && renderInProgress()}
           {quizState === 'completed' && renderCompleted()}
         </View>
@@ -1488,17 +1395,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   completedContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
+    flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.xl,
-    zIndex: 10,
   },
   completedCard: {
     width: '100%',

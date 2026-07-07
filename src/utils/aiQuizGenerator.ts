@@ -37,7 +37,10 @@ Return the response STRICTLY as a JSON object matching this schema:
           "question": "Scenario text (string)",
           "options": ["Option 1", "Option 2", "Option 3"],
           "correctIndex": 0, // Integer 0, 1, or 2 representing correct option
-          "explanation": "Explanation for why this is correct (string)"
+          "explanation": "Explanation for why this is correct (string)",
+          "whyOptions": ["Explanation option 1 (genuine social/emotional reason)", "Explanation option 2 (adult approval / rule following)", "Explanation option 3 (another distractor)"],
+          "correctWhyIndex": 0, // index of the genuine social/emotional reason in whyOptions (0, 1, or 2)
+          "whyConfirmation": "A child-friendly confirmation explaining why this is correct (string)"
         }
       ]
     }
@@ -89,7 +92,7 @@ const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social') =
   return topicType === 'math' ? getMathSystemPrompt(age) : getSocialSystemPrompt(age);
 };
 
-const validateQuizData = (data: any) => {
+const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social') => {
   if (!data || typeof data !== 'object') throw new Error("Root is not an object");
   if (!Array.isArray(data.quizzes) || data.quizzes.length !== 3) {
     throw new Error(`Expected exactly 3 quizzes, got ${data.quizzes?.length}`);
@@ -113,6 +116,17 @@ const validateQuizData = (data: any) => {
         throw new Error(`Quiz ${qIndex} Question ${index} has invalid correctIndex: ${q.correctIndex}`);
       }
       if (typeof q.explanation !== 'string' || !q.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty explanation`);
+
+      if (topicType === 'social') {
+        if (!Array.isArray(q.whyOptions) || q.whyOptions.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 3 whyOptions`);
+        for (const opt of q.whyOptions) {
+          if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has an empty whyOption`);
+        }
+        if (typeof q.correctWhyIndex !== 'number' || ![0, 1, 2].includes(q.correctWhyIndex)) {
+          throw new Error(`Quiz ${qIndex} Question ${index} has invalid correctWhyIndex: ${q.correctWhyIndex}`);
+        }
+        if (typeof q.whyConfirmation !== 'string' || !q.whyConfirmation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty whyConfirmation`);
+      }
     }
   }
 };
@@ -183,7 +197,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
         }
       }
 
-      validateQuizData(parsedData);
+      validateQuizData(parsedData, topicType);
       
       return parsedData;
 
@@ -255,7 +269,7 @@ export const generateQuizFromText = async (promptText: string, age: number = 7, 
         }
       }
 
-      validateQuizData(parsedData);
+      validateQuizData(parsedData, topicType);
       
       return parsedData;
 

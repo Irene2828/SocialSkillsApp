@@ -134,7 +134,10 @@ export const CreateQuizFromPhotoScreen = () => {
           scenario: q.question,
           options: q.options,
           correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!'
+          explanation: q.explanation || 'Great job!',
+          whyOptions: q.whyOptions,
+          correctWhyIndex: q.correctWhyIndex,
+          whyConfirmation: q.whyConfirmation,
         }));
         
         addCustomQuiz(newCategory, questionsWithCategory);
@@ -174,7 +177,10 @@ export const CreateQuizFromPhotoScreen = () => {
           scenario: q.question,
           options: q.options,
           correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!'
+          explanation: q.explanation || 'Great job!',
+          whyOptions: q.whyOptions,
+          correctWhyIndex: q.correctWhyIndex,
+          whyConfirmation: q.whyConfirmation,
         }));
         
         addCustomQuiz(newCategory, questionsWithCategory);

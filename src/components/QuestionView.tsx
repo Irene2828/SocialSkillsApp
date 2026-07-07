@@ -13,9 +13,12 @@ interface QuestionViewProps {
   onContinue: (isCorrect: boolean) => void;
   disabled?: boolean;
   topicName?: string;
+  showCoinReward?: boolean;
+  showExplanation?: boolean;
+  partLabel?: string;
 }
 
-export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName }) => {
+export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName, showCoinReward = true, showExplanation = true, partLabel }) => {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
@@ -61,14 +64,17 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
   const handleCloseModal = () => {
     if (displayIsCorrect) {
+      setSelectedIndex(null);
+      setHasFailed(false);
       onContinue(!hasFailed);
     } else {
       setSelectedIndex(null);
     }
   };
 
-  const isAnswered = selectedIndex !== null;
-  const isCorrect = selectedIndex === question.correctAnswerIndex;
+  const isIdChanged = question.id !== currentQuestionId;
+  const isAnswered = selectedIndex !== null && !isIdChanged;
+  const isCorrect = isAnswered && selectedIndex === question.correctAnswerIndex;
 
   const displayIsCorrectRef = useRef(isCorrect);
   if (isAnswered) {
@@ -81,6 +87,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
           <Card style={styles.scenarioCard}>
+            {partLabel && (
+              <Text style={styles.partLabelText}>{partLabel}</Text>
+            )}
             <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }]}>{question.scenario}</Text>
           {question.prompt && (
             <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }]}>{question.prompt}</Text>
@@ -127,11 +136,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               
               <View style={styles.feedbackTitleContainer}>
                 <Text style={styles.feedbackTitle}>
-                  {displayIsCorrect ? 'Correct!' : "Not quite, try again!"}
+                  {displayIsCorrect 
+                    ? (showCoinReward ? 'Correct!' : "That's correct!") 
+                    : "Not quite, try again!"}
                 </Text>
               </View>
               
-              {displayIsCorrect && (
+              {displayIsCorrect && showCoinReward && (
                 <View style={styles.coinRewardContainer}>
                   <FontAwesome5 
                     name="coins" 
@@ -149,9 +160,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
 
               {displayIsCorrect ? (
                 <>
-                  <View style={styles.dashedExplanationContainer}>
-                    <Text style={styles.explanationText}>{question.explanation}</Text>
-                  </View>
+                  {showExplanation && (
+                    <View style={styles.dashedExplanationContainer}>
+                      <Text style={styles.explanationText}>{question.explanation}</Text>
+                    </View>
+                  )}
                   <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
                     <Button
                       title="Continue"
@@ -211,8 +224,16 @@ const styles = StyleSheet.create({
   scenarioCard: {
     marginBottom: theme.spacing.lg,
     padding: theme.spacing.xl,
-    paddingVertical: theme.spacing.xxl,
+    paddingVertical: theme.spacing.lg,
     backgroundColor: theme.colors.white,
+  },
+  partLabelText: {
+    ...theme.typography.caption,
+    fontSize: 16,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+    marginBottom: theme.spacing.md,
+    fontWeight: '600',
   },
   scenarioText: {
     ...theme.typography.heading,

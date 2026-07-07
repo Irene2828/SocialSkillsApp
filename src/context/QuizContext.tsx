@@ -38,7 +38,14 @@ const MOCK_AI_QUESTIONS: Question[] = [
       'Interrupt and talk about your favorite movie'
     ],
     correctAnswerIndex: 1,
-    explanation: 'A good listener looks at the speaker and makes comments like "Cool!" to show they are interested.'
+    explanation: 'A good listener looks at the speaker and makes comments like "Cool!" to show they are interested.',
+    whyOptions: [
+      'It helps them feel heard and shows we care',
+      'Because they will stop talking sooner',
+      'Because it is a strict rule'
+    ],
+    correctWhyIndex: 0,
+    whyConfirmation: 'Showing your friend that you are listening helps build a strong and happy friendship.'
   },
   {
     id: 'q_ai_2',
@@ -51,7 +58,14 @@ const MOCK_AI_QUESTIONS: Question[] = [
       '"Stop talking."'
     ],
     correctAnswerIndex: 0,
-    explanation: 'As a listener, it\'s great to ask for clarification if you don\'t understand something!'
+    explanation: 'As a listener, it\'s great to ask for clarification if you don\'t understand something!',
+    whyOptions: [
+      'To be polite and understand their story better',
+      'Because we want to copy them',
+      'To show we are not interested'
+    ],
+    correctWhyIndex: 0,
+    whyConfirmation: 'Asking for repetition is a polite way to show you care about what they are saying.'
   },
   {
     id: 'q_ai_3',
@@ -64,7 +78,14 @@ const MOCK_AI_QUESTIONS: Question[] = [
       'Nod your head'
     ],
     correctAnswerIndex: 2,
-    explanation: 'Nodding your head shows the speaker that you are listening and understand what is being said.'
+    explanation: 'Nodding your head shows the speaker that you are listening and understand what is being said.',
+    whyOptions: [
+      'Because nodding is the rule',
+      'It signals to the speaker that we are paying attention',
+      'So we look like we are awake'
+    ],
+    correctWhyIndex: 1,
+    whyConfirmation: 'Nodding is a simple body language cue that helps others feel supported.'
   },
   {
     id: 'q_ai_4',
@@ -77,7 +98,14 @@ const MOCK_AI_QUESTIONS: Question[] = [
       'Ask them questions about your game instead'
     ],
     correctAnswerIndex: 0,
-    explanation: 'We don\'t interrupt! It is the speaker\'s turn. If we say nothing or interrupt, they might think we aren\'t interested.'
+    explanation: 'We don\'t interrupt! It is the speaker\'s turn. If we say nothing or interrupt, they might think we aren\'t interested.',
+    whyOptions: [
+      'Because our game is not important',
+      'So they will let us talk when they finish',
+      'It shows respect for their turn to speak'
+    ],
+    correctWhyIndex: 2,
+    whyConfirmation: 'Waiting for others to finish is a great way to show mutual respect.'
   },
   {
     id: 'q_ai_5',
@@ -90,7 +118,14 @@ const MOCK_AI_QUESTIONS: Question[] = [
       'You just guess'
     ],
     correctAnswerIndex: 1,
-    explanation: 'The speaker will usually let you know they are finished, or there will be a stop in the talking (a pause).'
+    explanation: 'The speaker will usually let you know they are finished, or there will be a stop in the talking (a pause).',
+    whyOptions: [
+      'So we do not interrupt them',
+      'Because we are tired of talking',
+      'Because the teacher said so'
+    ],
+    correctWhyIndex: 0,
+    whyConfirmation: 'Waiting for pauses ensures that we do not cut others off in conversation.'
   }
 ];
 
