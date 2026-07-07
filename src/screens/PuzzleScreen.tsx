@@ -21,35 +21,47 @@ interface PuzzleConfig {
   cols: number;
   rows: number;
   difficulty: string;
+  category?: 'animals' | 'cities';
 }
 
 const PUZZLES: PuzzleConfig[] = [
-  { id: 'p_lion', name: 'Friendly Lion', image: require('../../assets/puzzles/lion.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
-  { id: 'p_panda', name: 'Happy Panda', image: require('../../assets/puzzles/panda.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_koala', name: 'Sleepy Koala', image: require('../../assets/puzzles/koala.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_rabbit', name: 'Fluffy Rabbit', image: require('../../assets/puzzles/rabbit.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_fox', name: 'Clever Fox', image: require('../../assets/puzzles/fox.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_elephant', name: 'Baby Elephant', image: require('../../assets/puzzles/elephant.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
-  { id: 'p_giraffe', name: 'Happy Giraffe', image: require('../../assets/puzzles/giraffe.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_penguin', name: 'Waving Penguin', image: require('../../assets/puzzles/penguin.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_turtle', name: 'Sea Turtle', image: require('../../assets/puzzles/turtle.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_tiger', name: 'Tiger Cub', image: require('../../assets/puzzles/tiger.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_dolphin', name: 'Jumping Dolphin', image: require('../../assets/puzzles/dolphin.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_owl', name: 'Wise Owl', image: require('../../assets/puzzles/owl.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
-  { id: 'p_bear', name: 'Cuddly Bear', image: require('../../assets/puzzles/bear.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_hippo', name: 'Baby Hippo', image: require('../../assets/puzzles/hippo.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_astronaut', name: 'Little Astronaut', image: require('../../assets/puzzles/puzzle_astronaut.png'), icon: 'rocket-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_dolphin2', name: 'Playful Dolphin', image: require('../../assets/puzzles/puzzle_dolphin.png'), icon: 'water-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_elephant2', name: 'Jungle Elephant', image: require('../../assets/puzzles/puzzle_elephant.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_fish', name: 'Clownfish', image: require('../../assets/puzzles/puzzle_fish.png'), icon: 'water-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
-  { id: 'p_koala2', name: 'Sleepy Koala 2', image: require('../../assets/puzzles/puzzle_koala.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_lion2', name: 'Brave Lion', image: require('../../assets/puzzles/puzzle_lion.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_octopus', name: 'Curious Octopus', image: require('../../assets/puzzles/puzzle_octopus.png'), icon: 'water-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
-  { id: 'p_parrot', name: 'Colorful Parrot', image: require('../../assets/puzzles/puzzle_parrot.png'), icon: 'leaf-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
-  { id: 'p_turtle2', name: 'Sea Turtle 2', image: require('../../assets/puzzles/puzzle_turtle.png'), icon: 'water-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
-  { id: 'p_unicorn', name: 'Magical Unicorn', image: require('../../assets/puzzles/puzzle_unicorn.png'), icon: 'star-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
+  { id: 'p_lion', name: 'Friendly Lion', image: require('../../assets/puzzles/lion.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
+  { id: 'p_panda', name: 'Happy Panda', image: require('../../assets/puzzles/panda.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_koala', name: 'Sleepy Koala', image: require('../../assets/puzzles/koala.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_rabbit', name: 'Fluffy Rabbit', image: require('../../assets/puzzles/rabbit.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_fox', name: 'Clever Fox', image: require('../../assets/puzzles/fox.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_elephant', name: 'Baby Elephant', image: require('../../assets/puzzles/elephant.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
+  { id: 'p_giraffe', name: 'Happy Giraffe', image: require('../../assets/puzzles/giraffe.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_penguin', name: 'Waving Penguin', image: require('../../assets/puzzles/penguin.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_turtle', name: 'Sea Turtle', image: require('../../assets/puzzles/turtle.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_tiger', name: 'Tiger Cub', image: require('../../assets/puzzles/tiger.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_dolphin', name: 'Jumping Dolphin', image: require('../../assets/puzzles/dolphin.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_owl', name: 'Wise Owl', image: require('../../assets/puzzles/owl.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
+  { id: 'p_bear', name: 'Cuddly Bear', image: require('../../assets/puzzles/bear.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_hippo', name: 'Baby Hippo', image: require('../../assets/puzzles/hippo.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_astronaut', name: 'Little Astronaut', image: require('../../assets/puzzles/puzzle_astronaut.png'), icon: 'rocket-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_dolphin2', name: 'Playful Dolphin', image: require('../../assets/puzzles/puzzle_dolphin.png'), icon: 'water-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_elephant2', name: 'Jungle Elephant', image: require('../../assets/puzzles/puzzle_elephant.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_fish', name: 'Clownfish', image: require('../../assets/puzzles/puzzle_fish.png'), icon: 'water-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
+  { id: 'p_koala2', name: 'Sleepy Koala 2', image: require('../../assets/puzzles/puzzle_koala.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_lion2', name: 'Brave Lion', image: require('../../assets/puzzles/puzzle_lion.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_octopus', name: 'Curious Octopus', image: require('../../assets/puzzles/puzzle_octopus.png'), icon: 'water-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
+  { id: 'p_parrot', name: 'Colorful Parrot', image: require('../../assets/puzzles/puzzle_parrot.png'), icon: 'leaf-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  { id: 'p_turtle2', name: 'Sea Turtle 2', image: require('../../assets/puzzles/puzzle_turtle.png'), icon: 'water-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
+  { id: 'p_unicorn', name: 'Magical Unicorn', image: require('../../assets/puzzles/puzzle_unicorn.png'), icon: 'star-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+
+  { id: 'p_kyiv', name: 'Kyiv', image: require('../../assets/puzzles/puzzle_kyiv.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_montreal', name: 'Montreal', image: require('../../assets/puzzles/puzzle_montreal.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_las_palmas', name: 'Las Palmas', image: require('../../assets/puzzles/puzzle_las_palmas.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_madrid', name: 'Madrid', image: require('../../assets/puzzles/puzzle_madrid.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_valencia', name: 'Valencia', image: require('../../assets/puzzles/puzzle_valencia.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_lisbon', name: 'Lisbon', image: require('../../assets/puzzles/puzzle_lisbon.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_berlin', name: 'Berlin', image: require('../../assets/puzzles/puzzle_berlin.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_paris', name: 'Paris', image: require('../../assets/puzzles/puzzle_paris.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_london', name: 'London', image: require('../../assets/puzzles/puzzle_london.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  { id: 'p_rome', name: 'Rome', image: require('../../assets/puzzles/puzzle_rome.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
 ];
 
 const DraggablePiece = ({
@@ -173,7 +185,10 @@ export const PuzzleScreen = () => {
   const [isSolved, setIsSolved] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
+  const [activeTab, setActiveTab] = useState<'animals' | 'cities'>('animals');
+
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
+  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => p.category === activeTab || p.id.startsWith('p_custom_'));
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -388,6 +403,21 @@ export const PuzzleScreen = () => {
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           
+          <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }, { marginHorizontal: theme.spacing.lg }]}>
+            <Pressable 
+              style={[styles.tab, activeTab === 'animals' && styles.activeTab, activeTab === 'animals' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
+              onPress={() => setActiveTab('animals')}
+            >
+              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '600' }]}>Animals</Text>
+            </Pressable>
+            <Pressable 
+              style={[styles.tab, activeTab === 'cities' && styles.activeTab, activeTab === 'cities' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
+              onPress={() => setActiveTab('cities')}
+            >
+              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '600' }]}>Cities</Text>
+            </Pressable>
+          </View>
+
           <View style={styles.grid}>
             {allPuzzles.map((puzzle) => (
               <View
@@ -697,6 +727,28 @@ export const PuzzleScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  tabContainer: {
+    flexDirection: 'row',
+    marginBottom: theme.spacing.md,
+    backgroundColor: theme.colors.white,
+    borderRadius: theme.borderRadius.full,
+    padding: theme.spacing.xs,
+    ...theme.shadows.soft,
+  },
+  tab: {
+    flex: 1,
+    paddingVertical: theme.spacing.sm,
+    alignItems: 'center',
+    borderRadius: theme.borderRadius.full,
+  },
+  activeTab: {
+    backgroundColor: theme.colors.primary,
+    opacity: 0.8,
+  },
+  tabText: {
+    ...theme.typography.button,
+    color: theme.colors.secondaryText,
+  },
   scrollContent: {
     paddingBottom: theme.spacing.xl,
   },
