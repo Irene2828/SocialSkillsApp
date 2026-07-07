@@ -75,7 +75,8 @@ const useFloatAnim = () => {
           easing: Easing.inOut(Easing.sin),
           useNativeDriver: true,
         }),
-      ])
+      ]),
+      { iterations: 2 }
     ).start();
   }, [floatAnim]);
 
@@ -177,20 +178,20 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Animated.View style={{ 
-              position: 'absolute', 
-              top: -500,
-              left: 29, // approx center of the spaceman's helmet when left is -15
-              width: 1, 
-              height: 470, // stops right at the helmet
-              backgroundColor: 'rgba(56, 189, 248, 0.6)', 
-              zIndex: 9, 
-              transform: [{ translateY: floatAnim }] 
-            }} />
-            <Animated.Image 
-              source={require('../../assets/mascot_v2_transparent.png')} 
-              style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10, transform: [{ translateY: floatAnim }] }} 
-            />
+            <Animated.View style={{ position: 'absolute', top: -45, left: -15, width: 90, height: 90, zIndex: 10, transform: [{ translateY: floatAnim }], alignItems: 'center' }}>
+              <View style={{ 
+                position: 'absolute', 
+                bottom: 85, // Stops just at the top of his helmet
+                width: 1, 
+                height: 500, // Long enough to go off screen
+                backgroundColor: 'rgba(30, 58, 138, 0.5)', // Navy blue
+                zIndex: 9, 
+              }} />
+              <Image 
+                source={require('../../assets/mascot_v2_transparent.png')} 
+                style={{ width: 90, height: 90, resizeMode: 'contain', zIndex: 10 }} 
+              />
+            </Animated.View>
             <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
             <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
           </View>
