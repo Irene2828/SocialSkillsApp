@@ -72,10 +72,9 @@ export const HomeScreen = () => {
           </View>
 
             <Text 
-              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontWeight: '500' }, isSmallScreen && { paddingHorizontal: theme.spacing.lg }]}
-              numberOfLines={2}
+              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontWeight: '600' }, isSmallScreen && { paddingHorizontal: theme.spacing.lg }]}
             >
-              Turn your knowledge{'\n'}into rewards!
+              Turn your knowledge{'\n'}into cool rewards!
             </Text>
 
             <Button

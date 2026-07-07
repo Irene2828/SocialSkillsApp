@@ -449,7 +449,6 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
   },
   partLabelText: {
