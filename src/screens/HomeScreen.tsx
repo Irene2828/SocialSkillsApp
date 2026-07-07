@@ -72,15 +72,15 @@ const ElectrifiedText = ({ text, style }: { text: string; style: any }) => {
       if (!isMounted) return;
       const animations = animatedValues.map((anim, index) => {
         return Animated.sequence([
-          Animated.delay(index * 120),
+          Animated.delay(index * 200), // slower wave across letters
           Animated.timing(anim, {
             toValue: 1,
-            duration: 150,
+            duration: 400, // slower glow in
             useNativeDriver: false,
           }),
           Animated.timing(anim, {
             toValue: 0,
-            duration: 600,
+            duration: 1200, // slower glow out
             useNativeDriver: false,
           })
         ]);
@@ -88,7 +88,7 @@ const ElectrifiedText = ({ text, style }: { text: string; style: any }) => {
 
       Animated.sequence([
         Animated.stagger(0, animations),
-        Animated.delay(5000)
+        Animated.delay(1000) // Much shorter break before it goes again
       ]).start(({ finished }) => {
         if (finished && isMounted) animateElectricity();
       });
