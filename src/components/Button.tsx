@@ -84,6 +84,8 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.primary,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
   },
   primaryGradient: {
     width: '100%',
