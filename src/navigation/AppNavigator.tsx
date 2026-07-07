@@ -6,6 +6,7 @@ import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme } from '../theme';
 
 const Tab = createBottomTabNavigator();
@@ -14,6 +15,14 @@ export const AppNavigator = () => {
   const insets = useSafeAreaInsets();
   const paddingBottom = Math.max(insets.bottom, 12);
   const height = 60 + paddingBottom;
+
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
+
+  const footerBgColor = isRocket ? moodColors.bg : '#F3F4F6';
+  const activeColor = isRocket ? '#FFFFFF' : theme.colors.text;
+  const inactiveColor = isRocket ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.5)';
 
   return (
     <Tab.Navigator
@@ -33,11 +42,11 @@ export const AppNavigator = () => {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: theme.colors.text,
-        tabBarInactiveTintColor: 'rgba(0, 0, 0, 0.5)',
+        tabBarActiveTintColor: activeColor,
+        tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: '#F3F4F6', // Silver grey
+          backgroundColor: footerBgColor,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,

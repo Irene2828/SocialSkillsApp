@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme, FONTS } from '../theme';
 import { SettingsModal } from './SettingsModal';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface TopBarProps {
   title: string;
@@ -12,6 +13,10 @@ interface TopBarProps {
 
 export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent }) => {
   const [showSettings, setShowSettings] = useState(false);
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
+  const textColor = isRocket ? '#FFFFFF' : theme.colors.text;
 
   return (
     <>
@@ -20,17 +25,17 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent })
         <View style={styles.side}>
           {onBack && (
             <Pressable onPress={onBack} style={{ padding: 8, marginLeft: -8 }}>
-              <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
+              <Ionicons name="arrow-back" size={24} color={textColor} />
             </Pressable>
           )}
         </View>
         
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: textColor }]}>{title}</Text>
         
         <View style={[styles.side, { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end' }]}>
           {rightComponent}
           <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
-            <Ionicons name="options-outline" size={24} color={theme.colors.text} />
+            <Ionicons name="options-outline" size={24} color={textColor} />
           </Pressable>
         </View>
       </View>
