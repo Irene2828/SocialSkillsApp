@@ -735,7 +735,7 @@ export const NewQuizScreen = () => {
           {/* Progress bar row: bar left-aligned with back button, coins on right, vertically centered */}
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <View style={{ flex: 1, marginBottom: 0 }}>
-              <View style={{ marginBottom: 0, paddingHorizontal: 0 }}>
+              <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
                 <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden' }}>
                   {selectedCategory === 'iq_word_problems' ? (
                     <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
@@ -750,11 +750,11 @@ export const NewQuizScreen = () => {
 
           {/* Caption below progress bar */}
           {selectedCategory === 'iq_word_problems' ? (
-            <Text style={[styles.questionCaption, { marginTop: 2, marginBottom: 0, color: subTextColor }]}>
+            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
               Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
             </Text>
           ) : (
-            <Text style={[styles.questionCaption, { marginTop: 2, marginBottom: 0, color: subTextColor }]}>
+            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
               Question {currentIndex + 1} of {currentQuestions.length}
             </Text>
           )}

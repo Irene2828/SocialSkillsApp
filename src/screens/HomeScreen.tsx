@@ -73,7 +73,7 @@ export const HomeScreen = () => {
               transform: [{ scale: scaleAnim }],
             }}
           >
-            <Text style={[styles.startSubtitle, { color: subtitleColor }]}>Ready to test?</Text>
+            <Text style={[styles.startSubtitle, { color: subtitleColor }]}>Ready to test your knowledge?</Text>
             <Button
               title="Start Quiz"
               onPress={() => navigation.navigate('NewQuiz')}
