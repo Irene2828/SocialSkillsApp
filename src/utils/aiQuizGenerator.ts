@@ -1,4 +1,4 @@
-const getSocialSystemPrompt = (age: number) => `You are an educational quiz generator for children.
+const getSocialSystemPrompt = (age: number, isImage: boolean = false) => `You are an educational quiz generator for children.
 
 The uploaded image is provided only to understand the educational concept being taught.
 
@@ -10,9 +10,9 @@ Instead:
 
 2. Ignore the wording of the source.
 
-3. Create exactly 3 distinct multiple-choice quizzes that teach this concept or closely related social/life skill concepts.
+13. ${isImage ? `Generate up to 3 quizzes (minimum 2) of exactly 5 questions each. If the source material is very narrow and does not support 3 genuinely distinct, non-repetitive quizzes, return exactly 2 instead of forcing a weak third one.` : `Create exactly 3 distinct multiple-choice quizzes that teach this concept or closely related social/life skill concepts.`}
 
-Requirements for each of the 3 quizzes:
+Requirements for each of the quizzes:
 
 • The "concept" field must be extremely concise: strictly 2 words max (e.g. "Active Listening", "Sharing Toys", "Taking Turns").
 • Questions must be original.
@@ -24,12 +24,12 @@ Requirements for each of the 3 quizzes:
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
 
-Create exactly 5 questions for each of the 3 quizzes.
+Create exactly 5 questions for each quiz.
 Each question must test the concept from a different real-life situation, perspective, or problem angle.
 
 Return the response STRICTLY as a JSON object matching this schema:
 {
-  "quizzes": [
+${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly 1 to 2 words max)",\n` : ''}  "quizzes": [
     {
       "concept": "Name of the concept/topic (strictly 1 to 2 words max)",
       "questions": [
@@ -48,7 +48,7 @@ Return the response STRICTLY as a JSON object matching this schema:
 }
 No markdown wrappers, no backticks, just raw JSON.`;
 
-const getMathSystemPrompt = (age: number) => `You are an educational math quiz generator for children.
+const getMathSystemPrompt = (age: number, isImage: boolean = false) => `You are an educational math quiz generator for children.
 
 The uploaded image is provided only to understand the mathematical concept being taught.
 
@@ -56,9 +56,9 @@ Instead of text summarization:
 
 1. Identify the underlying math concept (e.g., Addition, Place Value, Patterns, Counting, Subtraction).
 
-2. Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.
+2. ${isImage ? `Generate up to 3 quizzes (minimum 2) of exactly 5 questions each. If the source material is very narrow and does not support 3 genuinely distinct, non-repetitive quizzes, return exactly 2 instead of forcing a weak third one.` : `Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.`}
 
-Requirements for each of the 3 quizzes:
+Requirements for each of the quizzes:
 
 • The "concept" field must be extremely concise: strictly 2 words max (e.g. "Basic Addition", "Finding Patterns", "Word Problems").
 • Questions must be original math challenges.
@@ -68,11 +68,11 @@ Requirements for each of the 3 quizzes:
 • Friendly, encouraging language.
 • Format: The "scenario" field should contain the math problem itself (e.g. "What is 5 + 3?" or "What comes next? 2, 4, 6, ___").
 
-Create exactly 5 math problems for each of the 3 quizzes.
+Create exactly 5 math problems for each quiz.
 
 Return the response STRICTLY as a JSON object matching this schema:
 {
-  "quizzes": [
+${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly 1 to 2 words max)",\n` : ''}  "quizzes": [
     {
       "concept": "Name of the concept/topic (strictly 1 to 2 words max)",
       "questions": [
@@ -88,14 +88,29 @@ Return the response STRICTLY as a JSON object matching this schema:
 }
 No markdown wrappers, no backticks, just raw JSON.`;
 
-const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social') => {
-  return topicType === 'math' ? getMathSystemPrompt(age) : getSocialSystemPrompt(age);
+const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social', isImage: boolean = false) => {
+  return topicType === 'math' ? getMathSystemPrompt(age, isImage) : getSocialSystemPrompt(age, isImage);
 };
 
-const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social') => {
+const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', isImage: boolean = false) => {
   if (!data || typeof data !== 'object') throw new Error("Root is not an object");
-  if (!Array.isArray(data.quizzes) || data.quizzes.length !== 3) {
-    throw new Error(`Expected exactly 3 quizzes, got ${data.quizzes?.length}`);
+  
+  if (isImage && typeof data.folderName !== 'string') {
+    throw new Error(`Expected folderName string, got ${typeof data.folderName}`);
+  }
+
+  if (!Array.isArray(data.quizzes)) {
+    throw new Error("Expected quizzes to be an array");
+  }
+  
+  if (isImage) {
+    if (data.quizzes.length !== 2 && data.quizzes.length !== 3) {
+      throw new Error(`Expected 2 or 3 quizzes for image generation, got ${data.quizzes.length}`);
+    }
+  } else {
+    if (data.quizzes.length !== 3) {
+      throw new Error(`Expected exactly 3 quizzes for text generation, got ${data.quizzes.length}`);
+    }
   }
 
   for (const [qIndex, quiz] of data.quizzes.entries()) {
@@ -152,7 +167,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
           messages: [
             {
               role: 'system',
-              content: getSystemPrompt(age, topicType)
+              content: getSystemPrompt(age, topicType, true)
             },
             {
               role: 'user',
@@ -197,7 +212,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
         }
       }
 
-      validateQuizData(parsedData, topicType);
+      validateQuizData(parsedData, topicType, true);
       
       return parsedData;
 

@@ -111,6 +111,9 @@ export const NewQuizScreen = () => {
   const [aiPromptContext, setAiPromptContext] = useState('');
   const [generatedQuizzes, setGeneratedQuizzes] = useState<any[] | null>(null);
   const [showFolderSelection, setShowFolderSelection] = useState(false);
+  const [showPhotoConfirmation, setShowPhotoConfirmation] = useState(false);
+  const [suggestedFolderName, setSuggestedFolderName] = useState('');
+  const [selectedExistingFolderId, setSelectedExistingFolderId] = useState<string | null>(null);
   const [selectedLevel, setSelectedLevel] = useState<QuizLevel>(QUIZ_LEVELS[1]);
 
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -260,8 +263,14 @@ export const NewQuizScreen = () => {
       });
       
       setGeneratedQuizzes(newQuizzes);
+      if (responseData.folderName) {
+        setSuggestedFolderName(responseData.folderName);
+      } else {
+        setSuggestedFolderName('New Folder');
+      }
+      setSelectedExistingFolderId(null);
       setAiGenerating(false);
-      setShowFolderSelection(true);
+      setShowPhotoConfirmation(true);
     } catch (error) {
       console.error('Failed to generate quiz from image:', error);
       setAiGenerating(false);
@@ -372,6 +381,35 @@ export const NewQuizScreen = () => {
       setAiPromptText('');
       showToast({ message: 'AI Quizzes generated and saved!' });
     }
+  };
+
+  const handleConfirmPhotoQuizzes = () => {
+    if (generatedQuizzes) {
+      let targetFolderId = selectedExistingFolderId;
+      
+      if (!targetFolderId) {
+        const folderName = suggestedFolderName.trim() || 'New Folder';
+        targetFolderId = addFolder(folderName, activeTab);
+      }
+      
+      generatedQuizzes.forEach((quizSet) => {
+        const categoryToSave = { ...quizSet.category, folderId: targetFolderId };
+        addCustomQuiz(categoryToSave, quizSet.questions);
+      });
+      
+      setGeneratedQuizzes(null);
+      setShowPhotoConfirmation(false);
+      setSuggestedFolderName('');
+      setSelectedExistingFolderId(null);
+      showToast({ message: 'AI Quizzes added successfully!' });
+    }
+  };
+
+  const cancelPhotoConfirmation = () => {
+    setGeneratedQuizzes(null);
+    setShowPhotoConfirmation(false);
+    setSuggestedFolderName('');
+    setSelectedExistingFolderId(null);
   };
 
   const cancelFolderSelection = () => {
@@ -969,6 +1007,67 @@ export const NewQuizScreen = () => {
       </Modal>
 
 
+
+    {/* Photo Generation Confirmation Modal */}
+      <Modal visible={showPhotoConfirmation} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={cancelPhotoConfirmation}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={styles.levelTitle}>Confirm Quizzes</Text>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg }]}>
+                {generatedQuizzes ? `Generated ${generatedQuizzes.length} quizzes. Where would you like to save them?` : 'Where would you like to save these generated quizzes?'}
+              </Text>
+              
+              <Text style={[styles.modalOptionText, { marginBottom: theme.spacing.xs, fontSize: 14, color: theme.colors.secondaryText }]}>
+                Suggested New Folder Name
+              </Text>
+              <TextInput
+                style={[styles.modalInput, { marginBottom: theme.spacing.lg }]}
+                value={suggestedFolderName}
+                onChangeText={(text) => {
+                  setSuggestedFolderName(text);
+                  setSelectedExistingFolderId(null);
+                }}
+                placeholder="Enter folder name"
+              />
+              
+              <Text style={[styles.modalOptionText, { marginBottom: theme.spacing.xs, fontSize: 14, color: theme.colors.secondaryText }]}>
+                Or select an existing folder:
+              </Text>
+              
+              <ScrollView style={{ width: '100%', maxHeight: 200, marginBottom: theme.spacing.lg }}>
+                {folders.map(folder => (
+                  <Pressable 
+                    key={folder.id} 
+                    style={[
+                      styles.modalOptionCard, 
+                      { marginBottom: 8 },
+                      selectedExistingFolderId === folder.id && { backgroundColor: theme.colors.primarySoft, borderColor: theme.colors.primary, borderWidth: 2 }
+                    ]}
+                    onPress={() => setSelectedExistingFolderId(folder.id)}
+                  >
+                    <Ionicons name="folder-outline" size={24} color={selectedExistingFolderId === folder.id ? theme.colors.primary : theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Text style={[styles.modalOptionText, selectedExistingFolderId === folder.id && { color: theme.colors.primary, fontWeight: '600' }]}>{folder.name}</Text>
+                  </Pressable>
+                ))}
+              </ScrollView>
+              
+              <Button 
+                title="Add Quizzes" 
+                variant="primary"
+                onPress={handleConfirmPhotoQuizzes} 
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
+              />
+              <Button 
+                title="Cancel" 
+                variant="secondary"
+                onPress={cancelPhotoConfirmation} 
+                style={{ width: '100%' }}
+              />
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
 
       {/* Folder Selection Modal after AI Generation */}
       <Modal visible={showFolderSelection} transparent animationType="fade">
@@ -1926,6 +2025,16 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.stroke,
   },
   modalOptionText: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+  },
+  modalInput: {
+    width: '100%',
+    padding: theme.spacing.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
     ...theme.typography.body,
     color: theme.colors.text,
   },
