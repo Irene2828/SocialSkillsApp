@@ -726,8 +726,9 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2 }}>
+        {/* Sticky header — stays pinned at top */}
+        <View style={{ paddingBottom: theme.spacing.sm, zIndex: 10 }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.sm, zIndex: 2 }}>
             <Pressable style={[
               styles.backButton,
               isRocket && {
@@ -744,29 +745,39 @@ export const NewQuizScreen = () => {
               <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
           </View>
-          
-          {selectedCategory === 'iq_word_problems' ? (
-            <>
-              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4, color: subTextColor }]}>
-                Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
-              </Text>
-              <ProgressBar 
-                current={currentWordProblemStep + 1} 
-                total={totalWordProblemSteps} 
-              />
-            </>
-          ) : (
-            <>
-              <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 4, color: subTextColor }]}>Question {currentIndex + 1} of {currentQuestions.length}</Text>
-              <ProgressBar 
-                current={currentIndex + 1} 
-                total={currentQuestions.length} 
-              />
-            </>
-          )}
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingHorizontal: theme.spacing.md, marginTop: -16, marginBottom: theme.spacing.md }}>
+
+          {/* Progress bar row: coins left, bar fills right */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             {renderCoinJar()}
+            <View style={{ flex: 1 }}>
+              {selectedCategory === 'iq_word_problems' ? (
+                <ProgressBar 
+                  current={currentWordProblemStep + 1} 
+                  total={totalWordProblemSteps} 
+                />
+              ) : (
+                <ProgressBar 
+                  current={currentIndex + 1} 
+                  total={currentQuestions.length} 
+                />
+              )}
+            </View>
           </View>
+
+          {/* Caption below progress bar */}
+          {selectedCategory === 'iq_word_problems' ? (
+            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
+              Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
+            </Text>
+          ) : (
+            <Text style={[styles.questionCaption, { marginTop: 4, marginBottom: 0, color: subTextColor }]}>
+              Question {currentIndex + 1} of {currentQuestions.length}
+            </Text>
+          )}
+        </View>
+
+        {/* Scrollable question content */}
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
           {selectedCategory === 'iq_word_problems' ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
