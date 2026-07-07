@@ -38,7 +38,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = 
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {!moodColors.isDark && (
         <LinearGradient
-          colors={['#FFFFFF', theme.colors.primarySoft, '#FFFFFF']}
+          colors={['#FFFFFF', '#E0F2FE', '#FFFFFF']}
           style={StyleSheet.absoluteFill}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
