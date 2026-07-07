@@ -78,7 +78,7 @@ export const HomeScreen = () => {
               adjustsFontSizeToFit
               numberOfLines={1}
             >
-              Ready to test your knowledge?
+              Practice your skills!
             </Text>
             <Button
               title="Start Quiz"

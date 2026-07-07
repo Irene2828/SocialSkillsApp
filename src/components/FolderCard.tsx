@@ -51,7 +51,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
             <Ionicons name="folder-outline" size={32} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, glassTextShadow]} numberOfLines={2}>{name}</Text>
+            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>{name}</Text>
           </View>
         </View>
       </Pressable>

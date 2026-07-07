@@ -21,7 +21,7 @@ export const theme = {
     errorSoft: '#F3F4F6',
     neutralGrey: '#E5E7EB',
     accent: '#FFC857',
-    stroke: '#D1D5DB',
+    stroke: '#BAE6FD', // Sky Blue 200 (was #D1D5DB)
     text: '#111827',
     secondaryText: '#6B7280',
     white: '#FFFFFF',

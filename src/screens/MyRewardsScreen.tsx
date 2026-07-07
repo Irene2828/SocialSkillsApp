@@ -833,8 +833,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
   },
   activeTab: {
-    backgroundColor: theme.colors.primary,
-    opacity: 0.8,
+    backgroundColor: '#BAE6FD',
+    opacity: 1,
   },
   tabText: {
     ...theme.typography.button,

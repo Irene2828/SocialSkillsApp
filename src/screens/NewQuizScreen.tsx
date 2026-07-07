@@ -75,7 +75,7 @@ export const NewQuizScreen = () => {
     ...IQ_CATEGORIES,
     { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'sparkles-outline', isCustom: true },
     { id: 'new_folder_1', title: 'New Folder', description: '0 quizzes', icon: 'folder-outline', isCustom: false },
-    { id: 'new_folder_2', title: 'New Folder 2', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
+    { id: 'new_folder_2', title: 'New Quiz', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
   ], []);
 
   const { folders, addFolder, removeFolder, renameFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
@@ -593,13 +593,13 @@ export const NewQuizScreen = () => {
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'general' && { backgroundColor: theme.colors.primary, opacity: 0.85 }]} 
+            style={[styles.tab, activeTab === 'general' && { backgroundColor: '#BAE6FD', opacity: 1 }]} 
             onPress={() => setActiveTab('general')}
           >
             <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: theme.colors.text }]}>Social Skills</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.85 }]} 
+            style={[styles.tab, activeTab === 'ai' && { backgroundColor: '#BAE6FD', opacity: 1 }]} 
             onPress={() => setActiveTab('ai')}
           >
             <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: theme.colors.text }]}>Math Skills</Text>

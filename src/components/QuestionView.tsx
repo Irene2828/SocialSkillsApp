@@ -183,10 +183,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* ===== PART 1 ===== */}
+      <Card style={[styles.unifiedCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+        {/* ===== PART 1 ===== */}
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
-          <Card style={styles.scenarioCard}>
+          <View style={styles.scenarioCard}>
             {whyQuestion && (
               <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 1</Text>
             )}
@@ -194,7 +195,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           {question.prompt && (
             <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.prompt}</Text>
           )}
-          </Card>
+          </View>
         </View>
 
         <View style={styles.optionsContainer}>
@@ -302,13 +303,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         >
 
           <View style={styles.cardWrapper}>
-            <Card style={styles.scenarioCard}>
+            <View style={styles.scenarioCard}>
               <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 2</Text>
               <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.scenario}</Text>
               {whyQuestion.prompt && (
                 <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.prompt}</Text>
               )}
-            </Card>
+            </View>
           </View>
 
           <View style={styles.optionsContainer}>
@@ -401,6 +402,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           </Modal>
         </Animated.View>
       )}
+      </Card>
     </View>
   );
 };
@@ -408,6 +410,14 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  unifiedCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#E5E7EB',
   },
   cardWrapper: {
     position: 'relative',
@@ -439,9 +449,8 @@ const styles = StyleSheet.create({
   },
   scenarioCard: {
     marginBottom: theme.spacing.lg,
-    padding: theme.spacing.xl,
-    paddingVertical: theme.spacing.lg,
-    backgroundColor: theme.colors.white,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
   },
   partLabelText: {
     ...theme.typography.caption,

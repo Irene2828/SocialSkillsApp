@@ -133,26 +133,18 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 
   return (
     <View style={styles.container}>
-      {/* Persistent Problem Text Card */}
-      <Card style={styles.mainCard}>
-        <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
-        <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
-      </Card>
+      <Card style={[styles.unifiedCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+        {/* Persistent Problem Text Card */}
+        <View style={styles.mainCard}>
+          <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
+          <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
+        </View>
 
       {/* ===== Completed Steps (stacked, read-only) ===== */}
       {completedSteps.map((cs) => {
         const step = question.steps[cs.stepIndex];
         return (
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
-            {/* Step divider */}
-            <View style={styles.stepSectionDivider}>
-              <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-              <Text style={[styles.stepSectionLabel, isRocket && { color: 'rgba(255,255,255,0.5)' }]}>
-                Step {cs.stepIndex + 1} ✓
-              </Text>
-              <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-            </View>
-
             {/* Completed step prompt */}
             <View style={[styles.completedPromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.2)' }]}>
               <Text style={[styles.promptText, { fontStyle: 'italic', opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
@@ -182,15 +174,6 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
       {/* ===== Current Active Step ===== */}
       {currentStep && (
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
-          {/* Step divider for current step */}
-          <View style={styles.stepSectionDivider}>
-            <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-            <Text style={[styles.stepSectionLabel, isRocket && { color: 'rgba(255,255,255,0.6)' }]}>
-              Step {currentStepIndex + 1} of {question.steps.length}
-            </Text>
-            <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
-          </View>
-
           {/* Current step prompt */}
           <View style={[styles.activePromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }]}>
             <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
@@ -226,6 +209,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           </View>
         </Animated.View>
       )}
+      </Card>
 
       {/* ===== Feedback Modal ===== */}
       <Modal
@@ -297,6 +281,14 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+  },
+  unifiedCard: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    padding: theme.spacing.lg,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: '#E5E7EB',
   },
   animatedContainer: {
     width: '100%',
