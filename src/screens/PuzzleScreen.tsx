@@ -188,7 +188,6 @@ export const PuzzleScreen = () => {
   const [activeTab, setActiveTab] = useState<'animals' | 'cities'>('animals');
 
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
-  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => p.category === activeTab || p.id.startsWith('p_custom_'));
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -201,7 +200,7 @@ export const PuzzleScreen = () => {
     loadPuzzles();
   }, []);
 
-  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles];
+  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => p.category === activeTab || p.id.startsWith('p_custom_'));
 
   const handleDeletePuzzle = (puzzle: PuzzleConfig) => {
     setActionMenuPuzzle(puzzle);
@@ -403,15 +402,15 @@ export const PuzzleScreen = () => {
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           
-          <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }, { marginHorizontal: theme.spacing.lg }]}>
+          <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
             <Pressable 
-              style={[styles.tab, activeTab === 'animals' && styles.activeTab, activeTab === 'animals' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
+              style={[styles.tab, activeTab === 'animals' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
               onPress={() => setActiveTab('animals')}
             >
               <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '600' }]}>Animals</Text>
             </Pressable>
             <Pressable 
-              style={[styles.tab, activeTab === 'cities' && styles.activeTab, activeTab === 'cities' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
+              style={[styles.tab, activeTab === 'cities' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
               onPress={() => setActiveTab('cities')}
             >
               <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '600' }]}>Cities</Text>

@@ -132,14 +132,15 @@ const styles = StyleSheet.create({
   },
   text: {
     ...theme.typography.button,
+    fontWeight: '600',
   },
   primaryText: {
-    color: theme.colors.text,
+    color: '#374151',
   },
   secondaryText: {
-    color: theme.colors.text,
+    color: '#374151',
   },
   outlineText: {
-    color: theme.colors.text,
+    color: '#374151',
   },
 });
