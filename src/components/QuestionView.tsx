@@ -276,8 +276,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
                       <Button
                         title="Continue"
-                        iconName="arrow-forward"
-                        iconSize={18}
                         onPress={handleCloseModal}
                         style={styles.continueButton}
                         disabled={disabled}
@@ -386,8 +384,6 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <Animated.View style={{ width: '100%' }}>
                       <Button
                         title="Continue"
-                        iconName="arrow-forward"
-                        iconSize={18}
                         onPress={handleClosePart2Modal}
                         style={styles.continueButton}
                         disabled={disabled}

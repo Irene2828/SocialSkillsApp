@@ -74,18 +74,13 @@ export const HomeScreen = () => {
             }}
           >
             <Text 
-              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center' }]}
-              adjustsFontSizeToFit
-              numberOfLines={1}
+              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center' }, isSmallScreen && { paddingHorizontal: theme.spacing.lg }]}
+              numberOfLines={2}
             >
               Turn Knowledge into Rewards!
             </Text>
             <Button
               title="Start Now"
-              iconName="arrow-forward"
-              iconSize={18}
-              iconColor="#4B5563"
-              iconStyle={{ transform: [{ rotate: '-45deg' }] }}
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
