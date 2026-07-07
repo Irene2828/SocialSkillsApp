@@ -203,8 +203,8 @@ export const HomeScreen = () => {
                 style={{ width: 90, height: 90, resizeMode: 'contain', zIndex: 10 }} 
               />
             </Animated.View>
-            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
-            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
+            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.bold, fontWeight: '800', letterSpacing: 3, color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
+            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.bold, fontWeight: '800', letterSpacing: 3, color: titleColor }]} startIndex={5} totalLetters={13} />
           </View>
 
             <Text 
