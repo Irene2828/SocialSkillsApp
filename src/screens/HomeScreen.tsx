@@ -83,50 +83,52 @@ const useFloatAnim = () => {
 };
 
 const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { text: string; style: any; startIndex?: number; totalLetters?: number }) => {
-  const animatedValues = useRef(text.split('').map(() => new Animated.Value(0))).current;
+  const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const waveSpeed = 300; // ms between each letter starting
-    const glowIn = 500;
-    const glowOut = 1500;
-    const totalDuration = (totalLetters * waveSpeed) + glowIn + glowOut;
-
-    const animations = animatedValues.map((anim, index) => {
-      const myDelay = (startIndex + index) * waveSpeed;
-      const remainingTime = totalDuration - myDelay - glowIn - glowOut;
-      
-      return Animated.loop(
-        Animated.sequence([
-          Animated.delay(myDelay),
-          Animated.timing(anim, {
-            toValue: 1,
-            duration: glowIn,
-            useNativeDriver: false,
-          }),
-          Animated.timing(anim, {
-            toValue: 0,
-            duration: glowOut,
-            useNativeDriver: false,
-          }),
-          Animated.delay(Math.max(0, remainingTime))
-        ])
-      );
-    });
-
-    Animated.parallel(animations).start();
-  }, [animatedValues, startIndex, totalLetters]);
+    // 6 seconds for the full wave to pass
+    Animated.loop(
+      Animated.timing(anim, {
+        toValue: 1,
+        duration: 6000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      })
+    ).start();
+  }, [anim]);
 
   return (
     <View style={{ flexDirection: 'row' }}>
       {text.split('').map((char, index) => {
-        const color = animatedValues[index].interpolate({
-          inputRange: [0, 0.3, 1],
-          outputRange: [style.color || '#333', '#FDE047', '#38BDF8']
+        const center = (startIndex + index) / totalLetters;
+        const spread = 0.15; // 15% of the text glows at once
+
+        const color = anim.interpolate({
+          inputRange: [
+            center - 1 - spread, center - 1, center - 1 + spread,
+            center - spread, center, center + spread,
+            center + 1 - spread, center + 1, center + 1 + spread,
+          ],
+          outputRange: [
+            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
+            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
+            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
+          ],
+          extrapolate: 'clamp',
         });
         
-        const shadowColor = animatedValues[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: ['rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 1)']
+        const shadowColor = anim.interpolate({
+          inputRange: [
+            center - 1 - spread, center - 1, center - 1 + spread,
+            center - spread, center, center + spread,
+            center + 1 - spread, center + 1, center + 1 + spread,
+          ],
+          outputRange: [
+            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
+            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
+            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
+          ],
+          extrapolate: 'clamp',
         });
 
         return (
@@ -159,7 +161,7 @@ export const HomeScreen = () => {
   
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
-  const titleColor = moodColors.isDark ? '#FFFFFF' : theme.colors.text;
+  const titleColor = moodColors.isDark ? '#FFFFFF' : '#1E3A8A'; // Navy blue
   const subtitleColor = moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
 
 
@@ -175,6 +177,16 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
+            <Animated.View style={{ 
+              position: 'absolute', 
+              top: -500,
+              left: 29, // approx center of the spaceman's helmet when left is -15
+              width: 1, 
+              height: 470, // stops right at the helmet
+              backgroundColor: 'rgba(56, 189, 248, 0.6)', 
+              zIndex: 9, 
+              transform: [{ translateY: floatAnim }] 
+            }} />
             <Animated.Image 
               source={require('../../assets/mascot_v2_transparent.png')} 
               style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10, transform: [{ translateY: floatAnim }] }} 
