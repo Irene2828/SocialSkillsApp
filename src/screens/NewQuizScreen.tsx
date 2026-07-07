@@ -884,12 +884,7 @@ export const NewQuizScreen = () => {
     let categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     const customCat = customCategories.find(c => c.id === selectedCategory);
     if (customCat) {
-      if (customCat.folderId) {
-        const folder = folders.find(f => f.id === customCat.folderId);
-        categoryName = folder ? `${folder.name}. ${customCat.title}` : customCat.title;
-      } else {
-        categoryName = customCat.title;
-      }
+      categoryName = customCat.title;
     }
 
     return (
