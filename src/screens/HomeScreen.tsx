@@ -78,20 +78,11 @@ export const HomeScreen = () => {
               Turn your knowledge{'\n'}into rewards!
             </Text>
 
-            <Animated.View
-              style={{
-                width: '100%',
-                alignItems: 'center',
-                opacity: fadeAnim,
-                transform: [{ scale: scaleAnim }],
-              }}
-            >
-              <Button
-                title="Start Now"
-                onPress={() => navigation.navigate('NewQuiz')}
-                style={styles.actionButton}
-              />
-            </Animated.View>
+            <Button
+              title="START"
+              onPress={() => navigation.navigate('NewQuiz')}
+              style={styles.actionButton}
+            />
         </View>
       </ScreenWrapper>
     </View>
