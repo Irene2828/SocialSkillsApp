@@ -1532,7 +1532,6 @@ const styles = StyleSheet.create({
   createAiButtonContainer: {
     width: '100%',
     marginTop: theme.spacing.lg * 2,
-    paddingHorizontal: theme.spacing.xl,
   },
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
