@@ -235,7 +235,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
-                    ? (isFinalStep ? 'Correct!' : `Step ${currentStepIndex + 1} correct!`) 
+                    ? "That's Correct!" 
                     : "Not quite, try again!"}
                 </Text>
               </View>
@@ -251,11 +251,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 </View>
               )}
 
-              {displayIsCorrect && currentStep && (
-                <View style={{ marginBottom: theme.spacing.lg }}>
-                  <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow, { marginBottom: 0 }]}>{currentStep.explanation}</Text>
-                </View>
-              )}
+
 
               {displayIsCorrect ? (
                 <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
