@@ -58,6 +58,14 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
       onPressOut={handlePressOut}
       {...props}
     >
+      {isPrimary && (
+        <LinearGradient
+          colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+          style={StyleSheet.absoluteFillObject}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0, y: 1 }}
+        />
+      )}
       {content}
     </ScalePressable>
   );
@@ -69,6 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   primaryButtonContainer: {
     borderRadius: theme.borderRadius.full,
