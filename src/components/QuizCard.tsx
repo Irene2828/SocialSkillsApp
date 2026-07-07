@@ -81,7 +81,11 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
-            <Text style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} numberOfLines={2}>
+            <Text 
+              style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} 
+              numberOfLines={2}
+              adjustsFontSizeToFit
+            >
               {category.title}
             </Text>
             <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
@@ -135,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing.md,
-    height: 150,
+    minHeight: 150,
     position: 'relative',
     borderWidth: 0,
   },
@@ -158,7 +162,7 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     width: '100%',
-    height: 56,
+    minHeight: 56,
     justifyContent: 'flex-start',
   },
   featuredTextContainer: {

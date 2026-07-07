@@ -243,7 +243,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 <View style={styles.feedbackTitleContainer}>
                   <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                     {displayIsCorrect 
-                      ? (whyQuestion ? "Part 1 correct! Let's continue..." : (showCoinReward ? 'Correct!' : "That's correct!"))
+                      ? (whyQuestion ? "That's correct!" : (showCoinReward ? 'Correct!' : "That's correct!"))
                       : "Not quite, try again!"}
                   </Text>
                 </View>
