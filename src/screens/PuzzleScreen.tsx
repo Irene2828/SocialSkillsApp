@@ -701,6 +701,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.lg,
+    paddingTop: theme.spacing.lg * 2,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: StyleSheet.hairlineWidth,
