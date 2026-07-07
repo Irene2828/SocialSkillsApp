@@ -9,7 +9,7 @@ interface MoodContextData {
 }
 
 const MoodContext = createContext<MoodContextData>({
-  mood: 'botanical',
+  mood: 'none',
   setMood: () => {},
 });
 
@@ -28,13 +28,15 @@ export const getMoodColors = (mood: MoodType) => {
 export const useMood = () => useContext(MoodContext);
 
 export const MoodProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [mood, setMoodState] = useState<MoodType>('botanical');
+  const [mood, setMoodState] = useState<MoodType>('none');
 
   useEffect(() => {
     const loadMood = async () => {
-      const stored = await safeStorage.get<MoodType>('@app_mood', 'botanical');
-      if (stored) {
+      const stored = await safeStorage.get<MoodType>('@app_mood', 'none');
+      if (stored && stored !== 'botanical') {
         setMoodState(stored);
+      } else {
+        setMoodState('none');
       }
     };
     loadMood();
