@@ -596,18 +596,18 @@ export const NewQuizScreen = () => {
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         <TopBar title="Library" />
         
-        <View style={styles.tabContainer}>
+        <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'general' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
+            style={[styles.tab, activeTab === 'general' && { backgroundColor: theme.colors.primary, opacity: 0.85 }]} 
             onPress={() => setActiveTab('general')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && styles.activeTabText]}>Social Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: theme.colors.text }]}>Social Skills</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.8 }]} 
+            style={[styles.tab, activeTab === 'ai' && { backgroundColor: theme.colors.primary, opacity: 0.85 }]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && styles.activeTabText]}>Math Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: theme.colors.text }]}>Math Skills</Text>
           </Pressable>
         </View>
 

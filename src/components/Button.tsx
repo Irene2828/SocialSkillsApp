@@ -19,12 +19,13 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
   const isOutline = variant === 'outline';
+  const isRocket = mood === 'rocket';
 
-  let textStyle = styles.secondaryText;
+  let textStyle: any = styles.secondaryText;
   if (isPrimary || (isOutline && isPressed)) {
     textStyle = styles.primaryText;
   } else if (isOutline) {
-    textStyle = styles.outlineText;
+    textStyle = [styles.outlineText, isRocket && { color: '#FFFFFF' }];
   }
 
   const content = (
@@ -49,7 +50,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
         styles.button,
         isPrimary && [styles.primaryButtonContainer, { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary }],
         isSecondary && styles.secondaryButton,
-        isOutline && styles.outlineButton,
+        isOutline && [styles.outlineButton, isRocket && { borderColor: '#FFFFFF' }],
         isOutline && isPressed && [styles.outlineButtonPressed, { backgroundColor: theme.colors.primary }],
         style,
       ]}

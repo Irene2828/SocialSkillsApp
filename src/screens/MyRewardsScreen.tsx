@@ -23,11 +23,16 @@ import { theme, FONTS } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 export const MyRewardsScreen = () => {
   const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isDark = moodColors.isDark;
+  const subTextColor = isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
 
   const [showUndo, setShowUndo] = useState(false);
   const [undoState, setUndoState] = useState<{ type: 'delete' | 'fulfill' | 'delete-custom'; itemId: string } | null>(null);
@@ -374,7 +379,7 @@ export const MyRewardsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
         <TopBar title="Rewards" />
@@ -387,18 +392,18 @@ export const MyRewardsScreen = () => {
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
-        <View style={styles.tabContainer}>
+        <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
             style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
             onPress={() => setActiveTab('available')}
           >
-            <Text style={[styles.tabText, activeTab === 'available' && styles.activeTabText]}>All Rewards</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: theme.colors.text }]}>All Rewards</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>Unlocked</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: theme.colors.text }]}>Unlocked</Text>
           </Pressable>
         </View>
 
