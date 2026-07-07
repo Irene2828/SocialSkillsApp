@@ -8,16 +8,22 @@ const CUBE_COLORS = ['#FFFFFF'];
 
 export const AnimatedCubesBackground: React.FC = () => {
   const [cubes] = useState(() => {
-    return Array.from({ length: CUBE_COUNT }).map((_, i) => ({
-      id: i,
-      x: Math.random() * width,
-      size: Math.random() * 12 + 6, // 6px to 18px cubes
+    return Array.from({ length: CUBE_COUNT }).map((_, i) => {
+      // Skew towards edges (0 and 1) to keep the center relatively clear for UI
+      const skewed = Math.pow(Math.random(), 2.5); 
+      const finalX = Math.random() > 0.5 ? skewed : 1 - skewed;
+      
+      return {
+        id: i,
+        x: finalX * width,
+        size: Math.random() * 12 + 6, // 6px to 18px cubes
       color: CUBE_COLORS[Math.floor(Math.random() * CUBE_COLORS.length)],
       duration: Math.random() * 10000 + 15000, // Very slow float: 15s to 25s
       rotationDir: Math.random() > 0.5 ? 1 : -1,
       randomOffset: Math.random(), // 0 to 1
       animValue: new Animated.Value(0),
-    }));
+    };
+    });
   });
 
   useEffect(() => {

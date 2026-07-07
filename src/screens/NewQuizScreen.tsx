@@ -18,6 +18,7 @@ import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types
 import { questions as allQuestions } from '../data/questions';
 import { wordProblems } from '../data/wordProblems';
 import { useRewards } from '../context/RewardsContext';
+import { safeStorage } from '../utils/storage';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
