@@ -82,59 +82,71 @@ const useFloatAnim = () => {
   return floatAnim;
 };
 
-const ElectrifiedText = ({ text, style, delay = 0 }: { text: string; style: any; delay?: number }) => {
-  const anim = useRef(new Animated.Value(0)).current;
+const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { text: string; style: any; startIndex?: number; totalLetters?: number }) => {
+  const animatedValues = useRef(text.split('').map(() => new Animated.Value(0))).current;
 
   useEffect(() => {
-    let isMounted = true;
-    const animateElectricity = () => {
-      if (!isMounted) return;
-      Animated.sequence([
-        Animated.delay(delay),
-        Animated.timing(anim, {
-          toValue: 1,
-          duration: 300, // fast magic light change
-          useNativeDriver: false,
-        }),
-        Animated.timing(anim, {
-          toValue: 0,
-          duration: 800, // smooth glow out
-          useNativeDriver: false,
-        }),
-        Animated.delay(1000) // loop delay
-      ]).start(({ finished }) => {
-        if (finished && isMounted) animateElectricity();
-      });
-    };
+    const waveSpeed = 300; // ms between each letter starting
+    const glowIn = 500;
+    const glowOut = 1500;
+    const totalDuration = (totalLetters * waveSpeed) + glowIn + glowOut;
 
-    animateElectricity();
-    return () => { isMounted = false; };
-  }, [anim, delay]);
+    const animations = animatedValues.map((anim, index) => {
+      const myDelay = (startIndex + index) * waveSpeed;
+      const remainingTime = totalDuration - myDelay - glowIn - glowOut;
+      
+      return Animated.loop(
+        Animated.sequence([
+          Animated.delay(myDelay),
+          Animated.timing(anim, {
+            toValue: 1,
+            duration: glowIn,
+            useNativeDriver: false,
+          }),
+          Animated.timing(anim, {
+            toValue: 0,
+            duration: glowOut,
+            useNativeDriver: false,
+          }),
+          Animated.delay(Math.max(0, remainingTime))
+        ])
+      );
+    });
 
-  const color = anim.interpolate({
-    inputRange: [0, 0.3, 1],
-    outputRange: [style.color || '#333', '#FDE047', '#38BDF8']
-  });
-  
-  const shadowColor = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 1)']
-  });
+    Animated.parallel(animations).start();
+  }, [animatedValues, startIndex, totalLetters]);
 
   return (
-    <Animated.Text 
-      style={[
-        style, 
-        { 
-          color,
-          textShadowColor: shadowColor,
-          textShadowRadius: 8,
-          textShadowOffset: { width: 0, height: 0 },
-        }
-      ]}
-    >
-      {text}
-    </Animated.Text>
+    <View style={{ flexDirection: 'row' }}>
+      {text.split('').map((char, index) => {
+        const color = animatedValues[index].interpolate({
+          inputRange: [0, 0.3, 1],
+          outputRange: [style.color || '#333', '#FDE047', '#38BDF8']
+        });
+        
+        const shadowColor = animatedValues[index].interpolate({
+          inputRange: [0, 1],
+          outputRange: ['rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 1)']
+        });
+
+        return (
+          <Animated.Text 
+            key={`${char}-${index}`} 
+            style={[
+              style, 
+              { 
+                color,
+                textShadowColor: shadowColor,
+                textShadowRadius: 8,
+                textShadowOffset: { width: 0, height: 0 },
+              }
+            ]}
+          >
+            {char}
+          </Animated.Text>
+        );
+      })}
+    </View>
   );
 };
 
@@ -167,8 +179,8 @@ export const HomeScreen = () => {
               source={require('../../assets/mascot_v2_transparent.png')} 
               style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10, transform: [{ translateY: floatAnim }] }} 
             />
-            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} delay={0} />
-            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} delay={400} />
+            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
+            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
           </View>
 
             <Text 
