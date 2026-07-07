@@ -138,7 +138,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <View style={styles.mainCard}>
           <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
           <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
-          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, fontStyle: 'italic', color: '#6B7280', marginTop: -8, marginBottom: 8 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
+          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, color: '#6B7280', marginTop: -8, marginBottom: 12 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
             (don't answer yet, follow the steps below first!)
           </Text>
         </View>
@@ -301,7 +301,9 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: 'transparent',
     borderWidth: 0,
-    marginBottom: theme.spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.stroke,
+    marginBottom: 0,
   },
   situationalLabel: {
     ...theme.typography.body,
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
     lineHeight: 34,
     textAlign: 'center',
     color: theme.colors.text,
-    marginTop: theme.spacing.xl,
+    marginTop: theme.spacing.md,
   },
 
   // Completed step styling

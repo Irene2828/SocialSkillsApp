@@ -73,26 +73,27 @@ export const HomeScreen = () => {
             <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Explorer</Text>
           </View>
 
-          <Animated.View
-            style={{
-              width: '100%',
-              alignItems: 'center',
-              opacity: fadeAnim,
-              transform: [{ scale: scaleAnim }],
-            }}
-          >
             <Text 
               style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontWeight: '500' }, isSmallScreen && { paddingHorizontal: theme.spacing.lg }]}
               numberOfLines={2}
             >
               Turn your knowledge{'\n'}into rewards!
             </Text>
-            <Button
-              title="Start Now"
-              onPress={() => navigation.navigate('NewQuiz')}
-              style={styles.actionButton}
-            />
-          </Animated.View>
+
+            <Animated.View
+              style={{
+                width: '100%',
+                alignItems: 'center',
+                opacity: fadeAnim,
+                transform: [{ scale: scaleAnim }],
+              }}
+            >
+              <Button
+                title="Start Now"
+                onPress={() => navigation.navigate('NewQuiz')}
+                style={styles.actionButton}
+              />
+            </Animated.View>
         </View>
       </ScreenWrapper>
     </View>
