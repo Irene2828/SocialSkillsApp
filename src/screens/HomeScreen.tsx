@@ -12,6 +12,7 @@ import { GlobalBackground } from '../components/GlobalBackground';
 const useAttentionLoop = () => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const borderAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -32,10 +33,28 @@ const useAttentionLoop = () => {
     };
 
     timeoutId = setTimeout(pulse, 6000);
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(borderAnim, {
+          toValue: 1,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+        Animated.timing(borderAnim, {
+          toValue: 0,
+          duration: 1500,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+
     return () => clearTimeout(timeoutId);
   }, []);
 
-  return { fadeAnim, scaleAnim };
+  return { fadeAnim, scaleAnim, borderAnim };
 };
 
 const useFloatAnim = () => {
@@ -134,7 +153,7 @@ const ElectrifiedText = ({ text, style }: { text: string; style: any }) => {
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
-  const { fadeAnim, scaleAnim } = useAttentionLoop();
+  const { fadeAnim, scaleAnim, borderAnim } = useAttentionLoop();
   const floatAnim = useFloatAnim();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
@@ -174,7 +193,16 @@ export const HomeScreen = () => {
             <Button
               title="START NOW"
               onPress={() => navigation.navigate('NewQuiz')}
-              style={styles.actionButton}
+              style={[
+                styles.actionButton,
+                {
+                  borderWidth: 2,
+                  borderColor: borderAnim.interpolate({
+                    inputRange: [0, 0.5, 1],
+                    outputRange: [theme.colors.stroke, '#38BDF8', theme.colors.stroke]
+                  })
+                }
+              ]}
             />
         </View>
       </ScreenWrapper>
