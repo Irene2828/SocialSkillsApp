@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: theme.spacing.md,
-    paddingTop: theme.spacing.md,
+    paddingTop: theme.spacing.xs,
     paddingBottom: 0,
   },
 });

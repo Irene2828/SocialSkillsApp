@@ -10,7 +10,7 @@ Instead:
 
 2. Ignore the wording of the source.
 
-13. ${isImage ? `Generate up to 3 quizzes (minimum 2) of exactly 5 questions each. If the source material is very narrow and does not support 3 genuinely distinct, non-repetitive quizzes, return exactly 2 instead of forcing a weak third one.` : `Create exactly 3 distinct multiple-choice quizzes that teach this concept or closely related social/life skill concepts.`}
+13. ${isImage ? `Generate exactly 3 quizzes of exactly 5 questions each. Each quiz must explore a distinct angle, perspective, or sub-topic of the concept. Never return fewer than 3.` : `Create exactly 3 distinct multiple-choice quizzes that teach this concept or closely related social/life skill concepts.`}
 
 Requirements for each of the quizzes:
 
@@ -56,7 +56,7 @@ Instead of text summarization:
 
 1. Identify the underlying math concept (e.g., Addition, Place Value, Patterns, Counting, Subtraction).
 
-2. ${isImage ? `Generate up to 3 quizzes (minimum 2) of exactly 5 questions each. If the source material is very narrow and does not support 3 genuinely distinct, non-repetitive quizzes, return exactly 2 instead of forcing a weak third one.` : `Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.`}
+2. ${isImage ? `Generate exactly 3 quizzes of exactly 5 questions each. Each quiz must explore a distinct angle, perspective, or sub-topic of the concept. Never return fewer than 3.` : `Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.`}
 
 Requirements for each of the quizzes:
 

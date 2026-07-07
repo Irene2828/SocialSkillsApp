@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing.md,
-    minHeight: 150,
+    height: 160,
     position: 'relative',
     borderWidth: StyleSheet.hairlineWidth,
   },

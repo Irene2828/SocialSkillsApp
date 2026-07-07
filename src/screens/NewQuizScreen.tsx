@@ -887,17 +887,13 @@ export const NewQuizScreen = () => {
         {/* Sticky header — stays pinned at top */}
         <View style={{ paddingBottom: theme.spacing.sm, zIndex: 10 }}>
           <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.sm, zIndex: 2 }}>
-            <Pressable style={[
-              styles.backButton,
-              isRocket && {
-                backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-                borderWidth: 1.5,
-                shadowOpacity: 0,
-              }
-            ]} onPress={handleBackToHome}>
-              <Ionicons name="arrow-back" size={24} color={baseTextColor} />
-              <Text style={{ marginLeft: 4, ...theme.typography.button, color: baseTextColor }}>Back</Text>
+            <Pressable 
+              onPress={handleBackToHome}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              style={{ flexDirection: 'row', alignItems: 'center' }}
+            >
+              <Ionicons name="chevron-back" size={24} color={baseTextColor} />
+              <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
             </Pressable>
             <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
               <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
