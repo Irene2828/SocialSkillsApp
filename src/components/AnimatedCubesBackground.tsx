@@ -60,7 +60,7 @@ export const AnimatedCubesBackground: React.FC = () => {
       {cubes.map(c => {
         const translateY = c.animValue.interpolate({
           inputRange: [0, 1],
-          outputRange: [height + 50, -100], // Float from bottom to top
+          outputRange: [height / 2, -100], // Float from half screen to top
         });
         
         const rotate = c.animValue.interpolate({
