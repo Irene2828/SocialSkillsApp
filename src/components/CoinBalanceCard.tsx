@@ -2,17 +2,38 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../theme';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface CoinBalanceCardProps {
   balance: number;
 }
 
 export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => {
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
+
+  const glassStyle = isRocket ? {
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.35)',
+    borderWidth: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 24,
+    shadowOpacity: 0.1,
+  } : {};
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
+
   return (
     <View style={styles.cardContainer}>
-      <View style={styles.card}>
+      <View style={[styles.card, glassStyle]}>
         <View style={styles.content}>
-          <Text style={styles.earnedText}>You've earned:</Text>
+          <Text style={[styles.earnedText, isRocket && { color: 'rgba(255, 255, 255, 0.75)' }, isRocket && glassTextShadow]}>You've earned:</Text>
           <View style={styles.balanceRow}>
             <FontAwesome5 
               name="coins" 
@@ -26,15 +47,15 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
               }} 
             />
             <Text 
-              style={styles.balanceNumber}
+              style={[styles.balanceNumber, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}
               adjustsFontSizeToFit
               numberOfLines={1}
             >
               {balance}
             </Text>
-            <Text style={styles.balanceLabel}>Coins</Text>
+            <Text style={[styles.balanceLabel, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>Coins</Text>
           </View>
-          <Text style={styles.subtitleText}>Redeem points for rewards of your choice anytime!</Text>
+          <Text style={[styles.subtitleText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, isRocket && glassTextShadow]}>Redeem points for rewards of your choice anytime!</Text>
         </View>
       </View>
     </View>

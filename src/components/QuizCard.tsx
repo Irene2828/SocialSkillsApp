@@ -36,6 +36,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
   const { name: iconName, family: iconFamily } = getCategoryIcon(category);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
   const cardBorderColor = category.color || theme.colors.stroke;
   const iconBorderColor = theme.colors.stroke;
   const iconBackgroundColor = theme.colors.errorSoft;
@@ -73,21 +74,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             isFeatured && styles.featuredIconContainer,
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={isRocket ? '#FFFFFF' : iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={isRocket ? '#FFFFFF' : iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
-            <Text style={[styles.title, isFeatured && styles.featuredTitle]} numberOfLines={2}>
+            <Text style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} numberOfLines={2}>
               {category.title}
             </Text>
-            <Text style={{ fontSize: 12, color: theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
+            <Text style={{ fontSize: 12, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
               1 quiz
             </Text>
             {isFeatured && category.description && (
-              <Text style={styles.descriptionText}>
+              <Text style={[styles.descriptionText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }]}>
                 {category.description}
               </Text>
             )}
@@ -115,7 +116,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
+            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
           </Pressable>
         </View>
       )}

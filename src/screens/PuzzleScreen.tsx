@@ -11,6 +11,7 @@ import { GlobalBackground } from '../components/GlobalBackground';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { SettingsModal } from '../components/SettingsModal';
 import { SilverDust } from '../components/SilverDust';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface PuzzleConfig {
   id: string;
@@ -136,6 +137,10 @@ const DraggablePiece = ({
 };
 
 export const PuzzleScreen = () => {
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
+
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleConfig | null>(null);
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
@@ -384,11 +389,26 @@ export const PuzzleScreen = () => {
                     startPuzzle(puzzle);
                   }}
                 >
-                  <Animated.View style={[styles.card]}>
+                  <Animated.View style={[
+                    styles.card,
+                    isRocket && {
+                      backgroundColor: 'rgba(255, 255, 255, 0.45)',
+                      borderColor: 'rgba(255, 255, 255, 0.35)',
+                      borderWidth: 1.5,
+                      shadowColor: '#000000',
+                      shadowOffset: { width: 0, height: 8 },
+                      shadowRadius: 24,
+                      shadowOpacity: 0.1,
+                    }
+                  ]}>
                     <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
                       <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
                     </View>
-                    <Text style={styles.cardName}>{puzzle.name}</Text>
+                    <Text style={[
+                      styles.cardName,
+                      isRocket && { color: '#FFFFFF' },
+                      isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
+                    ]}>{puzzle.name}</Text>
                   </Animated.View>
                 </Pressable>
 
@@ -410,7 +430,7 @@ export const PuzzleScreen = () => {
                       }
                     ]}
                   >
-                    <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
+                    <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
                   </Pressable>
                 </View>
               </View>

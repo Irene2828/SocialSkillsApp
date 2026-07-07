@@ -12,6 +12,8 @@ import { Reward } from '../data/types';
 import { theme } from '../theme';
 import { Button } from './Button';
 
+import { useMood, getMoodColors } from '../context/MoodContext';
+
 const SWIPE_THRESHOLD = 60; // px to reveal actions
 const ACTION_WIDTH = 140;   // total reveal width (2 × 70px actions)
 
@@ -32,8 +34,28 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
   onEdit,
   onDelete,
 }) => {
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isRocket = mood === 'rocket';
+
   const translateX = useRef(new Animated.Value(0)).current;
   const [isOpen, setIsOpen] = useState(false);
+
+  const glassCardStyle = isRocket ? {
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.35)',
+    borderWidth: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 24,
+    shadowOpacity: 0.1,
+  } : {};
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
 
   const panResponder = useRef(
     PanResponder.create({
@@ -105,26 +127,26 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
 
       {/* Swipeable card */}
       <Animated.View
-        style={[styles.card, { transform: [{ translateX }] }]}
+        style={[styles.card, glassCardStyle, { transform: [{ translateX }] }]}
         {...panResponder.panHandlers}
       >
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
           <View style={styles.leftContent}>
-            <View style={styles.iconContainer}>
-              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={theme.colors.secondaryText} />
+            <View style={[styles.iconContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} />
             </View>
             <View style={styles.textContainer}>
-              <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
+              <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
                 {reward.title}
               </Text>
-              <View style={[styles.costContainer, { marginTop: 4 }]}>
+              <View style={[styles.costContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }, { marginTop: 4 }]}>
                 <FontAwesome5
                   name="coins"
                   size={14}
                   color={theme.colors.primary}
                   style={{ textShadowColor: '#9CA3AF', textShadowOffset: { width: -0.5, height: 0.5 }, textShadowRadius: 1 }}
                 />
-                <Text style={styles.costText}>{reward.cost}</Text>
+                <Text style={[styles.costText, isRocket && { color: '#FFFFFF' }]}>{reward.cost}</Text>
               </View>
             </View>
           </View>
@@ -134,7 +156,8 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
               onPress={() => onRedeem(reward)}
               style={[
                 styles.redeemButton,
-                styles.redeemButtonActive
+                styles.redeemButtonActive,
+                isRocket && { backgroundColor: '#FFFFFF', borderColor: '#BEF264' }
               ]}
               variant="secondary"
               disabled={isProcessing}

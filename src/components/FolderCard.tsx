@@ -18,6 +18,23 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
 
+  const isRocket = mood === 'rocket';
+  const glassContainerStyle = isRocket ? {
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.35)',
+    borderWidth: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 24,
+    shadowOpacity: 0.1,
+  } : {};
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
+
   const handleLayout = () => {
     if (onLayout && containerRef.current) {
       containerRef.current.measure((x, y, width, height, pageX, pageY) => {
@@ -27,14 +44,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
   };
 
   return (
-    <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
+    <View ref={containerRef} onLayout={handleLayout} style={[styles.container, glassContainerStyle, isDragTarget && styles.dragTarget]}>
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color={theme.colors.secondaryText} />
+            <Ionicons name="folder-outline" size={32} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.title} numberOfLines={2}>{name}</Text>
+            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, glassTextShadow]} numberOfLines={2}>{name}</Text>
           </View>
         </View>
       </Pressable>
@@ -56,7 +73,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
+            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
           </Pressable>
         </View>
       )}
