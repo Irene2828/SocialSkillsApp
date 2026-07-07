@@ -75,6 +75,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
 
 const styles = StyleSheet.create({
   button: {
+    width: '100%',
     minHeight: theme.layout.minTouchTarget,
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
