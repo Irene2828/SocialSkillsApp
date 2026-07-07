@@ -425,6 +425,7 @@ export const MyRewardsScreen = () => {
               />
               <Button 
                 title="Add New Reward" 
+                iconName="gift-outline"
                 onPress={() => setShowAddPin(true)} 
                 style={{ marginTop: theme.spacing.md, width: '100%', backgroundColor: '#BEF264' }}
               />
