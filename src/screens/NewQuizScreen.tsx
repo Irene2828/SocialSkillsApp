@@ -627,7 +627,7 @@ export const NewQuizScreen = () => {
         <View style={styles.createAiButtonContainer}>
           <Button
             title="Generate New Quiz"
-            style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary, borderWidth: 0 }]}
+            style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
             onPress={() => setShowGenerateMenu(true)}
           />
         </View>

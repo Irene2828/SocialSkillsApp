@@ -5,10 +5,15 @@ import { theme } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
+import { Ionicons } from '@expo/vector-icons';
+
 interface ButtonProps extends Omit<PressableProps, 'style'> {
   title: string;
   variant?: 'primary' | 'secondary' | 'outline';
   style?: any;
+  iconName?: any;
+  iconSize?: number;
+  iconColor?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, ...props }) => {
@@ -29,9 +34,19 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   }
 
   const content = (
-    <Text style={[styles.text, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
-      {title}
-    </Text>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      <Text style={[styles.text, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
+        {title}
+      </Text>
+      {iconName && (
+        <Ionicons 
+          name={iconName} 
+          size={iconSize || 18} 
+          color={iconColor || theme.colors.text} 
+          style={{ marginLeft: 6 }} 
+        />
+      )}
+    </View>
   );
 
   const handlePressIn = (e: any) => {

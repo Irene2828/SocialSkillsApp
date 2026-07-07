@@ -82,6 +82,8 @@ export const HomeScreen = () => {
             </Text>
             <Button
               title="Start Now"
+              iconName="play"
+              iconSize={16}
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
