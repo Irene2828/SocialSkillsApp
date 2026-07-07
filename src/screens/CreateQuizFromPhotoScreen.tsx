@@ -217,6 +217,8 @@ export const CreateQuizFromPhotoScreen = () => {
         />
         <Button 
           title="Generate from Text" 
+          iconName="sparkles-outline"
+          iconSize={18} 
           onPress={handleGenerateFromText} 
           disabled={!textPrompt.trim()}
           style={styles.button}
@@ -275,6 +277,8 @@ export const CreateQuizFromPhotoScreen = () => {
       
       <Button 
         title="Generate Quiz" 
+        iconName="sparkles-outline"
+        iconSize={18} 
         onPress={handleGenerate} 
         style={styles.generateButton}
       />

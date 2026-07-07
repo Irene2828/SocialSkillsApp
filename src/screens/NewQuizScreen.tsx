@@ -627,6 +627,8 @@ export const NewQuizScreen = () => {
         <View style={styles.createAiButtonContainer}>
           <Button
             title="Generate New Quiz"
+            iconName="sparkles-outline"
+            iconSize={18}
             style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
             onPress={() => setShowGenerateMenu(true)}
           />
@@ -886,6 +888,8 @@ export const NewQuizScreen = () => {
               
               <Button 
                 title="Generate Quiz" 
+                iconName="sparkles-outline"
+                iconSize={18} 
                 onPress={handleGenerateFromSelectedImage} 
                 style={styles.uploadButton}
                 disabled={!selectedImageBase64}
@@ -939,6 +943,8 @@ export const NewQuizScreen = () => {
               
               <Button 
                 title="Generate Quiz" 
+                iconName="sparkles-outline"
+                iconSize={18} 
                 onPress={handleGenerateFromText} 
                 style={styles.uploadButton}
                 disabled={!aiPromptSituation.trim() || !aiPromptAge}
