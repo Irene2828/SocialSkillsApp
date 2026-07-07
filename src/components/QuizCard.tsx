@@ -88,7 +88,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             >
               {category.title}
             </Text>
-            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : '#38bdf8', fontWeight: '500', marginTop: 2 }}>
+            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : '#6B7280', fontWeight: '500', marginTop: 2 }}>
               1 quiz
             </Text>
             {isFeatured && category.description && (
@@ -217,9 +217,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
   },
   icon: {
-    textShadowColor: 'rgba(0,0,0,0.15)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   title: {
     ...theme.typography.body,
