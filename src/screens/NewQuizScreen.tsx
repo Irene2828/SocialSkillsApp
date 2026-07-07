@@ -716,11 +716,11 @@ export const NewQuizScreen = () => {
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <View style={{ flex: 1, marginBottom: 0 }}>
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
-                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden' }}>
+                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
                   {selectedCategory === 'iq_word_problems' ? (
-                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: '#4B5563', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   ) : (
-                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: '#4B5563', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   )}
                 </View>
               </View>
@@ -731,11 +731,11 @@ export const NewQuizScreen = () => {
           {/* Caption below progress bar */}
           {selectedCategory === 'iq_word_problems' ? (
             <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
-              Step {currentWordProblemStep + 1} of {totalWordProblemSteps}
+              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
             </Text>
           ) : (
             <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
-              Question {currentIndex + 1} of {currentQuestions.length}
+              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
             </Text>
           )}
         </View>

@@ -39,6 +39,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
               name="coins" 
               size={34} 
               color="#4B5563" 
+              style={{ marginRight: 12 }}
             />
             <Text 
               style={[styles.balanceNumber, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}
