@@ -61,8 +61,8 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.bold, fontWeight: '700', color: titleColor, marginBottom: -2 }]}>Smart</Text>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.bold, fontWeight: '700', color: titleColor }]}>Explorer</Text>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.semiBold, fontWeight: '600', color: titleColor, marginBottom: -2 }]}>Smart</Text>
+            <Text style={[styles.startTitle, { fontFamily: FONTS.semiBold, fontWeight: '600', color: titleColor }]}>Explorer</Text>
           </View>
 
           <Animated.View

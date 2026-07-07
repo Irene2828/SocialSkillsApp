@@ -657,7 +657,7 @@ export const NewQuizScreen = () => {
         <FontAwesome5 
           name="coins" 
           size={20} 
-          color="#84CC16" 
+          color={theme.colors.primary} 
           style={{
             textShadowColor: '#4B5563',
             textShadowOffset: { width: -0.5, height: 0.5 },
@@ -731,9 +731,9 @@ export const NewQuizScreen = () => {
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
                 <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden' }}>
                   {selectedCategory === 'iq_word_problems' ? (
-                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: '#84CC16', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   ) : (
-                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: '#84CC16', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: theme.colors.primary, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
                   )}
                 </View>
               </View>
@@ -833,7 +833,7 @@ export const NewQuizScreen = () => {
               <FontAwesome5 
                 name="coins" 
                 size={24} 
-                color="#84CC16" 
+                color={theme.colors.primary} 
                 style={{
                   textShadowColor: '#4B5563',
                   textShadowOffset: { width: -0.5, height: 0.5 },

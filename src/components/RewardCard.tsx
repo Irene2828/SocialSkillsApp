@@ -44,7 +44,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
         <FontAwesome5 
           name="coins" 
           size={14} 
-          color="#84CC16" 
+          color={theme.colors.primary} 
           style={{
             textShadowColor: '#4B5563',
             textShadowOffset: { width: -0.5, height: 0.5 },

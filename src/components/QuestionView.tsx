@@ -259,7 +259,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <FontAwesome5 
                       name="coins" 
                       size={24} 
-                      color="#84CC16" 
+                      color={theme.colors.primary} 
                       style={{
                         textShadowColor: '#4B5563',
                         textShadowOffset: { width: -0.5, height: 0.5 },
@@ -372,7 +372,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       <FontAwesome5 
                         name="coins" 
                         size={24} 
-                        color="#84CC16" 
+                        color={theme.colors.primary} 
                         style={{
                           textShadowColor: '#4B5563',
                           textShadowOffset: { width: -0.5, height: 0.5 },

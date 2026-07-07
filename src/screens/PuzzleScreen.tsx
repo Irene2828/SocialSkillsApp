@@ -703,7 +703,8 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 0,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.primary,
     ...theme.shadows.soft,
   },
   deleteBadge: {
@@ -721,7 +722,7 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.white,
   },
   cardIconContainer: {
-    marginBottom: theme.spacing.md,
+    marginBottom: 4,
     width: 60,
     height: 60,
     borderRadius: 30,
