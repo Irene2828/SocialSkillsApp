@@ -82,32 +82,26 @@ const useFloatAnim = () => {
   return floatAnim;
 };
 
-const ElectrifiedText = ({ text, style }: { text: string; style: any }) => {
-  const animatedValues = useRef(text.split('').map(() => new Animated.Value(0))).current;
+const ElectrifiedText = ({ text, style, delay = 0 }: { text: string; style: any; delay?: number }) => {
+  const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     let isMounted = true;
     const animateElectricity = () => {
       if (!isMounted) return;
-      const animations = animatedValues.map((anim, index) => {
-        return Animated.sequence([
-          Animated.delay(index * 200), // slower wave across letters
-          Animated.timing(anim, {
-            toValue: 1,
-            duration: 400, // slower glow in
-            useNativeDriver: false,
-          }),
-          Animated.timing(anim, {
-            toValue: 0,
-            duration: 1200, // slower glow out
-            useNativeDriver: false,
-          })
-        ]);
-      });
-
       Animated.sequence([
-        Animated.stagger(0, animations),
-        Animated.delay(1000) // Much shorter break before it goes again
+        Animated.delay(delay),
+        Animated.timing(anim, {
+          toValue: 1,
+          duration: 300, // fast magic light change
+          useNativeDriver: false,
+        }),
+        Animated.timing(anim, {
+          toValue: 0,
+          duration: 800, // smooth glow out
+          useNativeDriver: false,
+        }),
+        Animated.delay(1000) // loop delay
       ]).start(({ finished }) => {
         if (finished && isMounted) animateElectricity();
       });
@@ -115,45 +109,38 @@ const ElectrifiedText = ({ text, style }: { text: string; style: any }) => {
 
     animateElectricity();
     return () => { isMounted = false; };
-  }, [animatedValues]);
+  }, [anim, delay]);
+
+  const color = anim.interpolate({
+    inputRange: [0, 0.3, 1],
+    outputRange: [style.color || '#333', '#FDE047', '#38BDF8']
+  });
+  
+  const shadowColor = anim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 1)']
+  });
 
   return (
-    <View style={{ flexDirection: 'row' }}>
-      {text.split('').map((char, index) => {
-        const color = animatedValues[index].interpolate({
-          inputRange: [0, 0.3, 1],
-          outputRange: [style.color || '#333', '#FDE047', '#38BDF8']
-        });
-        
-        const shadowColor = animatedValues[index].interpolate({
-          inputRange: [0, 1],
-          outputRange: ['rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 1)']
-        });
-
-        return (
-          <Animated.Text 
-            key={`${char}-${index}`} 
-            style={[
-              style, 
-              { 
-                color,
-                textShadowColor: shadowColor,
-                textShadowRadius: 8,
-                textShadowOffset: { width: 0, height: 0 },
-              }
-            ]}
-          >
-            {char}
-          </Animated.Text>
-        );
-      })}
-    </View>
+    <Animated.Text 
+      style={[
+        style, 
+        { 
+          color,
+          textShadowColor: shadowColor,
+          textShadowRadius: 8,
+          textShadowOffset: { width: 0, height: 0 },
+        }
+      ]}
+    >
+      {text}
+    </Animated.Text>
   );
 };
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
-  const { fadeAnim, scaleAnim, borderAnim } = useAttentionLoop();
+  const { fadeAnim, scaleAnim } = useAttentionLoop();
   const floatAnim = useFloatAnim();
   const { height } = useWindowDimensions();
   const isSmallScreen = height < 700;
@@ -180,8 +167,8 @@ export const HomeScreen = () => {
               source={require('../../assets/mascot_v2_transparent.png')} 
               style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10, transform: [{ translateY: floatAnim }] }} 
             />
-            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} />
-            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} />
+            <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} delay={0} />
+            <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} delay={400} />
           </View>
 
             <Text 
@@ -193,16 +180,7 @@ export const HomeScreen = () => {
             <Button
               title="START NOW"
               onPress={() => navigation.navigate('NewQuiz')}
-              style={[
-                styles.actionButton,
-                {
-                  borderWidth: 2,
-                  borderColor: borderAnim.interpolate({
-                    inputRange: [0, 0.5, 1],
-                    outputRange: [theme.colors.stroke, '#38BDF8', theme.colors.stroke]
-                  })
-                }
-              ]}
+              style={styles.actionButton}
             />
         </View>
       </ScreenWrapper>
