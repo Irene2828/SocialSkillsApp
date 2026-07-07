@@ -421,7 +421,7 @@ export const PuzzleScreen = () => {
             {allPuzzles.map((puzzle) => (
               <View
                 key={puzzle.id}
-                style={{ width: '48%', marginBottom: theme.spacing.md, marginTop: theme.spacing.md, position: 'relative' }}
+                style={{ width: '48%', marginBottom: theme.spacing.md, position: 'relative' }}
               >
                 <Pressable
                   onPress={() => {
