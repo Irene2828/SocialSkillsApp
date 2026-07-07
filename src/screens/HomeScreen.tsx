@@ -84,6 +84,7 @@ export const HomeScreen = () => {
               title="Start Now"
               iconName="play"
               iconSize={16}
+              iconColor="#4B5563"
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
