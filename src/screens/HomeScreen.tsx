@@ -67,7 +67,7 @@ export const HomeScreen = () => {
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
             <Image 
               source={require('../../assets/mascot_v2_transparent.png')} 
-              style={{ width: 80, height: 80, position: 'absolute', top: -35, left: -40, resizeMode: 'contain', zIndex: 10 }} 
+              style={{ width: 90, height: 90, position: 'absolute', top: -45, left: -15, resizeMode: 'contain', zIndex: 10 }} 
             />
             <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]}>Smart</Text>
             <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Explorer</Text>

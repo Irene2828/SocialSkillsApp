@@ -40,7 +40,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
   const cardBorderColor = category.color || theme.colors.stroke;
   const iconBorderColor = theme.colors.stroke;
   const iconBackgroundColor = theme.colors.errorSoft;
-  const iconColor = '#38bdf8';
+  const iconColor = theme.colors.stroke;
 
   if (isDeleted) {
     return (
@@ -61,7 +61,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         onPress={onPressStart} 
         style={{ flex: 1 }}
       >
-        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: iconColor }]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: theme.colors.stroke }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>

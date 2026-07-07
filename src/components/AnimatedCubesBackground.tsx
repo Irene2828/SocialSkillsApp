@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 const { width, height } = Dimensions.get('window');
 const CUBE_COUNT = 30;
-const CUBE_COLORS = ['#E5E7EB', '#D1D5DB', '#F3F4F6', '#FFFFFF'];
+const CUBE_COLORS = ['#FFFFFF'];
 
 export const AnimatedCubesBackground: React.FC = () => {
   const [cubes] = useState(() => {
@@ -104,10 +104,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     borderRadius: 2, // Slight rounding so they aren't painfully sharp
-    shadowColor: '#9CA3AF',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#38bdf8',
   },
 });
