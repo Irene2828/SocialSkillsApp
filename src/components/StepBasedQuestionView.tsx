@@ -258,12 +258,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   <FontAwesome5 
                     name="coins" 
                     size={24} 
-                    color={theme.colors.primary} 
-                    style={{
-                      textShadowColor: '#4B5563',
-                      textShadowOffset: { width: -0.5, height: 0.5 },
-                      textShadowRadius: 1
-                    }}
+                    color="#4B5563" 
                   />
                   <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
                 </View>

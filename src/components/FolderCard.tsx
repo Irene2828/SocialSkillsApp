@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
     position: 'relative',
   },

@@ -660,12 +660,7 @@ export const NewQuizScreen = () => {
         <FontAwesome5 
           name="coins" 
           size={20} 
-          color={theme.colors.primary} 
-          style={{
-            textShadowColor: '#4B5563',
-            textShadowOffset: { width: -0.5, height: 0.5 },
-            textShadowRadius: 1
-          }}
+          color="#4B5563" 
         />
         <Text style={[styles.coinJarText, isRocket && { color: '#FFFFFF' }]}>{score}</Text>
       </View>
@@ -836,12 +831,7 @@ export const NewQuizScreen = () => {
               <FontAwesome5 
                 name="coins" 
                 size={24} 
-                color={theme.colors.primary} 
-                style={{
-                  textShadowColor: '#4B5563',
-                  textShadowOffset: { width: -0.5, height: 0.5 },
-                  textShadowRadius: 1
-                }}
+                color="#4B5563" 
               />
               <Text style={styles.completedCoinText}>+{coinsEarned} Coins Earned!</Text>
             </View>

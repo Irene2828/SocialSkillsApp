@@ -705,7 +705,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.primary,
+    borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },
   deleteBadge: {

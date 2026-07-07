@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   barFill: {
     height: '100%',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#4B5563',
     borderRadius: theme.borderRadius.full,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
