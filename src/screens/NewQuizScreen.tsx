@@ -539,22 +539,11 @@ export const NewQuizScreen = () => {
   const handleContinue = async (isCorrect: boolean) => {
     if (isProcessing) return;
 
-    const currentQuestion = currentQuestions[currentIndex] as Question;
-    const hasWhyData = currentQuestion.whyOptions && currentQuestion.whyOptions.length > 0;
+    // handleContinue is now only called when the full question is done
+    // (Part 2 complete for why-questions, or single-part complete).
+    // The Part 1→Part 2 transition is handled by QuestionView internally.
 
-    // If we just finished the "what" phase and this question has a why follow-up,
-    // enter the why phase. The modal only closes on a correct answer, so we always
-    // transition here. We stash the isCorrect (first-try) flag for later scoring.
-    if (!isWhyPhase && hasWhyData) {
-      setIsWhyPhase(true);
-      // Don't advance index or award coin yet
-      return;
-    }
-
-    // Award score: once per completed scenario (based on whether they got
-    // the "what" AND "why" both right on first try — but since we stash nothing,
-    // we use the isCorrect from whichever phase just completed).
-    // Simpler: award 1 point per scenario completed.
+    // Award score: 1 point per scenario completed
     if (isCorrect) {
       setScore(prev => prev + 1);
     }
@@ -716,13 +705,9 @@ export const NewQuizScreen = () => {
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
     const baseQuestion = currentQuestions[currentIndex] as Question;
-    const displayQuestion = getDisplayQuestion();
     const hasWhyData = baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
 
     const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
-
-    // Suppress coin reward during Part 1 when Part 2 (why) is coming
-    const shouldShowCoinReward = !hasWhyData || isWhyPhase;
 
     return (
       <View style={styles.inProgressContainer}>
@@ -788,17 +773,36 @@ export const NewQuizScreen = () => {
                 setTotalWordProblemSteps(total);
               }}
             />
-          ) : (
-            <QuestionView
-              question={displayQuestion}
-              onContinue={handleContinue}
-              disabled={isProcessing}
-              topicName={allCategories.find(c => c.id === selectedCategory)?.title}
-              showCoinReward={shouldShowCoinReward}
-              showExplanation={shouldShowCoinReward}
-              partLabel={hasWhyData ? (isWhyPhase ? 'Part 2' : 'Part 1') : undefined}
-            />
-          )}
+          ) : (() => {
+            // Build the Part 2 (why) question inline if applicable
+            const whyQ = hasWhyData ? (() => {
+              const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
+              const promptFn = WHY_PROMPTS[currentIndex % WHY_PROMPTS.length];
+              return {
+                ...baseQuestion,
+                id: `${baseQuestion.id}-why`,
+                scenario: promptFn(correctAnswer),
+                prompt: undefined,
+                options: baseQuestion.whyOptions!,
+                correctAnswerIndex: baseQuestion.correctWhyIndex!,
+                explanation: baseQuestion.whyConfirmation!,
+              } as Question;
+            })() : null;
+
+            return (
+              <QuestionView
+                question={baseQuestion}
+                onContinue={handleContinue}
+                disabled={isProcessing}
+                topicName={allCategories.find(c => c.id === selectedCategory)?.title}
+                showCoinReward={!hasWhyData}
+                showExplanation={!hasWhyData}
+                whyQuestion={whyQ}
+                showPart2={isWhyPhase}
+                onPart1Complete={() => setIsWhyPhase(true)}
+              />
+            );
+          })()}
         </ScrollView>
       </View>
     );

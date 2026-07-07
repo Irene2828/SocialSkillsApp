@@ -8,7 +8,11 @@ import { RocketBackground } from './RocketBackground';
 import { AnimatedCubesBackground } from './AnimatedCubesBackground';
 import { LinearGradient } from 'expo-linear-gradient';
 
-export const GlobalBackground: React.FC = () => {
+interface GlobalBackgroundProps {
+  showCubes?: boolean;
+}
+
+export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = false }) => {
   const { mood } = useMood();
 
   const renderMood = () => {
@@ -40,7 +44,7 @@ export const GlobalBackground: React.FC = () => {
         />
       )}
       {renderMood()}
-      <AnimatedCubesBackground />
+      {showCubes && <AnimatedCubesBackground />}
     </View>
   );
 };

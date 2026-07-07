@@ -17,9 +17,26 @@ interface QuestionViewProps {
   showCoinReward?: boolean;
   showExplanation?: boolean;
   partLabel?: string;
+  /** The Part 2 (why) question to show inline below Part 1 */
+  whyQuestion?: Question | null;
+  /** Whether Part 2 should be visible (Part 1 was completed) */
+  showPart2?: boolean;
+  /** Called when Part 1 is answered correctly and has a Part 2 */
+  onPart1Complete?: () => void;
 }
 
-export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue, disabled, topicName, showCoinReward = true, showExplanation = true, partLabel }) => {
+export const QuestionView: React.FC<QuestionViewProps> = ({
+  question,
+  onContinue,
+  disabled,
+  topicName,
+  showCoinReward = true,
+  showExplanation = true,
+  partLabel,
+  whyQuestion,
+  showPart2 = false,
+  onPart1Complete,
+}) => {
   const { mood } = useMood();
   const isRocket = mood === 'rocket';
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -27,6 +44,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
+
+  // Part 2 state
+  const [part2SelectedIndex, setPart2SelectedIndex] = useState<number | null>(null);
+  const [part2HasFailed, setPart2HasFailed] = useState(false);
+  const part2FadeAnim = useRef(new Animated.Value(0)).current;
 
   const glassTextShadow = isRocket ? {
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
@@ -37,6 +59,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   if (question.id !== currentQuestionId) {
     setSelectedIndex(null);
     setHasFailed(false);
+    setPart2SelectedIndex(null);
+    setPart2HasFailed(false);
     setCurrentQuestionId(question.id);
   }
   
@@ -62,6 +86,18 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     ]).start();
   }, [question.id]);
 
+  // Animate Part 2 in when showPart2 becomes true
+  useEffect(() => {
+    if (showPart2) {
+      part2FadeAnim.setValue(0);
+      Animated.timing(part2FadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [showPart2]);
+
   const handleSelect = (index: number) => {
     if (selectedIndex === null) {
       setSelectedIndex(index);
@@ -71,13 +107,38 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
     }
   };
 
+  const handlePart2Select = (index: number) => {
+    if (whyQuestion && part2SelectedIndex === null) {
+      setPart2SelectedIndex(index);
+      if (index !== whyQuestion.correctAnswerIndex) {
+        setPart2HasFailed(true);
+      }
+    }
+  };
+
   const handleCloseModal = () => {
     if (displayIsCorrect) {
+      // If this question has a Part 2 and we're on Part 1
+      if (whyQuestion && !showPart2 && onPart1Complete) {
+        setSelectedIndex(null); // Reset modal state but keep Part 1 locked via showPart2
+        onPart1Complete();
+        return;
+      }
       setSelectedIndex(null);
       setHasFailed(false);
       onContinue(!hasFailed);
     } else {
       setSelectedIndex(null);
+    }
+  };
+
+  const handleClosePart2Modal = () => {
+    if (whyQuestion && part2DisplayIsCorrect) {
+      setPart2SelectedIndex(null);
+      setPart2HasFailed(false);
+      onContinue(!part2HasFailed);
+    } else {
+      setPart2SelectedIndex(null);
     }
   };
 
@@ -91,13 +152,30 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
   }
   const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
 
+  // Part 2 answered state
+  const part2IsAnswered = part2SelectedIndex !== null && !isIdChanged;
+  const part2IsCorrect = whyQuestion && part2IsAnswered ? part2SelectedIndex === whyQuestion.correctAnswerIndex : false;
+
+  const part2DisplayIsCorrectRef = useRef(part2IsCorrect);
+  if (part2IsAnswered) {
+    part2DisplayIsCorrectRef.current = part2IsCorrect;
+  }
+  const part2DisplayIsCorrect = part2IsAnswered ? part2IsCorrect : part2DisplayIsCorrectRef.current;
+
+  // Should Part 1 answers show as locked (completed)?
+  const part1Locked = showPart2;
+
+  // For Part 1 modal: if has why data, suppress coin reward (it comes on Part 2)
+  const part1ShowCoin = !whyQuestion;
+
   return (
     <View style={styles.container}>
+      {/* ===== PART 1 ===== */}
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
           <Card style={styles.scenarioCard}>
-            {partLabel && (
-              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{partLabel}</Text>
+            {whyQuestion && (
+              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 1</Text>
             )}
             <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.scenario}</Text>
           {question.prompt && (
@@ -110,7 +188,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
         {question.options.map((option, index) => {
           let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
 
-          if (isAnswered) {
+          if (part1Locked) {
+            // Part 1 is completed — show correct answer locked
+            state = index === question.correctAnswerIndex ? 'selected-correct' : 'default';
+          } else if (isAnswered) {
             if (isCorrect) {
               state = index === question.correctAnswerIndex ? 'selected-correct' : 'default';
             } else {
@@ -126,81 +207,199 @@ export const QuestionView: React.FC<QuestionViewProps> = ({ question, onContinue
               text={option}
               onPress={() => handleSelect(index)}
               state={state}
-              disabled={isAnswered}
+              disabled={isAnswered || part1Locked}
             />
           );
         })}
       </View>
     </Animated.View>
 
-      <Modal
-        visible={isAnswered}
-        transparent={true}
-        animationType="fade"
-      >
-        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
-          {displayIsCorrect && <SilverDust />}
-          <Pressable style={[
-            styles.feedbackContainerBackground,
-            isRocket && {
-              backgroundColor: 'rgba(255, 255, 255, 0.35)',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-              borderWidth: 1.5,
-            }
-          ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-            <View style={styles.feedbackContainer}>
-              
-              <View style={styles.feedbackTitleContainer}>
-                <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
-                  {displayIsCorrect 
-                    ? (showCoinReward ? 'Correct!' : "That's correct!") 
-                    : "Not quite, try again!"}
-                </Text>
-              </View>
-              
-              {displayIsCorrect && showCoinReward && (
-                <View style={styles.coinRewardContainer}>
-                  <FontAwesome5 
-                    name="coins" 
-                    size={24} 
-                    color={theme.colors.primary} 
-                    style={{
-                      textShadowColor: '#9CA3AF',
-                      textShadowOffset: { width: -0.5, height: 0.5 },
-                      textShadowRadius: 1
-                    }}
-                  />
-                  <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
+      {/* ===== PART 1 MODAL (only when Part 2 is NOT yet showing) ===== */}
+      {!showPart2 && (
+        <Modal
+          visible={isAnswered}
+          transparent={true}
+          animationType="fade"
+        >
+          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
+            {displayIsCorrect && part1ShowCoin && <SilverDust />}
+            <Pressable style={[
+              styles.feedbackContainerBackground,
+              isRocket && {
+                backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                borderColor: 'rgba(255, 255, 255, 0.3)',
+                borderWidth: 1.5,
+              }
+            ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <View style={styles.feedbackContainer}>
+                
+                <View style={styles.feedbackTitleContainer}>
+                  <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+                    {displayIsCorrect 
+                      ? (whyQuestion ? "Part 1 correct! Let's continue..." : (showCoinReward ? 'Correct!' : "That's correct!"))
+                      : "Not quite, try again!"}
+                  </Text>
                 </View>
-              )}
+                
+                {displayIsCorrect && part1ShowCoin && showCoinReward && (
+                  <View style={styles.coinRewardContainer}>
+                    <FontAwesome5 
+                      name="coins" 
+                      size={24} 
+                      color={theme.colors.primary} 
+                      style={{
+                        textShadowColor: '#9CA3AF',
+                        textShadowOffset: { width: -0.5, height: 0.5 },
+                        textShadowRadius: 1
+                      }}
+                    />
+                    <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
+                  </View>
+                )}
 
-              {displayIsCorrect ? (
-                <>
-                  {showExplanation && (
-                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                      <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.explanation}</Text>
+                {displayIsCorrect ? (
+                  <>
+                    {showExplanation && part1ShowCoin && (
+                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
+                        <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.explanation}</Text>
+                      </View>
+                    )}
+                    <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
+                      <Button
+                        title="Continue"
+                        onPress={handleCloseModal}
+                        style={styles.continueButton}
+                        disabled={disabled}
+                      />
+                    </Animated.View>
+                  </>
+                ) : (
+                  <Button
+                    title="Try Again"
+                    onPress={() => setSelectedIndex(null)}
+                    style={styles.continueButton}
+                  />
+                )}
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
+
+      {/* ===== PART 2 (inline, appears below Part 1 when showPart2 is true) ===== */}
+      {showPart2 && whyQuestion && (
+        <Animated.View style={[styles.animatedContainer, { opacity: part2FadeAnim }]}>
+          <View style={styles.part2Divider}>
+            <View style={styles.part2DividerLine} />
+            <Text style={[styles.part2DividerText, isRocket && { color: 'rgba(255,255,255,0.6)' }]}>Part 2</Text>
+            <View style={styles.part2DividerLine} />
+          </View>
+
+          <View style={styles.cardWrapper}>
+            <Card style={styles.scenarioCard}>
+              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 2</Text>
+              <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.scenario}</Text>
+              {whyQuestion.prompt && (
+                <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.prompt}</Text>
+              )}
+            </Card>
+          </View>
+
+          <View style={styles.optionsContainer}>
+            {whyQuestion.options.map((option, index) => {
+              let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
+
+              if (part2IsAnswered) {
+                if (part2IsCorrect) {
+                  state = index === whyQuestion.correctAnswerIndex ? 'selected-correct' : 'default';
+                } else {
+                  if (index === part2SelectedIndex) {
+                    state = 'selected-incorrect';
+                  }
+                }
+              }
+
+              return (
+                <AnswerButton
+                  key={`part2-${index}`}
+                  text={option}
+                  onPress={() => handlePart2Select(index)}
+                  state={state}
+                  disabled={part2IsAnswered}
+                />
+              );
+            })}
+          </View>
+
+          {/* Part 2 Modal */}
+          <Modal
+            visible={part2IsAnswered}
+            transparent={true}
+            animationType="fade"
+          >
+            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleClosePart2Modal}>
+              {part2DisplayIsCorrect && <SilverDust />}
+              <Pressable style={[
+                styles.feedbackContainerBackground,
+                isRocket && {
+                  backgroundColor: 'rgba(255, 255, 255, 0.35)',
+                  borderColor: 'rgba(255, 255, 255, 0.3)',
+                  borderWidth: 1.5,
+                }
+              ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+                <View style={styles.feedbackContainer}>
+                  <View style={styles.feedbackTitleContainer}>
+                    <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+                      {part2DisplayIsCorrect 
+                        ? 'Correct!'
+                        : "Not quite, try again!"}
+                    </Text>
+                  </View>
+
+                  {part2DisplayIsCorrect && (
+                    <View style={styles.coinRewardContainer}>
+                      <FontAwesome5 
+                        name="coins" 
+                        size={24} 
+                        color={theme.colors.primary} 
+                        style={{
+                          textShadowColor: '#9CA3AF',
+                          textShadowOffset: { width: -0.5, height: 0.5 },
+                          textShadowRadius: 1
+                        }}
+                      />
+                      <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
                     </View>
                   )}
-                  <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
+
+                  {part2DisplayIsCorrect && (
+                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
+                      <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.explanation}</Text>
+                    </View>
+                  )}
+
+                  {part2DisplayIsCorrect ? (
+                    <Animated.View style={{ width: '100%' }}>
+                      <Button
+                        title="Continue"
+                        onPress={handleClosePart2Modal}
+                        style={styles.continueButton}
+                        disabled={disabled}
+                      />
+                    </Animated.View>
+                  ) : (
                     <Button
-                      title="Continue"
-                      onPress={handleCloseModal}
+                      title="Try Again"
+                      onPress={() => setPart2SelectedIndex(null)}
                       style={styles.continueButton}
-                      disabled={disabled}
                     />
-                  </Animated.View>
-                </>
-              ) : (
-                <Button
-                  title="Try Again"
-                  onPress={() => setSelectedIndex(null)}
-                  style={styles.continueButton}
-                />
-              )}
-            </View>
-          </Pressable>
-        </Pressable>
-      </Modal>
+                  )}
+                </View>
+              </Pressable>
+            </Pressable>
+          </Modal>
+        </Animated.View>
+      )}
     </View>
   );
 };
@@ -344,5 +543,22 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.sm,
     width: '100%',
   },
-
+  part2Divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.md,
+  },
+  part2DividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#D1D5DB',
+  },
+  part2DividerText: {
+    ...theme.typography.caption,
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.secondaryText,
+    paddingHorizontal: theme.spacing.md,
+  },
 });

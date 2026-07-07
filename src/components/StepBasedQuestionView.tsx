@@ -16,12 +16,19 @@ interface StepBasedQuestionViewProps {
   onStepChange?: (currentIndex: number, totalSteps: number) => void;
 }
 
+interface CompletedStep {
+  stepIndex: number;
+  selectedOption: number;
+  correctOption: number;
+}
+
 export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
   const { mood } = useMood();
   const isRocket = mood === 'rocket';
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
+  const [completedSteps, setCompletedSteps] = useState<CompletedStep[]>([]);
   
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 380;
@@ -34,6 +41,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
+  const stepFadeAnim = useRef(new Animated.Value(0)).current;
 
   const currentStep = currentStepIndex < question.steps.length ? question.steps[currentStepIndex] : null;
   const isFinalStep = currentStepIndex === question.steps.length - 1;
@@ -44,6 +52,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     setCurrentStepIndex(0);
     setSelectedIndex(null);
     setHasFailed(false);
+    setCompletedSteps([]);
     setCurrentQuestionId(question.id);
   }
 
@@ -53,8 +62,14 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   }, [question.id]);
 
   useEffect(() => {
-    animateIn();
     onStepChange?.(currentStepIndex, question.steps.length);
+    // Animate new step in
+    stepFadeAnim.setValue(0);
+    Animated.timing(stepFadeAnim, {
+      toValue: 1,
+      duration: 400,
+      useNativeDriver: true,
+    }).start();
   }, [currentStepIndex]);
 
   const animateIn = () => {
@@ -84,19 +99,22 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     }
   };
 
-  const handleContinueStep = () => {
-    setCurrentStepIndex(prev => prev + 1);
-    setSelectedIndex(null);
-  };
-
   const handleCloseModal = () => {
     if (displayIsCorrect) {
       if (isFinalStep) {
+        // Final step done — complete the question
         setSelectedIndex(null);
         setHasFailed(false);
         onContinue(true);
       } else {
-        handleContinueStep();
+        // Not final — lock this step as completed and reveal next step below
+        setCompletedSteps(prev => [...prev, {
+          stepIndex: currentStepIndex,
+          selectedOption: selectedIndex!,
+          correctOption: currentStep!.correctIndex,
+        }]);
+        setCurrentStepIndex(prev => prev + 1);
+        setSelectedIndex(null);
       }
     } else {
       setSelectedIndex(null);
@@ -115,42 +133,72 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 
   return (
     <View style={styles.container}>
+      {/* Persistent Problem Text Card */}
       <Card style={styles.mainCard}>
-        {/* Persistent Problem Text */}
         <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
         <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
-        <Text style={[styles.microcopy, isRocket && { color: 'rgba(255, 255, 255, 0.6)' }]}>(Don't answer yet, follow steps below first)</Text>
-        
-        {/* Subtle Step Indicator (Dots) - inside the card */}
-        {question.steps.length > 1 && (
-          <View style={styles.dotsContainer}>
-            {question.steps.map((_: any, index: number) => (
-              <View 
-                key={index} 
-                style={[
-                  styles.dot, 
-                  index === currentStepIndex ? styles.activeDot : 
-                  index < currentStepIndex ? styles.completedDot : styles.inactiveDot
-                ]} 
-              />
-            ))}
-          </View>
-        )}
-
-        {/* Current Step Question - inside the same card */}
-        <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-          {currentStep ? (
-            <View style={styles.promptContainer}>
-              <View style={styles.stepDivider} />
-              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{currentStep.prompt}</Text>
-            </View>
-          ) : null}
-        </Animated.View>
       </Card>
-        
-      {/* Options outside the Card */}
-      <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-        {currentStep && (
+
+      {/* ===== Completed Steps (stacked, read-only) ===== */}
+      {completedSteps.map((cs) => {
+        const step = question.steps[cs.stepIndex];
+        return (
+          <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
+            {/* Step divider */}
+            <View style={styles.stepSectionDivider}>
+              <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+              <Text style={[styles.stepSectionLabel, isRocket && { color: 'rgba(255,255,255,0.5)' }]}>
+                Step {cs.stepIndex + 1} ✓
+              </Text>
+              <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+            </View>
+
+            {/* Completed step prompt */}
+            <View style={[styles.completedPromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.2)' }]}>
+              <Text style={[styles.promptText, { fontStyle: 'italic', opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+                {step.prompt}
+              </Text>
+            </View>
+
+            {/* Show only the correct answer (locked) */}
+            <View style={styles.completedAnswerContainer}>
+              {step.options.map((option: string, index: number) => {
+                const state: 'default' | 'selected-correct' = index === cs.correctOption ? 'selected-correct' : 'default';
+                return (
+                  <AnswerButton
+                    key={`completed-${cs.stepIndex}-${index}`}
+                    text={option}
+                    onPress={() => {}}
+                    state={state}
+                    disabled={true}
+                  />
+                );
+              })}
+            </View>
+          </View>
+        );
+      })}
+
+      {/* ===== Current Active Step ===== */}
+      {currentStep && (
+        <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
+          {/* Step divider for current step */}
+          <View style={styles.stepSectionDivider}>
+            <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+            <Text style={[styles.stepSectionLabel, isRocket && { color: 'rgba(255,255,255,0.6)' }]}>
+              Step {currentStepIndex + 1} of {question.steps.length}
+            </Text>
+            <View style={[styles.stepSectionDividerLine, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)' }]} />
+          </View>
+
+          {/* Current step prompt */}
+          <View style={[styles.activePromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }]}>
+            <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+              {currentStep.prompt}
+            </Text>
+          </View>
+
+          {/* Current step options */}
           <View style={styles.optionsContainer}>
             {currentStep.options.map((option: string, index: number) => {
               let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
@@ -176,9 +224,10 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               );
             })}
           </View>
-        )}
-      </Animated.View>
+        </Animated.View>
+      )}
 
+      {/* ===== Feedback Modal ===== */}
       <Modal
         visible={isAnswered}
         transparent={true}
@@ -199,7 +248,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
-                    ? (isFinalStep ? 'Correct!' : "That's right!") 
+                    ? (isFinalStep ? 'Correct!' : `Step ${currentStepIndex + 1} correct!`) 
                     : "Not quite, try again!"}
                 </Text>
               </View>
@@ -263,7 +312,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.sm,
   },
   situationalLabel: {
     ...theme.typography.body,
@@ -288,47 +337,6 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     marginBottom: theme.spacing.md,
   },
-  microcopy: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
-    fontSize: 14,
-    textAlign: 'left',
-    marginBottom: theme.spacing.lg,
-  },
-  dotsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing.md,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginRight: theme.spacing.xs,
-  },
-  activeDot: {
-    backgroundColor: theme.colors.primary,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-  },
-  completedDot: {
-    backgroundColor: theme.colors.primary,
-    opacity: 0.5,
-  },
-  inactiveDot: {
-    backgroundColor: theme.colors.stroke,
-  },
-
-  promptContainer: {
-    paddingHorizontal: theme.spacing.xs,
-  },
-  stepDivider: {
-    height: 1,
-    backgroundColor: '#E5E7EB',
-    marginBottom: theme.spacing.md,
-  },
   promptText: {
     ...theme.typography.heading,
     fontFamily: FONTS.regular,
@@ -338,6 +346,56 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     color: theme.colors.text,
   },
+
+  // Completed step styling
+  completedStepContainer: {
+    width: '100%',
+    opacity: 0.7,
+  },
+  completedPromptCard: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    backgroundColor: '#F9FAFB',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginBottom: theme.spacing.sm,
+  },
+  completedAnswerContainer: {
+    marginBottom: theme.spacing.sm,
+  },
+
+  // Active step styling
+  activePromptCard: {
+    paddingHorizontal: theme.spacing.lg,
+    paddingVertical: theme.spacing.md,
+    backgroundColor: '#FFFFFF',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    marginBottom: theme.spacing.lg,
+  },
+
+  // Step section dividers
+  stepSectionDivider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.md,
+    paddingHorizontal: theme.spacing.sm,
+  },
+  stepSectionDividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#D1D5DB',
+  },
+  stepSectionLabel: {
+    ...theme.typography.caption,
+    fontSize: 13,
+    fontWeight: '600',
+    color: theme.colors.secondaryText,
+    paddingHorizontal: theme.spacing.md,
+  },
+
   optionsContainer: {
     marginBottom: theme.spacing.lg,
   },
