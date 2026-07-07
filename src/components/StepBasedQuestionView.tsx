@@ -138,6 +138,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <View style={styles.mainCard}>
           <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
           <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
+          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, fontStyle: 'italic', color: '#6B7280', marginTop: -8, marginBottom: 8 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
+            (don't answer yet, follow the steps below first!)
+          </Text>
         </View>
 
       {/* ===== Completed Steps (stacked, read-only) ===== */}
@@ -146,7 +149,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         return (
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
-            <View style={[styles.completedPromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.15)', borderColor: 'rgba(255,255,255,0.2)' }]}>
+            <View style={styles.completedPromptCard}>
               <Text style={[styles.promptText, { fontStyle: 'italic', opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
                 {step.prompt}
               </Text>
@@ -175,7 +178,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
       {currentStep && (
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
-          <View style={[styles.activePromptCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.2)', borderColor: 'rgba(255,255,255,0.3)' }]}>
+          <View style={styles.activePromptCard}>
             <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
               {currentStep.prompt}
             </Text>
@@ -340,12 +343,8 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   completedPromptCard: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    backgroundColor: '#F9FAFB',
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+    paddingHorizontal: 0,
+    paddingVertical: theme.spacing.xs,
     marginBottom: theme.spacing.sm,
   },
   completedAnswerContainer: {
@@ -354,12 +353,8 @@ const styles = StyleSheet.create({
 
   // Active step styling
   activePromptCard: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    backgroundColor: '#FFFFFF',
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    paddingHorizontal: 0,
+    paddingVertical: theme.spacing.xs,
     marginBottom: theme.spacing.lg,
   },
 
@@ -424,10 +419,10 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     borderWidth: 2,
-    borderColor: '#E5E7EB',
+    borderColor: '#BAE6FD',
     borderStyle: 'dashed',
     borderRadius: 16,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#F0F9FF',
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.md,
   },

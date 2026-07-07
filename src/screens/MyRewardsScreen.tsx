@@ -834,7 +834,7 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     backgroundColor: '#BAE6FD',
-    opacity: 1,
+    opacity: 0.4,
   },
   tabText: {
     ...theme.typography.button,
