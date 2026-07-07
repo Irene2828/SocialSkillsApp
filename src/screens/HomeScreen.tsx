@@ -82,9 +82,10 @@ export const HomeScreen = () => {
             </Text>
             <Button
               title="Start Now"
-              iconName="play"
-              iconSize={16}
+              iconName="arrow-forward"
+              iconSize={18}
               iconColor="#4B5563"
+              iconStyle={{ transform: [{ rotate: '-45deg' }] }}
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />

@@ -14,9 +14,10 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
   iconName?: any;
   iconSize?: number;
   iconColor?: string;
+  iconStyle?: any;
 }
 
-export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, iconStyle, ...props }) => {
   const [isPressed, setIsPressed] = useState(false);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -43,7 +44,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
           name={iconName} 
           size={iconSize || 18} 
           color={iconColor || theme.colors.text} 
-          style={{ marginLeft: 6 }} 
+          style={[{ marginLeft: 6 }, iconStyle]} 
         />
       )}
     </View>
