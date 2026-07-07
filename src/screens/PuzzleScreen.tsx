@@ -702,6 +702,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.lg,
     paddingTop: theme.spacing.lg * 2,
+    paddingBottom: theme.spacing.lg * 2,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: StyleSheet.hairlineWidth,
