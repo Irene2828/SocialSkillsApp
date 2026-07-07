@@ -366,10 +366,12 @@ export const PuzzleScreen = () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       quality: 0.8,
+      base64: true,
     });
 
-    if (!result.canceled && result.assets[0]?.uri) {
-      createCustomPuzzle(result.assets[0].uri);
+    if (!result.canceled && result.assets[0]?.base64) {
+      const base64Uri = `data:image/jpeg;base64,${result.assets[0].base64}`;
+      createCustomPuzzle(base64Uri);
     }
   };
 
@@ -385,10 +387,12 @@ export const PuzzleScreen = () => {
       mediaTypes: ['images'],
       allowsEditing: true,
       quality: 0.8,
+      base64: true,
     });
 
-    if (!result.canceled && result.assets[0]?.uri) {
-      createCustomPuzzle(result.assets[0].uri);
+    if (!result.canceled && result.assets[0]?.base64) {
+      const base64Uri = `data:image/jpeg;base64,${result.assets[0].base64}`;
+      createCustomPuzzle(base64Uri);
     }
   };
 
@@ -937,7 +941,6 @@ const styles = StyleSheet.create({
   createAiButtonContainer: {
     width: '100%',
     marginTop: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.xl,
     paddingBottom: theme.spacing.xxl,
   },
   createAiButton: {
