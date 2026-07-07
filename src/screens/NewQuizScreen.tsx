@@ -658,16 +658,18 @@ export const NewQuizScreen = () => {
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           {/* Back button + folder title */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.lg, paddingTop: theme.spacing.md }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.lg, paddingTop: theme.spacing.md }}>
             <Pressable 
               onPress={navigateBackFromFolder} 
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={{ flexDirection: 'row', alignItems: 'center', marginRight: theme.spacing.md }}
+              style={{ flexDirection: 'row', alignItems: 'center' }}
             >
               <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
               <Text style={{ ...theme.typography.body, color: theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
             </Pressable>
-            <Text style={{ ...theme.typography.heading, flex: 1 }} numberOfLines={1}>{currentFolder?.name || 'Folder'}</Text>
+            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', backgroundColor: isDark ? 'rgba(255,255,255,0.2)' : theme.colors.primary }]}>
+              <Text style={[styles.screenFolderTabText, { color: isDark ? '#FFFFFF' : theme.colors.text }]} numberOfLines={1}>{currentFolder?.name || 'Folder'}</Text>
+            </View>
           </View>
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
