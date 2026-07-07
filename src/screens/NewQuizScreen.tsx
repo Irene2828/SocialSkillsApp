@@ -641,18 +641,77 @@ export const NewQuizScreen = () => {
     setIsWhyPhase(false);
   };
 
-  const [openFolderIds, setOpenFolderIds] = useState<Set<string>>(new Set());
-  const toggleFolder = (folderId: string) => {
-    setOpenFolderIds(prev => {
-      const next = new Set(prev);
-      if (next.has(folderId)) next.delete(folderId);
-      else next.add(folderId);
-      return next;
-    });
+  const navigateIntoFolder = (folderId: string) => {
+    setFolderHistory(prev => [...prev, folderId]);
+  };
+  const navigateBackFromFolder = () => {
+    setFolderHistory(prev => prev.slice(0, -1));
   };
 
   const renderSelection = () => {
-    // Built-in categories for the current tab
+    // If we're inside a folder, render the folder contents view
+    if (activeFolderId) {
+      const currentFolder = folders.find(f => f.id === activeFolderId);
+      const quizzesInFolder = customCategories.filter(c => c.folderId === activeFolderId);
+      const subFolders = folders.filter(f => f.parentId === activeFolderId);
+
+      return (
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          {/* Back button + folder title */}
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.lg, paddingTop: theme.spacing.md }}>
+            <Pressable 
+              onPress={navigateBackFromFolder} 
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              style={{ flexDirection: 'row', alignItems: 'center', marginRight: theme.spacing.md }}
+            >
+              <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
+              <Text style={{ ...theme.typography.body, color: theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
+            </Pressable>
+            <Text style={{ ...theme.typography.heading, flex: 1 }} numberOfLines={1}>{currentFolder?.name || 'Folder'}</Text>
+          </View>
+
+          {quizzesInFolder.length === 0 && subFolders.length === 0 && (
+            <View style={{ alignItems: 'center', paddingVertical: theme.spacing.xxl }}>
+              <Ionicons name="folder-open-outline" size={48} color={theme.colors.stroke} />
+              <Text style={{ ...theme.typography.body, color: theme.colors.secondaryText, marginTop: theme.spacing.md }}>This folder is empty</Text>
+            </View>
+          )}
+
+          <View ref={bentoGridRef} style={styles.bentoGrid}>
+            {/* Sub-folders */}
+            {subFolders.map(folder => {
+              const count = customCategories.filter(c => c.folderId === folder.id).length;
+              return (
+                <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
+                  <FolderCard 
+                    name={`${folder.name} (${count})`}
+                    onPress={() => navigateIntoFolder(folder.id)}
+                    onEdit={() => {
+                      setActionMenuFolder(folder);
+                      setShowFolderActionMenu(true);
+                    }}
+                  />
+                </View>
+              );
+            })}
+
+            {/* Quiz cards inside the folder */}
+            {quizzesInFolder.map(quiz => (
+              <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+                <QuizCard 
+                  category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
+                  isFeatured={false}
+                  onPressStart={() => handleStartQuiz(quiz.id)} 
+                  onOptionsPress={() => handleOpenActionMenu(quiz)}
+                />
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      );
+    }
+
+    // Root library view (no folder open)
     const tabFilter = activeTab === 'general' ? 'general' : 'ai';
     let builtInCategories = activeTab === 'general' 
       ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0))
@@ -702,34 +761,19 @@ export const NewQuizScreen = () => {
 
           {/* Folders */}
           {tabFolders.map(folder => {
-            const quizzesInFolder = customCategories.filter(c => c.folderId === folder.id);
-            const isOpen = openFolderIds.has(folder.id);
-            const quizCount = quizzesInFolder.length;
+            const quizCount = customCategories.filter(c => c.folderId === folder.id).length;
             return (
-              <React.Fragment key={folder.id}>
-                <View style={[styles.bentoItem, { width: '47%' }]}>
-                  <FolderCard 
-                    name={`${folder.name} (${quizCount})`}
-                    onPress={() => toggleFolder(folder.id)}
-                    onEdit={() => {
-                      setActionMenuFolder(folder);
-                      setShowFolderActionMenu(true);
-                    }}
-                    isDragTarget={hoveredFolderId === folder.id}
-                  />
-                </View>
-                {/* Expanded folder: show quizzes inside */}
-                {isOpen && quizzesInFolder.map(quiz => (
-                  <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
-                    <QuizCard 
-                      category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
-                      isFeatured={false}
-                      onPressStart={() => handleStartQuiz(quiz.id)} 
-                      onOptionsPress={() => handleOpenActionMenu(quiz)}
-                    />
-                  </View>
-                ))}
-              </React.Fragment>
+              <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
+                <FolderCard 
+                  name={`${folder.name} (${quizCount})`}
+                  onPress={() => navigateIntoFolder(folder.id)}
+                  onEdit={() => {
+                    setActionMenuFolder(folder);
+                    setShowFolderActionMenu(true);
+                  }}
+                  isDragTarget={hoveredFolderId === folder.id}
+                />
+              </View>
             );
           })}
 
