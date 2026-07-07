@@ -670,13 +670,13 @@ export const NewQuizScreen = () => {
   };
 
 
-  // Phrasing variants for the why-question intro
+  // Phrasing variants for the why-question intro (short — Part 1 is still visible above)
   const WHY_PROMPTS = [
-    (answer: string) => `Now that you answered "${answer}", why is that the right thing to do?`,
-    (answer: string) => `Now that you answered "${answer}", why is that the best choice?`,
-    (answer: string) => `Now that you answered "${answer}", what makes that the right move?`,
-    (answer: string) => `Now that you answered "${answer}", why is that a good choice here?`,
-    (answer: string) => `Now that you answered "${answer}", why is that the correct option?`,
+    (answer: string) => `Why is "${answer}" the right thing to do?`,
+    (answer: string) => `Why is "${answer}" the best choice?`,
+    (answer: string) => `Why is "${answer}" a good choice here?`,
+    (answer: string) => `Why is "${answer}" the correct answer?`,
+    (answer: string) => `Why is "${answer}" the right move?`,
   ];
 
   const getDisplayQuestion = (): Question => {
