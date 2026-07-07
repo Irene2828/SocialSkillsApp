@@ -79,7 +79,7 @@ export const HomeScreen = () => {
             </Text>
 
             <Button
-              title="START"
+              title="START NOW"
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />

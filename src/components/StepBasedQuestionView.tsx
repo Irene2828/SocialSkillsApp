@@ -293,7 +293,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   mainCard: {
-    paddingHorizontal: theme.spacing.lg,
     paddingVertical: 12,
     backgroundColor: 'transparent',
     borderWidth: 0,
