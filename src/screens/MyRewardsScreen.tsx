@@ -394,16 +394,16 @@ export const MyRewardsScreen = () => {
         {/* Bottom Section: Tabs and Lists */}
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
+            style={[styles.tab, activeTab === 'available' && styles.activeTab, activeTab === 'available' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
             onPress={() => setActiveTab('available')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontWeight: '500' }]}>All Rewards</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontWeight: '600' }]}>All Rewards</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
+            style={[styles.tab, activeTab === 'unlocked' && styles.activeTab, activeTab === 'unlocked' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontWeight: '500' }]}>Unlocked</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontWeight: '600' }]}>Unlocked</Text>
           </Pressable>
         </View>
 
