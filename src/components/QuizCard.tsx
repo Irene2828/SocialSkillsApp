@@ -40,7 +40,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
   const cardBorderColor = category.color || theme.colors.stroke;
   const iconBorderColor = theme.colors.stroke;
   const iconBackgroundColor = theme.colors.errorSoft;
-  const iconColor = theme.colors.secondaryText;
+  const iconColor = '#38bdf8';
 
   if (isDeleted) {
     return (
@@ -88,7 +88,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             >
               {category.title}
             </Text>
-            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : theme.colors.secondaryText, fontWeight: '500', marginTop: 2 }}>
+            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : '#38bdf8', fontWeight: '500', marginTop: 2 }}>
               1 quiz
             </Text>
             {isFeatured && category.description && (

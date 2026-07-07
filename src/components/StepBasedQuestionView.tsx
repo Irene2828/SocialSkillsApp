@@ -299,9 +299,8 @@ const styles = StyleSheet.create({
   mainCard: {
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: 12,
-    backgroundColor: theme.colors.white,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     marginBottom: theme.spacing.sm,
   },
   situationalLabel: {

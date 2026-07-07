@@ -397,13 +397,13 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
             onPress={() => setActiveTab('available')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontWeight: '700' }]}>All Rewards</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontWeight: '500' }]}>All Rewards</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontWeight: '700' }]}>Unlocked</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontWeight: '500' }]}>Unlocked</Text>
           </Pressable>
         </View>
 

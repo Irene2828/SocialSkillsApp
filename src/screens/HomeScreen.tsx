@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
@@ -56,13 +56,23 @@ export const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground showCubes />
+      <Image 
+        source={require('../../assets/space_bg.png')} 
+        style={[StyleSheet.absoluteFill, { opacity: 0.15, resizeMode: 'repeat' }]} 
+      />
       <ScreenWrapper transparent>
         <TopBar title="" />
 
         <View style={styles.startContainer}>
-          <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]}>Smart</Text>
-            <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]}>Explorer</Text>
+          <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }, { flexDirection: 'row', alignItems: 'center' }]}>
+            <Image 
+              source={require('../../assets/mascot_v2.png')} 
+              style={{ width: 80, height: 80, marginRight: 15, resizeMode: 'contain', transform: [{ translateY: -10 }] }} 
+            />
+            <View>
+              <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2, textAlign: 'left' }]}>Smart</Text>
+              <Text style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, textAlign: 'left' }]}>Explorer</Text>
+            </View>
           </View>
 
           <Animated.View
