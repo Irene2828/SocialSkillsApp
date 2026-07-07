@@ -658,7 +658,7 @@ export const NewQuizScreen = () => {
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
           {/* Back button + folder title */}
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.lg, paddingTop: theme.spacing.md }}>
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.lg }}>
             <Pressable 
               onPress={navigateBackFromFolder} 
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -830,7 +830,6 @@ export const NewQuizScreen = () => {
   };
 
   const renderCoinJar = () => {
-    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     return (
       <View style={[
         styles.coinJarContainer,
@@ -882,7 +881,16 @@ export const NewQuizScreen = () => {
     const baseQuestion = currentQuestions[currentIndex] as Question;
     const hasWhyData = baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
 
-    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
+    let categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
+    const customCat = customCategories.find(c => c.id === selectedCategory);
+    if (customCat) {
+      if (customCat.folderId) {
+        const folder = folders.find(f => f.id === customCat.folderId);
+        categoryName = folder ? `${folder.name}. ${customCat.title}` : customCat.title;
+      } else {
+        categoryName = customCat.title;
+      }
+    }
 
     return (
       <View style={styles.inProgressContainer}>
