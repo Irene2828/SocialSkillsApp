@@ -150,7 +150,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
             <View style={styles.completedPromptCard}>
-              <Text style={[styles.promptText, { fontStyle: 'italic', opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+              <Text style={[styles.promptText, { opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
                 {step.prompt}
               </Text>
             </View>
@@ -179,7 +179,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
-            <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, { fontStyle: 'italic' }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+            <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
               {currentStep.prompt}
             </Text>
           </View>
@@ -333,10 +333,11 @@ const styles = StyleSheet.create({
     ...theme.typography.heading,
     fontFamily: FONTS.regular,
     fontSize: 24,
-    fontWeight: '400',
+    fontWeight: '700',
     lineHeight: 34,
-    textAlign: 'left',
+    textAlign: 'center',
     color: theme.colors.text,
+    marginTop: theme.spacing.xl,
   },
 
   // Completed step styling

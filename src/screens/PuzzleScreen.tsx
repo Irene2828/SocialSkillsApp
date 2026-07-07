@@ -40,6 +40,16 @@ const PUZZLES: PuzzleConfig[] = [
   { id: 'p_bear', name: 'Cuddly Bear', image: require('../../assets/puzzles/bear.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
   { id: 'p_hippo', name: 'Baby Hippo', image: require('../../assets/puzzles/hippo.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
   { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
+  { id: 'p_astronaut', name: 'Little Astronaut', image: require('../../assets/puzzles/puzzle_astronaut.png'), icon: 'rocket-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
+  { id: 'p_dolphin2', name: 'Playful Dolphin', image: require('../../assets/puzzles/puzzle_dolphin.png'), icon: 'water-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
+  { id: 'p_elephant2', name: 'Jungle Elephant', image: require('../../assets/puzzles/puzzle_elephant.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
+  { id: 'p_fish', name: 'Clownfish', image: require('../../assets/puzzles/puzzle_fish.png'), icon: 'water-outline', cols: 3, rows: 2, difficulty: '6 Pieces' },
+  { id: 'p_koala2', name: 'Sleepy Koala 2', image: require('../../assets/puzzles/puzzle_koala.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
+  { id: 'p_lion2', name: 'Brave Lion', image: require('../../assets/puzzles/puzzle_lion.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
+  { id: 'p_octopus', name: 'Curious Octopus', image: require('../../assets/puzzles/puzzle_octopus.png'), icon: 'water-outline', cols: 3, rows: 3, difficulty: '9 Pieces' },
+  { id: 'p_parrot', name: 'Colorful Parrot', image: require('../../assets/puzzles/puzzle_parrot.png'), icon: 'leaf-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
+  { id: 'p_turtle2', name: 'Sea Turtle 2', image: require('../../assets/puzzles/puzzle_turtle.png'), icon: 'water-outline', cols: 5, rows: 5, difficulty: '25 Pieces' },
+  { id: 'p_unicorn', name: 'Magical Unicorn', image: require('../../assets/puzzles/puzzle_unicorn.png'), icon: 'star-outline', cols: 4, rows: 4, difficulty: '16 Pieces' },
 ];
 
 const DraggablePiece = ({
