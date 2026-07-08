@@ -71,8 +71,8 @@ export const AppNavigator = () => {
           left: 0,
           right: 0,
           height: height + 8,
-          paddingBottom: paddingBottom * 0.9,
-          paddingTop: 11,
+          paddingBottom: paddingBottom * 0.8,
+          paddingTop: 10,
           width: '100%',
         },
         tabBarItemStyle: {
