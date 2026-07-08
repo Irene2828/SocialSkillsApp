@@ -125,7 +125,6 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     textAlign: 'center',
-    color: theme.colors.text,
   },
   actionButtons: {
     position: 'absolute',
