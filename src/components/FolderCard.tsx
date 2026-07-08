@@ -65,18 +65,15 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
             }} 
             style={({ pressed }) => [
               {
-                padding: 5,
+                padding: 6,
                 borderRadius: 20,
-                backgroundColor: 'transparent',
-                borderWidth: 1,
-                borderColor: '#BAE6FD',
-                opacity: pressed ? 0.7 : 1,
+                backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#BAE6FD'} />
+            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
           </Pressable>
         </View>
       )}
