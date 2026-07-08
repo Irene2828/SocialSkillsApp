@@ -8,6 +8,7 @@ import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme } from '../theme';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 
@@ -45,8 +46,16 @@ export const AppNavigator = () => {
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
+        tabBarBackground: () => (
+          <LinearGradient
+            colors={isRocket ? [moodColors.bg, moodColors.bg] : ['#FFFFFF', '#BAE6FD']}
+            style={{ flex: 1, borderTopLeftRadius: 30, borderTopRightRadius: 30 }}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
+          />
+        ),
         tabBarStyle: {
-          backgroundColor: footerBgColor,
+          backgroundColor: 'transparent',
           borderTopWidth: isRocket ? 0 : 1,
           borderTopColor: isRocket ? 'transparent' : '#BAE6FD',
           borderLeftWidth: isRocket ? 0 : 1,
