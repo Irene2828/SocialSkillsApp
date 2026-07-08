@@ -63,12 +63,12 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       onPress={onPress}
       disabled={disabled}
     >
-      <Text style={[styles.text, textStyle, glassText]}>{text}</Text>
       {state === 'default' ? (
         <View style={[styles.checkboxCircle, isRocket && { borderColor: 'rgba(255, 255, 255, 0.6)' }]} />
       ) : (
         <Ionicons name={iconName} size={24} color={iconColor} />
       )}
+      <Text style={[styles.text, textStyle, glassText]}>{text}</Text>
     </ScalePressable>
   );
 };
@@ -77,22 +77,17 @@ const styles = StyleSheet.create({
   button: {
     width: '100%',
     minHeight: theme.layout.minTouchTarget,
-    paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-    borderRadius: theme.borderRadius.lg,
-    marginBottom: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: theme.colors.white,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    justifyContent: 'flex-start',
+    backgroundColor: 'transparent',
   },
   text: {
     ...theme.typography.body,
     flex: 1,
-    paddingRight: theme.spacing.md,
+    paddingLeft: theme.spacing.md,
     fontWeight: '400',
   },
   defaultButton: {
@@ -102,13 +97,14 @@ const styles = StyleSheet.create({
     color: '#111827',
   },
   correctButton: {
-    backgroundColor: theme.colors.successSoft,
+    backgroundColor: 'transparent',
   },
   correctText: {
     color: theme.colors.text,
+    fontWeight: '600',
   },
   incorrectButton: {
-    backgroundColor: theme.colors.errorSoft,
+    backgroundColor: 'transparent',
   },
   incorrectText: {
     color: theme.colors.secondaryText,

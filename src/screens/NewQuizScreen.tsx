@@ -657,19 +657,16 @@ export const NewQuizScreen = () => {
 
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          {/* Back button + folder title */}
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.lg }}>
+          <TopBar title={currentFolder?.name || 'Folder'} />
+          
+          <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
             <Pressable 
               onPress={navigateBackFromFolder} 
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={[styles.tab, { flexDirection: 'row', justifyContent: 'flex-start', paddingHorizontal: theme.spacing.md }]}
             >
-              <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
-              <Text style={{ ...theme.typography.body, color: theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
+              <Ionicons name="chevron-back" size={20} color={isDark ? '#FFFFFF' : '#374151'} style={{ marginRight: 4 }} />
+              <Text style={[styles.tabText, { color: isDark ? '#FFFFFF' : '#374151', fontWeight: '600' }]}>Back</Text>
             </Pressable>
-            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', backgroundColor: isDark ? 'rgba(255,255,255,0.2)' : theme.colors.primary }]}>
-              <Text style={[styles.screenFolderTabText, { color: isDark ? '#FFFFFF' : theme.colors.text }]} numberOfLines={1}>{currentFolder?.name || 'Folder'}</Text>
-            </View>
           </View>
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
@@ -895,7 +892,7 @@ export const NewQuizScreen = () => {
             <Pressable 
               onPress={handleBackToHome}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={{ flexDirection: 'row', alignItems: 'center' }}
+              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
             >
               <Ionicons name="chevron-back" size={24} color={baseTextColor} />
               <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
