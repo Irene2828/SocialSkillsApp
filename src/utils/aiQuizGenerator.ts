@@ -23,6 +23,7 @@ Requirements for each of the quizzes:
 • Three plausible distractors.
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
+• For the 'whyOptions' explanations, the distractors must be highly specific to the scenario, natural, and varied. Avoid repetitive, generic reasons like "because it is a rule" or "to get adult approval".
 
 Create exactly 5 questions for each quiz.
 Each question must test the concept from a different real-life situation, perspective, or problem angle.
@@ -38,8 +39,8 @@ ${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly
           "options": ["Option 1", "Option 2", "Option 3"],
           "correctIndex": 0, // Integer 0, 1, or 2 representing correct option
           "explanation": "Explanation for why this is correct (string)",
-          "whyOptions": ["Explanation option 1 (genuine social/emotional reason)", "Explanation option 2 (adult approval / rule following)", "Explanation option 3 (another distractor)"],
-          "correctWhyIndex": 0, // index of the genuine social/emotional reason in whyOptions (0, 1, or 2)
+          "whyOptions": ["Correct or incorrect explanation 1 (must be highly specific to this scenario)", "Correct or incorrect explanation 2", "Correct or incorrect explanation 3"],
+          "correctWhyIndex": 0, // index of the correct explanation in whyOptions (0, 1, or 2)
           "whyConfirmation": "A child-friendly confirmation explaining why this is correct (string)"
         }
       ]
