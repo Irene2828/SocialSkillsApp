@@ -49,21 +49,14 @@ export const AppNavigator = () => {
         tabBarBackground: () => (
           <LinearGradient
             colors={isRocket ? [moodColors.bg, moodColors.bg] : ['#FFFFFF', '#F0F9FF']}
-            style={{ flex: 1, borderTopLeftRadius: 30, borderTopRightRadius: 30 }}
+            style={{ flex: 1 }}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
           />
         ),
         tabBarStyle: {
           backgroundColor: 'transparent',
-          borderTopWidth: isRocket ? 0 : 1,
-          borderTopColor: isRocket ? 'transparent' : '#BAE6FD',
-          borderLeftWidth: isRocket ? 0 : 1,
-          borderRightWidth: isRocket ? 0 : 1,
-          borderLeftColor: isRocket ? 'transparent' : '#BAE6FD',
-          borderRightColor: isRocket ? 'transparent' : '#BAE6FD',
-          borderTopLeftRadius: 30,
-          borderTopRightRadius: 30,
+          borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',
