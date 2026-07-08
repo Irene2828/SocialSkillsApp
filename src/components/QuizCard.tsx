@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
 import { useMood, getMoodColors } from '../context/MoodContext';
+import { GradientIcon } from './GradientIcon';
 import { QuizCategory } from '../data/types';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
@@ -73,10 +74,19 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             styles.iconContainer, 
             isFeatured && styles.featuredIconContainer,
           ]}>
-            {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={isRocket ? '#FFFFFF' : iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+            {isRocket ? (
+              iconFamily === 'FontAwesome5' ? (
+                <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#FFFFFF" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              ) : (
+                <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#FFFFFF" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              )
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={isRocket ? '#FFFFFF' : iconColor} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <GradientIcon 
+                iconFamily={iconFamily as any} 
+                name={iconName} 
+                size={isFeatured ? 24 : 32} 
+                style={[styles.icon, isFeatured && { marginBottom: 2 }]} 
+              />
             )}
           </View>
 
