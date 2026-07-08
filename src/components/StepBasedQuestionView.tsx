@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.lg,
     borderRadius: 0,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: '#E5E7EB',
+    borderColor: theme.colors.stroke,
   },
   animatedContainer: {
     width: '100%',
