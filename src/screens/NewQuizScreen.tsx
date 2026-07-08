@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { TopBar } from '../components/TopBar';
@@ -228,12 +229,15 @@ export const NewQuizScreen = () => {
         'Creating original questions...',
         'Building your quiz...'
       ];
-      let i = 0;
-      const interval = setInterval(() => {
-        i = (i + 1) % texts.length;
-        setLoadingText(texts[i]);
-      }, 2500);
-      return () => clearInterval(interval);
+      setLoadingText(texts[0]);
+      
+      const timeout1 = setTimeout(() => setLoadingText(texts[1]), 5000);
+      const timeout2 = setTimeout(() => setLoadingText(texts[2]), 10000);
+      
+      return () => {
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
+      };
     }
   }, [aiGenerating]);
 
@@ -339,7 +343,7 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const topicType = activeTab === 'general' ? 'social' : 'math';
+      const topicType = 'social';
       const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
       
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
@@ -795,7 +799,7 @@ export const NewQuizScreen = () => {
                 alignItems: 'center', 
                 justifyContent: 'center', 
                 padding: theme.spacing.md,
-                minHeight: 150,
+                height: 160,
                 borderStyle: 'dashed',
                 borderWidth: 2,
                 borderColor: theme.colors.stroke,
@@ -803,7 +807,7 @@ export const NewQuizScreen = () => {
                 opacity: 0.8
               }}>
                 <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-                  <Ionicons name="add" size={32} color={theme.colors.secondaryText} />
+                  <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
                 </View>
                 <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
                   <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
@@ -897,7 +901,13 @@ export const NewQuizScreen = () => {
               <Ionicons name="chevron-back" size={24} color={baseTextColor} />
               <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
             </Pressable>
-            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
+            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+              <LinearGradient
+                colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+                style={StyleSheet.absoluteFill}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+              />
               <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
             </View>
           </View>
@@ -1653,7 +1663,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingBottom: theme.spacing.xl,
+    paddingBottom: 140,
   },
   quickStartButton: {
     marginBottom: theme.spacing.md,

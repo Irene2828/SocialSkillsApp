@@ -20,7 +20,7 @@ export const AppNavigator = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const footerBgColor = isRocket ? moodColors.bg : '#FFFFFF';
+  const footerBgColor = isRocket ? moodColors.bg : 'rgba(186, 230, 253, 0.4)';
   const activeColor = isRocket ? '#FFFFFF' : theme.colors.text;
   const inactiveColor = isRocket ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.5)';
 
@@ -47,12 +47,23 @@ export const AppNavigator = () => {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: footerBgColor,
-          borderTopWidth: 0,
+          borderTopWidth: isRocket ? 0 : 1,
+          borderTopColor: isRocket ? 'transparent' : '#BAE6FD',
+          borderLeftWidth: isRocket ? 0 : 1,
+          borderRightWidth: isRocket ? 0 : 1,
+          borderLeftColor: isRocket ? 'transparent' : '#BAE6FD',
+          borderRightColor: isRocket ? 'transparent' : '#BAE6FD',
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
           elevation: 0,
           shadowOpacity: 0,
-          height: height,
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: height + 8,
           paddingBottom: paddingBottom,
-          paddingTop: 4,
+          paddingTop: 12,
           width: '100%',
         },
         tabBarItemStyle: {

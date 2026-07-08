@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { LinearGradient } from 'expo-linear-gradient';
 import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { TopBar } from '../components/TopBar';
@@ -553,8 +554,16 @@ export const PuzzleScreen = () => {
                     const target = actionMenuPuzzle;
                     setShowActionMenu(false);
                     if (target) {
-                      setActionMenuPuzzle(target);
-                      setShowDeletePin(true);
+                      if (PUZZLES.some(p => p.id === target.id)) {
+                        const newHidden = [...hiddenPuzzles, target.id];
+                        setHiddenPuzzles(newHidden);
+                        safeStorage.set('@hidden_puzzles', newHidden);
+                      } else {
+                        const newCustom = customPuzzles.filter(p => p.id !== target.id);
+                        setCustomPuzzles(newCustom);
+                        safeStorage.set('@custom_puzzles', newCustom);
+                      }
+                      setActionMenuPuzzle(null);
                     }
                   }}
                 >
@@ -574,35 +583,7 @@ export const PuzzleScreen = () => {
         </Pressable>
       </Modal>
 
-      {/* Delete Pin Verification Modal */}
-      <Modal visible={showDeletePin} transparent animationType="fade">
-        <Pressable style={{ flex: 1 }} onPress={() => {
-          setShowDeletePin(false);
-          setDeletePin('');
-          setActionMenuPuzzle(null);
-        }}>
-          <View style={styles.modalOverlay}>
-            <Pressable style={styles.pinCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
-                <Text style={styles.pinTitle}>Enter Parent PIN to Delete</Text>
-                <TextInput
-                  style={styles.pinInput}
-                  value={deletePin}
-                  onChangeText={handleDeletePinChange}
-                  keyboardType="number-pad"
-                  maxLength={4}
-                  autoFocus
-                  placeholder="****"
-                  autoComplete="off"
-                  autoCorrect={false}
-                  importantForAutofill="no"
-                  textContentType="oneTimeCode"
-                />
-              </Animated.View>
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
+
 
       {/* Rename Puzzle Modal */}
       <Modal visible={showRenameModal} transparent animationType="fade">
@@ -641,12 +622,22 @@ export const PuzzleScreen = () => {
           <GlobalBackground />
           <ScreenWrapper transparent>
             <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
-              <Pressable style={styles.backButton} onPress={() => setSelectedPuzzle(null)}>
-                <Ionicons name="arrow-back" size={24} color={theme.colors.text} />
-                <Text style={{ marginLeft: 4, ...theme.typography.button, color: theme.colors.text }}>Back</Text>
+              <Pressable 
+                onPress={() => setSelectedPuzzle(null)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+              >
+                <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
+                <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
               </Pressable>
-              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto' }]}>
-                <Text style={styles.screenFolderTabText} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
+              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+                <LinearGradient
+                  colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+                  style={StyleSheet.absoluteFill}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                />
+                <Text style={[styles.screenFolderTabText, { color: theme.colors.text }]} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
               </View>
             </View>
 
@@ -753,7 +744,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
-    paddingBottom: theme.spacing.xl,
+    paddingBottom: 140,
   },
   grid: {
     flexDirection: 'row',
@@ -940,12 +931,12 @@ const styles = StyleSheet.create({
   },
   createAiButtonContainer: {
     width: '100%',
-    marginTop: theme.spacing.lg,
+    marginTop: 48,
     paddingHorizontal: theme.spacing.xl,
-    paddingBottom: theme.spacing.xxl,
   },
   createAiButton: {
     width: '100%',
+    marginBottom: 12,
   },
   modalOverlay: {
     flex: 1,

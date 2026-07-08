@@ -23,7 +23,9 @@ Requirements for each of the quizzes:
 • Three plausible distractors.
 • Friendly, encouraging language.
 • Questions should reinforce understanding rather than memorization.
-• For the 'whyOptions' explanations, the distractors must be highly specific to the scenario, natural, and varied. Avoid repetitive, generic reasons like "because it is a rule" or "to get adult approval".
+• For the 'whyOptions' explanations, ALL options (both correct and incorrect) MUST be completely unique for every single question in the quiz.
+• Do NOT reuse the same reasoning, phrases, or structure across different questions.
+• The distractors must be highly specific to the scenario, natural, and creatively varied. Avoid repetitive, generic reasons like "because it is a rule", "to get adult approval", "it is polite", "it makes people happy", or "it is nice".
 
 Create exactly 5 questions for each quiz.
 Each question must test the concept from a different real-life situation, perspective, or problem angle.

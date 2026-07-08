@@ -32,7 +32,7 @@ export const CreateQuizFromPhotoScreen = () => {
   const spinAnim = new Animated.Value(0);
 
   const navigation = useNavigation<any>();
-  const { addCustomQuiz } = useQuizContext();
+  const { addCustomQuiz, addFolder } = useQuizContext();
 
   useEffect(() => {
     if (screenState === 'generating') {
@@ -49,13 +49,14 @@ export const CreateQuizFromPhotoScreen = () => {
         'Creating original questions...',
         'Building your quiz...'
       ];
-      let i = 0;
-      const interval = setInterval(() => {
-        i = (i + 1) % texts.length;
-        setLoadingText(texts[i]);
-      }, 2500);
-
-      return () => clearInterval(interval);
+      setLoadingText(texts[0]);
+      const timeout1 = setTimeout(() => setLoadingText(texts[1]), 5000);
+      const timeout2 = setTimeout(() => setLoadingText(texts[2]), 10000);
+      
+      return () => {
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
+      };
     }
   }, [screenState]);
 
@@ -115,16 +116,19 @@ export const CreateQuizFromPhotoScreen = () => {
       const responseData = await generateQuizFromImage(dataUri);
       setGeneratedQuiz(responseData);
       
+      const targetFolderId = addFolder(responseData.folderName || 'AI Quiz Topic', 'general');
+
       // Save all 3 generated quizzes to context
       responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
         const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
-        const newCategory = {
+        const newCategory: QuizCategory = {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
           icon: 'color-wand', // magical icon for AI generated
           color: '#A78BFA', // Purple styling to stand out
-          isCustom: true
+          isCustom: true,
+          folderId: targetFolderId
         };
         
         const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
@@ -159,15 +163,18 @@ export const CreateQuizFromPhotoScreen = () => {
       setGeneratedQuiz(responseData);
       
       // Save all 3 generated quizzes to context
+      const targetFolderId = addFolder(responseData.folderName || 'AI Quiz Topic', 'general');
+
       responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
         const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
-        const newCategory = {
+        const newCategory: QuizCategory = {
           id: newCategoryId,
           title: quiz.concept,
           description: 'AI Generated Quiz',
           icon: 'color-wand', // magical icon for AI generated
           color: '#A78BFA', // Purple styling to stand out
-          isCustom: true
+          isCustom: true,
+          folderId: targetFolderId
         };
         
         const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({

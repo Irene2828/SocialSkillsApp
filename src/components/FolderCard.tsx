@@ -48,7 +48,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} />
+            <Ionicons name="folder-outline" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
           </View>
           <View style={styles.textContainer}>
             <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>{name}</Text>
@@ -84,7 +84,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    minHeight: 150,
+    height: 160,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     borderWidth: StyleSheet.hairlineWidth,
@@ -122,7 +122,8 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   title: {
-    ...theme.typography.button,
+    ...theme.typography.body,
+    fontWeight: '600',
     textAlign: 'center',
     color: theme.colors.text,
   },

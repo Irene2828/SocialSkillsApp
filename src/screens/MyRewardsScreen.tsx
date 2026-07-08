@@ -44,19 +44,6 @@ export const MyRewardsScreen = () => {
     const item = unlockedRewards.find(r => r.id === id);
     if (item) {
       deleteUnlockedReward(id);
-      setDeletedUnlockedStack(prev => [item, ...prev]);
-      setUndoState({ type: 'delete', itemId: id });
-      setShowUndo(true);
-
-      if (undoTimeoutRef.current) {
-        clearTimeout(undoTimeoutRef.current);
-      }
-
-      undoTimeoutRef.current = setTimeout(() => {
-        setShowUndo(false);
-        setDeletedUnlockedStack([]);
-        setUndoState(null);
-      }, 5000);
     }
   };
 
@@ -423,12 +410,12 @@ export const MyRewardsScreen = () => {
                   handleDeleteReward(reward);
                 }}
               />
-              <View style={{ width: '100%', paddingHorizontal: theme.spacing.xl }}>
+              <View style={{ width: '100%', marginTop: 48, paddingHorizontal: theme.spacing.xl }}>
                 <Button 
                   title="Add New Reward" 
                   iconName="gift-outline"
                   onPress={() => setShowAddPin(true)} 
-                  style={{ marginTop: theme.spacing.md, width: '100%', backgroundColor: '#BEF264' }}
+                  style={{ marginBottom: 12, width: '100%', backgroundColor: '#BEF264' }}
                 />
               </View>
             </View>
@@ -662,7 +649,7 @@ export const MyRewardsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: theme.spacing.xl,
+    paddingBottom: 140,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
