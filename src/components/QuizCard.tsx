@@ -88,9 +88,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             >
               {category.title}
             </Text>
-            <Text style={{ fontSize: 14, color: isRocket ? 'rgba(255, 255, 255, 0.7)' : '#6B7280', fontWeight: '500', marginTop: 2 }}>
-              1 quiz
-            </Text>
             {isFeatured && category.description && (
               <Text style={[styles.descriptionText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }]}>
                 {category.description}

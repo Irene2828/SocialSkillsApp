@@ -683,7 +683,7 @@ export const NewQuizScreen = () => {
               return (
                 <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
                   <FolderCard 
-                    name={`${folder.name} (${count})`}
+                    name={folder.name}
                     onPress={() => navigateIntoFolder(folder.id)}
                     onEdit={() => {
                       setActionMenuFolder(folder);
@@ -764,7 +764,7 @@ export const NewQuizScreen = () => {
             return (
               <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
                 <FolderCard 
-                  name={`${folder.name} (${quizCount})`}
+                  name={folder.name}
                   onPress={() => navigateIntoFolder(folder.id)}
                   onEdit={() => {
                     setActionMenuFolder(folder);
