@@ -215,7 +215,7 @@ export const HomeScreen = () => {
 
             <Button
               title="Start Now"
-              iconName="rocket"
+              iconName="rocket-outline"
               onPress={() => navigation.navigate('NewQuiz')}
               style={styles.actionButton}
             />
