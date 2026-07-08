@@ -744,7 +744,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 70,
   },
   grid: {
     flexDirection: 'row',
@@ -931,7 +931,7 @@ const styles = StyleSheet.create({
   },
   createAiButtonContainer: {
     width: '100%',
-    marginTop: 48,
+    marginTop: 24,
     paddingHorizontal: theme.spacing.xl,
   },
   createAiButton: {

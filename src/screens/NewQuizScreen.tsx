@@ -1663,7 +1663,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 70,
   },
   quickStartButton: {
     marginBottom: theme.spacing.md,
@@ -1786,7 +1786,7 @@ const styles = StyleSheet.create({
   },
   createAiButtonContainer: {
     width: '100%',
-    marginTop: theme.spacing.lg * 2,
+    marginTop: 24,
     paddingHorizontal: theme.spacing.xl,
   },
   primaryButton: {

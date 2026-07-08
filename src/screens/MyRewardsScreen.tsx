@@ -410,7 +410,7 @@ export const MyRewardsScreen = () => {
                   handleDeleteReward(reward);
                 }}
               />
-              <View style={{ width: '100%', marginTop: 48, paddingHorizontal: theme.spacing.xl }}>
+              <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl }}>
                 <Button 
                   title="Add New Reward" 
                   iconName="gift-outline"
@@ -649,7 +649,7 @@ export const MyRewardsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 70,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
