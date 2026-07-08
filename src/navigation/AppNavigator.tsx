@@ -15,7 +15,7 @@ const Tab = createBottomTabNavigator();
 export const AppNavigator = () => {
   const insets = useSafeAreaInsets();
   const paddingBottom = Math.max(insets.bottom * 0.75, 10); // 50% more than the reduced padding
-  const height = 54 + paddingBottom;
+  const height = 48 + paddingBottom * 0.8;
 
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -63,7 +63,7 @@ export const AppNavigator = () => {
           bottom: 0,
           left: 0,
           right: 0,
-          height: height + 8,
+          height: height,
           paddingBottom: paddingBottom * 0.8,
           paddingTop: 10,
           width: '100%',
