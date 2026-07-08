@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   text: {
     ...theme.typography.button,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   primaryText: {
     color: '#374151',

@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
-    fontWeight: '600',
+    fontWeight: '500',
     textAlign: 'center',
   },
   actionButtons: {

@@ -1663,7 +1663,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingBottom: 70,
+    paddingBottom: 140,
   },
   quickStartButton: {
     marginBottom: theme.spacing.md,
