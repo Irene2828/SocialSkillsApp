@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: '#FFFFFF',
     padding: theme.spacing.lg,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#E5E7EB',
   },
