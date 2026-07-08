@@ -138,7 +138,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <View style={styles.mainCard}>
           <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
           <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
-          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, color: '#6B7280', marginTop: -8, marginBottom: 12 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
+          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, color: '#7DD3FC', marginTop: -8, marginBottom: 12 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
             (don't answer yet, follow the steps below first!)
           </Text>
         </View>
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '700',
     lineHeight: 34,
-    textAlign: 'center',
+    textAlign: 'left',
     color: theme.colors.text,
     marginTop: theme.spacing.md,
   },
