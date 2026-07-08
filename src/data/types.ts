@@ -16,6 +16,7 @@ export interface Question {
   whyOptions?: string[];
   correctWhyIndex?: number;
   whyConfirmation?: string;
+  whyQuestion?: string;
 }
 
 export interface QuizFolder {

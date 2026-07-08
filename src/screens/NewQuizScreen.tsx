@@ -952,7 +952,7 @@ export const NewQuizScreen = () => {
               return {
                 ...baseQuestion,
                 id: `${baseQuestion.id}-why`,
-                scenario: `Now tell me: why is this the right ${actionText}?`,
+                scenario: baseQuestion.whyQuestion || `Now tell me: why is this the right ${actionText}?`,
                 prompt: undefined,
                 options: baseQuestion.whyOptions!,
                 correctAnswerIndex: baseQuestion.correctWhyIndex!,

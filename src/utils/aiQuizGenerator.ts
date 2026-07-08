@@ -41,6 +41,7 @@ ${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly
           "explanation": "Explanation for why this is correct (string)",
           "whyOptions": ["Correct or incorrect explanation 1 (must be highly specific to this scenario)", "Correct or incorrect explanation 2", "Correct or incorrect explanation 3"],
           "correctWhyIndex": 0, // index of the correct explanation in whyOptions (0, 1, or 2)
+          "whyQuestion": "A follow up question asking why the correct option is the right choice (e.g. 'Why is this a good idea?')",
           "whyConfirmation": "A child-friendly confirmation explaining why this is correct (string)"
         }
       ]
