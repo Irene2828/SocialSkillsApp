@@ -2,8 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { theme } from '../theme';
 import { FontAwesome5 } from '@expo/vector-icons';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface CoinBalanceCardProps {
@@ -42,34 +40,43 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
       <View style={[styles.card, glassStyle]}>
         <View style={styles.content}>
           <Text style={[styles.earnedText, isRocket && { color: 'rgba(255, 255, 255, 0.75)' }, isRocket && glassTextShadow]}>You've earned:</Text>
-          <MaskedView
-            style={{ height: 65, width: '100%' }}
-            maskElement={
-              <View style={[styles.balanceRow, { backgroundColor: 'transparent' }]}>
-                <FontAwesome5 
-                  name="coins" 
-                  size={34} 
-                  color="black" 
-                  style={{ marginRight: 12, marginTop: 4 }}
-                />
-                <Text 
-                  style={[styles.balanceNumber, isRocket && glassTextShadow, { color: 'black' }]}
-                  adjustsFontSizeToFit
-                  numberOfLines={1}
-                >
-                  {balance}
-                </Text>
-                <Text style={[styles.balanceLabel, isRocket && glassTextShadow, { color: 'black' }]}>Coins</Text>
-              </View>
-            }
-          >
-            <LinearGradient
-              colors={gradientColors}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              style={{ flex: 1, width: '100%' }}
+          <View style={styles.balanceRow}>
+            <FontAwesome5 
+              name="coins" 
+              size={34} 
+              color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+              style={{ marginRight: 12, marginTop: 4, textShadowColor: isRocket ? 'rgba(0,0,0,0.4)' : undefined, textShadowRadius: isRocket ? 2 : undefined, textShadowOffset: isRocket ? {width:0, height:1} : undefined }}
             />
-          </MaskedView>
+            <View style={{ flexDirection: 'row' }}>
+              {balance.toString().split('').map((char, index) => (
+                <Text 
+                  key={`num-${index}`}
+                  style={[
+                    styles.balanceNumber, 
+                    isRocket && glassTextShadow, 
+                    { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                  ]}
+                >
+                  {char}
+                </Text>
+              ))}
+            </View>
+            <View style={{ flexDirection: 'row', marginLeft: theme.spacing.sm }}>
+              {"Coins".split('').map((char, index) => (
+                <Text 
+                  key={`coin-${index}`}
+                  style={[
+                    styles.balanceLabel, 
+                    { marginLeft: 0 },
+                    isRocket && glassTextShadow, 
+                    { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + balance.toString().length + 1 + index, gradientColors.length - 1)] }
+                  ]}
+                >
+                  {char}
+                </Text>
+              ))}
+            </View>
+          </View>
           <Text style={[styles.subtitleText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, isRocket && glassTextShadow]}>Redeem points for rewards of your choice anytime!</Text>
         </View>
       </View>
