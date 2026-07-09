@@ -1864,7 +1864,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,
@@ -2139,7 +2139,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     padding: theme.spacing.xl,
     alignItems: 'center',
     ...theme.shadows.soft,

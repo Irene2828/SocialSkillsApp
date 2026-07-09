@@ -954,7 +954,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: theme.colors.neutralGrey,
     borderStyle: 'dashed',
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 0,
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -1001,7 +1001,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     overflow: 'hidden',
     zIndex: 1000,
     backgroundColor: theme.colors.white,

@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     maxWidth: 400,
     maxHeight: '85%',
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
+    borderRadius: 0,
     overflow: 'hidden',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },

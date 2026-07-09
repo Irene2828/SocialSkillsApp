@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   feedbackContainerBackground: {
     width: '100%',
     maxWidth: 500,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     overflow: 'hidden',
     backgroundColor: theme.colors.white,
   },
