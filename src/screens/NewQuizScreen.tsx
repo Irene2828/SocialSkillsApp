@@ -983,7 +983,7 @@ export const NewQuizScreen = () => {
         </ScrollView>
 
         {/* Bottom bar with progress and coins */}
-        <View style={{ paddingTop: theme.spacing.md, paddingBottom: 40 }}>
+        <View style={{ paddingTop: theme.spacing.md, paddingBottom: 110 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <View style={{ flex: 1, marginBottom: 0 }}>
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>

@@ -72,7 +72,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_2_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -83,7 +83,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_2_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "35 − 12",
           "12 − 35",
@@ -124,7 +124,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_3_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -135,7 +135,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_3_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "28 − 19",
           "19 − 28",
@@ -176,7 +176,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_4_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Multiplication",
           "Addition of two numbers",
@@ -187,7 +187,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_4_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "5 × 4",
           "5 + 4",
@@ -228,7 +228,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_5_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Division",
           "Multiplication",
@@ -239,7 +239,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_5_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "24 ÷ 6",
           "6 ÷ 24",
@@ -280,7 +280,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_6_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -291,7 +291,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_6_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "35 − 12",
           "12 − 35",
@@ -332,7 +332,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_7_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Adding time",
           "Subtracting time",
@@ -343,7 +343,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_7_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "10:15 + 20 minutes",
           "10:15 − 20 minutes",
@@ -384,7 +384,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_8_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -395,7 +395,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_8_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "45 − 22",
           "30 − 22",
@@ -436,7 +436,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_9_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -447,7 +447,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_9_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "60 − 25",
           "60 − 8",
@@ -488,7 +488,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_10_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Multiplication",
           "Addition",
@@ -499,7 +499,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_10_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "3 × 14",
           "3 + 14",
@@ -540,7 +540,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_11_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Division",
           "Multiplication",
@@ -551,7 +551,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_11_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "36 ÷ 4",
           "10 ÷ 4",
@@ -592,7 +592,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_12_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -603,7 +603,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_12_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "40 − 25",
           "40 − 6",
@@ -644,7 +644,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_13_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Subtraction",
           "Addition",
@@ -655,7 +655,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_13_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "52 − 37",
           "37 − 52",
@@ -696,7 +696,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_14_p1_s2",
-        "prompt": "Which operation?",
+        "prompt": "Which operation solves this?",
         "options": [
           "Adding time",
           "Subtracting time",
@@ -707,7 +707,7 @@ export const wordProblems: StepBasedQuestion[] = [
       },
       {
         "id": "wp_quiz_14_p1_s3",
-        "prompt": "Which equation?",
+        "prompt": "Which equation is correct?",
         "options": [
           "1:30 + 85 minutes",
           "1:30 − 85 minutes",
