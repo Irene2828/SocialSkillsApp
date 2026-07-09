@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: theme.spacing.lg,
     borderRadius: 0,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
   },
   animatedContainer: {

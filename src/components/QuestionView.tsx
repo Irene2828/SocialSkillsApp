@@ -188,9 +188,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
           <View style={styles.scenarioCard}>
-            {whyQuestion && (
-              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 1</Text>
-            )}
+            {whyQuestion && null}
             <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.scenario}</Text>
           {question.prompt && (
             <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.prompt}</Text>
@@ -304,7 +302,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
           <View style={styles.cardWrapper}>
             <View style={styles.scenarioCard}>
-              <Text style={[styles.partLabelText, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>Part 2</Text>
+
               <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.scenario}</Text>
               {whyQuestion.prompt && (
                 <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.prompt}</Text>
@@ -416,7 +414,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: theme.spacing.lg,
     borderRadius: 0,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
   },
   cardWrapper: {

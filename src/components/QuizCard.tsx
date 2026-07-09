@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     height: 160,
     position: 'relative',
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
   },
   featuredCard: {
     minHeight: 110,
