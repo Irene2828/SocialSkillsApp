@@ -197,6 +197,8 @@ export const NewQuizScreen = () => {
         moveQuizToFolder(pendingDragQuizId, folderId);
         showToast({ message: 'Folder created and quiz moved!' });
         setPendingDragQuizId(null);
+      } else if (generatedQuizzes) {
+        handleSaveToFolder(folderId);
       }
     }
   };
@@ -832,6 +834,11 @@ export const NewQuizScreen = () => {
   };
 
   const renderCoinJar = () => {
+    const gradientColors = [
+      '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+      '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+      '#3B82F6', '#60A5FA', '#93C5FD'
+    ];
     return (
       <View style={[
         styles.coinJarContainer,
@@ -844,9 +851,22 @@ export const NewQuizScreen = () => {
         <FontAwesome5 
           name="coins" 
           size={20} 
-          color="#4B5563" 
+          color={isRocket ? '#FFFFFF' : gradientColors[0]} 
         />
-        <Text style={[styles.coinJarText, isRocket && { color: '#FFFFFF' }]}>{score}</Text>
+        <View style={{ flexDirection: 'row', marginLeft: 4 }}>
+          {score.toString().split('').map((char, index) => (
+            <Text 
+              key={`score-${index}`} 
+              style={[
+                styles.coinJarText, 
+                { marginLeft: 0 },
+                { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+              ]}
+            >
+              {char}
+            </Text>
+          ))}
+        </View>
       </View>
     );
   };
@@ -919,9 +939,17 @@ export const NewQuizScreen = () => {
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
                 <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
                   {selectedCategory === 'iq_word_problems' ? (
-                    <View style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, backgroundColor: '#4B5563', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <LinearGradient
+                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985', '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+                    />
                   ) : (
-                    <View style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, backgroundColor: '#4B5563', borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} />
+                    <LinearGradient
+                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985', '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+                    />
                   )}
                 </View>
               </View>
@@ -995,10 +1023,7 @@ export const NewQuizScreen = () => {
     const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || '';
     const total = currentQuestions.length;
     
-    let message = "Good effort!";
-    if (score === total) message = "Awesome!";
-    else if (score >= total * 0.7) message = "Great job, Social Explorer!";
-    else if (score >= total * 0.5) message = "You're learning fast!";
+    let message = "Awesome!";
 
     let coinsEarned = total;
 
@@ -1007,13 +1032,18 @@ export const NewQuizScreen = () => {
       navigation.navigate('MyRewards');
     };
 
+    const gradientColors = [
+      '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+      '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+      '#3B82F6', '#60A5FA', '#93C5FD'
+    ];
     return (
       <Pressable style={styles.completedContainer} onPress={handleBackToHome}>
         <SilverDust />
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             <View style={[styles.titleContainer, { position: 'relative' }]}>
-              <SpiderMascot visible={true} />
+
               <Text style={styles.completedTitle}>{message}</Text>
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
@@ -1022,9 +1052,24 @@ export const NewQuizScreen = () => {
               <FontAwesome5 
                 name="coins" 
                 size={24} 
-                color="#4B5563" 
+                color={gradientColors[0]} 
               />
-              <Text style={styles.completedCoinText}>+{coinsEarned} Coins Earned!</Text>
+              <View style={{ flexDirection: 'row', marginLeft: 8 }}>
+                <Text style={{ ...styles.completedCoinText, marginRight: 0, color: gradientColors[0] }}>+</Text>
+                {coinsEarned.toString().split('').map((char, index) => (
+                  <Text 
+                    key={`earn-${index}`} 
+                    style={[
+                      styles.completedCoinText, 
+                      { marginLeft: 0 },
+                      { color: gradientColors[Math.min(1 + index, gradientColors.length - 1)] }
+                    ]}
+                  >
+                    {char}
+                  </Text>
+                ))}
+                <Text style={{ ...styles.completedCoinText, marginLeft: 6, color: gradientColors[Math.min(3, gradientColors.length - 1)] }}>Coins Earned!</Text>
+              </View>
             </View>
 
             <Button
@@ -1255,6 +1300,16 @@ export const NewQuizScreen = () => {
                     <Text style={styles.modalOptionText}>{folder.name}</Text>
                   </Pressable>
                 ))}
+                <Pressable 
+                  style={[styles.modalOptionCard, { marginBottom: 8 }]}
+                  onPress={() => {
+                    setShowFolderSelection(false);
+                    setShowFolderModal(true);
+                  }}
+                >
+                  <Ionicons name="add-circle-outline" size={24} color={theme.colors.primary} style={{ marginRight: 12 }} />
+                  <Text style={[styles.modalOptionText, { color: theme.colors.primary, fontWeight: '600' }]}>Create New Folder</Text>
+                </Pressable>
                 <Pressable 
                   style={[styles.modalOptionCard, { marginBottom: 8 }]}
                   onPress={() => handleSaveToFolder(undefined)}
@@ -1624,7 +1679,11 @@ export const NewQuizScreen = () => {
               onPress={handleCreateFolder}
               style={{ width: '100%', marginTop: theme.spacing.md }}
             />
-            <Pressable style={styles.linkButton} onPress={() => { setShowFolderModal(false); setPendingDragQuizId(null); }}>
+            <Pressable style={styles.linkButton} onPress={() => { 
+              setShowFolderModal(false); 
+              setPendingDragQuizId(null); 
+              if (generatedQuizzes) setShowFolderSelection(true); 
+            }}>
               <Text style={styles.linkButtonText}>Cancel</Text>
             </Pressable>
           </View>
