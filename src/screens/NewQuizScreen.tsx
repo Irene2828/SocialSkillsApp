@@ -933,44 +933,10 @@ export const NewQuizScreen = () => {
             </View>
           </View>
 
-          {/* Progress bar row: bar left-aligned with back button, coins on right, vertically centered */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-            <View style={{ flex: 1, marginBottom: 0 }}>
-              <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
-                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
-                  {selectedCategory === 'iq_word_problems' ? (
-                    <LinearGradient
-                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                      style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-                    />
-                  ) : (
-                    <LinearGradient
-                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                      style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-                    />
-                  )}
-                </View>
-              </View>
-            </View>
-            {renderCoinJar()}
-          </View>
-
-          {/* Caption below progress bar */}
-          {selectedCategory === 'iq_word_problems' ? (
-            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
-              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
-            </Text>
-          ) : (
-            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
-              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
-            </Text>
-          )}
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
           {selectedCategory === 'iq_word_problems' ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -1015,6 +981,43 @@ export const NewQuizScreen = () => {
             );
           })()}
         </ScrollView>
+
+        {/* Bottom bar with progress and coins */}
+        <View style={{ paddingTop: theme.spacing.md, paddingBottom: 40 }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
+            <View style={{ flex: 1, marginBottom: 0 }}>
+              <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
+                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
+                  {selectedCategory === 'iq_word_problems' ? (
+                    <LinearGradient
+                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+                    />
+                  ) : (
+                    <LinearGradient
+                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                      style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+                    />
+                  )}
+                </View>
+              </View>
+            </View>
+            {renderCoinJar()}
+          </View>
+
+          {/* Caption below progress bar */}
+          {selectedCategory === 'iq_word_problems' ? (
+            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
+              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
+            </Text>
+          ) : (
+            <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
+              <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
+            </Text>
+          )}
+        </View>
       </View>
     );
   };
