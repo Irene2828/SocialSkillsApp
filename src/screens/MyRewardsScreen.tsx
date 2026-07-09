@@ -661,7 +661,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: theme.spacing.lg,
-    borderWidth: 1,
+    borderWidth: 2,
     
   },
   bannerTextContainer: {
@@ -825,7 +825,7 @@ const styles = StyleSheet.create({
   activeTab: {
     backgroundColor: 'rgba(186, 230, 253, 0.4)',
     borderColor: '#BAE6FD',
-    borderWidth: 1,
+    borderWidth: 2,
   },
   tabText: {
     ...theme.typography.button,

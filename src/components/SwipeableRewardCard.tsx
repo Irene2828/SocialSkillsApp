@@ -216,7 +216,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },

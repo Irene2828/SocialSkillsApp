@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Modal, useWindowDimensions, Pressable } from 'react-native';
+import { SpiderMascot } from './SpiderMascot';
 import { StepBasedQuestion } from '../data/types';
 import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
@@ -232,7 +233,8 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               
-              <View style={styles.feedbackTitleContainer}>
+              <View style={[styles.feedbackTitleContainer, { position: 'relative' }]}>
+                <SpiderMascot visible={displayIsCorrect} />
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
                     ? "That's Correct!" 

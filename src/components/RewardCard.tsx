@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },
