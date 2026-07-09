@@ -560,7 +560,7 @@ const styles = StyleSheet.create({
   },
   successOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)', // Standardized white overlay
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -568,13 +568,12 @@ const styles = StyleSheet.create({
   successCard: {
     width: '100%',
     maxWidth: 500,
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    backgroundColor: 'transparent',
+    borderRadius: 0,
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
     alignItems: 'center',
     overflow: 'hidden',
-    ...theme.shadows.glow,
   },
   successDismissHint: {
     ...theme.typography.caption,

@@ -117,7 +117,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -128,11 +128,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: theme.colors.white,
-    ...theme.shadows.glow,
+    backgroundColor: 'transparent',
   },
 
   modalTitle: {

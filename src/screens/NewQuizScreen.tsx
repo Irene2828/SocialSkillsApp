@@ -1822,9 +1822,9 @@ const styles = StyleSheet.create({
   completedCard: {
     width: '100%',
     maxWidth: 500,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: 0,
     overflow: 'hidden',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
@@ -1956,7 +1956,7 @@ const styles = StyleSheet.create({
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255,255,255,0.85)',
+    backgroundColor: 'rgba(255,255,255,0.90)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -1970,7 +1970,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
   },
   pinContainer: {
     width: '100%',
@@ -1999,8 +1999,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
     padding: theme.spacing.xl,
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.white,
+    borderRadius: 0,
+    backgroundColor: 'transparent',
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -2042,11 +2042,9 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: theme.colors.white,
-    borderWidth: 2,
-    borderColor: theme.colors.neutralGrey,
-    borderStyle: 'dashed',
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderRadius: 0,
   },
   levelQuestionCount: {
     ...theme.typography.button,
@@ -2243,11 +2241,12 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: '100%',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
     borderRadius: 0,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   addFolderCard: {
     width: '100%',

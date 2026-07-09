@@ -942,7 +942,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.90)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -952,10 +952,8 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: theme.colors.white,
-    borderWidth: 2,
-    borderColor: theme.colors.neutralGrey,
-    borderStyle: 'dashed',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     borderRadius: 0,
   },
   levelTitle: {
@@ -1006,7 +1004,7 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
   },
   pinContainer: {
     width: '100%',

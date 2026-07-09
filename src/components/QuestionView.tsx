@@ -238,12 +238,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
             {displayIsCorrect && part1ShowCoin && <SilverDust />}
             <Pressable style={[
-              styles.feedbackContainerBackground,
-              isRocket && {
-                backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                borderColor: 'rgba(255, 255, 255, 0.3)',
-                borderWidth: 1.5,
-              }
+              styles.feedbackContainerBackground
             ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <View style={styles.feedbackContainer}>
                 
@@ -350,12 +345,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleClosePart2Modal}>
               {part2DisplayIsCorrect && <SilverDust />}
               <Pressable style={[
-                styles.feedbackContainerBackground,
-                isRocket && {
-                  backgroundColor: 'rgba(255, 255, 255, 0.35)',
-                  borderColor: 'rgba(255, 255, 255, 0.3)',
-                  borderWidth: 1.5,
-                }
+                styles.feedbackContainerBackground
               ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                 <View style={styles.feedbackContainer}>
                   {!part2DisplayIsCorrect && <WrongAnswerSpaceman />}
@@ -506,7 +496,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)', // Standardized white overlay
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Standardized white overlay 90%
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -516,7 +506,8 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     borderRadius: 0,
     overflow: 'hidden',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   feedbackContainer: {
     padding: theme.spacing.xl,

@@ -223,15 +223,10 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.9)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && isFinalStep && <SilverDust />}
           <Pressable style={[
-            styles.feedbackContainerBackground,
-            isRocket && {
-              backgroundColor: 'rgba(255, 255, 255, 0.35)',
-              borderColor: 'rgba(255, 255, 255, 0.3)',
-              borderWidth: 1.5,
-            }
+            styles.feedbackContainerBackground
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               {!displayIsCorrect && <WrongAnswerSpaceman />}
@@ -385,7 +380,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -395,7 +390,8 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     borderRadius: 0,
     overflow: 'hidden',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   feedbackContainer: {
     padding: theme.spacing.xl,
