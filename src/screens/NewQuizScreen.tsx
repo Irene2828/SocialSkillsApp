@@ -993,10 +993,13 @@ export const NewQuizScreen = () => {
               const questionText = (baseQuestion.prompt || baseQuestion.scenario).toLowerCase();
               const isSaying = correctAnswer.includes('"') || questionText.includes('say') || questionText.includes('tell');
               const actionText = isSaying ? "thing to say" : "thing to do";
+              const rawWhyQuestion = baseQuestion.whyQuestion || `Why is this the right ${actionText}?`;
+              const cleanWhyQuestion = rawWhyQuestion.replace(/^Now tell me:\s*/i, '');
+              
               return {
                 ...baseQuestion,
                 id: `${baseQuestion.id}-why`,
-                scenario: baseQuestion.whyQuestion || `Why is this the right ${actionText}?`,
+                scenario: cleanWhyQuestion,
                 prompt: undefined,
                 options: baseQuestion.whyOptions!,
                 correctAnswerIndex: baseQuestion.correctWhyIndex!,
