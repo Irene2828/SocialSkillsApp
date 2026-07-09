@@ -223,7 +223,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.9)' }]} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && isFinalStep && <SilverDust />}
           <Pressable style={[
             styles.feedbackContainerBackground
@@ -380,7 +380,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

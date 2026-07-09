@@ -235,7 +235,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           transparent={true}
           animationType="fade"
         >
-          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleCloseModal}>
+          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
             {displayIsCorrect && part1ShowCoin && <SilverDust />}
             <Pressable style={[
               styles.feedbackContainerBackground
@@ -342,7 +342,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             transparent={true}
             animationType="fade"
           >
-            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.85)' }]} onPress={handleClosePart2Modal}>
+            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleClosePart2Modal}>
               {part2DisplayIsCorrect && <SilverDust />}
               <Pressable style={[
                 styles.feedbackContainerBackground
@@ -496,7 +496,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)', // Standardized white overlay 90%
+    backgroundColor: 'rgba(255, 255, 255, 0.95)', // Standardized white overlay 90%
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
