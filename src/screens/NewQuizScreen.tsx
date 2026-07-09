@@ -625,6 +625,9 @@ export const NewQuizScreen = () => {
 
     if (currentIndex + 1 < currentQuestions.length) {
       setCurrentIndex(prev => prev + 1);
+      setTimeout(() => {
+        quizScrollRef.current?.scrollTo({ y: 0, animated: true });
+      }, 50);
     } else {
       setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
@@ -945,6 +948,9 @@ export const NewQuizScreen = () => {
               onStepChange={(idx, total) => {
                 setCurrentWordProblemStep(idx);
                 setTotalWordProblemSteps(total);
+                setTimeout(() => {
+                  quizScrollRef.current?.scrollTo({ y: 0, animated: true });
+                }, 50);
               }}
             />
           ) : (() => {

@@ -102,11 +102,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
     }
   }, [showPart2]);
 
-  // Auto-scroll to eye-level when Part 2 layout is known
+  // Auto-scroll to top so the user sees the original question along with the follow-up
   useEffect(() => {
     if (showPart2 && part2Y !== null) {
       setTimeout(() => {
-        scrollViewRef?.current?.scrollTo?.({ y: part2Y - 80, animated: true });
+        scrollViewRef?.current?.scrollTo?.({ y: 0, animated: true });
       }, 50);
     }
   }, [showPart2, part2Y]);
