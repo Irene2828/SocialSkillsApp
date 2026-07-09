@@ -734,6 +734,8 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
     alignItems: 'center',
     borderRadius: theme.borderRadius.full,
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
   activeTab: {
     backgroundColor: theme.colors.primary,

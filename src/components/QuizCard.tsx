@@ -228,7 +228,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: theme.colors.text,
     textAlign: 'center',
   },
   featuredTitle: {
