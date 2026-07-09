@@ -6,8 +6,10 @@ import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { Confetti } from './Confetti';
 import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
+import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 
 interface StepBasedQuestionViewProps {
   question: StepBasedQuestion;
@@ -231,7 +233,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
             }
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
-              
+              {!displayIsCorrect && <WrongAnswerSpaceman />}
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 

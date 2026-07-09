@@ -8,6 +8,7 @@ import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
+import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 
 interface QuestionViewProps {
   question: Question;
@@ -245,6 +246,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <View style={styles.feedbackContainer}>
                 
+                {!displayIsCorrect && <WrongAnswerSpaceman />}
+
                 <View style={styles.feedbackTitleContainer}>
                   <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                     {displayIsCorrect 
@@ -353,6 +356,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 }
               ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                 <View style={styles.feedbackContainer}>
+                  {!part2DisplayIsCorrect && <WrongAnswerSpaceman />}
                   <View style={styles.feedbackTitleContainer}>
                     <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                       {part2DisplayIsCorrect 
