@@ -746,7 +746,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 160,
   },
   grid: {
     flexDirection: 'row',

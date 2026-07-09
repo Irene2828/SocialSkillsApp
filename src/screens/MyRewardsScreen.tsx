@@ -649,7 +649,7 @@ export const MyRewardsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 160,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
