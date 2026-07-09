@@ -14,7 +14,7 @@ export const SpiderMascot: React.FC<SpiderMascotProps> = ({ visible }) => {
       // Drop down animation - slow and smooth
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 1600, // slower
+        duration: 3000, // even slower
         easing: Easing.out(Easing.back(1.5)), // smooth slight overshoot
         useNativeDriver: true,
       }).start();
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     top: -20,
-    left: -70, // To the left of the text
+    right: -70, // To the right of the text
     alignItems: 'center',
     zIndex: 999,
   },
