@@ -17,6 +17,12 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const borderGlow = useRef(new Animated.Value(0)).current;
 
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
+
   useEffect(() => {
     if (isHighlighted) {
       Animated.sequence([
@@ -68,7 +74,7 @@ export const UnlockedRewardItem: React.FC<UnlockedRewardItemProps> = ({ reward, 
           <Ionicons 
             name={reward.icon as any || 'gift'} 
             size={24} 
-            color={reward.isFulfilled ? theme.colors.secondaryText : theme.colors.text} 
+            color={reward.isFulfilled ? theme.colors.secondaryText : gradientColors[0]} 
           />
         </View>
         <View style={styles.textContainer}>

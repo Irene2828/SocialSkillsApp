@@ -286,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     padding: theme.spacing.lg,
     borderRadius: 0,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: theme.colors.stroke,
   },
   animatedContainer: {
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
   dashedExplanationContainer: {
     width: '100%',
     padding: theme.spacing.lg,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#BAE6FD',
     borderStyle: 'dashed',
     borderRadius: 16,

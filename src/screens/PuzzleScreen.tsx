@@ -762,7 +762,7 @@ const styles = StyleSheet.create({
     paddingBottom: theme.spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: StyleSheet.hairlineWidth,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
     ...theme.shadows.soft,
   },

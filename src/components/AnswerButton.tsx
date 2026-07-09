@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: theme.colors.primary,
     backgroundColor: 'transparent',
   },

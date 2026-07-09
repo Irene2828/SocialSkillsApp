@@ -57,6 +57,12 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
     textShadowRadius: 2,
   } : {};
 
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
+
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gs) =>
@@ -133,7 +139,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
           <View style={styles.leftContent}>
             <View style={[styles.iconContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} />
+              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : gradientColors[0]} />
             </View>
             <View style={styles.textContainer}>
               <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
@@ -143,9 +149,23 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 <FontAwesome5
                   name="coins"
                   size={14}
-                  color="#4B5563"
+                  color={isRocket ? '#FFFFFF' : gradientColors[0]}
                 />
-                <Text style={[styles.costText, isRocket && { color: '#FFFFFF' }]}>{reward.cost}</Text>
+                <View style={{ flexDirection: 'row', marginLeft: 4 }}>
+                  {reward.cost.toString().split('').map((char, index) => (
+                    <Text 
+                      key={`cost-${index}`} 
+                      style={[
+                        styles.costText, 
+                        isRocket && { color: '#FFFFFF' }, 
+                        { marginLeft: 0 },
+                        { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                      ]}
+                    >
+                      {char}
+                    </Text>
+                  ))}
+                </View>
               </View>
             </View>
           </View>
