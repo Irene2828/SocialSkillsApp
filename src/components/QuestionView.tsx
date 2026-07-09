@@ -9,6 +9,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
+import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
 
 interface QuestionViewProps {
   question: Question;
@@ -247,6 +248,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
               <View style={styles.feedbackContainer}>
                 
                 {!displayIsCorrect && <WrongAnswerSpaceman />}
+                {displayIsCorrect && <CorrectAnswerSpaceman />}
 
                 <View style={styles.feedbackTitleContainer}>
                   <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
@@ -357,6 +359,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
               ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                 <View style={styles.feedbackContainer}>
                   {!part2DisplayIsCorrect && <WrongAnswerSpaceman />}
+                  {part2DisplayIsCorrect && <CorrectAnswerSpaceman />}
                   <View style={styles.feedbackTitleContainer}>
                     <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                       {part2DisplayIsCorrect 

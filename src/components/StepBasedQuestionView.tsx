@@ -10,6 +10,7 @@ import { Confetti } from './Confetti';
 import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
+import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
 
 interface StepBasedQuestionViewProps {
   question: StepBasedQuestion;
@@ -234,6 +235,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               {!displayIsCorrect && <WrongAnswerSpaceman />}
+              {displayIsCorrect && <CorrectAnswerSpaceman />}
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
