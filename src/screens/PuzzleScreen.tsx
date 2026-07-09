@@ -412,13 +412,13 @@ export const PuzzleScreen = () => {
               style={[styles.tab, activeTab === 'animals' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
               onPress={() => setActiveTab('animals')}
             >
-              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '600' }]}>Animals</Text>
+              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '500' }]}>Animals</Text>
             </Pressable>
             <Pressable 
               style={[styles.tab, activeTab === 'cities' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
               onPress={() => setActiveTab('cities')}
             >
-              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '600' }]}>Cities</Text>
+              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '500' }]}>Cities</Text>
             </Pressable>
           </View>
 

@@ -742,13 +742,13 @@ export const NewQuizScreen = () => {
             style={[styles.tab, activeTab === 'general' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
             onPress={() => setActiveTab('general')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: '#374151', fontWeight: '600' }]}>Social Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: '#374151', fontWeight: '500' }]}>Social Skills</Text>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'ai' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
             onPress={() => setActiveTab('ai')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: '#374151', fontWeight: '600' }]}>Math Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: '#374151', fontWeight: '500' }]}>Math Skills</Text>
           </Pressable>
         </View>
 
