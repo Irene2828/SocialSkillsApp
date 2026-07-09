@@ -939,7 +939,7 @@ export const NewQuizScreen = () => {
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: theme.spacing.sm }]}>
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0 }]}>
           {selectedCategory === 'iq_word_problems' ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -989,7 +989,7 @@ export const NewQuizScreen = () => {
         </ScrollView>
 
         {/* Bottom bar with progress and coins */}
-        <View style={{ paddingTop: theme.spacing.md, paddingBottom: 110 }}>
+        <View style={{ paddingTop: 8, paddingBottom: 110 }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <View style={{ flex: 1, marginBottom: 0 }}>
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
@@ -1733,7 +1733,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingBottom: 140,
+    paddingBottom: 40,
   },
   quickStartButton: {
     marginBottom: theme.spacing.md,
