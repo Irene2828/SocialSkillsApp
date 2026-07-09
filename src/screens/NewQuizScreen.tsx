@@ -1013,7 +1013,7 @@ export const NewQuizScreen = () => {
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
             <View style={[styles.titleContainer, { position: 'relative' }]}>
-              {message === "Awesome!" && <SpiderMascot visible={true} />}
+              <SpiderMascot visible={true} />
               <Text style={styles.completedTitle}>{message}</Text>
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
