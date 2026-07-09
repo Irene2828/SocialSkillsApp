@@ -547,10 +547,43 @@ export const NewQuizScreen = () => {
     };
   };
 
+  const shuffleQuestionOptions = (q: any) => {
+    const newQ = { ...q };
+
+    if (newQ.options) {
+      newQ.options = [...newQ.options];
+      const opts = newQ.options.map((opt: string, i: number) => ({ opt, originalIndex: i }));
+      opts.sort(() => Math.random() - 0.5);
+      newQ.options = opts.map((o: any) => o.opt);
+      newQ.correctAnswerIndex = opts.findIndex((o: any) => o.originalIndex === q.correctAnswerIndex);
+    }
+
+    if (newQ.whyOptions) {
+      newQ.whyOptions = [...newQ.whyOptions];
+      const whyOpts = newQ.whyOptions.map((opt: string, i: number) => ({ opt, originalIndex: i }));
+      whyOpts.sort(() => Math.random() - 0.5);
+      newQ.whyOptions = whyOpts.map((o: any) => o.opt);
+      newQ.correctWhyIndex = whyOpts.findIndex((o: any) => o.originalIndex === q.correctWhyIndex);
+    }
+
+    if (newQ.steps) {
+      newQ.steps = newQ.steps.map((step: any) => {
+        const newStep = { ...step, options: [...step.options] };
+        const stepOpts = newStep.options.map((opt: string, i: number) => ({ opt, originalIndex: i }));
+        stepOpts.sort(() => Math.random() - 0.5);
+        newStep.options = stepOpts.map((o: any) => o.opt);
+        newStep.correctIndex = stepOpts.findIndex((o: any) => o.originalIndex === step.correctIndex);
+        return newStep;
+      });
+    }
+
+    return newQ;
+  };
+
   const handleStartQuickQuiz = () => {
     const socialSkillsPool = allQuestions.filter(q => !q.category.toString().startsWith('iq_'));
     const shuffled = shuffleArray(socialSkillsPool);
-    const selected = shuffled.slice(0, 5).map(q => injectFallbackWhy(q));
+    const selected = shuffled.slice(0, 5).map(q => shuffleQuestionOptions(injectFallbackWhy(q)));
     
     setSelectedCategory(null);
     setCurrentQuestions(selected);
@@ -586,10 +619,10 @@ export const NewQuizScreen = () => {
     // Slice questions, wrapping around if necessary
     for (let i = 0; i < limit; i++) {
       const idx = (currentOffset + i) % pool.length;
-      selected.push(injectFallbackWhy({
+      selected.push(shuffleQuestionOptions(injectFallbackWhy({
         ...pool[idx],
         id: `${pool[idx].id}-${currentOffset}-${i}`,
-      }));
+      })));
     }
 
     const newOffset = (currentOffset + limit) % pool.length;
