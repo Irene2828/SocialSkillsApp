@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable, ScrollView } from 'react-native';
 import { Question } from '../data/types';
 import { Card } from './Card';
-import { SpiderMascot } from './SpiderMascot';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme, FONTS } from '../theme';
@@ -246,8 +245,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <View style={styles.feedbackContainer}>
                 
-                <View style={[styles.feedbackTitleContainer, { position: 'relative' }]}>
-                  <SpiderMascot visible={displayIsCorrect} />
+                <View style={styles.feedbackTitleContainer}>
                   <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                     {displayIsCorrect 
                       ? (whyQuestion ? "That's correct!" : (showCoinReward ? 'Correct!' : "That's correct!"))

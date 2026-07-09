@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, View, Image, StyleSheet } from 'react-native';
+import { Animated, View, Image, StyleSheet, Easing } from 'react-native';
 
 interface SpiderMascotProps {
   visible: boolean;
@@ -11,11 +11,11 @@ export const SpiderMascot: React.FC<SpiderMascotProps> = ({ visible }) => {
 
   useEffect(() => {
     if (visible) {
-      // Drop down animation
-      Animated.spring(slideAnim, {
+      // Drop down animation - slow and smooth
+      Animated.timing(slideAnim, {
         toValue: 0,
-        friction: 5,
-        tension: 40,
+        duration: 1600, // slower
+        easing: Easing.out(Easing.back(1.5)), // smooth slight overshoot
         useNativeDriver: true,
       }).start();
 

@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { TopBar } from '../components/TopBar';
+import { SpiderMascot } from '../components/SpiderMascot';
 import { Header } from '../components/Header';
 import { QuizCard } from '../components/QuizCard';
 import { FolderCard } from '../components/FolderCard';
@@ -1011,7 +1012,8 @@ export const NewQuizScreen = () => {
         <SilverDust />
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
-            <View style={styles.titleContainer}>
+            <View style={[styles.titleContainer, { position: 'relative' }]}>
+              {message === "Awesome!" && <SpiderMascot visible={true} />}
               <Text style={styles.completedTitle}>{message}</Text>
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
