@@ -10,6 +10,7 @@ import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
+import { useRewards } from '../context/RewardsContext';
 
 interface QuestionViewProps {
   question: Question;
@@ -43,6 +44,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   scrollViewRef,
 }) => {
   const { mood } = useMood();
+  const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
@@ -236,14 +238,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           animationType="fade"
         >
           <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
-            {displayIsCorrect && part1ShowCoin && <SilverDust />}
+            {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && <SilverDust />}
             <Pressable style={[
               styles.feedbackContainerBackground
             ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <View style={styles.feedbackContainer}>
-                
                 {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
-                {displayIsCorrect && <CorrectAnswerSpaceman />}
+                {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
 
                 <View style={styles.feedbackTitleContainer}>
                   <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
@@ -253,7 +254,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   </Text>
                 </View>
                 
-                {displayIsCorrect && part1ShowCoin && showCoinReward && !hasFailed && (
+                {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && !hasFailed && (
                   <View style={styles.coinRewardContainer}>
                     <FontAwesome5 
                       name="coins" 
@@ -343,13 +344,13 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             animationType="fade"
           >
             <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleClosePart2Modal}>
-              {part2DisplayIsCorrect && <SilverDust />}
+              {part2DisplayIsCorrect && isRewardsModeOn && <SilverDust />}
               <Pressable style={[
                 styles.feedbackContainerBackground
               ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                 <View style={styles.feedbackContainer}>
                   {/* {!part2DisplayIsCorrect && <WrongAnswerSpaceman />} */}
-                  {part2DisplayIsCorrect && <CorrectAnswerSpaceman />}
+                  {/* {part2DisplayIsCorrect && <CorrectAnswerSpaceman />} */}
                   <View style={styles.feedbackTitleContainer}>
                     <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                       {part2DisplayIsCorrect 
@@ -358,7 +359,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     </Text>
                   </View>
 
-                  {part2DisplayIsCorrect && !part2HasFailed && (
+                  {part2DisplayIsCorrect && !part2HasFailed && isRewardsModeOn && (
                     <View style={styles.coinRewardContainer}>
                       <FontAwesome5 
                         name="coins" 

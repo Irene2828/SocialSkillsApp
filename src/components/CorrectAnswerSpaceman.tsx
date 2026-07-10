@@ -45,7 +45,7 @@ export const CorrectAnswerSpaceman: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    marginBottom: -10, // Pull the text closer to the spaceman
+    marginBottom: 10, // Added more space between spaceman and text
     marginTop: -40, // Start higher up to account for thread
     overflow: 'visible',
     zIndex: 10,
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   },
   thread: {
     width: 2,
-    height: 80, // Taller thread
+    height: 68, // Cut by 15%
     backgroundColor: '#94a3b8', // subtle gray thread
   },
   spaceman: {

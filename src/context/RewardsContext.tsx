@@ -17,6 +17,10 @@ interface RewardsContextType {
   deleteUnlockedReward: (id: string) => void;
   restoreUnlockedReward: (reward: UnlockedReward) => void;
   restoreReward: (reward: Reward) => void;
+  isRewardsModeOn: boolean;
+  setIsRewardsModeOn: (val: boolean) => void;
+  parentsPin: string;
+  setParentsPin: (pin: string) => void;
 }
 
 const DEFAULT_REWARDS: Reward[] = [
@@ -33,6 +37,8 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [coinBalance, setCoinBalance] = useState(0);
   const [rewards, setRewards] = useState<Reward[]>(DEFAULT_REWARDS);
   const [unlockedRewards, setUnlockedRewards] = useState<UnlockedReward[]>([]);
+  const [isRewardsModeOn, setIsRewardsModeOnState] = useState(true);
+  const [parentsPin, setParentsPinState] = useState('');
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -69,6 +75,12 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
         const storedUnlocked = await safeStorage.get<UnlockedReward[]>('@unlocked_rewards', []);
         setUnlockedRewards(storedUnlocked);
+
+        const storedRewardsMode = await safeStorage.get<boolean>('@rewards_mode', true);
+        setIsRewardsModeOnState(storedRewardsMode);
+
+        const storedPin = await safeStorage.get<string>('@parents_pin', '');
+        setParentsPinState(storedPin);
       } catch (e) {
         logger.error('Failed to load rewards data', e);
         setCoinBalance(0);
@@ -102,6 +114,16 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!success) {
       logger.warn('Failed to save unlocked rewards');
     }
+  };
+
+  const setIsRewardsModeOn = (val: boolean) => {
+    setIsRewardsModeOnState(val);
+    safeStorage.set('@rewards_mode', val);
+  };
+
+  const setParentsPin = (pin: string) => {
+    setParentsPinState(pin);
+    safeStorage.set('@parents_pin', pin);
   };
 
   const addCoins = (amount: number) => {
@@ -215,7 +237,11 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
       toggleRewardFulfilled,
       deleteUnlockedReward,
       restoreUnlockedReward,
-      restoreReward
+      restoreReward,
+      isRewardsModeOn,
+      setIsRewardsModeOn,
+      parentsPin,
+      setParentsPin
     }}>
       {children}
     </RewardsContext.Provider>

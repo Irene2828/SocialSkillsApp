@@ -6,11 +6,12 @@ import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import { Confetti } from './Confetti';
+
 import { SilverDust } from './SilverDust';
 import { useMood } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
+import { useRewards } from '../context/RewardsContext';
 
 interface StepBasedQuestionViewProps {
   question: StepBasedQuestion;
@@ -27,6 +28,7 @@ interface CompletedStep {
 
 export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
   const { mood } = useMood();
+  const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
@@ -139,7 +141,6 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
       <Card style={[styles.unifiedCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
         {/* Persistent Problem Text Card */}
         <View style={styles.mainCard}>
-          <Text style={[styles.situationalLabel, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>Situational problem:</Text>
           <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
           <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, color: '#6B7280', marginTop: -8, marginBottom: 12 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
             (don't answer yet, follow the steps below to solve the problem)
@@ -224,13 +225,13 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         animationType="fade"
       >
         <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
-          {displayIsCorrect && isFinalStep && <SilverDust />}
+          {displayIsCorrect && isFinalStep && isRewardsModeOn && <SilverDust />}
           <Pressable style={[
             styles.feedbackContainerBackground
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
               {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
-              {displayIsCorrect && <CorrectAnswerSpaceman />}
+              {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                   {displayIsCorrect 
@@ -239,7 +240,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 </Text>
               </View>
 
-              {displayIsCorrect && isFinalStep && !hasFailed && (
+              {displayIsCorrect && isFinalStep && !hasFailed && isRewardsModeOn && (
                 <View style={styles.coinRewardContainer}>
                   <FontAwesome5 
                     name="coins" 

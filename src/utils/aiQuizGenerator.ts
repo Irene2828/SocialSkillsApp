@@ -52,45 +52,108 @@ ${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly
 }
 No markdown wrappers, no backticks, just raw JSON.`;
 
-const getMathSystemPrompt = (age: number, isImage: boolean = false) => `You are an educational math quiz generator for children.
+const getMathSystemPrompt = (age: number, isImage: boolean = false) => `You are an educational math tutor AI for children aged ${age}. You act like a patient tutor who guides children step-by-step through word problems, helping them learn HOW to think — not just find the answer.
 
-The uploaded image is provided only to understand the mathematical concept being taught.
+${isImage ? `The child has uploaded a math worksheet image.` : `The child has requested math quiz practice.`}
 
-Instead of text summarization:
+# YOUR ONLY JOB
+Generate NEW math word problems that are STRUCTURALLY IDENTICAL to the original worksheet — same type of reasoning, same complexity, same number of steps — but with completely different names, objects, story setting, and numbers.
 
-1. Identify the underlying math concept (e.g., Addition, Place Value, Patterns, Counting, Subtraction).
+DO NOT simplify. DO NOT omit structural elements. If the original has a price table → your problem MUST have a price table.
 
-2. ${isImage ? `Generate exactly 3 quizzes of exactly 5 questions each. Each quiz must explore a distinct angle, perspective, or sub-topic of the concept. Never return fewer than 3.` : `Create exactly 3 distinct multiple-choice quizzes that challenge the user with math problems related to this concept.`}
+${isImage ? `Generate exactly 1 quiz with exactly 5 questions.` : `Generate exactly 3 quizzes with exactly 5 questions each.`}
 
-Requirements for each of the quizzes:
+# CRITICAL RULE: PRICE TABLE IN PROBLEM TEXT
+If the original problem has a price list or reference table, you MUST invent and embed an equivalent table directly inside the "problemText" field, formatted with literal newlines like this:
+"...story text...\\n\\nPrices:\\n- 1 packet of 6 squares: $4\\n- 1 packet of 3 rectangles: $2\\n- 1 circle: $3\\n\\n...rest of story..."
 
-• The "concept" field must be extremely concise: strictly 2 words max (e.g. "Basic Addition", "Finding Patterns", "Word Problems").
-• Questions must be original math challenges.
-• Age: ${age} years old.
-• One correct answer.
-• Three plausible distractors (common math mistakes).
-• Friendly, encouraging language.
-• Format: The "scenario" field should contain the math problem itself (e.g. "What is 5 + 3?" or "What comes next? 2, 4, 6, ___").
+Every price and item the child needs to do the math MUST appear inside "problemText". The child has no other source of information.
 
-Create exactly 5 math problems for each quiz.
+# MANDATORY STEP SEQUENCE — FOLLOW EXACTLY
+Every question MUST have these steps in exactly this order:
 
-Return the response STRICTLY as a JSON object matching this schema:
+Step 1 — prompt MUST be the exact words: "What do we need to find out in this problem?"
+  → Options: 3 different possible goals (only one is correct)
+
+Step 2 — prompt MUST be the exact words: "What should our first step be?"
+  → Options: 3 different possible first actions (e.g. "Count all the squares needed", "Add up all prices", "Count the total shapes")
+
+Step 3 — prompt MUST be the exact words: "What's the second step?"
+  → Options: 3 different possible second actions
+
+Step 4 — prompt MUST be the exact words: "What's the third step?" (include only if the problem needs a third planning step)
+
+Final Step — prompt MUST start with: "Now calculate"
+  → Options MUST be 3 specific dollar amounts (or numbers), e.g. ["$14", "$18", "$22"] — never vague words like "Find the total"
+
+# CONCRETE EXAMPLE OF A CORRECT OUTPUT
+Here is exactly what one question should look like:
 {
-${isImage ? `  "folderName": "Suggested folder name based on the topic (strictly 1 to 2 words max)",\n` : ''}  "quizzes": [
+  "problemText": "Sofia wants to build a toy house for her cat. To make it, she will use these shapes: 2 cubes and 1 triangular prism. She also wants to decorate it with stars. Each star costs $1. She wants to add 3 stars.\\n\\nTo build the shapes, Sofia needs to buy flat pieces. Here are the prices:\\n- 1 packet of 6 squares: $4\\n- 1 packet of 3 triangles: $3\\n- 1 circle: $2\\n\\nHow much will it cost to buy all the flat pieces and stars for the toy house?",
+  "steps": [
     {
-      "concept": "Name of the concept/topic (strictly 1 to 2 words max)",
+      "prompt": "What do we need to find out in this problem?",
+      "options": ["The total cost of all pieces and stars", "The number of cubes Sofia uses", "Which shape is the most expensive"],
+      "correctIndex": 0,
+      "explanation": "We need to find the total cost. That's the big question we are trying to answer."
+    },
+    {
+      "prompt": "What should our first step be?",
+      "options": ["Find out which flat pieces we need to buy", "Count the stars", "Add up all the prices"],
+      "correctIndex": 0,
+      "explanation": "We start by figuring out which flat pieces each 3D shape needs, so we know what to buy."
+    },
+    {
+      "prompt": "What's the second step?",
+      "options": ["Figure out how many packets of each piece to buy", "Pick the star color", "Count the total shapes"],
+      "correctIndex": 0,
+      "explanation": "Now that we know what pieces we need, we figure out how many packets to buy and what they cost."
+    },
+    {
+      "prompt": "What's the third step?",
+      "options": ["Add the cost of stars to the total", "Subtract the most expensive item", "Multiply shapes by 10"],
+      "correctIndex": 0,
+      "explanation": "Finally, we add the star costs to the shape costs to get the grand total."
+    },
+    {
+      "prompt": "Now calculate the total cost (use paper if needed!) — how much will Sofia spend in total?",
+      "options": ["$14", "$18", "$11"],
+      "correctIndex": 0,
+      "explanation": "2 packets of squares ($4 each) + 1 packet of triangles ($3) + 3 stars ($3) = $14 total."
+    }
+  ],
+  "finalAnswer": "Sofia will need $14 to buy all the flat pieces and stars for the toy house."
+}
+
+Now generate problems following this exact pattern.
+
+Requirements:
+• "concept" field: strictly 2 words max (e.g. "Cost Calculation").
+• Friendly, encouraging language throughout.
+• Every "explanation" answers WHY this step comes next.
+• Every problem MUST be fully solvable using only the information in "problemText".
+
+Return the response STRICTLY as a JSON object:
+{
+${isImage ? `  "folderName": "Suggested folder name (strictly 1 to 2 words max)",\n` : ''}  "quizzes": [
+    {
+      "concept": "2 words max",
       "questions": [
         {
-          "question": "Math problem text (string)",
-          "options": ["Option 1", "Option 2", "Option 3"],
-          "correctIndex": 0, // Integer 0, 1, or 2 representing correct option
-          "explanation": "Explanation for why this is correct (string)"
+          "problemText": "Full story WITH price table embedded using \\n newlines",
+          "steps": [
+            {"prompt": "What do we need to find out in this problem?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "What should our first step be?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "What's the second step?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "Now calculate the total cost (use paper if needed!) — [specific question]", "options": ["$X", "$Y", "$Z"], "correctIndex": 0, "explanation": "..."}
+          ],
+          "finalAnswer": "The answer in a complete friendly sentence."
         }
       ]
     }
   ]
 }
-No markdown wrappers, no backticks, just raw JSON.`;
+No markdown, no backticks, just raw JSON.`;
 
 const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social', isImage: boolean = false) => {
   return topicType === 'math' ? getMathSystemPrompt(age, isImage) : getSocialSystemPrompt(age, isImage);
@@ -108,8 +171,8 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
   }
   
   if (isImage) {
-    if (data.quizzes.length !== 2 && data.quizzes.length !== 3) {
-      throw new Error(`Expected 2 or 3 quizzes for image generation, got ${data.quizzes.length}`);
+    if (data.quizzes.length < 1 || data.quizzes.length > 3) {
+      throw new Error(`Expected 1 to 3 quizzes for image generation, got ${data.quizzes.length}`);
     }
   } else {
     if (data.quizzes.length !== 3) {
@@ -121,22 +184,23 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
     if (typeof quiz.concept !== 'string' || !quiz.concept.trim()) {
       throw new Error(`Quiz ${qIndex} has invalid or empty concept`);
     }
-    if (!Array.isArray(quiz.questions) || quiz.questions.length !== 5) {
-      throw new Error(`Quiz ${qIndex} expected exactly 5 questions, got ${quiz.questions?.length}`);
+    const minQ = topicType === 'math' ? 1 : 5;
+    if (!Array.isArray(quiz.questions) || quiz.questions.length < minQ) {
+      throw new Error(`Quiz ${qIndex} expected at least ${minQ} questions, got ${quiz.questions?.length}`);
     }
 
     for (const [index, q] of quiz.questions.entries()) {
-      if (typeof q.question !== 'string' || !q.question.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty text`);
-      if (!Array.isArray(q.options) || q.options.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 3 options`);
-      for (const opt of q.options) {
-        if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has an empty option`);
-      }
-      if (typeof q.correctIndex !== 'number' || ![0, 1, 2].includes(q.correctIndex)) {
-        throw new Error(`Quiz ${qIndex} Question ${index} has invalid correctIndex: ${q.correctIndex}`);
-      }
-      if (typeof q.explanation !== 'string' || !q.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty explanation`);
-
       if (topicType === 'social') {
+        if (typeof q.question !== 'string' || !q.question.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty text`);
+        if (!Array.isArray(q.options) || q.options.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 3 options`);
+        for (const opt of q.options) {
+          if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has an empty option`);
+        }
+        if (typeof q.correctIndex !== 'number' || ![0, 1, 2].includes(q.correctIndex)) {
+          throw new Error(`Quiz ${qIndex} Question ${index} has invalid correctIndex: ${q.correctIndex}`);
+        }
+        if (typeof q.explanation !== 'string' || !q.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty explanation`);
+
         if (!Array.isArray(q.whyOptions) || q.whyOptions.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 3 whyOptions`);
         for (const opt of q.whyOptions) {
           if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has an empty whyOption`);
@@ -145,6 +209,22 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
           throw new Error(`Quiz ${qIndex} Question ${index} has invalid correctWhyIndex: ${q.correctWhyIndex}`);
         }
         if (typeof q.whyConfirmation !== 'string' || !q.whyConfirmation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty whyConfirmation`);
+      } else {
+        // math (step-based)
+        if (typeof q.problemText !== 'string' || !q.problemText.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty problemText`);
+        if (!Array.isArray(q.steps) || q.steps.length < 3) throw new Error(`Quiz ${qIndex} Question ${index} must have at least 3 steps`);
+        for (const [stepIndex, step] of q.steps.entries()) {
+          if (typeof step.prompt !== 'string' || !step.prompt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid prompt`);
+          if (!Array.isArray(step.options) || step.options.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} must have exactly 3 options`);
+          for (const opt of step.options) {
+            if (typeof opt !== 'string' || !opt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has empty option`);
+          }
+          if (typeof step.correctIndex !== 'number' || ![0, 1, 2].includes(step.correctIndex)) {
+            throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid correctIndex: ${step.correctIndex}`);
+          }
+          if (typeof step.explanation !== 'string' || !step.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid explanation`);
+        }
+        if (typeof q.finalAnswer !== 'string' || !q.finalAnswer.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty finalAnswer`);
       }
     }
   }
@@ -186,7 +266,7 @@ export const generateQuizFromImage = async (base64Image: string, age: number = 7
             }
           ],
           response_format: { type: "json_object" },
-          max_tokens: 5000,
+          max_tokens: 8000,
         })
       });
 
@@ -258,7 +338,7 @@ export const generateQuizFromText = async (promptText: string, age: number = 7, 
             }
           ],
           response_format: { type: "json_object" },
-          max_tokens: 5000,
+          max_tokens: 8000,
         })
       });
 

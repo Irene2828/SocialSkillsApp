@@ -7,7 +7,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { TopBar } from '../components/TopBar';
 import { Button } from '../components/Button';
 import { theme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { SettingsModal } from '../components/SettingsModal';
@@ -397,6 +397,39 @@ export const PuzzleScreen = () => {
     }
   };
 
+  const renderCompleted = () => {
+    let message = "Awesome!";
+    let coinsEarned = 3;
+
+    const handleRedeemNow = () => {
+      setSelectedPuzzle(null);
+      // navigation.navigate('MyRewards'); // Assume navigation is not available in PuzzleScreen unless we use useNavigation, but we can just close the puzzle for now or if we have navigation prop, we could use it. The user just wants it to look the same.
+    };
+
+    const gradientColors = [
+      '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+      '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+      '#3B82F6', '#60A5FA', '#93C5FD'
+    ];
+    return (
+      <Pressable style={styles.completedContainer} onPress={() => setSelectedPuzzle(null)}>
+        <SilverDust />
+        <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+          <Animated.View style={{ alignItems: 'center', width: '100%' }}>
+            <View style={[styles.titleContainer, { position: 'relative', marginBottom: theme.spacing.xl }]}>
+              <Text style={styles.completedTitle}>{message}</Text>
+              {message === "Awesome!" && <View style={styles.brushUnderline} />}
+            </View>
+
+            <Pressable style={styles.linkButton} onPress={() => setSelectedPuzzle(null)}>
+              <Text style={styles.linkButtonText}>One More Puzzle</Text>
+            </Pressable>
+          </Animated.View>
+        </Pressable>
+      </Pressable>
+    );
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground />
@@ -621,97 +654,99 @@ export const PuzzleScreen = () => {
         <View style={{ flex: 1, backgroundColor: '#F0F1F3' }}>
           <GlobalBackground />
           <ScreenWrapper transparent>
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
-              <Pressable 
-                onPress={() => setSelectedPuzzle(null)}
-                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
-              >
-                <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
-                <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
-              </Pressable>
-              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
-                <LinearGradient
-                  colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-                  style={StyleSheet.absoluteFill}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 0, y: 1 }}
-                />
-                <Text style={[styles.screenFolderTabText, { color: theme.colors.text }]} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
-              </View>
-            </View>
-
-            <View style={styles.gameContent}>
-              {selectedPuzzle && (
-                <>
-                  {screenHeight > 700 && <Text style={styles.headlineText}>Drag the pieces to solve a puzzle!</Text>}
-                  <View
-                    style={[
-                      styles.board,
-                    {
-                      width: boardSize,
-                      height: boardSize,
-                    },
-                  ]}
-                >
-                  {pieces.map((piece, index) => (
-                    <DraggablePiece
-                      key={piece.id}
-                      piece={piece}
-                      index={index}
-                      selectedPuzzle={selectedPuzzle}
-                      boardSize={boardSize}
-                      onSwap={handleSwapPieces}
-                    />
-                  ))}
+            {!isSolved ? (
+              <>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
+                  <View style={{ flex: 1, alignItems: 'flex-start' }}>
+                    <Pressable 
+                      onPress={() => setSelectedPuzzle(null)}
+                      hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                      style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+                    >
+                      <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
+                      <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
+                    </Pressable>
                   </View>
-                  <View style={styles.difficultySelector}>
-                    {[4, 9, 16, 25].map((num) => {
-                      const isSelected = selectedPuzzle.cols * selectedPuzzle.rows === num;
-                      return (
-                        <Pressable 
-                          key={num} 
-                          style={[styles.diffBtn, isSelected && styles.diffBtnSelected]}
-                          onPress={() => changeDifficulty(num)}
-                        >
-                          <Text style={[styles.diffBtnText, isSelected && styles.diffBtnTextSelected]}>{num}</Text>
-                        </Pressable>
-                      );
-                    })}
+                  <View style={{ flex: 2, alignItems: 'center' }}>
+                    <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+                      <LinearGradient
+                        colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+                        style={StyleSheet.absoluteFill}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 0, y: 1 }}
+                      />
+                      <Text style={[styles.screenFolderTabText, { color: theme.colors.text }]} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
+                    </View>
                   </View>
-                  <View style={styles.mascotContainer}>
-                    <Ionicons name="extension-puzzle-outline" size={32} color={theme.colors.secondaryText} style={{ opacity: 0.5 }} />
-                    <Text style={styles.mascotText}>Piece it together!</Text>
+                  <View style={{ flex: 1, alignItems: 'flex-end' }}>
+                    <Pressable 
+                      onPress={() => setShowSettings(true)}
+                      hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                      style={{ paddingVertical: 8 }}
+                    >
+                      <Ionicons name="options-outline" size={28} color={theme.colors.text} />
+                    </Pressable>
                   </View>
-                </>
-              )}
-
-              {isSolved && (
-                <View style={styles.celebrationCard}>
-                  <SilverDust />
-                  <View style={styles.titleContainer}>
-                    <Text style={styles.celebrationText}>Awesome!</Text>
-                    <View style={styles.brushUnderline} />
-                  </View>
-                  <Button
-                    title="Play More!"
-                    onPress={() => setSelectedPuzzle(null)}
-                    style={{ marginTop: theme.spacing.lg, paddingHorizontal: theme.spacing.xxl }}
-                  />
                 </View>
-              )}
-            </View>
 
-            <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: theme.spacing.md, paddingBottom: theme.spacing.md, marginTop: 'auto' }}>
-              {screenHeight > 700 && (
-                <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
-                  <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
-                    <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
-                    <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
-                  </Pressable>
-                </Animated.View>
-              )}
-            </View>
+                <View style={styles.gameContent}>
+                  {selectedPuzzle && (
+                    <>
+                      {screenHeight > 700 && <Text style={styles.headlineText}>Drag the pieces to solve a puzzle!</Text>}
+                      <View
+                        style={[
+                          styles.board,
+                        {
+                          width: boardSize,
+                          height: boardSize,
+                        },
+                      ]}
+                    >
+                      {pieces.map((piece, index) => (
+                        <DraggablePiece
+                          key={piece.id}
+                          piece={piece}
+                          index={index}
+                          selectedPuzzle={selectedPuzzle}
+                          boardSize={boardSize}
+                          onSwap={handleSwapPieces}
+                        />
+                      ))}
+                      </View>
+                      <View style={styles.difficultySelector}>
+                        {[4, 9, 16, 25].map((num) => {
+                          const isSelected = selectedPuzzle.cols * selectedPuzzle.rows === num;
+                          return (
+                            <Pressable 
+                              key={num} 
+                              style={[styles.diffBtn, isSelected && styles.diffBtnSelected]}
+                              onPress={() => changeDifficulty(num)}
+                            >
+                              <Text style={[styles.diffBtnText, isSelected && styles.diffBtnTextSelected]}>{num}</Text>
+                            </Pressable>
+                          );
+                        })}
+                      </View>
+                      <View style={styles.mascotContainer}>
+                        <Ionicons name="extension-puzzle-outline" size={32} color={theme.colors.secondaryText} style={{ opacity: 0.5 }} />
+                        <Text style={styles.mascotText}>Piece it together!</Text>
+                      </View>
+                    </>
+                  )}
+                </View>
+
+                <View style={{ width: '100%', alignItems: 'flex-end', paddingHorizontal: theme.spacing.md, paddingBottom: theme.spacing.md, marginTop: 'auto' }}>
+                  {screenHeight > 700 && (
+                    <Animated.View style={{ transform: [{ translateX: shakeNextAnim }] }}>
+                      <Pressable style={styles.backButton} onPress={handleNextPuzzle}>
+                        <Text style={{ marginRight: 4, ...theme.typography.button, color: theme.colors.text }}>Next Puzzle</Text>
+                        <Ionicons name="arrow-forward" size={24} color={theme.colors.text} />
+                      </Pressable>
+                    </Animated.View>
+                  )}
+                </View>
+              </>
+            ) : renderCompleted()}
           </ScreenWrapper>
         </View>
       </Modal>
@@ -863,28 +898,60 @@ const styles = StyleSheet.create({
     position: 'absolute',
     overflow: 'hidden',
   },
-  celebrationCard: {
-    ...StyleSheet.absoluteFill,
+  completedContainer: {
+    flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: theme.spacing.xl,
-    zIndex: 100,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xl,
   },
-  celebrationText: {
+  completedCard: {
+    width: '100%',
+    maxWidth: 500,
+    borderRadius: 0,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    paddingHorizontal: theme.spacing.md,
+    paddingBottom: theme.spacing.xl,
+    paddingTop: theme.spacing.xxl,
+  },
+  completedTitle: {
     ...theme.typography.heading,
-    fontSize: 32,
-    fontWeight: '700',
-    color: theme.colors.text,
+    fontSize: 24,
     textAlign: 'center',
+    color: theme.colors.text,
     marginBottom: 0,
   },
-  celebrationSub: {
-    ...theme.typography.body,
-    textAlign: 'center',
-    color: theme.colors.secondaryText,
+  completedCoinRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.md,
+  },
+  completedCoinText: {
+    ...theme.typography.body,
+    fontWeight: '700',
+    fontSize: 20,
+    letterSpacing: 0.5,
+    textAlign: 'center',
+    color: theme.colors.text,
+    marginLeft: theme.spacing.xs,
+  },
+  completedButton: {
+    marginTop: theme.spacing.md,
+    width: '100%',
+  },
+  linkButton: {
+    marginTop: theme.spacing.xl,
+    padding: theme.spacing.sm,
+  },
+  linkButtonText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
   },
   titleContainer: {
     position: 'relative',

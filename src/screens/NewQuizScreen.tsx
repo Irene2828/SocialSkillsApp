@@ -32,8 +32,7 @@ import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { GlobalBackground } from '../components/GlobalBackground';
 
 import { SilverDust } from '../components/SilverDust';
-
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
+import { SettingsModal } from '../components/SettingsModal';if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
 }
 
@@ -51,7 +50,7 @@ const QUIZ_LEVELS: QuizLevel[] = [
 ];
 
 export const NewQuizScreen = () => {
-  const { addCoins, coinBalance } = useRewards();
+  const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();
   const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz } = useQuizContext();
   const { showModal, showToast } = useFeedback();
@@ -94,6 +93,7 @@ export const NewQuizScreen = () => {
 
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [showPhotoMenu, setShowPhotoMenu] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
 
   const handleOpenActionMenu = (category: any) => {
     setActionMenuCategory(category);
@@ -266,15 +266,28 @@ export const NewQuizScreen = () => {
           folderId: activeFolderId || undefined
         };
         
-        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-          id: `${newCategoryId}-q${index}`,
-          category: newCategoryId,
-          difficulty: 'Medium',
-          scenario: q.question,
-          options: q.options,
-          correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!'
-        }));
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => {
+          if (topicType === 'math') {
+            return {
+              id: `${newCategoryId}-q${index}`,
+              category: newCategoryId,
+              difficulty: 'Medium',
+              problemText: q.problemText,
+              steps: q.steps,
+              finalAnswer: q.finalAnswer
+            };
+          } else {
+            return {
+              id: `${newCategoryId}-q${index}`,
+              category: newCategoryId,
+              difficulty: 'Medium',
+              scenario: q.question,
+              options: q.options,
+              correctAnswerIndex: q.correctIndex,
+              explanation: q.explanation || 'Great job!'
+            };
+          }
+        });
         
         return { category: newCategory, questions: questionsWithCategory };
       });
@@ -288,10 +301,10 @@ export const NewQuizScreen = () => {
       setSelectedExistingFolderId(null);
       setAiGenerating(false);
       setShowPhotoConfirmation(true);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to generate quiz from image:', error);
       setAiGenerating(false);
-      Alert.alert('Error', 'Failed to generate quiz. Please try again.');
+      Alert.alert('Generation Failed', error?.message || 'Failed to generate quiz. Please try again.');
     }
   };
 
@@ -346,7 +359,7 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const topicType = 'social';
+      const topicType = activeTab === 'general' ? 'social' : 'math';
       const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
       
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
@@ -362,18 +375,31 @@ export const NewQuizScreen = () => {
           folderId: activeFolderId || undefined // default, will be overridden if they choose
         };
         
-        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-          id: `${newCategoryId}-q${index}`,
-          category: newCategoryId,
-          difficulty: 'Medium',
-          scenario: q.question,
-          options: q.options,
-          correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!',
-          whyOptions: q.whyOptions,
-          correctWhyIndex: q.correctWhyIndex,
-          whyConfirmation: q.whyConfirmation,
-        }));
+        const questionsWithCategory = quiz.questions.map((q: any, index: number) => {
+          if (topicType === 'math') {
+            return {
+              id: `${newCategoryId}-q${index}`,
+              category: newCategoryId,
+              difficulty: 'Medium',
+              problemText: q.problemText,
+              steps: q.steps,
+              finalAnswer: q.finalAnswer
+            };
+          } else {
+            return {
+              id: `${newCategoryId}-q${index}`,
+              category: newCategoryId,
+              difficulty: 'Medium',
+              scenario: q.question,
+              options: q.options,
+              correctAnswerIndex: q.correctIndex,
+              explanation: q.explanation || 'Great job!',
+              whyOptions: q.whyOptions,
+              correctWhyIndex: q.correctWhyIndex,
+              whyConfirmation: q.whyConfirmation,
+            };
+          }
+        });
         
         return { category: newCategory, questions: questionsWithCategory };
       });
@@ -664,7 +690,10 @@ export const NewQuizScreen = () => {
     } else {
       setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
-      let coinsEarned = currentQuestions.length;
+      let coinsEarned = isRewardsModeOn ? currentQuestions.length : 0;
+      if (isRewardsModeOn && selectedCategory?.startsWith('math_ai')) {
+        coinsEarned = 10;
+      }
       
       if (coinsEarned > 0) {
         addCoins(coinsEarned);
@@ -949,31 +978,43 @@ export const NewQuizScreen = () => {
       <View style={styles.inProgressContainer}>
         {/* Sticky header — stays pinned at top */}
         <View style={{ paddingBottom: theme.spacing.sm, zIndex: 10 }}>
-          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: theme.spacing.sm, zIndex: 2 }}>
-            <Pressable 
-              onPress={handleBackToHome}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-              style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
-            >
-              <Ionicons name="chevron-back" size={24} color={baseTextColor} />
-              <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
-            </Pressable>
-            <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
-              <LinearGradient
-                colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-                style={StyleSheet.absoluteFill}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 0, y: 1 }}
-              />
-              <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
+          <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm, zIndex: 2 }}>
+            <View style={{ flex: 1, alignItems: 'flex-start' }}>
+              <Pressable 
+                onPress={handleBackToHome}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+              >
+                <Ionicons name="chevron-back" size={24} color={baseTextColor} />
+                <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
+              </Pressable>
+            </View>
+            <View style={{ flex: 2, alignItems: 'center' }}>
+              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+                <LinearGradient
+                  colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+                  style={StyleSheet.absoluteFill}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 0, y: 1 }}
+                />
+                <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
+              </View>
+            </View>
+            <View style={{ flex: 1, alignItems: 'flex-end' }}>
+              <Pressable 
+                onPress={() => setShowSettings(true)}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                style={{ paddingVertical: 8 }}
+              >
+                <Ionicons name="options-outline" size={28} color={baseTextColor} />
+              </Pressable>
             </View>
           </View>
-
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingBottom: 16 }]}>
-          {selectedCategory === 'iq_word_problems' ? (
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingBottom: 40, flexGrow: 1 }]}>
+          {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
               onContinue={handleContinue}
@@ -1030,7 +1071,7 @@ export const NewQuizScreen = () => {
             <View style={{ flex: 1, marginBottom: 0 }}>
               <View style={{ marginBottom: -4, paddingHorizontal: 0 }}>
                 <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
-                  {selectedCategory === 'iq_word_problems' ? (
+                  {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
                     <LinearGradient
                       colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
                       start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
@@ -1050,7 +1091,7 @@ export const NewQuizScreen = () => {
           </View>
 
           {/* Caption below progress bar */}
-          {selectedCategory === 'iq_word_problems' ? (
+          {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
             <Text style={[styles.questionCaption, { marginTop: -8, marginBottom: 0, color: subTextColor }]}>
               <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
             </Text>
@@ -1070,7 +1111,10 @@ export const NewQuizScreen = () => {
     
     let message = "Awesome!";
 
-    let coinsEarned = total;
+    let coinsEarned = isRewardsModeOn ? total : 0;
+    if (isRewardsModeOn && selectedCategory?.startsWith('math_ai')) {
+      coinsEarned = 10;
+    }
 
     const handleRedeemNow = () => {
       handleBackToHome();
@@ -1087,41 +1131,45 @@ export const NewQuizScreen = () => {
         <SilverDust />
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
-            <View style={[styles.titleContainer, { position: 'relative' }]}>
+            <View style={[styles.titleContainer, { position: 'relative', marginBottom: isRewardsModeOn ? 0 : theme.spacing.xl }]}>
 
               <Text style={styles.completedTitle}>{message}</Text>
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
 
-            <View style={styles.completedCoinRow}>
-              <FontAwesome5 
-                name="coins" 
-                size={24} 
-                color={gradientColors[0]} 
-              />
-              <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                <Text style={{ ...styles.completedCoinText, marginRight: 0, color: gradientColors[0] }}>+</Text>
-                {coinsEarned.toString().split('').map((char, index) => (
-                  <Text 
-                    key={`earn-${index}`} 
-                    style={[
-                      styles.completedCoinText, 
-                      { marginLeft: 0 },
-                      { color: gradientColors[Math.min(1 + index, gradientColors.length - 1)] }
-                    ]}
-                  >
-                    {char}
-                  </Text>
-                ))}
-                <Text style={{ ...styles.completedCoinText, marginLeft: 6, color: gradientColors[Math.min(3, gradientColors.length - 1)] }}>Coins Earned!</Text>
-              </View>
-            </View>
+            {isRewardsModeOn && (
+              <>
+                <View style={styles.completedCoinRow}>
+                  <FontAwesome5 
+                    name="coins" 
+                    size={24} 
+                    color={gradientColors[0]} 
+                  />
+                  <View style={{ flexDirection: 'row', marginLeft: 8 }}>
+                    <Text style={{ ...styles.completedCoinText, marginRight: 0, color: gradientColors[0] }}>+</Text>
+                    {coinsEarned.toString().split('').map((char, index) => (
+                      <Text 
+                        key={`earn-${index}`} 
+                        style={[
+                          styles.completedCoinText, 
+                          { marginLeft: 0 },
+                          { color: gradientColors[Math.min(1 + index, gradientColors.length - 1)] }
+                        ]}
+                      >
+                        {char}
+                      </Text>
+                    ))}
+                    <Text style={{ ...styles.completedCoinText, marginLeft: 6, color: gradientColors[Math.min(3, gradientColors.length - 1)] }}>Coins Earned!</Text>
+                  </View>
+                </View>
 
-            <Button
-              title="Redeem Now"
-              onPress={handleRedeemNow}
-              style={styles.completedButton}
-            />
+                <Button
+                  title="Redeem Now"
+                  onPress={handleRedeemNow}
+                  style={styles.completedButton}
+                />
+              </>
+            )}
 
             <Pressable style={styles.linkButton} onPress={handleBackToHome}>
               <Text style={styles.linkButtonText}>One More Quiz</Text>
@@ -1758,6 +1806,8 @@ export const NewQuizScreen = () => {
           </View>
         </Pressable>
       </Modal>
+      
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
     </View>
   );
@@ -1816,7 +1866,7 @@ const styles = StyleSheet.create({
   },
   completedContainer: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
