@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="%LANG_ISO_CODE%">
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>%WEB_TITLE%</title>
+    <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
+    <style id="expo-reset">
+      /* These styles make the body full-height */
+      html,
+      body {
+        height: 100%;
+      }
+      /* These styles disable body scrolling if you are using <ScrollView> */
+      body {
+        overflow: hidden;
+      }
+      /* These styles make the root element full-height */
+      #root {
+        display: flex;
+        height: 100%;
+        flex: 1;
+      }
+    </style>
+    <script>
+      if (typeof globalThis === 'undefined') {
+        window.globalThis = window;
+      }
+      window.onerror = function(message, source, lineno, colno, error) {
+        var d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:red;color:white;z-index:9999;padding:20px;font-size:14px;word-break:break-all;';
+        d.textContent = 'Error: ' + message + ' \nLine: ' + lineno;
+        document.documentElement.appendChild(d);
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        var d = document.createElement('div');
+        d.style.cssText = 'position:fixed;top:50px;left:0;width:100%;background:orange;color:white;z-index:9999;padding:20px;font-size:14px;word-break:break-all;';
+        d.textContent = 'Promise Rejection: ' + (e.reason ? e.reason.message : 'Unknown');
+        document.documentElement.appendChild(d);
+      });
+    </script>
+  </head>
+
+  <body>
+    <!-- Use static rendering with Expo Router to support running without JavaScript. -->
+    <noscript>
+      You need to enable JavaScript to run this app.
+    </noscript>
+    <!-- The root element for your Expo app. -->
+    <div id="root"></div>
+  </body>
+</html>
