@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "esbuild": "^0.28.1",
     "typescript": "~6.0.3"
   },
   "scripts": {
@@ -40,7 +41,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "build": "expo export -p web"
+    "build": "expo export -p web && esbuild dist/_expo/static/js/web/*.js --target=es2018 --allow-overwrite --outdir=dist/_expo/static/js/web/ --minify"
   },
   "browserslist": [
     "> 0.2%",
