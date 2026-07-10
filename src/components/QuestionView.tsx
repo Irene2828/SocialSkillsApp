@@ -242,7 +242,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <View style={styles.feedbackContainer}>
                 
-                {!displayIsCorrect && <WrongAnswerSpaceman />}
+                {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
                 {displayIsCorrect && <CorrectAnswerSpaceman />}
 
                 <View style={styles.feedbackTitleContainer}>
@@ -253,7 +253,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   </Text>
                 </View>
                 
-                {displayIsCorrect && part1ShowCoin && showCoinReward && (
+                {displayIsCorrect && part1ShowCoin && showCoinReward && !hasFailed && (
                   <View style={styles.coinRewardContainer}>
                     <FontAwesome5 
                       name="coins" 
@@ -348,7 +348,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 styles.feedbackContainerBackground
               ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
                 <View style={styles.feedbackContainer}>
-                  {!part2DisplayIsCorrect && <WrongAnswerSpaceman />}
+                  {/* {!part2DisplayIsCorrect && <WrongAnswerSpaceman />} */}
                   {part2DisplayIsCorrect && <CorrectAnswerSpaceman />}
                   <View style={styles.feedbackTitleContainer}>
                     <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
@@ -358,7 +358,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     </Text>
                   </View>
 
-                  {part2DisplayIsCorrect && (
+                  {part2DisplayIsCorrect && !part2HasFailed && (
                     <View style={styles.coinRewardContainer}>
                       <FontAwesome5 
                         name="coins" 

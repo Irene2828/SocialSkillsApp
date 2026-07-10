@@ -229,7 +229,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
             styles.feedbackContainerBackground
           ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <View style={styles.feedbackContainer}>
-              {!displayIsCorrect && <WrongAnswerSpaceman />}
+              {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
               {displayIsCorrect && <CorrectAnswerSpaceman />}
               <View style={styles.feedbackTitleContainer}>
                 <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
@@ -239,7 +239,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 </Text>
               </View>
 
-              {displayIsCorrect && isFinalStep && (
+              {displayIsCorrect && isFinalStep && !hasFailed && (
                 <View style={styles.coinRewardContainer}>
                   <FontAwesome5 
                     name="coins" 
