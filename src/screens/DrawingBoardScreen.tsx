@@ -1,10 +1,7 @@
 import React from 'react';
 import { Platform, View, ActivityIndicator } from 'react-native';
-
-let WithSkiaWeb: any;
-if (Platform.OS === 'web') {
-  WithSkiaWeb = require('@shopify/react-native-skia/lib/module/web').WithSkiaWeb;
-}
+// @ts-ignore
+import { WithSkiaWeb } from '@shopify/react-native-skia/lib/module/web';
 
 let NativeDrawingBoard: any;
 if (Platform.OS !== 'web') {
