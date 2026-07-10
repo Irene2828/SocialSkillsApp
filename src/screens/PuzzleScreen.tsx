@@ -158,8 +158,10 @@ const DraggablePiece = ({
     </Animated.View>
   );
 };
+import { useNavigation } from '@react-navigation/native';
 
 export const PuzzleScreen = () => {
+  const navigation = useNavigation();
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
@@ -436,6 +438,7 @@ export const PuzzleScreen = () => {
       <ScreenWrapper transparent>
         <TopBar 
           title="Puzzles"
+          onBack={() => navigation.canGoBack() && navigation.goBack()}
         />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>

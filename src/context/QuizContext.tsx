@@ -237,6 +237,8 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const removeFolder = (folderId: string) => {
+    const categoriesToDelete = customCategories.filter(c => c.folderId === folderId).map(c => c.id);
+
     setFolders(prev => {
       // Remove the folder, and for any children, reset their parentId so they move to root
       const newList = prev
@@ -245,19 +247,19 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
       safeStorage.set('@quiz_folders', newList);
       return newList;
     });
-    // Remove folderId from quizzes that were in this folder
-    setCustomCategories(prev => {
-      let changed = false;
-      const newList = prev.map(c => {
-        if (c.folderId === folderId) {
-          changed = true;
-          return { ...c, folderId: undefined };
-        }
-        return c;
+    
+    if (categoriesToDelete.length > 0) {
+      setCustomCategories(prev => {
+        const newList = prev.filter(c => c.folderId !== folderId);
+        safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
+        return newList;
       });
-      if (changed) safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
-      return newList;
-    });
+      setCustomQuestions(prev => {
+        const newList = prev.filter(q => !categoriesToDelete.includes(q.category));
+        safeStorage.set('@custom_quiz_questions', newList.filter(q => q.category !== 'c_listening_ai'));
+        return newList;
+      });
+    }
   };
 
   if (!isLoaded) return null;

@@ -4,7 +4,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
-import { PuzzleScreen } from '../screens/PuzzleScreen';
+import { PuzzleNavigator } from './PuzzleNavigator';
 import { HomeScreen } from '../screens/HomeScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme } from '../theme';
@@ -85,8 +85,8 @@ export const AppNavigator = () => {
       />
       <Tab.Screen 
         name="Puzzles" 
-        component={PuzzleScreen} 
-        options={{ tabBarLabel: 'Puzzles' }}
+        component={PuzzleNavigator} 
+        options={{ tabBarLabel: 'Activities' }}
       />
       <Tab.Screen 
         name="MyRewards" 
