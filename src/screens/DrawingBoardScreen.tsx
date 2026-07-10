@@ -12,6 +12,7 @@ export const DrawingBoardScreen = () => {
   if (Platform.OS === 'web') {
     return (
       <WithSkiaWeb
+        opts={{ locateFile: (file: string) => `https://cdn.jsdelivr.net/npm/canvaskit-wasm@0.41.0/bin/full/${file}` }}
         getComponent={() => import('./DrawingBoardScreenContent')}
         fallback={
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
