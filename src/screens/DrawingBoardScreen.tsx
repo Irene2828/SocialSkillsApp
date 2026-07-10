@@ -42,30 +42,31 @@ export const DrawingBoardScreen = () => {
   
   const [currentPath, setCurrentPath] = useState<string>('');
 
-  const pan = React.useMemo(() => Gesture.Pan()
-    .runOnJS(true)
-    .minDistance(1)
-    .onStart((g) => {
-      setCurrentPath(`M ${g.x} ${g.y}`);
-    })
-    .onUpdate((g) => {
-      setCurrentPath(prev => `${prev} L ${g.x} ${g.y}`);
-    })
-    .onEnd(() => {
-      setCurrentPath(prevPath => {
-        if (prevPath) {
-          setPaths(prev => [
-            ...prev, 
-            { 
-              path: prevPath, 
-              color: activeColor, 
-              strokeWidth: activeStrokeWidth 
-            }
-          ]);
-        }
-        return '';
-      });
-    }), [activeColor, activeStrokeWidth]);
+  const handleTouchStart = (e: any) => {
+    const { locationX, locationY } = e.nativeEvent;
+    setCurrentPath(`M ${locationX} ${locationY}`);
+  };
+
+  const handleTouchMove = (e: any) => {
+    const { locationX, locationY } = e.nativeEvent;
+    setCurrentPath(prev => prev ? `${prev} L ${locationX} ${locationY}` : `M ${locationX} ${locationY}`);
+  };
+
+  const handleTouchEnd = () => {
+    setCurrentPath(prevPath => {
+      if (prevPath) {
+        setPaths(prev => [
+          ...prev, 
+          { 
+            path: prevPath, 
+            color: activeColor, 
+            strokeWidth: activeStrokeWidth 
+          }
+        ]);
+      }
+      return '';
+    });
+  };
 
   const undo = () => {
     setPaths(prev => prev.slice(0, -1));
@@ -89,33 +90,40 @@ export const DrawingBoardScreen = () => {
       </View>
 
       <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
-        <GestureDetector gesture={pan}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent' }]}>
-            <Canvas style={StyleSheet.absoluteFill}>
-              {paths.map((stroke, index) => (
-                <Path
-                  key={index}
-                  path={stroke.path}
-                  color={stroke.color}
-                  style="stroke"
-                  strokeWidth={stroke.strokeWidth}
-                  strokeCap="round"
-                  strokeJoin="round"
-                />
-              ))}
-              {currentPath ? (
-                <Path
-                  path={currentPath}
-                  color={activeColor}
-                  style="stroke"
-                  strokeWidth={activeStrokeWidth}
-                  strokeCap="round"
-                  strokeJoin="round"
-                />
-              ) : null}
-            </Canvas>
-          </View>
-        </GestureDetector>
+        <View 
+          collapsable={false} 
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent' }]}
+          onStartShouldSetResponder={() => true}
+          onMoveShouldSetResponder={() => true}
+          onResponderGrant={handleTouchStart}
+          onResponderMove={handleTouchMove}
+          onResponderRelease={handleTouchEnd}
+          onResponderTerminate={handleTouchEnd}
+        >
+          <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+            {paths.map((stroke, index) => (
+              <Path
+                key={index}
+                path={stroke.path}
+                color={stroke.color}
+                style="stroke"
+                strokeWidth={stroke.strokeWidth}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            ))}
+            {currentPath ? (
+              <Path
+                path={currentPath}
+                color={activeColor}
+                style="stroke"
+                strokeWidth={activeStrokeWidth}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            ) : null}
+          </Canvas>
+        </View>
       </View>
 
       <View style={[styles.toolbar, { paddingBottom: insets.bottom + 80, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
