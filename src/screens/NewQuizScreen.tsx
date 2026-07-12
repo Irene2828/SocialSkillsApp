@@ -987,8 +987,6 @@ export const NewQuizScreen = () => {
       </ScrollView>
     );
   };
-    );
-  };
 
   const renderCoinJar = () => {
     const gradientColors = [
