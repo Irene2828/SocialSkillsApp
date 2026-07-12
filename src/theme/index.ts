@@ -83,9 +83,9 @@ export const theme = {
 
     // Button / CTA text — semi-bold for authority
     button: {
-      fontFamily: FONTS.medium,
+      fontFamily: FONTS.semiBold,
       fontSize: 16,
-      fontWeight: '500' as const,
+      fontWeight: '600' as const,
       color: '#111827',
       lineHeight: 22,
       letterSpacing: 0.2,

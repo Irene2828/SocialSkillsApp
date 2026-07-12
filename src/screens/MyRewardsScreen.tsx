@@ -341,7 +341,7 @@ export const MyRewardsScreen = () => {
                     <View style={styles.successIconWrapper}>
                       <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color={theme.colors.text} />
                     </View>
-                    <Text style={styles.successRewardLabel}>{redeemedReward.title}</Text>
+                    <Text style={styles.successRewardLabel} numberOfLines={1} adjustsFontSizeToFit>{redeemedReward.title}</Text>
                   </View>
 
                   <View style={styles.successCopyBox}>
@@ -691,7 +691,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

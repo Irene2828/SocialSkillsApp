@@ -287,8 +287,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.sm,
     borderRadius: 0,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderWidth: 0,
+    borderColor: 'transparent',
   },
   animatedContainer: {
     width: '100%',
@@ -297,8 +297,8 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: 'transparent',
     borderWidth: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.stroke,
+    borderBottomWidth: 0,
+    borderBottomColor: 'transparent',
     marginBottom: 0,
   },
   situationalLabel: {
@@ -381,7 +381,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

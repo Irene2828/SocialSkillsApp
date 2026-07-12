@@ -1,4 +1,5 @@
 import React from 'react';
+import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,7 +8,7 @@ import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { PuzzleNavigator } from './PuzzleNavigator';
 import { HomeScreen } from '../screens/HomeScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
@@ -42,6 +43,24 @@ export const AppNavigator = () => {
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarLabel: ({ focused, color }) => {
+          let label = '';
+          if (route.name === 'Home') label = 'Home';
+          else if (route.name === 'NewQuiz') label = 'Quiz Library';
+          else if (route.name === 'Puzzles') label = 'Activities';
+          else if (route.name === 'MyRewards') label = 'My Rewards';
+          return (
+            <Text style={{
+              fontFamily: focused ? FONTS.semiBold : FONTS.medium,
+              fontSize: 10,
+              color: color,
+              marginTop: 4,
+              textAlign: 'center'
+            }}>
+              {label}
+            </Text>
+          );
         },
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,

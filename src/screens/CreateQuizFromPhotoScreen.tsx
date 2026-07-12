@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
+import { QuizCategory } from '../data/types';
 
 type ScreenState = 'idle' | 'imageSelected' | 'generating' | 'success' | 'error';
 
@@ -560,7 +561,7 @@ const styles = StyleSheet.create({
   },
   successOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

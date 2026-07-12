@@ -6,7 +6,7 @@ import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { TopBar } from '../components/TopBar';
 import { Button } from '../components/Button';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
@@ -193,6 +193,25 @@ export const PuzzleScreen = () => {
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
 
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
+
+  useEffect(() => {
+    let interval: any;
+    if (selectedPuzzle && !isSolved) {
+      interval = setInterval(() => {
+        setTimeElapsed(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [selectedPuzzle, isSolved]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s < 10 ? '0' : ''}${s}`;
+  };
+
   useEffect(() => {
     const loadPuzzles = async () => {
       const storedCustom = await safeStorage.get<PuzzleConfig[]>('@custom_puzzles', []);
@@ -249,6 +268,10 @@ export const PuzzleScreen = () => {
   };
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
+  const isTablet = screenWidth >= 768;
+  const numColumns = isTablet ? 3 : 2;
+  const cardWidth = Math.floor((screenWidth - 32 - (16 * (numColumns - 1))) / numColumns);
+  const isSmallScreen = screenWidth < 380;
   const boardSize = Math.min(screenWidth - 48, 400);
 
   const startPuzzle = (puzzle: PuzzleConfig) => {
@@ -280,6 +303,7 @@ export const PuzzleScreen = () => {
     setPieces(scrambled);
     setIsSolved(false);
     setSelectedPuzzle(puzzle);
+    setTimeElapsed(0);
   };
 
   useEffect(() => {
@@ -401,18 +425,7 @@ export const PuzzleScreen = () => {
 
   const renderCompleted = () => {
     let message = "Awesome!";
-    let coinsEarned = 3;
 
-    const handleRedeemNow = () => {
-      setSelectedPuzzle(null);
-      // navigation.navigate('MyRewards'); // Assume navigation is not available in PuzzleScreen unless we use useNavigation, but we can just close the puzzle for now or if we have navigation prop, we could use it. The user just wants it to look the same.
-    };
-
-    const gradientColors = [
-      '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
-      '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
-      '#3B82F6', '#60A5FA', '#93C5FD'
-    ];
     return (
       <Pressable style={styles.completedContainer} onPress={() => setSelectedPuzzle(null)}>
         <SilverDust />
@@ -423,8 +436,21 @@ export const PuzzleScreen = () => {
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
 
+            {showTimer && timeElapsed > 0 && (
+              <Text style={{ fontFamily: FONTS.semiBold, fontSize: 18, color: theme.colors.secondaryText, marginBottom: theme.spacing.xl }}>
+                Time: {formatTime(timeElapsed)}
+              </Text>
+            )}
+
+            <Button 
+              title="Next Puzzle" 
+              onPress={handleNextPuzzle}
+              style={{ backgroundColor: '#22C55E', width: '100%', marginBottom: theme.spacing.md, borderColor: '#16A34A' }}
+              textStyle={{ color: '#FFFFFF' }}
+            />
+
             <Pressable style={styles.linkButton} onPress={() => setSelectedPuzzle(null)}>
-              <Text style={styles.linkButtonText}>One More Puzzle</Text>
+              <Text style={[styles.linkButtonText, { textDecorationLine: 'none' }]}>Back to All Puzzles</Text>
             </Pressable>
           </Animated.View>
         </Pressable>
@@ -446,8 +472,9 @@ export const PuzzleScreen = () => {
           contentContainerStyle={styles.scrollContent}
           data={allPuzzles}
           keyExtractor={(item) => item.id}
-          numColumns={2}
-          columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: theme.spacing.xs, marginBottom: theme.spacing.md }}
+          key={numColumns}
+          numColumns={numColumns}
+          columnWrapperStyle={{ gap: theme.spacing.md, marginBottom: theme.spacing.md }}
           ListHeaderComponent={
             <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
               <Pressable 
@@ -475,7 +502,7 @@ export const PuzzleScreen = () => {
             </View>
           }
           renderItem={({ item: puzzle }) => (
-            <View style={{ width: '48%', position: 'relative' }}>
+            <View style={{ width: cardWidth, position: 'relative' }}>
               <Pressable
                 onPress={() => {
                   startPuzzle(puzzle);
@@ -697,6 +724,17 @@ export const PuzzleScreen = () => {
                 <View style={styles.gameContent}>
                   {selectedPuzzle && (
                     <>
+                      <Pressable 
+                        onPress={() => setShowTimer(!showTimer)}
+                        style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: theme.spacing.md, paddingVertical: 4, paddingHorizontal: 12, borderRadius: 20, backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)' }}
+                      >
+                        <Ionicons name="timer-outline" size={20} color={isRocket ? '#FFFFFF' : theme.colors.text} />
+                        {showTimer && (
+                          <Text style={{ marginLeft: 8, fontSize: 16, fontFamily: FONTS.semiBold, color: isRocket ? '#FFFFFF' : theme.colors.text, fontVariant: ['tabular-nums'] }}>
+                            {formatTime(timeElapsed)}
+                          </Text>
+                        )}
+                      </Pressable>
                       {screenHeight > 700 && <Text style={styles.headlineText}>Drag the pieces to solve a puzzle!</Text>}
                       <View
                         style={[
@@ -905,7 +943,7 @@ const styles = StyleSheet.create({
   },
   completedContainer: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
@@ -1014,7 +1052,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,

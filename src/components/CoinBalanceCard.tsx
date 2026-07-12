@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
@@ -110,6 +110,8 @@ const styles = StyleSheet.create({
   },
   earnedText: {
     ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
     color: theme.colors.secondaryText,
     letterSpacing: 0.1,
     marginBottom: theme.spacing.xs,

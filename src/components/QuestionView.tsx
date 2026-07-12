@@ -413,8 +413,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.sm,
     borderRadius: 0,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderWidth: 0,
+    borderColor: 'transparent',
   },
   cardWrapper: {
     position: 'relative',
@@ -429,8 +429,8 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderWidth: 0,
+    borderColor: 'transparent',
     borderBottomWidth: 0,
     zIndex: -1, // Keep it visually attached behind the rounded edge if needed, or zIndex 1
   },
@@ -497,7 +497,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)', // Standardized white overlay 90%
+    backgroundColor: '#FFFFFF', // Standardized white overlay 90%
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

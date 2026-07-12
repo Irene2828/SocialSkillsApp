@@ -37,6 +37,7 @@ export const DrawingBoardScreenWeb = () => {
   const [paths, setPaths] = useState<Stroke[]>([]);
   const [activeColor, setActiveColor] = useState(COLORS[5]);
   const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
   const [currentPath, setCurrentPath] = useState<string>('');
 
   const canvasRef = useRef<any>(null);
@@ -112,7 +113,7 @@ export const DrawingBoardScreenWeb = () => {
         <View 
           ref={canvasRef}
           collapsable={false} 
-          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent', touchAction: 'none' as any }]}
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent', touchAction: 'none' } as any]}
           onStartShouldSetResponder={() => true}
           onMoveShouldSetResponder={() => true}
           onResponderGrant={handleTouchStart}
@@ -157,8 +158,14 @@ export const DrawingBoardScreenWeb = () => {
         </Pressable>
       </View>
 
-      <View style={[styles.rightToolbar, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
-        <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
+      {isToolbarVisible ? (
+        <View style={[styles.rightToolbar, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
+          <Pressable style={styles.toolBtn} onPress={() => setIsToolbarVisible(false)}>
+            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
+          </Pressable>
+          <View style={styles.dividerHorizontal} />
+          
+          <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
             <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
           </Pressable>
@@ -199,6 +206,14 @@ export const DrawingBoardScreenWeb = () => {
           ))}
         </ScrollView>
       </View>
+      ) : (
+        <Pressable 
+          style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
+          onPress={() => setIsToolbarVisible(true)}
+        >
+          <Ionicons name="color-palette-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+        </Pressable>
+      )}
     </View>
   );
 };

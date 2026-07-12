@@ -51,6 +51,9 @@ const QUIZ_LEVELS: QuizLevel[] = [
 
 export const NewQuizScreen = () => {
   const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
+  const numColumns = isTablet ? 3 : 2;
+  const cardWidth = Math.floor((width - 32 - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();
@@ -755,7 +758,7 @@ export const NewQuizScreen = () => {
             {subFolders.map(folder => {
               const count = customCategories.filter(c => c.folderId === folder.id).length;
               return (
-                <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
+                <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
                   <FolderCard 
                     name={folder.name}
                     onPress={() => navigateIntoFolder(folder.id)}
@@ -770,7 +773,7 @@ export const NewQuizScreen = () => {
 
             {/* Quiz cards inside the folder */}
             {quizzesInFolder.map(quiz => (
-              <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+              <View key={quiz.id} style={[styles.bentoItem, { width: cardWidth }]}>
                 <QuizCard 
                   category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
                   isFeatured={false}
@@ -806,13 +809,13 @@ export const NewQuizScreen = () => {
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'general' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
+            style={[styles.tab, activeTab === 'general' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
             onPress={() => setActiveTab('general')}
           >
             <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: '#374151', fontWeight: '500' }]}>Social Skills</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'ai' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 1 }]} 
+            style={[styles.tab, activeTab === 'ai' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
             onPress={() => setActiveTab('ai')}
           >
             <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: '#374151', fontWeight: '500' }]}>Math Skills</Text>
@@ -822,7 +825,7 @@ export const NewQuizScreen = () => {
         <View ref={bentoGridRef} style={styles.bentoGrid}>
           {/* Built-in categories */}
           {builtInCategories.map((category: any) => (
-            <View key={category.id} style={[styles.bentoItem, { width: '47%' }]}>
+            <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
               <QuizCard 
                 category={category} 
                 isFeatured={false}
@@ -836,7 +839,7 @@ export const NewQuizScreen = () => {
           {tabFolders.map(folder => {
             const quizCount = customCategories.filter(c => c.folderId === folder.id).length;
             return (
-              <View key={folder.id} style={[styles.bentoItem, { width: '47%' }]}>
+              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
                 <FolderCard 
                   name={folder.name}
                   onPress={() => navigateIntoFolder(folder.id)}
@@ -852,7 +855,7 @@ export const NewQuizScreen = () => {
 
           {/* Loose AI quizzes (not in any folder) */}
           {looseCategoryCards.map(quiz => (
-            <View key={quiz.id} style={[styles.bentoItem, { width: '47%' }]}>
+            <View key={quiz.id} style={[styles.bentoItem, { width: cardWidth }]}>
               <QuizCard 
                 category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
                 isFeatured={false}
@@ -863,7 +866,7 @@ export const NewQuizScreen = () => {
           ))}
           
           {/* Add Folder placeholder */}
-          <View style={[styles.bentoItem, { width: '47%' }]}>
+          <View style={[styles.bentoItem, { width: cardWidth }]}>
             <Pressable onPress={() => setShowFolderModal(true)}>
               <Card style={{ 
                 alignItems: 'center', 
@@ -1015,7 +1018,7 @@ export const NewQuizScreen = () => {
         </View>
 
         {/* Progress and coins container (above the ScrollView) */}
-        <View style={{ paddingHorizontal: theme.spacing.md, paddingBottom: theme.spacing.md, gap: theme.spacing.xs }}>
+        <View style={{ paddingHorizontal: 0, paddingBottom: theme.spacing.md, gap: theme.spacing.xs }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
             <View style={{ flex: 1, marginBottom: 0 }}>
               <View style={{ marginBottom: 0, paddingHorizontal: 0 }}>
@@ -1872,7 +1875,7 @@ const styles = StyleSheet.create({
   },
   completedContainer: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
@@ -2015,7 +2018,7 @@ const styles = StyleSheet.create({
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -2123,7 +2126,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
     alignItems: 'center',
     borderRadius: theme.borderRadius.full,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'transparent',
   },
   activeTab: {

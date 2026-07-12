@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, PressableProps, View } from 'react-native';
+import { Text, StyleSheet, PressableProps, View, useWindowDimensions } from 'react-native';
 import { ScalePressable } from './ScalePressable';
 import { theme } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -22,6 +22,8 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   const [isPressed, setIsPressed] = useState(false);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
 
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
@@ -69,6 +71,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
         isSecondary && styles.secondaryButton,
         isOutline && [styles.outlineButton, isRocket && { borderColor: '#FFFFFF' }],
         isOutline && isPressed && [styles.outlineButtonPressed, { backgroundColor: theme.colors.primary }],
+        isTablet && (isPrimary || isSecondary) && { maxWidth: 360, alignSelf: 'center' },
         style,
       ]}
       onPressIn={handlePressIn}

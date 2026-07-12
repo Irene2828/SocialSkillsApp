@@ -42,7 +42,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   };
 
   return (
-    <Modal visible={visible} transparent animationType="none">
+    <Modal visible={visible} transparent animationType="fade">
       <Pressable style={styles.overlay} onPress={onClose}>
         <Animated.View style={[styles.modalContent, { opacity: fadeAnim }]} onStartShouldSetResponder={() => true}>
           <View style={styles.header}>
@@ -86,7 +86,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                 <Button 
                   title="Save"
                   onPress={handleSavePin}
-                  style={{ paddingHorizontal: theme.spacing.lg }}
+                  style={{ width: '100%', marginTop: theme.spacing.md }}
                 />
               </View>
             </View>
@@ -101,7 +101,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -155,12 +155,10 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   pinRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: theme.spacing.md,
+    flexDirection: 'column',
   },
   pinInput: {
-    flex: 1,
+    width: '100%',
     backgroundColor: '#FFFFFF',
     borderWidth: 2,
     borderColor: theme.colors.stroke,

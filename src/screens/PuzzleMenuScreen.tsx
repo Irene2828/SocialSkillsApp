@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, useWindowDimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { GradientIcon } from '../components/GradientIcon';
 import { PuzzleStackParamList } from '../navigation/PuzzleNavigator';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
@@ -17,6 +18,8 @@ export const PuzzleMenuScreen = () => {
   const insets = useSafeAreaInsets();
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
   
   const isDark = moodColors.isDark;
   
@@ -25,7 +28,7 @@ export const PuzzleMenuScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         <View style={styles.content}>
-          <View style={styles.cardsContainer}>
+          <View style={[styles.cardsContainer, { flexDirection: isTablet ? 'row' : 'column', alignItems: 'center' }]}>
             <Pressable 
               style={({ pressed }) => [
                 styles.card,
@@ -33,10 +36,10 @@ export const PuzzleMenuScreen = () => {
               ]}
               onPress={() => navigation.navigate('PuzzleGame')}
             >
-              <View style={[styles.iconContainer, { backgroundColor: 'rgba(190, 242, 100, 0.2)' }]}>
-                <Ionicons name="extension-puzzle-outline" size={48} color={theme.colors.success} />
+              <View style={styles.iconContainer}>
+                <GradientIcon iconFamily="Ionicons" name="extension-puzzle-outline" size={48} />
               </View>
-              <Text style={[styles.cardTitle, { color: moodColors.text }]}>Puzzles</Text>
+              <Text style={[styles.cardTitle, { color: isDark ? '#FFFFFF' : theme.colors.text }]}>Puzzles</Text>
             </Pressable>
 
             <Pressable 
@@ -46,10 +49,10 @@ export const PuzzleMenuScreen = () => {
               ]}
               onPress={() => navigation.navigate('DrawingBoard')}
             >
-              <View style={[styles.iconContainer, { backgroundColor: 'rgba(167, 139, 250, 0.2)' }]}>
-                <Ionicons name="color-palette-outline" size={48} color="#A78BFA" />
+              <View style={styles.iconContainer}>
+                <GradientIcon iconFamily="Ionicons" name="color-palette-outline" size={48} />
               </View>
-              <Text style={[styles.cardTitle, { color: moodColors.text }]}>Drawing Board</Text>
+              <Text style={[styles.cardTitle, { color: isDark ? '#FFFFFF' : theme.colors.text }]}>Drawing Board</Text>
             </Pressable>
           </View>
         </View>
@@ -68,30 +71,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardsContainer: {
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: theme.spacing.lg,
   },
   card: {
     flex: 1,
-    maxWidth: 160,
+    width: '100%',
+    maxWidth: 240,
     alignItems: 'center',
     justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     padding: theme.spacing.md,
   },
   iconContainer: {
-    width: 96,
-    height: 96,
-    borderRadius: 48,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.md,
   },
   cardTitle: {
-    ...theme.typography.heading,
+    fontFamily: FONTS.semiBold,
     fontSize: 20,
+    marginTop: 8,
     textAlign: 'center',
-  }
+  },
 });
