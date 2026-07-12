@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput, FlatList } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { safeStorage } from '../utils/storage';
@@ -441,91 +441,93 @@ export const PuzzleScreen = () => {
           onBack={() => navigation.canGoBack() && navigation.goBack()}
         />
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          
-          <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
-            <Pressable 
-              style={[styles.tab, activeTab === 'animals' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
-              onPress={() => setActiveTab('animals')}
-            >
-              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '500' }]}>Animals</Text>
-            </Pressable>
-            <Pressable 
-              style={[styles.tab, activeTab === 'cities' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
-              onPress={() => setActiveTab('cities')}
-            >
-              <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '500' }]}>Cities</Text>
-            </Pressable>
-          </View>
-
-          <View style={styles.grid}>
-            {allPuzzles.map((puzzle) => (
-              <View
-                key={puzzle.id}
-                style={{ width: '48%', marginBottom: theme.spacing.md, position: 'relative' }}
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          data={allPuzzles}
+          keyExtractor={(item) => item.id}
+          numColumns={2}
+          columnWrapperStyle={{ justifyContent: 'space-between', paddingHorizontal: theme.spacing.xs, marginBottom: theme.spacing.md }}
+          ListHeaderComponent={
+            <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
+              <Pressable 
+                style={[styles.tab, activeTab === 'animals' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+                onPress={() => setActiveTab('animals')}
               >
-                <Pressable
-                  onPress={() => {
-                    startPuzzle(puzzle);
-                  }}
-                >
-                  <Animated.View style={[
-                    styles.card,
-                    isRocket && {
-                      backgroundColor: 'rgba(255, 255, 255, 0.45)',
-                      borderColor: 'rgba(255, 255, 255, 0.35)',
-                      borderWidth: 1.5,
-                      shadowColor: '#000000',
-                      shadowOffset: { width: 0, height: 8 },
-                      shadowRadius: 24,
-                      shadowOpacity: 0.1,
-                    }
-                  ]}>
-                    <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
-                      <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
-                    </View>
-                    <Text style={[
-                      styles.cardName,
-                      isRocket && { color: '#FFFFFF' },
-                      isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
-                    ]}>{puzzle.name}</Text>
-                  </Animated.View>
-                </Pressable>
+                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontWeight: '500' }]}>Animals</Text>
+              </Pressable>
+              <Pressable 
+                style={[styles.tab, activeTab === 'cities' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+                onPress={() => setActiveTab('cities')}
+              >
+                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontWeight: '500' }]}>Cities</Text>
+              </Pressable>
+            </View>
+          }
+          ListFooterComponent={
+            <View style={styles.createAiButtonContainer}>
+              <Button
+                title="Create New Puzzle"
+                iconName="extension-puzzle-outline"
+                style={styles.createAiButton}
+                onPress={() => setShowAiMenu(true)}
+              />
+            </View>
+          }
+          renderItem={({ item: puzzle }) => (
+            <View style={{ width: '48%', position: 'relative' }}>
+              <Pressable
+                onPress={() => {
+                  startPuzzle(puzzle);
+                }}
+              >
+                <Animated.View style={[
+                  styles.card,
+                  isRocket && {
+                    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+                    borderColor: 'rgba(255, 255, 255, 0.35)',
+                    borderWidth: 1.5,
+                    shadowColor: '#000000',
+                    shadowOffset: { width: 0, height: 8 },
+                    shadowRadius: 24,
+                    shadowOpacity: 0.1,
+                  }
+                ]}>
+                  <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
+                    <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                  </View>
+                  <Text style={[
+                    styles.cardName,
+                    isRocket && { color: '#FFFFFF' },
+                    isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
+                  ]}>{puzzle.name}</Text>
+                </Animated.View>
+              </Pressable>
 
-                <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
-                  <Pressable 
-                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-                    onPress={(e) => { 
-                      if (e && e.stopPropagation) e.stopPropagation(); 
-                      setActionMenuPuzzle(puzzle);
-                      setShowActionMenu(true);
-                    }} 
-                    style={({ pressed }) => [
-                      {
-                        padding: 6,
-                        borderRadius: 20,
-                        backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }
-                    ]}
-                  >
-                    <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
-                  </Pressable>
-                </View>
+              <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
+                <Pressable 
+                  hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                  onPress={(e) => { 
+                    if (e && e.stopPropagation) e.stopPropagation(); 
+                    setActionMenuPuzzle(puzzle);
+                    setShowActionMenu(true);
+                  }} 
+                  style={({ pressed }) => [
+                    {
+                      padding: 6,
+                      borderRadius: 20,
+                      backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }
+                  ]}
+                >
+                  <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
+                </Pressable>
               </View>
-            ))}
-          </View>
-          
-          <View style={styles.createAiButtonContainer}>
-            <Button
-              title="Create New Puzzle"
-              iconName="extension-puzzle-outline"
-              style={styles.createAiButton}
-              onPress={() => setShowAiMenu(true)}
-            />
-          </View>
-        </ScrollView>
+            </View>
+          )}
+        />
       </ScreenWrapper>
 
       {/* AI Puzzle creation menu modal */}

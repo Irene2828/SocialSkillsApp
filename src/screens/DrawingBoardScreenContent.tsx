@@ -42,14 +42,28 @@ export const DrawingBoardScreen = () => {
   
   const [currentPath, setCurrentPath] = useState<string>('');
 
+  const getCoordinates = (e: any) => {
+    let x = e.nativeEvent.locationX;
+    let y = e.nativeEvent.locationY;
+    if (x === undefined || isNaN(x)) x = e.nativeEvent.offsetX;
+    if (y === undefined || isNaN(y)) y = e.nativeEvent.offsetY;
+    if (x === undefined || isNaN(x)) x = e.nativeEvent.pageX;
+    if (y === undefined || isNaN(y)) y = e.nativeEvent.pageY;
+    
+    return {
+      x: typeof x === 'number' && !isNaN(x) ? x : 0,
+      y: typeof y === 'number' && !isNaN(y) ? y : 0
+    };
+  };
+
   const handleTouchStart = (e: any) => {
-    const { locationX, locationY } = e.nativeEvent;
-    setCurrentPath(`M ${locationX} ${locationY}`);
+    const { x, y } = getCoordinates(e);
+    setCurrentPath(`M ${x} ${y}`);
   };
 
   const handleTouchMove = (e: any) => {
-    const { locationX, locationY } = e.nativeEvent;
-    setCurrentPath(prev => prev ? `${prev} L ${locationX} ${locationY}` : `M ${locationX} ${locationY}`);
+    const { x, y } = getCoordinates(e);
+    setCurrentPath(prev => prev ? `${prev} L ${x} ${y}` : `M ${x} ${y}`);
   };
 
   const handleTouchEnd = () => {
@@ -85,7 +99,7 @@ export const DrawingBoardScreen = () => {
         >
           <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
         </Pressable>
-        <Text style={[styles.title, { color: moodColors.text }]}>Drawing Board</Text>
+        <Text style={[styles.title, { color: isDark ? '#FFFFFF' : theme.colors.text }]}>Drawing Board</Text>
         <View style={styles.headerSpacer} />
       </View>
 
