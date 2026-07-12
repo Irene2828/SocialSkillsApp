@@ -965,9 +965,9 @@ export const NewQuizScreen = () => {
             <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
               <Button 
                 title="Add a New Task" 
+                iconName="clipboard-outline"
                 onPress={() => setIsTaskModalVisible(true)}
                 style={styles.addButton}
-                variant="primary"
               />
             </View>
           </View>
@@ -1903,42 +1903,50 @@ export const NewQuizScreen = () => {
       
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
-      {/* Task Add/Edit Modal */}
+      {/* Task Add/Edit Modal (Matching Rewards Modal Style) */}
       <Modal
         visible={isTaskModalVisible}
         animationType="slide"
         transparent={true}
         onRequestClose={() => setIsTaskModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, isRocket && { backgroundColor: '#1E293B', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }]}>
-            <Text style={[styles.modalTitle, isDark && { color: '#FFFFFF' }]}>
-              {editingTaskId ? 'Edit Task' : 'New Task'}
-            </Text>
-            
-            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }]}>What needs to be done?</Text>
-            <TextInput
-              style={[styles.input, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
-              value={newTaskTitle}
-              onChangeText={setNewTaskTitle}
-              placeholder="e.g., Clean your room"
-              placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
-              autoFocus
-            />
-
-            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
-            <View style={[styles.coinInputContainer, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }]}>
-              <FontAwesome5 name="coins" size={16} color="#F59E0B" />
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setIsTaskModalVisible(false);
+          setEditingTaskId(null);
+          setNewTaskTitle('');
+        }}>
+          <View style={styles.whiteModalOverlay}>
+            <Pressable style={styles.rewardsModalCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Text style={[styles.rewardsModalTitle, isDark && { color: '#FFFFFF' }]}>
+                {editingTaskId ? 'Edit Task' : 'Add New Task'}
+              </Text>
+              
               <TextInput
-                style={[styles.coinInput, isRocket && { color: '#FFFFFF' }]}
+                style={[styles.rewardsModalInput, { marginBottom: theme.spacing.md }, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
+                value={newTaskTitle}
+                onChangeText={setNewTaskTitle}
+                placeholder="Task Name"
+                placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
+                autoFocus
+              />
+
+              <TextInput
+                style={[styles.rewardsModalInput, { marginBottom: theme.spacing.lg }, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
                 value={newTaskCoins}
                 onChangeText={setNewTaskCoins}
-                keyboardType="number-pad"
+                placeholder="Coins"
+                placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
+                keyboardType="numeric"
                 maxLength={4}
               />
-            </View>
 
-            <View style={styles.modalActions}>
+              <Button 
+                title="Save Task" 
+                onPress={handleAddTask}
+                style={{ width: '100%', marginBottom: theme.spacing.md }}
+                variant="primary"
+                disabled={!newTaskTitle.trim()}
+              />
               <Button 
                 title="Cancel" 
                 onPress={() => {
@@ -1946,19 +1954,12 @@ export const NewQuizScreen = () => {
                   setEditingTaskId(null);
                   setNewTaskTitle('');
                 }}
-                style={{ flex: 1, marginRight: theme.spacing.sm, backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : '#E5E7EB' }}
-                textStyle={{ color: isDark ? '#FFFFFF' : theme.colors.text }}
+                style={{ width: '100%' }}
+                variant="secondary"
               />
-              <Button 
-                title="Save Task" 
-                onPress={handleAddTask}
-                style={{ flex: 1, marginLeft: theme.spacing.sm }}
-                variant="primary"
-                disabled={!newTaskTitle.trim()}
-              />
-            </View>
+            </Pressable>
           </View>
-        </View>
+        </Pressable>
       </Modal>
 
     </View>
@@ -2550,5 +2551,39 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     color: theme.colors.text,
     marginLeft: 8,
+  },
+  whiteModalOverlay: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+  },
+  rewardsModalCard: {
+    width: '100%',
+    maxWidth: 500,
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+    paddingTop: theme.spacing.xxl,
+    borderRadius: 0,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+  },
+  rewardsModalTitle: {
+    ...theme.typography.body,
+    fontWeight: '700',
+    marginBottom: theme.spacing.xl,
+    textAlign: 'center',
+    color: theme.colors.text,
+  },
+  rewardsModalInput: {
+    width: '100%',
+    height: 48,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing.md,
+    fontSize: 16,
+    color: theme.colors.text,
   },
 });

@@ -13,8 +13,8 @@ import { theme, FONTS } from '../theme';
 
 import { useMood, getMoodColors } from '../context/MoodContext';
 
-const ACTION_WIDTH = 120; // 60 for edit + 60 for delete
-const SWIPE_THRESHOLD = 30;
+const ACTION_WIDTH = 140; // 70 for edit + 70 for delete
+const SWIPE_THRESHOLD = 60;
 
 interface SwipeableTaskCardProps {
   task: Task;
@@ -74,24 +74,26 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
 
   return (
     <View style={styles.wrapper}>
-      {/* Background Actions */}
+      {/* Action buttons revealed behind the card */}
       <View style={styles.actionsContainer}>
         <Pressable
-          style={[styles.actionButton, { backgroundColor: theme.colors.primary }]}
+          style={[styles.actionBtn, styles.editBtn]}
           onPress={() => {
             Animated.timing(translateX, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => setIsOpen(false));
             onEdit(task);
           }}
         >
-          <Ionicons name="pencil-outline" size={24} color="#FFFFFF" />
+          <Ionicons name="pencil-outline" size={22} color={theme.colors.text} />
+          <Text style={[styles.actionText, styles.editActionText]}>Edit</Text>
         </Pressable>
         <Pressable
-          style={[styles.actionButton, { backgroundColor: theme.colors.error }]}
+          style={[styles.actionBtn, styles.deleteBtn]}
           onPress={() => {
             onDelete(task.id);
           }}
         >
-          <Ionicons name="trash-outline" size={24} color="#FFFFFF" />
+          <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
+          <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
       </View>
 
@@ -154,24 +156,43 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
 const styles = StyleSheet.create({
   wrapper: {
     position: 'relative',
+    overflow: 'hidden',
+    borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.sm,
     height: 72,
   },
   actionsContainer: {
     position: 'absolute',
+    right: 0,
     top: 0,
     bottom: 0,
-    right: 0,
-    flexDirection: 'row',
     width: ACTION_WIDTH,
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
+    flexDirection: 'row',
   },
-  actionButton: {
-    width: ACTION_WIDTH / 2,
-    height: '100%',
+  actionBtn: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    gap: theme.spacing.xs,
+  },
+  editBtn: {
+    backgroundColor: theme.colors.neutralGrey,
+    borderTopLeftRadius: theme.borderRadius.md,
+    borderBottomLeftRadius: theme.borderRadius.md,
+  },
+  deleteBtn: {
+    backgroundColor: theme.colors.secondaryText,
+    borderTopRightRadius: theme.borderRadius.md,
+    borderBottomRightRadius: theme.borderRadius.md,
+  },
+  actionText: {
+    ...theme.typography.tab,
+  },
+  editActionText: {
+    color: theme.colors.text,
+  },
+  deleteActionText: {
+    color: theme.colors.white,
   },
   foreground: {
     width: '100%',
@@ -183,7 +204,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: theme.colors.stroke,
     height: '100%',
     ...theme.shadows.soft,
