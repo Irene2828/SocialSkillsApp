@@ -52,7 +52,7 @@ const QUIZ_LEVELS: QuizLevel[] = [
 export const NewQuizScreen = () => {
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
-  const numColumns = isTablet ? 3 : 2;
+  const numColumns = 2;
   const cardWidth = Math.floor((width - 32 - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
@@ -1842,7 +1842,7 @@ const styles = StyleSheet.create({
   bentoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing.md,
+    justifyContent: 'space-between',
   },
   bentoItem: {
     width: '100%',

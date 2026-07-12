@@ -269,7 +269,7 @@ export const PuzzleScreen = () => {
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const isTablet = screenWidth >= 768;
-  const numColumns = isTablet ? 3 : 2;
+  const numColumns = 2;
   const cardWidth = Math.floor((screenWidth - 32 - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = screenWidth < 380;
   const boardSize = Math.min(screenWidth - 48, 400);
@@ -474,7 +474,7 @@ export const PuzzleScreen = () => {
           keyExtractor={(item) => item.id}
           key={numColumns}
           numColumns={numColumns}
-          columnWrapperStyle={{ gap: theme.spacing.md, marginBottom: theme.spacing.md }}
+          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: theme.spacing.md }}
           ListHeaderComponent={
             <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
               <Pressable 

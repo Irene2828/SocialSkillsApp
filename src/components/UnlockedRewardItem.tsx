@@ -155,9 +155,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    ...theme.typography.button,
-    fontFamily: FONTS.regular,
-    fontWeight: '400',
+    ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
+    color: theme.colors.secondaryText,
+    letterSpacing: 0.1,
     marginBottom: theme.spacing.xs,
   },
   titleFulfilled: {

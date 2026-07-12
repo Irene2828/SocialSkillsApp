@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Reward } from '../data/types';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { Button } from './Button';
 
 import { useMood, getMoodColors } from '../context/MoodContext';
@@ -268,7 +268,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
-    ...theme.typography.button,
+    ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
+    color: theme.colors.secondaryText,
+    letterSpacing: 0.1,
     marginBottom: theme.spacing.xs,
     textTransform: 'capitalize',
   },
