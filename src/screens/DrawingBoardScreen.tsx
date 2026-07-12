@@ -38,6 +38,21 @@ if (Platform.OS !== 'web') {
 
 export const DrawingBoardScreen = () => {
   if (Platform.OS === 'web') {
+    const isOldIOS = typeof navigator !== 'undefined' && /iP(ad|hone|od).*OS (11|12|13|14)_/.test(navigator.userAgent);
+    
+    if (isOldIOS) {
+      return (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: theme.colors.background }}>
+          <Text style={{ ...theme.typography.heading, fontSize: 20, marginBottom: 12, textAlign: 'center' }}>
+            Browser Not Supported
+          </Text>
+          <Text style={{ ...theme.typography.body, textAlign: 'center', color: theme.colors.secondaryText }}>
+            The drawing board requires a newer web browser. Please try on a more recent device or use the native iOS app!
+          </Text>
+        </View>
+      );
+    }
+
     return (
       <ErrorBoundary>
         <WithSkiaWeb
