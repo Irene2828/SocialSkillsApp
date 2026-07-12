@@ -103,7 +103,7 @@ export const DrawingBoardScreenWeb = () => {
       <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
           collapsable={false} 
-          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent' }]}
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent', touchAction: 'none' as any }]}
           onStartShouldSetResponder={() => true}
           onMoveShouldSetResponder={() => true}
           onResponderGrant={handleTouchStart}
