@@ -3,7 +3,7 @@ import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { NewQuizScreen } from '../screens/NewQuizScreen';
+import { QuizLibraryNavigator } from './QuizLibraryNavigator';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { PuzzleNavigator } from './PuzzleNavigator';
 import { HomeScreen } from '../screens/HomeScreen';
@@ -99,7 +99,7 @@ export const AppNavigator = () => {
       />
       <Tab.Screen 
         name="NewQuiz" 
-        component={NewQuizScreen} 
+        component={QuizLibraryNavigator} 
         options={{ tabBarLabel: 'Quiz Library' }}
       />
       <Tab.Screen 

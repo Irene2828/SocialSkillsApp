@@ -12,6 +12,7 @@ import { AppNavigator } from './src/navigation/AppNavigator';
 import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
+import { TasksProvider } from './src/context/TasksContext';
 import { FeedbackProvider } from './src/context/FeedbackContext';
 import { MoodProvider } from './src/context/MoodContext';
 import {
@@ -51,12 +52,14 @@ export default function App() {
         <MoodProvider>
           <ProgressProvider>
             <RewardsProvider>
-              <QuizProvider>
-                <NavigationContainer>
-                  <RootNavigator />
-                  <StatusBar style="auto" />
-                </NavigationContainer>
-              </QuizProvider>
+              <TasksProvider>
+                <QuizProvider>
+                  <NavigationContainer>
+                    <RootNavigator />
+                    <StatusBar style="auto" />
+                  </NavigationContainer>
+                </QuizProvider>
+              </TasksProvider>
             </RewardsProvider>
           </ProgressProvider>
         </MoodProvider>
