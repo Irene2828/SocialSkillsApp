@@ -10,8 +10,11 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { useTasks, Task } from '../context/TasksContext';
 import { useRewards } from '../context/RewardsContext';
+import { useFeedback } from '../context/FeedbackContext';
 import { QuizLibraryStackParamList } from '../navigation/QuizLibraryNavigator';
 import { useMood, getMoodColors } from '../context/MoodContext';
+import { TopBar } from '../components/TopBar';
+import { SwipeableTaskCard } from '../components/SwipeableTaskCard';
 
 type NavigationProp = NativeStackNavigationProp<QuizLibraryStackParamList, 'Tasks'>;
 
@@ -23,92 +26,71 @@ export const TasksScreen = () => {
   const isDark = moodColors.isDark;
   const isRocket = mood === 'rocket';
   
-  const { tasks, addTask, toggleTaskCompletion, deleteTask } = useTasks();
+  const { tasks, addTask, toggleTaskCompletion, deleteTask, editTask } = useTasks();
   const { addCoins } = useRewards();
+  const { showModal } = useFeedback();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [newTaskCoins, setNewTaskCoins] = useState('10'); // Default 10 coins
 
-  // Separate tasks into active and completed
-  const activeTasks = tasks.filter(t => !t.isCompleted).sort((a, b) => b.createdAt - a.createdAt);
-  const completedTasks = tasks.filter(t => t.isCompleted).sort((a, b) => b.createdAt - a.createdAt);
+  // Tasks ordered by creation time
+  const sortedTasks = [...tasks].sort((a, b) => b.createdAt - a.createdAt);
 
   const handleToggleTask = (task: Task) => {
+    if (task.isCompleted) return; // Do nothing if already completed
     const wasJustCompleted = toggleTaskCompletion(task.id);
     if (wasJustCompleted) {
       addCoins(task.coinValue);
+      showModal({
+        title: 'Task Completed!',
+        message: 'Check your rewards to redeem earned coins for real rewards!',
+        type: 'success',
+      });
     }
   };
 
   const handleAddTask = () => {
     if (newTaskTitle.trim()) {
       const coinValue = parseInt(newTaskCoins, 10) || 10;
-      addTask(newTaskTitle.trim(), coinValue);
+      if (editingTaskId) {
+        editTask(editingTaskId, newTaskTitle.trim(), coinValue);
+      } else {
+        addTask(newTaskTitle.trim(), coinValue);
+      }
       setNewTaskTitle('');
       setNewTaskCoins('10');
+      setEditingTaskId(null);
       setIsModalVisible(false);
     }
   };
 
+  const handleEditTask = (task: Task) => {
+    setNewTaskTitle(task.title);
+    setNewTaskCoins(task.coinValue.toString());
+    setEditingTaskId(task.id);
+    setIsModalVisible(true);
+  };
+
   const renderTask = (task: Task) => {
-    const gradientColors = isRocket ? ['#38BDF8', '#818CF8'] : ['#FDE047', '#F59E0B'];
-
     return (
-      <View key={task.id} style={[styles.taskCard, task.isCompleted && styles.taskCardCompleted, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }]}>
-        <Pressable 
-          style={styles.checkboxContainer}
-          onPress={() => handleToggleTask(task)}
-        >
-          <View style={[
-            styles.checkbox,
-            task.isCompleted && styles.checkboxChecked,
-            isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)' },
-            task.isCompleted && isRocket && { backgroundColor: '#BEF264', borderColor: '#BEF264' }
-          ]}>
-            {task.isCompleted && <Ionicons name="checkmark" size={16} color={isRocket ? '#0F172A' : '#FFFFFF'} />}
-          </View>
-        </Pressable>
-
-        <View style={styles.taskInfo}>
-          <Text style={[
-            styles.taskTitle,
-            isRocket && { color: '#FFFFFF' },
-            task.isCompleted && styles.taskTitleCompleted,
-            task.isCompleted && isRocket && { color: 'rgba(255, 255, 255, 0.5)' }
-          ]} numberOfLines={2}>
-            {task.title}
-          </Text>
-        </View>
-
-        <View style={styles.rightContent}>
-          <View style={[styles.coinPill, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-            <Text style={[styles.coinText, isRocket && { color: '#FFFFFF' }]}>+{task.coinValue}</Text>
-            <FontAwesome5 name="coins" size={12} color={isRocket ? '#FFFFFF' : '#F59E0B'} style={{ marginLeft: 4 }} />
-          </View>
-          <Pressable onPress={() => deleteTask(task.id)} style={{ padding: 4, marginLeft: 8 }}>
-            <Ionicons name="trash-outline" size={20} color={isRocket ? 'rgba(255, 255, 255, 0.5)' : theme.colors.errorSoft} />
-          </Pressable>
-        </View>
-      </View>
+      <SwipeableTaskCard
+        key={task.id}
+        task={task}
+        onToggle={handleToggleTask}
+        onEdit={handleEditTask}
+        onDelete={deleteTask}
+      />
     );
   };
 
   return (
     <View style={styles.container}>
       <GlobalBackground />
-      <View style={[styles.header, { paddingTop: insets.top + theme.spacing.md }]}>
-        <Pressable 
-          style={[styles.backButton, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
-        </Pressable>
-        <Text style={[styles.headerTitle, { color: isDark ? '#FFFFFF' : theme.colors.text }]}>Tasks</Text>
-        <View style={{ width: 40 }} />
-      </View>
 
       <ScreenWrapper transparent>
+        <TopBar title="Tasks" onBack={() => navigation.goBack()} />
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           
           {tasks.length === 0 ? (
@@ -118,33 +100,21 @@ export const TasksScreen = () => {
               <Text style={[styles.emptyText, isDark && { color: 'rgba(255,255,255,0.7)' }]}>Add some tasks to start earning coins!</Text>
             </View>
           ) : (
-            <>
-              {activeTasks.length > 0 && (
-                <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, isDark && { color: '#FFFFFF' }]}>To Do</Text>
-                  {activeTasks.map(renderTask)}
-                </View>
-              )}
-
-              {completedTasks.length > 0 && (
-                <View style={styles.section}>
-                  <Text style={[styles.sectionTitle, isDark && { color: '#FFFFFF' }]}>Completed</Text>
-                  {completedTasks.map(renderTask)}
-                </View>
-              )}
-            </>
+            <View style={styles.section}>
+              {sortedTasks.map(renderTask)}
+            </View>
           )}
+
+          <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
+            <Button 
+              title="Add a New Task" 
+              onPress={() => setIsModalVisible(true)}
+              style={styles.addButton}
+              variant="primary"
+            />
+          </View>
         </ScrollView>
       </ScreenWrapper>
-
-      <View style={[styles.footer, { paddingBottom: insets.bottom + 80 }]}>
-        <Button 
-          title="Add a New Task" 
-          onPress={() => setIsModalVisible(true)}
-          style={styles.addButton}
-          variant="primary"
-        />
-      </View>
 
       <Modal
         visible={isModalVisible}
@@ -154,7 +124,9 @@ export const TasksScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, isRocket && { backgroundColor: '#1E293B', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }]}>
-            <Text style={[styles.modalTitle, isDark && { color: '#FFFFFF' }]}>New Task</Text>
+            <Text style={[styles.modalTitle, isDark && { color: '#FFFFFF' }]}>
+              {editingTaskId ? 'Edit Task' : 'New Task'}
+            </Text>
             
             <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }]}>What needs to be done?</Text>
             <TextInput
@@ -230,7 +202,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: theme.spacing.lg,
-    paddingBottom: 120, // Space for the floating button
+    paddingBottom: 160, // Match spacing on other screens of the app
   },
   section: {
     marginBottom: theme.spacing.xl,
@@ -285,21 +257,9 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   rightContent: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
-  },
-  coinPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(245, 158, 11, 0.1)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  coinText: {
-    fontFamily: FONTS.semiBold,
-    fontSize: 12,
-    color: '#F59E0B',
+    gap: 4,
   },
   emptyState: {
     alignItems: 'center',
@@ -319,18 +279,11 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
     textAlign: 'center',
   },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: theme.spacing.lg,
-    alignItems: 'center',
-  },
   addButton: {
     width: '100%',
     maxWidth: 340,
-    backgroundColor: theme.colors.primary,
+    backgroundColor: '#BEF264', // Match the green CTA color from MyRewardsScreen add button
+    borderColor: '#BEF264',
     ...theme.shadows.medium,
   },
   modalOverlay: {

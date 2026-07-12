@@ -12,6 +12,7 @@ export interface Task {
 interface TasksContextType {
   tasks: Task[];
   addTask: (title: string, coinValue: number) => void;
+  editTask: (id: string, title: string, coinValue: number) => void;
   toggleTaskCompletion: (id: string) => boolean; // Returns true if it was just completed
   deleteTask: (id: string) => void;
 }
@@ -64,6 +65,15 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setTasks(prev => [...prev, newTask]);
   };
 
+  const editTask = (id: string, title: string, coinValue: number) => {
+    setTasks(prev => prev.map(task => {
+      if (task.id === id) {
+        return { ...task, title, coinValue };
+      }
+      return task;
+    }));
+  };
+
   const toggleTaskCompletion = (id: string) => {
     let wasCompleted = false;
     setTasks(prev => prev.map(task => {
@@ -83,7 +93,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   return (
-    <TasksContext.Provider value={{ tasks, addTask, toggleTaskCompletion, deleteTask }}>
+    <TasksContext.Provider value={{ tasks, addTask, editTask, toggleTaskCompletion, deleteTask }}>
       {children}
     </TasksContext.Provider>
   );

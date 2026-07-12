@@ -38,8 +38,8 @@ export const AppNavigator = () => {
             iconName = 'bulb-outline';
           } else if (route.name === 'MyRewards') {
             return <FontAwesome5 name="coins" size={size - 2} color={color} />;
-          } else if (route.name === 'Puzzles') {
-            iconName = 'extension-puzzle-outline';
+          } else if (route.name === 'Activities') {
+            iconName = 'game-controller-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -47,8 +47,8 @@ export const AppNavigator = () => {
         tabBarLabel: ({ focused, color }) => {
           let label = '';
           if (route.name === 'Home') label = 'Home';
-          else if (route.name === 'NewQuiz') label = 'Quiz Library';
-          else if (route.name === 'Puzzles') label = 'Activities';
+          else if (route.name === 'NewQuiz') label = 'Earn Coins';
+          else if (route.name === 'Activities') label = 'Play';
           else if (route.name === 'MyRewards') label = 'My Rewards';
           return (
             <Text style={{
@@ -100,12 +100,12 @@ export const AppNavigator = () => {
       <Tab.Screen 
         name="NewQuiz" 
         component={QuizLibraryNavigator} 
-        options={{ tabBarLabel: 'Quiz Library' }}
+        options={{ tabBarLabel: 'Earn Coins' }}
       />
       <Tab.Screen 
-        name="Puzzles" 
+        name="Activities" 
         component={PuzzleNavigator} 
-        options={{ tabBarLabel: 'Activities' }}
+        options={{ tabBarLabel: 'Play' }}
       />
       <Tab.Screen 
         name="MyRewards" 
