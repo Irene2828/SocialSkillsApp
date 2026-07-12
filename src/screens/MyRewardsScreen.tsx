@@ -390,7 +390,7 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar title="Your Rewards" />
+        <TopBar title="" />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
@@ -407,7 +407,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="gift-outline" size={18} color={activeTab === 'available' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>All Rewards</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>All Rewards</Text>
             </View>
           </Pressable>
           <Pressable 
@@ -416,7 +416,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="lock-open-outline" size={18} color={activeTab === 'unlocked' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Unlocked</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>Unlocked</Text>
             </View>
           </Pressable>
         </View>

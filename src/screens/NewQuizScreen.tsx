@@ -881,7 +881,7 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <TopBar title="Earn Coins" />
+        <TopBar title="" />
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
@@ -890,7 +890,7 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="document-text-outline" size={18} color={activeTab === 'quizzes' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>My Quizzes</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>My Quizzes</Text>
             </View>
           </Pressable>
           <Pressable 
@@ -899,7 +899,7 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="checkbox-outline" size={18} color={activeTab === 'tasks' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>My Tasks</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>My Tasks</Text>
             </View>
           </Pressable>
         </View>

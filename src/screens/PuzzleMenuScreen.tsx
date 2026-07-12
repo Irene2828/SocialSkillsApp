@@ -29,7 +29,7 @@ export const PuzzleMenuScreen = () => {
     <View style={styles.container}>
       <GlobalBackground />
       <View style={{ paddingTop: insets.top }}>
-        <TopBar title="Play" onBack={() => navigation.goBack()} />
+        <TopBar title="" onBack={() => navigation.goBack()} />
       </View>
       <ScreenWrapper transparent>
         <View style={styles.content}>

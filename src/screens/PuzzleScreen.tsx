@@ -462,7 +462,7 @@ export const PuzzleScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         <TopBar 
-          title="Puzzles"
+          title=""
           onBack={navigation.canGoBack() ? () => navigation.goBack() : undefined}
         />
 

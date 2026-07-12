@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { theme, FONTS } from '../theme';
 import { SettingsModal } from './SettingsModal';
+import { GradientIcon } from './GradientIcon';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface TopBarProps {
@@ -32,7 +33,11 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : !hideHome ? (
             <Pressable onPress={() => navigation.navigate('Home')} style={{ padding: 8, marginLeft: -8 }}>
-              <Ionicons name="home-outline" size={24} color={textColor} />
+              {!isRocket ? (
+                <GradientIcon iconFamily="Ionicons" name="home-outline" size={24} />
+              ) : (
+                <Ionicons name="home-outline" size={24} color={textColor} />
+              )}
             </Pressable>
           ) : null}
         </View>
