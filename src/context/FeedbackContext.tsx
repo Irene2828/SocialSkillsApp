@@ -96,7 +96,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
   const renderToast = () => {
     if (!toastVisible) return null;
     return (
-      <View style={[styles.toastWrapper, { top: insets.top + 60 }]}>
+      <View style={[styles.toastWrapper, { bottom: insets.bottom + 100 }]}>
         <View style={styles.toastChip}>
           <Ionicons name="checkmark-circle-outline" size={20} color={theme.colors.success} style={{ marginRight: 8 }} />
           <Text style={styles.toastText}>{toastMessage}</Text>

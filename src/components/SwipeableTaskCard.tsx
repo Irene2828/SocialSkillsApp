@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -36,6 +36,12 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
   const translateX = useRef(new Animated.Value(0)).current;
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    if (task.isCompleted) {
+      Animated.timing(translateX, { toValue: 0, duration: 200, useNativeDriver: true }).start(() => setIsOpen(false));
+    }
+  }, [task.isCompleted]);
+
   const gradientColors = [
     '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
     '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
@@ -45,7 +51,7 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gs) =>
-        Math.abs(gs.dx) > 10 && Math.abs(gs.dx) > Math.abs(gs.dy),
+        !task.isCompleted && Math.abs(gs.dx) > 10 && Math.abs(gs.dx) > Math.abs(gs.dy),
       onPanResponderMove: (_, gs) => {
         // Only allow left-swipe
         const x = Math.min(0, Math.max(-ACTION_WIDTH, gs.dx + (isOpen ? -ACTION_WIDTH : 0)));
@@ -75,7 +81,8 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
   return (
     <View style={styles.wrapper}>
       {/* Action buttons revealed behind the card */}
-      <View style={styles.actionsContainer}>
+      {!task.isCompleted && (
+        <View style={styles.actionsContainer}>
         <Pressable
           style={[styles.actionBtn, styles.editBtn]}
           onPress={() => {
@@ -95,7 +102,8 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
           <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
           <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
-      </View>
+        </View>
+      )}
 
       {/* Foreground Task Card */}
       <Animated.View
@@ -109,6 +117,7 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
           <Pressable 
             style={[styles.checkboxContainer, task.isCompleted && { opacity: 0.5 }]}
             onPress={() => onToggle(task)}
+            disabled={task.isCompleted}
           >
             <View style={[
               styles.checkbox,
@@ -147,6 +156,35 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
               </View>
             </View>
           </View>
+
+          {task.isCompleted && (
+            <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
+              <View style={[styles.receivedChip, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+                <Ionicons name="checkmark-circle-outline" size={16} color={isRocket ? '#FFFFFF' : theme.colors.text} style={{ marginRight: 4 }} />
+                <Text style={[styles.receivedText, isRocket && { color: '#FFFFFF' }]}>Task Done</Text>
+              </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
+                <Pressable 
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    onDelete(task.id);
+                  }}
+                  style={{ padding: 4, marginRight: 8 }}
+                >
+                  <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
+                </Pressable>
+                <Pressable 
+                  onPress={(e) => {
+                    e.stopPropagation();
+                    onToggle(task);
+                  }}
+                  style={{ padding: 4, marginRight: 4 }}
+                >
+                  <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
+                </Pressable>
+              </View>
+            </View>
+          )}
         </View>
       </Animated.View>
     </View>
@@ -210,7 +248,9 @@ const styles = StyleSheet.create({
     ...theme.shadows.soft,
   },
   taskCardCompleted: {
-    opacity: 0.6,
+    backgroundColor: theme.colors.errorSoft,
+    borderColor: theme.colors.border,
+    opacity: 0.7,
   },
   checkboxContainer: {
     padding: 4,
@@ -240,5 +280,18 @@ const styles = StyleSheet.create({
   taskTitleCompleted: {
     textDecorationLine: 'line-through',
     color: theme.colors.secondaryText,
+  },
+  receivedChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.neutralGrey,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: theme.spacing.xs,
+    borderRadius: theme.borderRadius.full,
+    marginLeft: theme.spacing.md,
+  },
+  receivedText: {
+    ...theme.typography.tab,
+    color: theme.colors.text,
   },
 });

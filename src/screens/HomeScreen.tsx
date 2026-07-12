@@ -185,7 +185,7 @@ export const HomeScreen = () => {
         style={[StyleSheet.absoluteFill, { opacity: 0.15, resizeMode: 'repeat' }]} 
       />
       <ScreenWrapper transparent>
-        <TopBar title="" />
+        <TopBar title="" hideHome />
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
@@ -216,7 +216,7 @@ export const HomeScreen = () => {
             <Button
               title="START"
               iconName="rocket-outline"
-              onPress={() => navigation.navigate('NewQuiz')}
+              onPress={() => navigation.navigate('AppTabs')}
               style={styles.actionButton}
               textStyle={{ fontFamily: FONTS.semiBold, fontWeight: '600' }}
             />

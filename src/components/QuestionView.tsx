@@ -46,6 +46,11 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
@@ -258,10 +263,29 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   <View style={styles.coinRewardContainer}>
                     <FontAwesome5 
                       name="coins" 
-                      size={24} 
-                      color="#4B5563" 
+                      size={20} 
+                      color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                      style={{ marginRight: 8 }}
                     />
-                    <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
+                    <View style={{ flexDirection: 'row' }}>
+                      {'+1'.split('').map((char, index) => (
+                        <Text 
+                          key={`earn-part1-${index}`} 
+                          style={[
+                            styles.coinRewardText,
+                            { fontFamily: FONTS.bold, fontSize: 20, marginLeft: 0 },
+                            isRocket && { color: '#FFFFFF' },
+                            { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                          ]}
+                        >
+                          {char}
+                        </Text>
+                      ))}
+                      <Text style={[
+                        styles.coinRewardText,
+                        { fontFamily: FONTS.bold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                      ]}> Coin Earned!</Text>
+                    </View>
                   </View>
                 )}
 
@@ -363,10 +387,29 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <View style={styles.coinRewardContainer}>
                       <FontAwesome5 
                         name="coins" 
-                        size={24} 
-                        color="#4B5563" 
+                        size={20} 
+                        color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                        style={{ marginRight: 8 }}
                       />
-                      <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
+                      <View style={{ flexDirection: 'row' }}>
+                        {'+1'.split('').map((char, index) => (
+                          <Text 
+                            key={`earn-part2-${index}`} 
+                            style={[
+                              styles.coinRewardText,
+                              { fontFamily: FONTS.bold, fontSize: 20, marginLeft: 0 },
+                              isRocket && { color: '#FFFFFF' },
+                              { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                            ]}
+                          >
+                            {char}
+                          </Text>
+                        ))}
+                        <Text style={[
+                          styles.coinRewardText,
+                          { fontFamily: FONTS.bold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                        ]}> Coin Earned!</Text>
+                      </View>
                     </View>
                   )}
 

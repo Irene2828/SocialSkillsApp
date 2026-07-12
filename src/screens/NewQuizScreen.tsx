@@ -59,7 +59,7 @@ export const NewQuizScreen = () => {
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();
-  const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz } = useQuizContext();
+  const { customCategories, customQuestions, removeCustomQuiz, addCustomQuiz, renameCustomQuiz, renamedCategories } = useQuizContext();
   const { showModal, showToast } = useFeedback();
   const navigation = useNavigation<any>();
   const { mood } = useMood();
@@ -83,14 +83,17 @@ export const NewQuizScreen = () => {
   const [newTaskCoins, setNewTaskCoins] = useState('10');
 
   const handleToggleTask = (task: Task) => {
-    if (task.isCompleted) return;
     const wasJustCompleted = toggleTaskCompletion(task.id);
     if (wasJustCompleted) {
       addCoins(task.coinValue);
-      showModal({
-        title: 'Task Completed!',
-        message: 'Check your rewards to redeem earned coins for real rewards!',
-        type: 'success',
+      showToast({
+        message: `Task completed! +${task.coinValue} coins`,
+      });
+    } else if (task.isCompleted) {
+      // It was completed and is now being undone
+      addCoins(-task.coinValue);
+      showToast({
+        message: `Task undone. ${task.coinValue} coins deducted.`,
       });
     }
   };
@@ -124,7 +127,6 @@ export const NewQuizScreen = () => {
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
     ...IQ_CATEGORIES,
-    { id: 'custom_quiz', title: 'Custom Quiz', description: 'All AI-generated questions', icon: 'color-wand-outline', isCustom: true },
     { id: 'new_folder_1', title: 'New Folder', description: '0 quizzes', icon: 'folder-outline', isCustom: false },
     { id: 'new_folder_2', title: 'New Quiz', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
   ], []);
@@ -145,7 +147,10 @@ export const NewQuizScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
 
   const handleOpenActionMenu = (category: any) => {
-    setActionMenuCategory(category);
+    setActionMenuCategory({
+      ...category,
+      title: renamedCategories[category.id] || category.title
+    });
     setShowActionMenu(true);
   };
   const [aiPromptText, setAiPromptText] = useState('');
@@ -518,7 +523,13 @@ export const NewQuizScreen = () => {
     if (newPin.length === 4) {
       if (newPin === '1111') {
         if (quizToDelete) {
-          const isBuiltIn = [...QUIZ_CATEGORIES, ...IQ_CATEGORIES, { id: 'new_folder_1' }, { id: 'new_folder_2' }].some(c => c.id === quizToDelete);
+          const isBuiltIn = [
+            'general_quiz',
+            'iq_word_problems',
+            'custom_quiz',
+            'new_folder_1',
+            'new_folder_2'
+          ].includes(quizToDelete);
           if (isBuiltIn) {
             const newHidden = [...hiddenCategories, quizToDelete];
             setHiddenCategories(newHidden);
@@ -773,7 +784,10 @@ export const NewQuizScreen = () => {
     // If we're inside a folder, render the folder contents view
     if (activeFolderId) {
       const currentFolder = folders.find(f => f.id === activeFolderId);
-      const quizzesInFolder = customCategories.filter(c => c.folderId === activeFolderId);
+      const quizzesInFolder = customCategories.filter(c => c.folderId === activeFolderId).map(c => ({
+        ...c,
+        title: renamedCategories[c.id] || c.title
+      }));
       const subFolders = folders.filter(f => f.parentId === activeFolderId);
 
       return (
@@ -833,10 +847,11 @@ export const NewQuizScreen = () => {
 
     // Root library view (no folder open)
     let builtInCategories = allCategories.filter(
-      c => c.id === 'general_quiz' || 
-           (c.id === 'custom_quiz' && customQuestions.length > 0) || 
-           c.id === 'iq_word_problems'
-    );
+      c => c.id === 'general_quiz' || c.id === 'iq_word_problems'
+    ).map(c => ({
+      ...c,
+      title: renamedCategories[c.id] || c.title
+    }));
     builtInCategories = builtInCategories.filter(c => !hiddenCategories.includes(c.id));
 
     // Folders (root level only)
@@ -845,7 +860,10 @@ export const NewQuizScreen = () => {
     // Loose AI-generated quizzes (both social/custom and math)
     const looseCategoryCards = customCategories.filter(
       c => (c.id.startsWith('custom_ai') || c.id.startsWith('math_ai')) && !c.folderId
-    );
+    ).map(c => ({
+      ...c,
+      title: renamedCategories[c.id] || c.title
+    }));
 
     const sortedTasks = [...tasks].sort((a, b) => b.createdAt - a.createdAt);
 
@@ -863,20 +881,26 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <TopBar title="Earn Points" />
+        <TopBar title="Earn Coins" />
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
             style={[styles.tab, activeTab === 'quizzes' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
             onPress={() => setActiveTab('quizzes')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Quizzes</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Ionicons name="document-text-outline" size={18} color={activeTab === 'quizzes' ? '#374151' : subTextColor} />
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>My Quizzes</Text>
+            </View>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'tasks' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
             onPress={() => setActiveTab('tasks')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Tasks</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Ionicons name="checkbox-outline" size={18} color={activeTab === 'tasks' ? '#374151' : subTextColor} />
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>My Tasks</Text>
+            </View>
           </Pressable>
         </View>
 
@@ -1080,14 +1104,15 @@ export const NewQuizScreen = () => {
               </Pressable>
             </View>
             <View style={{ flex: 2, alignItems: 'center' }}>
-              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }]}>
                 <LinearGradient
                   colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
                   style={StyleSheet.absoluteFill}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 0, y: 1 }}
                 />
-                <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>Topic: {categoryName}</Text>
+                <Ionicons name="document-text-outline" size={16} color={baseTextColor} style={{ marginRight: 4 }} />
+                <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>{categoryName}</Text>
               </View>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -1236,24 +1261,28 @@ export const NewQuizScreen = () => {
                 <View style={styles.completedCoinRow}>
                   <FontAwesome5 
                     name="coins" 
-                    size={24} 
-                    color={gradientColors[0]} 
+                    size={22} 
+                    color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                    style={{ marginRight: 8 }}
                   />
-                  <View style={{ flexDirection: 'row', marginLeft: 8 }}>
-                    <Text style={{ ...styles.completedCoinText, marginRight: 0, color: gradientColors[0] }}>+</Text>
-                    {coinsEarned.toString().split('').map((char, index) => (
+                  <View style={{ flexDirection: 'row' }}>
+                    {('+' + coinsEarned).split('').map((char, index) => (
                       <Text 
                         key={`earn-${index}`} 
                         style={[
                           styles.completedCoinText, 
-                          { marginLeft: 0 },
-                          { color: gradientColors[Math.min(1 + index, gradientColors.length - 1)] }
+                          { fontFamily: FONTS.bold, fontSize: 22, marginLeft: 0 },
+                          isRocket && { color: '#FFFFFF' },
+                          { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
                         ]}
                       >
                         {char}
                       </Text>
                     ))}
-                    <Text style={{ ...styles.completedCoinText, marginLeft: 6, color: gradientColors[Math.min(3, gradientColors.length - 1)] }}>Coins Earned!</Text>
+                    <Text style={[
+                      styles.completedCoinText, 
+                      { fontFamily: FONTS.bold, fontSize: 22, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(5, gradientColors.length - 1)] }
+                    ]}> Coins Earned!</Text>
                   </View>
                 </View>
 
@@ -1570,8 +1599,7 @@ export const NewQuizScreen = () => {
               
               <View style={{ width: '100%', gap: theme.spacing.sm }}>
                 <Pressable 
-                  style={[styles.modalOptionCard, !actionMenuCategory?.isCustom && { opacity: 0.5 }]}
-                  disabled={!actionMenuCategory?.isCustom}
+                  style={styles.modalOptionCard}
                   onPress={() => {
                     setShowActionMenu(false);
                     handleOpenRename(actionMenuCategory);

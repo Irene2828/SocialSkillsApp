@@ -26,7 +26,7 @@ import { TopBar } from '../components/TopBar';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
 export const MyRewardsScreen = () => {
-  const { coinBalance, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
+  const { coinBalance, deductCoins, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();
   const { mood } = useMood();
@@ -164,6 +164,27 @@ export const MyRewardsScreen = () => {
   const [showAddForm, setShowAddForm] = useState(false);
 
   const [highlightFirstItem, setHighlightFirstItem] = useState(false);
+
+  // Reset Balance flow
+  const [showResetPin, setShowResetPin] = useState(false);
+  const [resetPin, setResetPin] = useState('');
+
+  const handleResetPinChange = (text: string) => {
+    const newPin = text.replace(/[^0-9]/g, '');
+    setResetPin(newPin);
+
+    if (newPin.length === 4) {
+      if (newPin === '1111') {
+        deductCoins(coinBalance);
+        setShowResetPin(false);
+        setResetPin('');
+        showToast({ message: 'Points reset to 0' });
+      } else {
+        triggerShake();
+        setResetPin('');
+      }
+    }
+  };
 
   const handleApproveReward = () => {
     setShowPinInput(true);
@@ -369,13 +390,13 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar title="Redeem Points" />
+        <TopBar title="Your Rewards" />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
         <View style={styles.topSection}>
-          <CoinBalanceCard balance={coinBalance} />
+          <CoinBalanceCard balance={coinBalance} onReset={() => setShowResetPin(true)} />
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
@@ -384,13 +405,19 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, activeTab === 'available' && styles.activeTab, activeTab === 'available' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
             onPress={() => setActiveTab('available')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>All Rewards</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Ionicons name="gift-outline" size={18} color={activeTab === 'available' ? '#374151' : subTextColor} />
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>All Rewards</Text>
+            </View>
           </Pressable>
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab, activeTab === 'unlocked' && { shadowOpacity: 0.05, shadowColor: '#000' }]} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Unlocked</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Ionicons name="lock-open-outline" size={18} color={activeTab === 'unlocked' ? '#374151' : subTextColor} />
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Unlocked</Text>
+            </View>
           </Pressable>
         </View>
 
@@ -446,6 +473,34 @@ export const MyRewardsScreen = () => {
       </ScrollView>
       {renderSuccessModal()}
       </ScreenWrapper>
+
+      {/* Reset Balance PIN Modal */}
+      <Modal visible={showResetPin} transparent animationType="fade">
+        <Pressable style={{ flex: 1 }} onPress={() => {
+          setShowResetPin(false);
+          setResetPin('');
+        }}>
+          <View style={styles.modalOverlay}>
+            <Pressable style={styles.successCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Animated.View style={[styles.pinContainer, { transform: [{ translateX: shakeAnim }] }]}>
+                <Text style={styles.pinTitle}>Enter Parent PIN to Reset Coins</Text>
+                <TextInput
+                  style={styles.pinInput}
+                  value={resetPin}
+                  onChangeText={handleResetPinChange}
+                  keyboardType="number-pad"
+                  maxLength={4}
+                  autoFocus
+                  placeholder="****"
+                  autoComplete="off"
+                  autoCorrect={false}
+                  importantForAutofill="no"
+                />
+              </Animated.View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
 
       <Modal visible={showFulfillPin} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => {

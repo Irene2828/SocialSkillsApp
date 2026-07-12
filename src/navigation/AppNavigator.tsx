@@ -49,10 +49,10 @@ const AppTabs = () => {
         },
         tabBarLabel: ({ focused, color }) => {
           let label = '';
-          if (route.name === 'NewQuiz') label = 'Earn Points';
+          if (route.name === 'NewQuiz') label = 'Earn Coins';
           else if (route.name === 'Puzzles') label = 'Puzzles';
-          else if (route.name === 'Drawing') label = 'Drawing';
-          else if (route.name === 'MyRewards') label = 'Redeem Points';
+          else if (route.name === 'Drawing') label = 'Draw';
+          else if (route.name === 'MyRewards') label = 'Rewards';
           return (
             <Text style={{
               fontFamily: focused ? FONTS.semiBold : FONTS.medium,
@@ -98,7 +98,7 @@ const AppTabs = () => {
       <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
-        options={{ tabBarLabel: 'Earn Points' }}
+        options={{ tabBarLabel: 'Earn Coins' }}
       />
       <Tab.Screen 
         name="Puzzles" 
@@ -108,12 +108,12 @@ const AppTabs = () => {
       <Tab.Screen 
         name="Drawing" 
         component={DrawingBoardScreen} 
-        options={{ tabBarLabel: 'Drawing' }}
+        options={{ tabBarLabel: 'Draw' }}
       />
       <Tab.Screen 
         name="MyRewards" 
         component={MyRewardsScreen} 
-        options={{ tabBarLabel: 'Redeem Points' }}
+        options={{ tabBarLabel: 'Rewards' }}
       />
     </Tab.Navigator>
   );
@@ -122,8 +122,8 @@ const AppTabs = () => {
 export const AppNavigator = () => {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="AppTabs" component={AppTabs} />
     </Stack.Navigator>
   );
 };

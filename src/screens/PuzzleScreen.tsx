@@ -445,8 +445,7 @@ export const PuzzleScreen = () => {
             <Button 
               title="Next Puzzle" 
               onPress={handleNextPuzzle}
-              style={{ backgroundColor: '#22C55E', width: '100%', marginBottom: theme.spacing.md, borderColor: '#16A34A' }}
-              textStyle={{ color: '#FFFFFF' }}
+              style={{ width: '100%', marginBottom: theme.spacing.md, backgroundColor: theme.colors.primary, borderColor: theme.colors.primary }}
             />
 
             <Pressable style={styles.linkButton} onPress={() => setSelectedPuzzle(null)}>
@@ -700,14 +699,15 @@ export const PuzzleScreen = () => {
                     </Pressable>
                   </View>
                   <View style={{ flex: 2, alignItems: 'center' }}>
-                    <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden' }]}>
+                    <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }]}>
                       <LinearGradient
                         colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
                         style={StyleSheet.absoluteFill}
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 1 }}
                       />
-                      <Text style={[styles.screenFolderTabText, { color: theme.colors.text }]} numberOfLines={1}>Puzzle: {selectedPuzzle?.name}</Text>
+                      <Ionicons name="extension-puzzle-outline" size={16} color={theme.colors.text} style={{ marginRight: 4 }} />
+                      <Text style={[styles.screenFolderTabText, { color: theme.colors.text }]} numberOfLines={1}>{selectedPuzzle?.name}</Text>
                     </View>
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>

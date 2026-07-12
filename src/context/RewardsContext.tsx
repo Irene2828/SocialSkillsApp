@@ -127,8 +127,7 @@ export const RewardsProvider: React.FC<{ children: React.ReactNode }> = ({ child
   };
 
   const addCoins = (amount: number) => {
-    const validAmount = Math.max(0, amount);
-    const newBalance = coinBalance + validAmount;
+    const newBalance = Math.max(0, coinBalance + amount);
     setCoinBalance(newBalance);
     saveCoins(newBalance);
   };

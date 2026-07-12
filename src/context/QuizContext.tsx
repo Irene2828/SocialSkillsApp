@@ -6,6 +6,7 @@ interface QuizContextData {
   customCategories: QuizCategory[];
   customQuestions: Question[];
   folders: QuizFolder[];
+  renamedCategories: Record<string, string>;
   addCustomQuiz: (category: QuizCategory, questions: Question[]) => void;
   removeCustomQuiz: (categoryId: string) => void;
   renameCustomQuiz: (categoryId: string, newTitle: string) => void;
@@ -25,6 +26,30 @@ const MOCK_AI_CATEGORY: QuizCategory = {
   icon: 'ear-outline',
   isCustom: true
 };
+
+const MOCK_MATH_CATEGORY: QuizCategory = {
+  id: 'math_ai_quiz1',
+  title: 'Quiz 1',
+  description: 'Practice basic math concepts!',
+  icon: 'calculator-outline',
+  isCustom: true,
+  folderId: 'math_quiz_folder'
+};
+
+const MOCK_MATH_QUESTIONS: Question[] = [
+  {
+    id: 'q_math_1',
+    category: 'math_ai_quiz1',
+    difficulty: 'Easy',
+    scenario: 'What is 5 + 3?',
+    options: ['7', '8', '9'],
+    correctAnswerIndex: 1,
+    explanation: '5 + 3 equals 8.',
+    whyOptions: ['Because it is the sum', 'Because 5 is more than 3', 'Because it is the rule'],
+    correctWhyIndex: 0,
+    whyConfirmation: 'Addition is combining two numbers to find the total.'
+  }
+];
 
 const MOCK_AI_QUESTIONS: Question[] = [
   {
@@ -133,6 +158,7 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   const [customCategories, setCustomCategories] = useState<QuizCategory[]>([]);
   const [customQuestions, setCustomQuestions] = useState<Question[]>([]);
   const [folders, setFolders] = useState<QuizFolder[]>([]);
+  const [renamedCategories, setRenamedCategories] = useState<Record<string, string>>({});
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
@@ -141,12 +167,28 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
         const storedCategories = await safeStorage.get<QuizCategory[]>('@custom_quiz_categories', []);
         const storedQuestions = await safeStorage.get<Question[]>('@custom_quiz_questions', []);
         const storedFolders = await safeStorage.get<QuizFolder[]>('@quiz_folders', []);
+        const storedRenamed = await safeStorage.get<Record<string, string>>('@renamed_categories', {});
         
-        // Merge with our hardcoded AI mock so it's always there for testing if needed
-        // but normally it would just load stored
-        setCustomCategories([...MOCK_AI_CATEGORY ? [MOCK_AI_CATEGORY] : [], ...storedCategories.filter(c => c.id !== 'c_listening_ai')]);
-        setCustomQuestions([...MOCK_AI_QUESTIONS ? MOCK_AI_QUESTIONS : [], ...storedQuestions.filter(q => q.category !== 'c_listening_ai')]);
-        setFolders(storedFolders);
+        // Merge with our hardcoded AI mocks so they are always there for testing if needed
+        const initialCategories = [
+          ...MOCK_AI_CATEGORY ? [MOCK_AI_CATEGORY] : [],
+          MOCK_MATH_CATEGORY
+        ];
+        const initialQuestions = [
+          ...MOCK_AI_QUESTIONS ? MOCK_AI_QUESTIONS : [],
+          ...MOCK_MATH_QUESTIONS
+        ];
+
+        setCustomCategories([...initialCategories, ...storedCategories.filter(c => c.id !== 'c_listening_ai' && c.id !== 'math_ai_quiz1')]);
+        setCustomQuestions([...initialQuestions, ...storedQuestions.filter(q => q.category !== 'c_listening_ai' && q.category !== 'math_ai_quiz1')]);
+        setRenamedCategories(storedRenamed);
+
+        // Default folder Math Quiz
+        let mergedFolders = [...storedFolders];
+        if (!mergedFolders.some(f => f.id === 'math_quiz_folder')) {
+          mergedFolders.push({ id: 'math_quiz_folder', name: 'Math Quiz', tab: 'ai' });
+        }
+        setFolders(mergedFolders);
       } catch (e) {
         console.error('Failed to load custom quizzes', e);
       } finally {
@@ -185,8 +227,13 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   const renameCustomQuiz = (categoryId: string, newTitle: string) => {
     setCustomCategories(prev => {
       const newList = prev.map(c => c.id === categoryId ? { ...c, title: newTitle } : c);
-      safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai'));
+      safeStorage.set('@custom_quiz_categories', newList.filter(c => c.id !== 'c_listening_ai' && c.id !== 'math_ai_quiz1'));
       return newList;
+    });
+    setRenamedCategories(prev => {
+      const updated = { ...prev, [categoryId]: newTitle };
+      safeStorage.set('@renamed_categories', updated);
+      return updated;
     });
   };
 
@@ -265,7 +312,7 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
   if (!isLoaded) return null;
 
   return (
-    <QuizContext.Provider value={{ customCategories, customQuestions, folders, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, moveFolderToFolder, addFolder, removeFolder, renameFolder }}>
+    <QuizContext.Provider value={{ customCategories, customQuestions, folders, renamedCategories, addCustomQuiz, removeCustomQuiz, renameCustomQuiz, moveQuizToFolder, moveFolderToFolder, addFolder, removeFolder, renameFolder }}>
       {children}
     </QuizContext.Provider>
   );

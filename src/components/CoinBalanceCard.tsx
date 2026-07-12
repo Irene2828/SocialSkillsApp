@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, FONTS } from '../theme';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface CoinBalanceCardProps {
   balance: number;
+  onReset?: () => void;
 }
 
-export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => {
+export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onReset }) => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
@@ -38,6 +39,14 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
   return (
     <View style={styles.cardContainer}>
       <View style={[styles.card, glassStyle]}>
+        {onReset && (
+          <Pressable 
+            onPress={onReset}
+            style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, padding: 4 }}
+          >
+            <Ionicons name="refresh-outline" size={20} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} style={{ opacity: 0.6 }} />
+          </Pressable>
+        )}
         <View style={styles.content}>
           <Text style={[styles.earnedText, isRocket && { color: 'rgba(255, 255, 255, 0.75)' }, isRocket && glassTextShadow]}>You've earned:</Text>
           <View style={styles.balanceRow}>
@@ -77,7 +86,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance }) => 
               ))}
             </View>
           </View>
-          <Text style={[styles.subtitleText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, isRocket && glassTextShadow]}>Redeem points for rewards of your choice anytime!</Text>
+          <Text style={[styles.subtitleText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, isRocket && glassTextShadow]}>Redeem coins for rewards of your choice anytime!</Text>
         </View>
       </View>
     </View>

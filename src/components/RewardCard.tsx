@@ -124,10 +124,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   costText: {
-    ...theme.typography.body,
-    fontWeight: '600',
+    fontFamily: FONTS.bold,
+    fontSize: 14,
     color: theme.colors.text,
-    marginLeft: theme.spacing.xs,
   },
   redeemButton: {
     minWidth: 80,

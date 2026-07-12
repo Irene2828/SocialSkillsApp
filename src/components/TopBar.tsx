@@ -10,9 +10,10 @@ interface TopBarProps {
   title: string;
   onBack?: () => void;
   rightComponent?: React.ReactNode;
+  hideHome?: boolean;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome }) => {
   const navigation = useNavigation<any>();
   const [showSettings, setShowSettings] = useState(false);
   const { mood } = useMood();
@@ -29,11 +30,11 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent })
             <Pressable onPress={onBack} style={{ padding: 8, marginLeft: -8 }}>
               <Ionicons name="arrow-back" size={24} color={textColor} />
             </Pressable>
-          ) : (
+          ) : !hideHome ? (
             <Pressable onPress={() => navigation.navigate('Home')} style={{ padding: 8, marginLeft: -8 }}>
               <Ionicons name="home-outline" size={24} color={textColor} />
             </Pressable>
-          )}
+          ) : null}
         </View>
         
         <Text style={[styles.title, { color: textColor }]}>{title}</Text>
