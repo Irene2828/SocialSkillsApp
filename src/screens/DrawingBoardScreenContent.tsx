@@ -1,7 +1,7 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { View, StyleSheet, Pressable, Text, Dimensions } from 'react-native';
-import { Canvas, Path, Skia, SkPath } from '@shopify/react-native-skia';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView } from 'react-native';
+import { Canvas, Path } from '@shopify/react-native-skia';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -92,17 +92,6 @@ export const DrawingBoardScreen = () => {
 
   return (
     <GestureHandlerRootView style={styles.container}>
-      <View style={[styles.header, { paddingTop: insets.top + 10, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
-        <Pressable 
-          style={[styles.backButton, isDark && styles.backButtonDark]} 
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
-        </Pressable>
-        <Text style={[styles.title, { color: isDark ? '#FFFFFF' : theme.colors.text }]}>Drawing Board</Text>
-        <View style={styles.headerSpacer} />
-      </View>
-
       <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
           collapsable={false} 
@@ -138,40 +127,43 @@ export const DrawingBoardScreen = () => {
             ) : null}
           </Canvas>
         </View>
+
+        <Pressable 
+          style={[styles.absoluteBackButton, { top: insets.top + 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+        </Pressable>
       </View>
 
-      <View style={[styles.toolbar, { paddingBottom: insets.bottom + 80, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
-        <View style={styles.toolsRow}>
+      <View style={[styles.rightToolbar, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
+        <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
             <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
           </Pressable>
           
-          <View style={styles.divider} />
-
-          <View style={styles.strokeWidths}>
-            {STROKE_WIDTHS.map((sw) => (
-              <Pressable
-                key={sw.id}
-                style={[
-                  styles.strokeBtn,
-                  activeStrokeWidth === sw.value && styles.activeStrokeBtn,
-                  isDark && activeStrokeWidth === sw.value && { borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.1)' }
-                ]}
-                onPress={() => setActiveStrokeWidth(sw.value)}
-              >
-                <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : theme.colors.text} />
-              </Pressable>
-            ))}
-          </View>
-
-          <View style={styles.divider} />
-          
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
             <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
           </Pressable>
-        </View>
 
-        <View style={styles.colorPicker}>
+          <View style={styles.dividerHorizontal} />
+
+          {STROKE_WIDTHS.map((sw) => (
+            <Pressable
+              key={sw.id}
+              style={[
+                styles.strokeBtn,
+                activeStrokeWidth === sw.value && styles.activeStrokeBtn,
+                isDark && activeStrokeWidth === sw.value && { borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.1)' }
+              ]}
+              onPress={() => setActiveStrokeWidth(sw.value)}
+            >
+              <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : theme.colors.text} />
+            </Pressable>
+          ))}
+
+          <View style={styles.dividerHorizontal} />
+
           {COLORS.map((color) => (
             <Pressable
               key={color}
@@ -184,7 +176,7 @@ export const DrawingBoardScreen = () => {
               onPress={() => setActiveColor(color)}
             />
           ))}
-        </View>
+        </ScrollView>
       </View>
     </GestureHandlerRootView>
   );
@@ -193,73 +185,58 @@ export const DrawingBoardScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
-  },
-  header: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.md,
-    paddingBottom: theme.spacing.md,
-    ...theme.shadows.soft,
-    zIndex: 10,
-  },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.colors.neutralGrey,
-  },
-  backButtonDark: {
-    backgroundColor: 'rgba(255,255,255,0.1)',
-  },
-  title: {
-    ...theme.typography.heading,
-    fontSize: 20,
-  },
-  headerSpacer: {
-    width: 40,
+    backgroundColor: theme.colors.background,
   },
   canvasContainer: {
     flex: 1,
+    position: 'relative',
     overflow: 'hidden',
   },
-  toolbar: {
-    paddingTop: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
-    ...theme.shadows.glow,
-    borderTopLeftRadius: theme.borderRadius.lg,
-    borderTopRightRadius: theme.borderRadius.lg,
-  },
-  toolsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing.lg,
-  },
-  divider: {
-    width: 1,
-    height: 32,
-    backgroundColor: theme.colors.neutralGrey,
-    opacity: 0.5,
-  },
-  toolBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  strokeWidths: {
-    flexDirection: 'row',
-    gap: theme.spacing.sm,
-  },
-  strokeBtn: {
+  absoluteBackButton: {
+    position: 'absolute',
+    left: 16,
     width: 44,
     height: 44,
     borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    ...theme.shadows.soft,
+    zIndex: 100,
+  },
+  rightToolbar: {
+    width: 76,
+    alignItems: 'center',
+    ...theme.shadows.glow,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+  },
+  toolbarContent: {
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    paddingHorizontal: 8,
+  },
+  dividerHorizontal: {
+    width: 32,
+    height: 2,
+    backgroundColor: theme.colors.neutralGrey,
+    opacity: 0.3,
+    marginVertical: 4,
+    borderRadius: 1,
+  },
+  toolBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.03)',
+  },
+  strokeBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -268,23 +245,18 @@ const styles = StyleSheet.create({
   },
   activeStrokeBtn: {
     backgroundColor: theme.colors.neutralGrey,
-    borderColor: 'rgba(0,0,0,0.05)',
-  },
-  colorPicker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.sm,
+    borderColor: 'rgba(0,0,0,0.08)',
   },
   colorBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     borderWidth: 3,
     borderColor: 'transparent',
   },
   activeColorBtn: {
-    borderColor: 'rgba(0,0,0,0.15)',
-    transform: [{ scale: 1.1 }],
+    borderColor: 'rgba(0,0,0,0.2)',
+    transform: [{ scale: 1.15 }],
   }
 });
 
