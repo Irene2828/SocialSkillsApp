@@ -941,7 +941,7 @@ export const NewQuizScreen = () => {
 
   const getDisplayQuestion = (): Question => {
     const baseQuestion = currentQuestions[currentIndex] as Question;
-    const hasWhyData = baseQuestion && baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
+    const hasWhyData = false; // baseQuestion && baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
 
     if (!hasWhyData) return baseQuestion;
 
@@ -968,7 +968,7 @@ export const NewQuizScreen = () => {
   const renderInProgress = () => {
     if (currentQuestions.length === 0) return null;
     const baseQuestion = currentQuestions[currentIndex] as Question;
-    const hasWhyData = baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
+    const hasWhyData = false; // baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
 
     let categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     const customCat = customCategories.find(c => c.id === selectedCategory);
