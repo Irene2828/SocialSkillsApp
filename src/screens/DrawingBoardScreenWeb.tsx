@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Text, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -38,6 +38,25 @@ export const DrawingBoardScreenWeb = () => {
   const [activeColor, setActiveColor] = useState(COLORS[5]);
   const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
   const [currentPath, setCurrentPath] = useState<string>('');
+
+  const canvasRef = useRef<any>(null);
+
+  useEffect(() => {
+    const el = canvasRef.current;
+    if (el && typeof el.addEventListener === 'function') {
+      const preventScroll = (e: TouchEvent) => {
+        // Prevent Safari from scrolling the page when drawing
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+      };
+      // { passive: false } is required on iOS Safari to allow preventDefault
+      el.addEventListener('touchmove', preventScroll, { passive: false });
+      return () => {
+        el.removeEventListener('touchmove', preventScroll);
+      };
+    }
+  }, []);
 
   const getCoordinates = (e: any) => {
     let x = e.nativeEvent.locationX;
@@ -91,6 +110,7 @@ export const DrawingBoardScreenWeb = () => {
     <View style={styles.container}>
       <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
+          ref={canvasRef}
           collapsable={false} 
           style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent', touchAction: 'none' as any }]}
           onStartShouldSetResponder={() => true}
