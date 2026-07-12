@@ -252,6 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: theme.spacing.md,
     paddingHorizontal: 8,
+    paddingBottom: 40,
   },
   dividerHorizontal: {
     width: 32,

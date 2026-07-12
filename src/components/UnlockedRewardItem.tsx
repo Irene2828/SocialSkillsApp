@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, Animated, PanResponder } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { UnlockedReward } from '../data/types';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 
 interface UnlockedRewardItemProps {
   reward: UnlockedReward;
@@ -156,6 +156,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.button,
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
     marginBottom: theme.spacing.xs,
   },
   titleFulfilled: {

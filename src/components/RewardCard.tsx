@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Reward } from '../data/types';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 interface RewardCardProps {
@@ -105,6 +105,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.subheading,
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
     marginBottom: 4,
     textTransform: 'capitalize',
   },
