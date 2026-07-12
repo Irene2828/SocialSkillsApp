@@ -474,7 +474,7 @@ export const PuzzleScreen = () => {
           keyExtractor={(item) => item.id}
           key={numColumns}
           numColumns={numColumns}
-          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: theme.spacing.md }}
+          columnWrapperStyle={{ gap: theme.spacing.md, marginBottom: theme.spacing.md }}
           ListHeaderComponent={
             <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
               <Pressable 
