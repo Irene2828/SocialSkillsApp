@@ -1846,7 +1846,6 @@ const styles = StyleSheet.create({
   },
   bentoItem: {
     width: '100%',
-    marginBottom: theme.spacing.md,
   },
   emptyAiContainer: {
     alignItems: 'center',

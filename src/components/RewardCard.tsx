@@ -21,14 +21,37 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
   ];
   return (
     <View style={[styles.card, !canAfford && styles.cardDimmed]}>
-      <View style={styles.leftContent}>
-        <View style={styles.iconContainer}>
-          <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color={gradientColors[0]} />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
-            {reward.title}
-          </Text>
+      <View style={styles.iconContainer}>
+        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color={gradientColors[0]} />
+      </View>
+      <View style={styles.textContainer}>
+        <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
+          {reward.title}
+        </Text>
+        
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 }}>
+          <View style={styles.costContainer}>
+            <FontAwesome5 
+              name="coins" 
+              size={14} 
+              color={gradientColors[0]} 
+            />
+            <View style={{ flexDirection: 'row', marginLeft: 4 }}>
+              {reward.cost.toString().split('').map((char, index) => (
+                <Text 
+                  key={`cost-${index}`} 
+                  style={[
+                    styles.costText, 
+                    { marginLeft: 0 },
+                    { color: gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                  ]}
+                >
+                  {char}
+                </Text>
+              ))}
+            </View>
+          </View>
+
           {canAfford ? (
             <Button 
               title={isProcessing ? "Redeeming points.." : "Redeem"} 
@@ -43,27 +66,6 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
               <Text style={styles.lockedButtonText}>Locked</Text>
             </View>
           )}
-        </View>
-      </View>
-      <View style={styles.costContainer}>
-        <FontAwesome5 
-          name="coins" 
-          size={14} 
-          color={gradientColors[0]} 
-        />
-        <View style={{ flexDirection: 'row', marginLeft: 4 }}>
-          {reward.cost.toString().split('').map((char, index) => (
-            <Text 
-              key={`cost-${index}`} 
-              style={[
-                styles.costText, 
-                { marginLeft: 0 },
-                { color: gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
-              ]}
-            >
-              {char}
-            </Text>
-          ))}
         </View>
       </View>
     </View>

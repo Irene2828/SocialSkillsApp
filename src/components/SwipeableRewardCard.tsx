@@ -137,15 +137,16 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
         {...panResponder.panHandlers}
       >
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
-          <View style={styles.leftContent}>
-            <View style={[styles.iconContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-              <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : gradientColors[0]} />
-            </View>
-            <View style={styles.textContainer}>
-              <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
-                {reward.title}
-              </Text>
-              <View style={[styles.costContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }, { marginTop: 4 }]}>
+          <View style={[styles.iconContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+            <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : gradientColors[0]} />
+          </View>
+          <View style={styles.textContainer}>
+            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
+              {reward.title}
+            </Text>
+            
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+              <View style={[styles.costContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
                 <FontAwesome5
                   name="coins"
                   size={14}
@@ -167,26 +168,27 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                   ))}
                 </View>
               </View>
+
+              {canAfford ? (
+                <Button
+                  title={isProcessing ? 'Redeeming..' : 'Redeem'}
+                  onPress={() => onRedeem(reward)}
+                  style={[
+                    styles.redeemButton,
+                    styles.redeemButtonActive,
+                    isRocket && { backgroundColor: '#FFFFFF', borderColor: '#BEF264' }
+                  ]}
+                  variant="secondary"
+                  disabled={isProcessing}
+                />
+              ) : (
+                <View style={styles.lockedButton}>
+                  <Ionicons name="lock-closed" size={14} color={theme.colors.secondaryText} style={{ marginRight: 4 }} />
+                  <Text style={styles.lockedButtonText}>Locked</Text>
+                </View>
+              )}
             </View>
           </View>
-          {canAfford ? (
-            <Button
-              title={isProcessing ? 'Redeeming..' : 'Redeem'}
-              onPress={() => onRedeem(reward)}
-              style={[
-                styles.redeemButton,
-                styles.redeemButtonActive,
-                isRocket && { backgroundColor: '#FFFFFF', borderColor: '#BEF264' }
-              ]}
-              variant="secondary"
-              disabled={isProcessing}
-            />
-          ) : (
-            <View style={styles.lockedButton}>
-              <Ionicons name="lock-closed" size={14} color={theme.colors.secondaryText} style={{ marginRight: 4 }} />
-              <Text style={styles.lockedButtonText}>Locked</Text>
-            </View>
-          )}
         </View>
       </Animated.View>
     </View>
