@@ -15,9 +15,10 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
   iconSize?: number;
   iconColor?: string;
   iconStyle?: any;
+  textStyle?: any;
 }
 
-export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, iconStyle, ...props }) => {
+export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, iconStyle, textStyle, ...props }) => {
   const [isPressed, setIsPressed] = useState(false);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -27,16 +28,16 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   const isOutline = variant === 'outline';
   const isRocket = mood === 'rocket';
 
-  let textStyle: any = styles.secondaryText;
+  let resolvedTextStyle: any = styles.secondaryText;
   if (isPrimary || (isOutline && isPressed)) {
-    textStyle = styles.primaryText;
+    resolvedTextStyle = styles.primaryText;
   } else if (isOutline) {
-    textStyle = [styles.outlineText, isRocket && { color: '#FFFFFF' }];
+    resolvedTextStyle = [styles.outlineText, isRocket && { color: '#FFFFFF' }];
   }
 
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={[styles.text, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
+      <Text style={[styles.text, resolvedTextStyle, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
         {title}
       </Text>
       {iconName && (
