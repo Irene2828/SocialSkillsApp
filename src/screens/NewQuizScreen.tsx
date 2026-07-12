@@ -20,6 +20,8 @@ import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types
 import { questions as allQuestions } from '../data/questions';
 import { wordProblems } from '../data/wordProblems';
 import { useRewards } from '../context/RewardsContext';
+import { useTasks, Task } from '../context/TasksContext';
+import { SwipeableTaskCard } from '../components/SwipeableTaskCard';
 import { safeStorage } from '../utils/storage';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { useProgress } from '../context/ProgressContext';
@@ -71,7 +73,49 @@ export const NewQuizScreen = () => {
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
+  const [activeTab, setActiveTab] = useState<'quizzes' | 'tasks'>('quizzes');
+
+  // Tasks Hooks & State
+  const { tasks, addTask, toggleTaskCompletion, deleteTask, editTask } = useTasks();
+  const [isTaskModalVisible, setIsTaskModalVisible] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskCoins, setNewTaskCoins] = useState('10');
+
+  const handleToggleTask = (task: Task) => {
+    if (task.isCompleted) return;
+    const wasJustCompleted = toggleTaskCompletion(task.id);
+    if (wasJustCompleted) {
+      addCoins(task.coinValue);
+      showModal({
+        title: 'Task Completed!',
+        message: 'Check your rewards to redeem earned coins for real rewards!',
+        type: 'success',
+      });
+    }
+  };
+
+  const handleAddTask = () => {
+    if (newTaskTitle.trim()) {
+      const coinValue = parseInt(newTaskCoins, 10) || 10;
+      if (editingTaskId) {
+        editTask(editingTaskId, newTaskTitle.trim(), coinValue);
+      } else {
+        addTask(newTaskTitle.trim(), coinValue);
+      }
+      setNewTaskTitle('');
+      setNewTaskCoins('10');
+      setEditingTaskId(null);
+      setIsTaskModalVisible(false);
+    }
+  };
+
+  const handleEditTask = (task: Task) => {
+    setNewTaskTitle(task.title);
+    setNewTaskCoins(task.coinValue.toString());
+    setEditingTaskId(task.id);
+    setIsTaskModalVisible(true);
+  };
 
   const IQ_CATEGORIES: QuizCategory[] = [
     { id: 'iq_word_problems', title: 'Word Problems', description: 'Story-style math', icon: 'text-outline', isCustom: false },
@@ -788,118 +832,161 @@ export const NewQuizScreen = () => {
     }
 
     // Root library view (no folder open)
-    const tabFilter = activeTab === 'general' ? 'general' : 'ai';
-    let builtInCategories = activeTab === 'general' 
-      ? allCategories.filter(c => c.id === 'general_quiz' || (c.id === 'custom_quiz' && customQuestions.length > 0))
-      : allCategories.filter(c => c.id === 'iq_word_problems');
+    let builtInCategories = allCategories.filter(
+      c => c.id === 'general_quiz' || 
+           (c.id === 'custom_quiz' && customQuestions.length > 0) || 
+           c.id === 'iq_word_problems'
+    );
     builtInCategories = builtInCategories.filter(c => !hiddenCategories.includes(c.id));
 
-    // Folders for the current tab (root level only)
-    const tabFolders = folders.filter(f => f.tab === tabFilter && !f.parentId);
+    // Folders (root level only)
+    const tabFolders = folders.filter(f => !f.parentId);
 
-    // AI-generated quizzes NOT inside any folder
-    const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
+    // Loose AI-generated quizzes (both social/custom and math)
     const looseCategoryCards = customCategories.filter(
-      c => c.id.startsWith(prefix) && !c.folderId
+      c => (c.id.startsWith('custom_ai') || c.id.startsWith('math_ai')) && !c.folderId
     );
+
+    const sortedTasks = [...tasks].sort((a, b) => b.createdAt - a.createdAt);
+
+    const renderTask = (task: Task) => {
+      return (
+        <SwipeableTaskCard
+          key={task.id}
+          task={task}
+          onToggle={handleToggleTask}
+          onEdit={handleEditTask}
+          onDelete={deleteTask}
+        />
+      );
+    };
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <TopBar title="Library" onBack={() => navigation.goBack()} />
+        <TopBar title="Earn Points" />
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'general' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
-            onPress={() => setActiveTab('general')}
+            style={[styles.tab, activeTab === 'quizzes' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+            onPress={() => setActiveTab('quizzes')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'general' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Social Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Quizzes</Text>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'ai' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
-            onPress={() => setActiveTab('ai')}
+            style={[styles.tab, activeTab === 'tasks' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+            onPress={() => setActiveTab('tasks')}
           >
-            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'ai' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Math Skills</Text>
+            <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Tasks</Text>
           </Pressable>
         </View>
 
-        <View ref={bentoGridRef} style={styles.bentoGrid}>
-          {/* Built-in categories */}
-          {builtInCategories.map((category: any) => (
-            <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
-              <QuizCard 
-                category={category} 
-                isFeatured={false}
-                onPressStart={() => handleSelectQuizCategory(category.id)} 
-                onOptionsPress={() => handleOpenActionMenu(category)}
-              />
-            </View>
-          ))}
-
-          {/* Folders */}
-          {tabFolders.map(folder => {
-            const quizCount = customCategories.filter(c => c.folderId === folder.id).length;
-            return (
-              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                <FolderCard 
-                  name={folder.name}
-                  onPress={() => navigateIntoFolder(folder.id)}
-                  onEdit={() => {
-                    setActionMenuFolder(folder);
-                    setShowFolderActionMenu(true);
-                  }}
-                  isDragTarget={hoveredFolderId === folder.id}
+        {activeTab === 'quizzes' ? (
+          <View ref={bentoGridRef} style={styles.bentoGrid}>
+            {/* Built-in categories */}
+            {builtInCategories.map((category: any) => (
+              <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                <QuizCard 
+                  category={category} 
+                  isFeatured={false}
+                  onPressStart={() => handleSelectQuizCategory(category.id)} 
+                  onOptionsPress={() => handleOpenActionMenu(category)}
                 />
               </View>
-            );
-          })}
+            ))}
 
-          {/* Loose AI quizzes (not in any folder) */}
-          {looseCategoryCards.map(quiz => (
-            <View key={quiz.id} style={[styles.bentoItem, { width: cardWidth }]}>
-              <QuizCard 
-                category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
-                isFeatured={false}
-                onPressStart={() => handleStartQuiz(quiz.id)} 
-                onOptionsPress={() => handleOpenActionMenu(quiz)}
+            {/* Folders */}
+            {tabFolders.map(folder => {
+              const quizCount = customCategories.filter(c => c.folderId === folder.id).length;
+              return (
+                <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                  <FolderCard 
+                    name={folder.name}
+                    onPress={() => navigateIntoFolder(folder.id)}
+                    onEdit={() => {
+                      setActionMenuFolder(folder);
+                      setShowFolderActionMenu(true);
+                    }}
+                    isDragTarget={hoveredFolderId === folder.id}
+                  />
+                </View>
+              );
+            })}
+
+            {/* Loose AI quizzes (not in any folder) */}
+            {looseCategoryCards.map(quiz => (
+              <View key={quiz.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                <QuizCard 
+                  category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
+                  isFeatured={false}
+                  onPressStart={() => handleStartQuiz(quiz.id)} 
+                  onOptionsPress={() => handleOpenActionMenu(quiz)}
+                />
+              </View>
+            ))}
+            
+            {/* Add Folder placeholder */}
+            <View style={[styles.bentoItem, { width: cardWidth }]}>
+              <Pressable onPress={() => setShowFolderModal(true)}>
+                <Card style={{ 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: theme.spacing.md,
+                  height: 160,
+                  borderStyle: 'dashed',
+                  borderWidth: 2,
+                  borderColor: theme.colors.stroke,
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                  opacity: 0.8
+                }}>
+                  <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+                    <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
+                  </View>
+                  <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
+                    <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
+                  </View>
+                </Card>
+              </Pressable>
+            </View>
+          </View>
+        ) : (
+          <View style={{ paddingHorizontal: theme.spacing.xs }}>
+            {tasks.length === 0 ? (
+              <View style={styles.emptyState}>
+                <Ionicons name="checkmark-done-circle-outline" size={64} color={isRocket ? 'rgba(255, 255, 255, 0.5)' : theme.colors.secondaryText} />
+                <Text style={[styles.emptyTitle, isDark && { color: '#FFFFFF' }]}>No tasks yet</Text>
+                <Text style={[styles.emptyText, isDark && { color: 'rgba(255,255,255,0.7)' }]}>Add some tasks to start earning coins!</Text>
+              </View>
+            ) : (
+              <View style={styles.section}>
+                {sortedTasks.map(renderTask)}
+              </View>
+            )}
+
+            <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
+              <Button 
+                title="Add a New Task" 
+                onPress={() => setIsTaskModalVisible(true)}
+                style={styles.addButton}
+                variant="primary"
               />
             </View>
-          ))}
-          
-          {/* Add Folder placeholder */}
-          <View style={[styles.bentoItem, { width: cardWidth }]}>
-            <Pressable onPress={() => setShowFolderModal(true)}>
-              <Card style={{ 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                padding: theme.spacing.md,
-                height: 160,
-                borderStyle: 'dashed',
-                borderWidth: 2,
-                borderColor: theme.colors.stroke,
-                backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                opacity: 0.8
-              }}>
-                <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-                  <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
-                </View>
-                <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
-                  <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
-                </View>
-              </Card>
-            </Pressable>
           </View>
-        </View>
+        )}
 
-        <View style={styles.createAiButtonContainer}>
-          <Button
-            title="Generate New Quiz"
-            iconName="color-wand-outline"
-            iconSize={18}
-            style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-            onPress={() => setShowGenerateMenu(true)}
-          />
-        </View>
+        {activeTab === 'quizzes' && (
+          <View style={styles.createAiButtonContainer}>
+            <Button
+              title="Generate New Quiz"
+              iconName="color-wand-outline"
+              iconSize={18}
+              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
+              onPress={() => setShowGenerateMenu(true)}
+            />
+          </View>
+        )}
       </ScrollView>
+    );
+  };
     );
   };
 
@@ -1818,6 +1905,64 @@ export const NewQuizScreen = () => {
       
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
+      {/* Task Add/Edit Modal */}
+      <Modal
+        visible={isTaskModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setIsTaskModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.modalContent, isRocket && { backgroundColor: '#1E293B', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }]}>
+            <Text style={[styles.modalTitle, isDark && { color: '#FFFFFF' }]}>
+              {editingTaskId ? 'Edit Task' : 'New Task'}
+            </Text>
+            
+            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }]}>What needs to be done?</Text>
+            <TextInput
+              style={[styles.input, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
+              value={newTaskTitle}
+              onChangeText={setNewTaskTitle}
+              placeholder="e.g., Clean your room"
+              placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
+              autoFocus
+            />
+
+            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
+            <View style={[styles.coinInputContainer, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }]}>
+              <FontAwesome5 name="coins" size={16} color="#F59E0B" />
+              <TextInput
+                style={[styles.coinInput, isRocket && { color: '#FFFFFF' }]}
+                value={newTaskCoins}
+                onChangeText={setNewTaskCoins}
+                keyboardType="number-pad"
+                maxLength={4}
+              />
+            </View>
+
+            <View style={styles.modalActions}>
+              <Button 
+                title="Cancel" 
+                onPress={() => {
+                  setIsTaskModalVisible(false);
+                  setEditingTaskId(null);
+                  setNewTaskTitle('');
+                }}
+                style={{ flex: 1, marginRight: theme.spacing.sm, backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : '#E5E7EB' }}
+                textStyle={{ color: isDark ? '#FFFFFF' : theme.colors.text }}
+              />
+              <Button 
+                title="Save Task" 
+                onPress={handleAddTask}
+                style={{ flex: 1, marginLeft: theme.spacing.sm }}
+                variant="primary"
+                disabled={!newTaskTitle.trim()}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
+
     </View>
   );
 };
@@ -2362,5 +2507,50 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.stroke,
     ...theme.typography.body,
     color: theme.colors.text,
+  },
+  section: {
+    marginBottom: theme.spacing.xl,
+  },
+  emptyState: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 60,
+  },
+  emptyTitle: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 20,
+    color: theme.colors.text,
+    marginTop: theme.spacing.md,
+    marginBottom: theme.spacing.xs,
+  },
+  emptyText: {
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+  },
+  addButton: {
+    width: '100%',
+    maxWidth: 340,
+    backgroundColor: '#BEF264',
+    borderColor: '#BEF264',
+    ...theme.shadows.medium,
+  },
+  coinInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing.md,
+    marginTop: theme.spacing.xs,
+  },
+  coinInput: {
+    flex: 1,
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
+    padding: theme.spacing.md,
+    color: theme.colors.text,
+    marginLeft: 8,
   },
 });

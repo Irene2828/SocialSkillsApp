@@ -464,7 +464,7 @@ export const PuzzleScreen = () => {
       <ScreenWrapper transparent>
         <TopBar 
           title="Puzzles"
-          onBack={() => navigation.canGoBack() && navigation.goBack()}
+          onBack={navigation.canGoBack() ? () => navigation.goBack() : undefined}
         />
 
         <FlatList

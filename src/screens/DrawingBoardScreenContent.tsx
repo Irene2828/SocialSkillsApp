@@ -131,9 +131,9 @@ export const DrawingBoardScreen = () => {
 
         <Pressable 
           style={[styles.absoluteBackButton, { top: insets.top + 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Home')}
         >
-          <Ionicons name="arrow-back" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+          <Ionicons name={navigation.canGoBack() ? "arrow-back" : "home-outline"} size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
         </Pressable>
       </View>
 

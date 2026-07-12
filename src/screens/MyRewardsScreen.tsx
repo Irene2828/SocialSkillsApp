@@ -369,7 +369,7 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar title="Rewards" />
+        <TopBar title="Redeem Points" />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}

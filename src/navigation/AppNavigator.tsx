@@ -1,21 +1,24 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { QuizLibraryNavigator } from './QuizLibraryNavigator';
+import { NewQuizScreen } from '../screens/NewQuizScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
-import { PuzzleNavigator } from './PuzzleNavigator';
+import { PuzzleScreen } from '../screens/PuzzleScreen';
+import { DrawingBoardScreen } from '../screens/DrawingBoardScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme, FONTS } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
-export const AppNavigator = () => {
+const AppTabs = () => {
   const insets = useSafeAreaInsets();
-  const paddingBottom = Math.max(insets.bottom * 0.75, 10); // 50% more than the reduced padding
+  const paddingBottom = Math.max(insets.bottom * 0.75, 10);
   const height = 62 + paddingBottom * 1.2;
 
   const { mood } = useMood();
@@ -32,24 +35,24 @@ export const AppNavigator = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
 
-          if (route.name === 'Home') {
-            iconName = 'home-outline';
-          } else if (route.name === 'NewQuiz') {
+          if (route.name === 'NewQuiz') {
             iconName = 'bulb-outline';
           } else if (route.name === 'MyRewards') {
             return <FontAwesome5 name="coins" size={size - 2} color={color} />;
-          } else if (route.name === 'Activities') {
-            iconName = 'game-controller-outline';
+          } else if (route.name === 'Puzzles') {
+            iconName = 'extension-puzzle-outline';
+          } else if (route.name === 'Drawing') {
+            iconName = 'color-palette-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarLabel: ({ focused, color }) => {
           let label = '';
-          if (route.name === 'Home') label = 'Home';
-          else if (route.name === 'NewQuiz') label = 'Earn Coins';
-          else if (route.name === 'Activities') label = 'Play';
-          else if (route.name === 'MyRewards') label = 'My Rewards';
+          if (route.name === 'NewQuiz') label = 'Earn Points';
+          else if (route.name === 'Puzzles') label = 'Puzzles';
+          else if (route.name === 'Drawing') label = 'Drawing';
+          else if (route.name === 'MyRewards') label = 'Redeem Points';
           return (
             <Text style={{
               fontFamily: focused ? FONTS.semiBold : FONTS.medium,
@@ -93,25 +96,34 @@ export const AppNavigator = () => {
       })}
     >
       <Tab.Screen 
-        name="Home" 
-        component={HomeScreen} 
-        options={{ tabBarLabel: 'Home' }}
-      />
-      <Tab.Screen 
         name="NewQuiz" 
-        component={QuizLibraryNavigator} 
-        options={{ tabBarLabel: 'Earn Coins' }}
+        component={NewQuizScreen} 
+        options={{ tabBarLabel: 'Earn Points' }}
       />
       <Tab.Screen 
-        name="Activities" 
-        component={PuzzleNavigator} 
-        options={{ tabBarLabel: 'Play' }}
+        name="Puzzles" 
+        component={PuzzleScreen} 
+        options={{ tabBarLabel: 'Puzzles' }}
+      />
+      <Tab.Screen 
+        name="Drawing" 
+        component={DrawingBoardScreen} 
+        options={{ tabBarLabel: 'Drawing' }}
       />
       <Tab.Screen 
         name="MyRewards" 
         component={MyRewardsScreen} 
-        options={{ tabBarLabel: 'My Rewards' }}
+        options={{ tabBarLabel: 'Redeem Points' }}
       />
     </Tab.Navigator>
+  );
+};
+
+export const AppNavigator = () => {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="AppTabs" component={AppTabs} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
   );
 };

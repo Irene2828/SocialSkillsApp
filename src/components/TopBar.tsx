@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { theme, FONTS } from '../theme';
 import { SettingsModal } from './SettingsModal';
 import { useMood, getMoodColors } from '../context/MoodContext';
@@ -12,6 +13,7 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent }) => {
+  const navigation = useNavigation<any>();
   const [showSettings, setShowSettings] = useState(false);
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -21,11 +23,15 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent })
   return (
     <>
       <View style={styles.container}>
-        {/* Back button or empty view for flex balancing */}
+        {/* Back button or Home button for flex balancing */}
         <View style={styles.side}>
-          {onBack && (
+          {onBack ? (
             <Pressable onPress={onBack} style={{ padding: 8, marginLeft: -8 }}>
               <Ionicons name="arrow-back" size={24} color={textColor} />
+            </Pressable>
+          ) : (
+            <Pressable onPress={() => navigation.navigate('Home')} style={{ padding: 8, marginLeft: -8 }}>
+              <Ionicons name="home-outline" size={24} color={textColor} />
             </Pressable>
           )}
         </View>
