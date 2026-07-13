@@ -1154,13 +1154,7 @@ export const NewQuizScreen = () => {
               </View>
             </View>
             <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              <Pressable 
-                onPress={() => setShowSettings(true)}
-                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                style={{ paddingVertical: 8 }}
-              >
-                <Ionicons name="options-outline" size={28} color={baseTextColor} />
-              </Pressable>
+              {/* Settings removed */}
             </View>
           </View>
         </View>
