@@ -463,7 +463,6 @@ export const PuzzleScreen = () => {
       <ScreenWrapper transparent>
         <TopBar 
           title=""
-          onBack={navigation.canGoBack() ? () => navigation.goBack() : undefined}
         />
 
         <FlatList
@@ -477,7 +476,7 @@ export const PuzzleScreen = () => {
           ListHeaderComponent={
             <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
               <Pressable 
-                style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#E2E8F0' }]} 
+                style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
                 onPress={() => setActiveTab('animals')}
               >
                 <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Animals</Text>
@@ -805,9 +804,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 0,
     padding: 0,
-    marginHorizontal: -theme.spacing.lg,
+    marginHorizontal: -theme.spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: '#BAE6FD',
     ...theme.shadows.soft,
   },
   tab: {
