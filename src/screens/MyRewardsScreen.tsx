@@ -404,7 +404,7 @@ export const MyRewardsScreen = () => {
         {/* Bottom Section: Tabs and Lists */}
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }, activeTab === 'available' && { backgroundColor: '#F0F9FF' }]} 
+            style={[styles.tab, activeTab === 'available' && { backgroundColor: '#F0F9FF' }]} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -878,8 +878,6 @@ const styles = StyleSheet.create({
     borderRadius: 0,
     padding: 0,
     marginHorizontal: -theme.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
     ...theme.shadows.soft,
   },
   tab: {
