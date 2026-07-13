@@ -874,11 +874,10 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     marginBottom: theme.spacing.md,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'transparent',
     borderRadius: 0,
     padding: 0,
     marginHorizontal: -theme.spacing.md,
-    ...theme.shadows.soft,
   },
   tab: {
     flex: 1,
