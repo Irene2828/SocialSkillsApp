@@ -815,7 +815,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 0,
     padding: 0,
-    marginHorizontal: -theme.spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#BAE6FD',
     ...theme.shadows.soft,
@@ -925,7 +924,7 @@ const styles = StyleSheet.create({
   screenFolderTabText: {
     ...theme.typography.body,
     fontSize: 14,
-    fontWeight: '400',
+    fontWeight: '600',
     letterSpacing: 0.1,
     color: theme.colors.text,
   },

@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     borderWidth: 1.5,
     borderColor: '#BAE6FD',
-    borderStyle: 'dashed',
+    borderStyle: 'solid',
   },
   animatedContainer: {
     width: '100%',

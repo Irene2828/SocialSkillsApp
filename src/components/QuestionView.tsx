@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.lg,
     borderWidth: 1.5,
     borderColor: '#BAE6FD',
-    borderStyle: 'dashed',
+    borderStyle: 'solid',
   },
   cardWrapper: {
     position: 'relative',
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
   },
   folderTabText: {
     ...theme.typography.body,
-    fontWeight: '800',
+    fontWeight: '900',
     fontSize: 14,
     color: theme.colors.text,
     letterSpacing: 0.5,
