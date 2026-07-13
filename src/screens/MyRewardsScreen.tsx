@@ -409,9 +409,9 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={11} />
+                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={11} />
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor }]}>All Rewards</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>All Rewards</Text>
               )}
             </View>
           </Pressable>
@@ -421,9 +421,9 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={8} />
+                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor }]}>Unlocked</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>Unlocked</Text>
               )}
             </View>
           </Pressable>

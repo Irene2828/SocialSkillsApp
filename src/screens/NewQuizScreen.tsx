@@ -847,7 +847,7 @@ export const NewQuizScreen = () => {
                   borderStyle: 'dashed',
                   borderWidth: 2,
                   borderColor: theme.colors.stroke,
-                  backgroundColor: '#F0F9FF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
                   opacity: 0.8
                 }}>
                   <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
@@ -922,9 +922,9 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'quizzes' ? (
-                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={10} />
+                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={10} />
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor }]}>My Quizzes</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>My Quizzes</Text>
               )}
             </View>
           </Pressable>
@@ -934,9 +934,9 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'tasks' ? (
-                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={8} />
+                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor }]}>My Tasks</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>My Tasks</Text>
               )}
             </View>
           </Pressable>
@@ -997,7 +997,7 @@ export const NewQuizScreen = () => {
                   borderStyle: 'dashed',
                   borderWidth: 2,
                   borderColor: theme.colors.stroke,
-                  backgroundColor: '#F0F9FF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
                   opacity: 0.8
                 }}>
                   <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>

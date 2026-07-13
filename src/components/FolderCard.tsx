@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 158,
-    backgroundColor: '#F0F9FF',
+    backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
     borderColor: theme.colors.stroke,
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '600',
     color: theme.colors.text,
     textAlign: 'center',

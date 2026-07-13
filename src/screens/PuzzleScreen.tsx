@@ -480,9 +480,9 @@ export const PuzzleScreen = () => {
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   {activeTab === 'animals' ? (
-                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={7} />
+                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={7} />
                   ) : (
-                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Animals</Text>
+                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText, fontSize: 18, lineHeight: 26 }]}>Animals</Text>
                   )}
                 </View>
               </Pressable>
@@ -492,9 +492,9 @@ export const PuzzleScreen = () => {
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   {activeTab === 'cities' ? (
-                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={6} />
+                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={6} />
                   ) : (
-                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Cities</Text>
+                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText, fontSize: 18, lineHeight: 26 }]}>Cities</Text>
                   )}
                 </View>
               </Pressable>
@@ -928,6 +928,14 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     letterSpacing: 0.1,
     color: theme.colors.text,
+  },
+  cardTitle: {
+    ...theme.typography.body,
+    fontSize: 14,
+    fontWeight: '600',
+    color: theme.colors.text,
+    textAlign: 'center',
+    marginBottom: theme.spacing.md,
   },
   headlineText: {
     ...theme.typography.subheading,
