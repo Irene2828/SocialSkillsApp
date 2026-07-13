@@ -1,20 +1,25 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, ViewProps, View, ImageBackground } from 'react-native';
+import { StyleSheet, ViewProps, View, ImageBackground } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../theme';
 
 interface ScreenWrapperProps extends ViewProps {
   transparent?: boolean;
+  disableSafeAreaTop?: boolean;
 }
 
-export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, transparent, ...props }) => {
+export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, transparent, disableSafeAreaTop, ...props }) => {
   return (
     <LinearGradient
       colors={transparent ? ['transparent', 'transparent', 'transparent'] : ['#FFFFFF', '#E0F2FE', '#FFFFFF']}
       style={{ flex: 1 }}
     >
-      <SafeAreaView style={[styles.safeArea, { backgroundColor: 'transparent' }]}>
-        <View style={[styles.container, style]} {...props}>
+      <SafeAreaView 
+        style={[styles.safeArea, { backgroundColor: 'transparent' }]}
+        edges={disableSafeAreaTop ? ['bottom', 'left', 'right'] : undefined}
+      >
+        <View style={[styles.container, disableSafeAreaTop && { paddingTop: 0 }, style]} {...props}>
           {children}
         </View>
       </SafeAreaView>

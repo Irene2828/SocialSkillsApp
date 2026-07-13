@@ -15,9 +15,7 @@ export const SettingsScreen = () => {
 
   return (
     <ScreenWrapper>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
-      </View>
+      {/* Header removed as requested */}
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
         

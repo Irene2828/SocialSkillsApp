@@ -10,6 +10,8 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Header } from '../components/Header';
 import { CoinBalanceCard } from '../components/CoinBalanceCard';
 import { RewardList } from '../components/RewardList';
+import { RewardCard } from '../components/RewardCard';
+import { ElectrifiedText } from '../components/ElectrifiedText';
 import { UnlockedRewardItem } from '../components/UnlockedRewardItem';
 import { AddRewardForm } from '../components/AddRewardForm';
 import { GoldenDust } from '../components/GoldenDust';
@@ -405,18 +407,24 @@ export const MyRewardsScreen = () => {
             style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
             onPress={() => setActiveTab('available')}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Ionicons name="gift-outline" size={18} color={activeTab === 'available' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>All Rewards</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {activeTab === 'available' ? (
+                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={11} />
+              ) : (
+                <Text style={[styles.tabText, { color: subTextColor }]}>All Rewards</Text>
+              )}
             </View>
           </Pressable>
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('unlocked')}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Ionicons name="lock-open-outline" size={18} color={activeTab === 'unlocked' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Unlocked</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {activeTab === 'unlocked' ? (
+                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={8} />
+              ) : (
+                <Text style={[styles.tabText, { color: subTextColor }]}>Unlocked</Text>
+              )}
             </View>
           </Pressable>
         </View>

@@ -32,6 +32,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { GlobalBackground } from '../components/GlobalBackground';
+import { ElectrifiedText } from '../components/ElectrifiedText';
 
 import { SilverDust } from '../components/SilverDust';
 import { SettingsModal } from '../components/SettingsModal';if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -842,11 +843,11 @@ export const NewQuizScreen = () => {
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   padding: theme.spacing.md,
-                  height: 160,
+                  height: 158,
                   borderStyle: 'dashed',
                   borderWidth: 2,
                   borderColor: theme.colors.stroke,
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                  backgroundColor: '#F0F9FF',
                   opacity: 0.8
                 }}>
                   <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
@@ -912,25 +913,31 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <TopBar title="" />
+        {/* TopBar removed */}
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
             style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
             onPress={() => setActiveTab('quizzes')}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Ionicons name="document-text-outline" size={18} color={activeTab === 'quizzes' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>My Quizzes</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {activeTab === 'quizzes' ? (
+                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={10} />
+              ) : (
+                <Text style={[styles.tabText, { color: subTextColor }]}>My Quizzes</Text>
+              )}
             </View>
           </Pressable>
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('tasks')}
           >
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Ionicons name="checkbox-outline" size={18} color={activeTab === 'tasks' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>My Tasks</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              {activeTab === 'tasks' ? (
+                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={8} />
+              ) : (
+                <Text style={[styles.tabText, { color: subTextColor }]}>My Tasks</Text>
+              )}
             </View>
           </Pressable>
         </View>
@@ -986,11 +993,11 @@ export const NewQuizScreen = () => {
                   alignItems: 'center', 
                   justifyContent: 'center', 
                   padding: theme.spacing.md,
-                  height: 160,
+                  height: 158,
                   borderStyle: 'dashed',
                   borderWidth: 2,
                   borderColor: theme.colors.stroke,
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                  backgroundColor: '#F0F9FF',
                   opacity: 0.8
                 }}>
                   <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
@@ -1338,7 +1345,7 @@ export const NewQuizScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       
-      <ScreenWrapper transparent>
+      <ScreenWrapper transparent disableSafeAreaTop>
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
           {quizState === 'in-progress' && renderInProgress()}

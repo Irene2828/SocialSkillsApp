@@ -4,11 +4,12 @@ import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { TopBar } from '../components/TopBar';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { AstronautBackground } from '../components/AstronautBackground';
 import { GlobalBackground } from '../components/GlobalBackground';
+import { ElectrifiedText } from '../components/ElectrifiedText';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { SettingsModal } from '../components/SettingsModal';
 import { SilverDust } from '../components/SilverDust';
@@ -460,10 +461,8 @@ export const PuzzleScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground />
-      <ScreenWrapper transparent>
-        <TopBar 
-          title=""
-        />
+      <ScreenWrapper transparent disableSafeAreaTop>
+        {/* TopBar removed to prevent space at top */}
 
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -479,13 +478,25 @@ export const PuzzleScreen = () => {
                 style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
                 onPress={() => setActiveTab('animals')}
               >
-                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Animals</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {activeTab === 'animals' ? (
+                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={7} />
+                  ) : (
+                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Animals</Text>
+                  )}
+                </View>
               </Pressable>
               <Pressable 
                 style={styles.tab} 
                 onPress={() => setActiveTab('cities')}
               >
-                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Cities</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  {activeTab === 'cities' ? (
+                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={6} />
+                  ) : (
+                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Cities</Text>
+                  )}
+                </View>
               </Pressable>
             </View>
           }

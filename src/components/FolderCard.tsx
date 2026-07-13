@@ -84,8 +84,8 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    height: 160,
-    backgroundColor: theme.colors.white,
+    height: 158,
+    backgroundColor: '#F0F9FF',
     borderRadius: theme.borderRadius.lg,
     borderWidth: 2,
     borderColor: theme.colors.stroke,
