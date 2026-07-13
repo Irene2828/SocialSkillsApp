@@ -111,15 +111,16 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     width: '100%',
-    minHeight: 40,
-    justifyContent: 'center',
+    minHeight: 56,
+    justifyContent: 'flex-start',
   },
   iconContainer: {
+    marginTop: 12,
+    marginBottom: 4,
     width: 44,
     height: 44,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 4,
   },
   title: {
     ...theme.typography.body,

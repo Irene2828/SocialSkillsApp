@@ -407,7 +407,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="gift-outline" size={18} color={activeTab === 'available' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>All Rewards</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'available' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>All Rewards</Text>
             </View>
           </Pressable>
           <Pressable 
@@ -416,7 +416,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="lock-open-outline" size={18} color={activeTab === 'unlocked' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>Unlocked</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'unlocked' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Unlocked</Text>
             </View>
           </Pressable>
         </View>
@@ -869,6 +869,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
     padding: theme.spacing.xs,
+    borderWidth: 1.5,
+    borderColor: '#BAE6FD',
+    borderStyle: 'dashed',
     ...theme.shadows.soft,
   },
   tab: {

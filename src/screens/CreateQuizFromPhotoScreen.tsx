@@ -10,7 +10,7 @@ import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { generateQuizFromImage, generateQuizFromText } from '../utils/aiQuizGenerator';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
@@ -33,6 +33,8 @@ export const CreateQuizFromPhotoScreen = () => {
   const spinAnim = new Animated.Value(0);
 
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
+  const topicType = route.params?.topicType || 'social';
   const { addCustomQuiz, addFolder } = useQuizContext();
 
   useEffect(() => {
@@ -114,40 +116,9 @@ export const CreateQuizFromPhotoScreen = () => {
     try {
       // OpenAI requires the data URI prefix for base64 images
       const dataUri = `data:image/jpeg;base64,${imageBase64}`;
-      const responseData = await generateQuizFromImage(dataUri);
+      const responseData = await generateQuizFromImage(dataUri, 7, topicType);
       setGeneratedQuiz(responseData);
       
-      const targetFolderId = addFolder(responseData.folderName || 'AI Quiz Topic', 'general');
-
-      // Save all 3 generated quizzes to context
-      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
-        const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
-        const newCategory: QuizCategory = {
-          id: newCategoryId,
-          title: quiz.concept,
-          description: 'AI Generated Quiz',
-          icon: 'color-wand', // magical icon for AI generated
-          color: '#A78BFA', // Purple styling to stand out
-          isCustom: true,
-          folderId: targetFolderId
-        };
-        
-        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-          id: `${newCategoryId}-q${index}`,
-          category: newCategoryId,
-          difficulty: selectedDifficulty,
-          scenario: q.question,
-          options: q.options,
-          correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!',
-          whyOptions: q.whyOptions,
-          correctWhyIndex: q.correctWhyIndex,
-          whyConfirmation: q.whyConfirmation,
-        }));
-        
-        addCustomQuiz(newCategory, questionsWithCategory);
-      });
-
       setScreenState('success');
     } catch (error: any) {
       setErrorMessage(error.message || 'An error occurred while generating the quiz.');
@@ -160,40 +131,8 @@ export const CreateQuizFromPhotoScreen = () => {
     
     setScreenState('generating');
     try {
-      const responseData = await generateQuizFromText(textPrompt.trim());
+      const responseData = await generateQuizFromText(textPrompt.trim(), 7, topicType);
       setGeneratedQuiz(responseData);
-      
-      // Save all 3 generated quizzes to context
-      const targetFolderId = addFolder(responseData.folderName || 'AI Quiz Topic', 'general');
-
-      responseData.quizzes.forEach((quiz: any, quizIndex: number) => {
-        const newCategoryId = `custom_ai_${Date.now()}_${quizIndex}`;
-        const newCategory: QuizCategory = {
-          id: newCategoryId,
-          title: quiz.concept,
-          description: 'AI Generated Quiz',
-          icon: 'color-wand', // magical icon for AI generated
-          color: '#A78BFA', // Purple styling to stand out
-          isCustom: true,
-          folderId: targetFolderId
-        };
-        
-        const questionsWithCategory = quiz.questions.map((q: any, index: number) => ({
-          id: `${newCategoryId}-q${index}`,
-          category: newCategoryId,
-          difficulty: selectedDifficulty,
-          scenario: q.question,
-          options: q.options,
-          correctAnswerIndex: q.correctIndex,
-          explanation: q.explanation || 'Great job!',
-          whyOptions: q.whyOptions,
-          correctWhyIndex: q.correctWhyIndex,
-          whyConfirmation: q.whyConfirmation,
-        }));
-        
-        addCustomQuiz(newCategory, questionsWithCategory);
-      });
-
       setTextPrompt('');
       setScreenState('success');
     } catch (error: any) {
@@ -205,6 +144,55 @@ export const CreateQuizFromPhotoScreen = () => {
   const handleStartQuiz = () => {
     navigation.navigate('NewQuiz', { playCategory: generatedQuiz.concept });
     setScreenState('idle'); // reset for next time
+  };
+
+  const handleSaveToFolder = (folderId?: string) => {
+    if (!generatedQuiz) return;
+    
+    generatedQuiz.quizzes.forEach((quiz: any, quizIndex: number) => {
+      const prefix = topicType === 'math' ? 'math_ai' : 'custom_ai';
+      const newCategoryId = `${prefix}_${Date.now()}_${quizIndex}`;
+      const newCategory: QuizCategory = {
+        id: newCategoryId,
+        title: quiz.concept,
+        description: 'AI Generated Quiz',
+        icon: topicType === 'math' ? 'calculator' : 'color-wand', 
+        color: '#A78BFA',
+        isCustom: true,
+        folderId: folderId
+      };
+      
+      const questionsWithCategory = quiz.questions.map((q: any, index: number) => {
+        if (topicType === 'math') {
+          return {
+            id: `${newCategoryId}-q${index}`,
+            category: newCategoryId,
+            difficulty: selectedDifficulty,
+            problemText: q.problemText,
+            steps: q.steps,
+            finalAnswer: q.finalAnswer,
+          };
+        } else {
+          return {
+            id: `${newCategoryId}-q${index}`,
+            category: newCategoryId,
+            difficulty: selectedDifficulty,
+            scenario: q.question,
+            options: q.options,
+            correctAnswerIndex: q.correctIndex,
+            explanation: q.explanation || 'Great job!',
+            whyOptions: q.whyOptions,
+            correctWhyIndex: q.correctWhyIndex,
+            whyConfirmation: q.whyConfirmation,
+          };
+        }
+      });
+      
+      addCustomQuiz(newCategory, questionsWithCategory);
+    });
+
+    setScreenState('idle');
+    navigation.navigate('NewQuiz', { tab: 'ai', targetFolderId: folderId });
   };
 
   const renderIdle = () => (
@@ -322,29 +310,49 @@ export const CreateQuizFromPhotoScreen = () => {
             <Text style={styles.successTitle}>3 Quizzes Generated!</Text>
             <View style={styles.brushUnderline} />
           </View>
-          <Text style={styles.successSubtitle}>
-            They have been added to your Custom tab in Quiz Library.
+          <Text style={[styles.successSubtitle, { marginBottom: theme.spacing.lg }]}>
+            Where would you like to save these quizzes?
           </Text>
+          
+          <ScrollView style={{ width: '100%', maxHeight: 200, marginBottom: theme.spacing.md }}>
+            {useQuizContext().folders.map(folder => (
+              <Pressable 
+                key={folder.id} 
+                style={[styles.folderOptionCard, { marginBottom: 8 }]}
+                onPress={() => handleSaveToFolder(folder.id)}
+              >
+                <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                <Text style={styles.folderOptionText}>{folder.name}</Text>
+              </Pressable>
+            ))}
+            <Pressable 
+              style={[styles.folderOptionCard, { marginBottom: 8 }]}
+              onPress={() => {
+                const newFolderId = addFolder(generatedQuiz?.folderName || 'New Topic', 'ai');
+                handleSaveToFolder(newFolderId);
+              }}
+            >
+              <Ionicons name="add-circle-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+              <Text style={styles.folderOptionText}>Create New Folder</Text>
+            </Pressable>
+            <Pressable 
+              style={[styles.folderOptionCard, { marginBottom: 8 }]}
+              onPress={() => handleSaveToFolder(undefined)}
+            >
+              <Ionicons name="home-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+              <Text style={styles.folderOptionText}>Main Library (No Folder)</Text>
+            </Pressable>
+          </ScrollView>
+
           <Button 
-            title="Go to Library" 
+            title="Cancel" 
+            variant="secondary"
             onPress={() => {
                setScreenState('idle');
-               navigation.navigate('NewQuiz', { tab: 'ai' });
             }} 
             style={styles.generateButton}
           />
-          <Pressable 
-            style={{ marginTop: theme.spacing.md }}
-            onPress={() => {
-               setScreenState('idle');
-            }} 
-          >
-            <Text style={{ ...theme.typography.button, color: theme.colors.secondaryText }}>
-              Create Another
-            </Text>
-          </Pressable>
         </Pressable>
-        <Text style={styles.successDismissHint}>Tap outside to close</Text>
       </Pressable>
     </Modal>
   );
@@ -541,6 +549,20 @@ const styles = StyleSheet.create({
   },
   selectorTextActive: {
     color: theme.colors.white,
+  },
+  folderOptionCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  folderOptionText: {
+    ...theme.typography.body,
+    color: theme.colors.text,
+    fontWeight: '500',
   },
   errorContainer: {
     flex: 1,

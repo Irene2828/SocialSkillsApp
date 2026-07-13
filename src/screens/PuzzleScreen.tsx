@@ -480,13 +480,13 @@ export const PuzzleScreen = () => {
                 style={[styles.tab, activeTab === 'animals' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
                 onPress={() => setActiveTab('animals')}
               >
-                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Animals</Text>
+                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'animals' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Animals</Text>
               </Pressable>
               <Pressable 
                 style={[styles.tab, activeTab === 'cities' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
                 onPress={() => setActiveTab('cities')}
               >
-                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600' }]}>Cities</Text>
+                <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }, activeTab === 'cities' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>Cities</Text>
               </Pressable>
             </View>
           }
@@ -805,6 +805,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
     padding: theme.spacing.xs,
+    borderWidth: 1.5,
+    borderColor: '#BAE6FD',
+    borderStyle: 'dashed',
     ...theme.shadows.soft,
   },
   tab: {

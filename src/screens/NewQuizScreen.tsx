@@ -243,7 +243,7 @@ export const NewQuizScreen = () => {
 
   const handleCreateFolder = () => {
     if (newFolderName.trim()) {
-      const folderId = addFolder(newFolderName.trim(), activeTab);
+      const folderId = addFolder(newFolderName.trim(), activeTab, activeFolderId || undefined);
       setNewFolderName('');
       setShowFolderModal(false);
       
@@ -554,9 +554,12 @@ export const NewQuizScreen = () => {
     if (route.params?.tab === 'ai') {
       setActiveTab('ai');
       setQuizState('selection');
-      navigation.setParams({ tab: undefined });
+      if (route.params?.targetFolderId) {
+        setFolderHistory([route.params.targetFolderId]);
+      }
+      navigation.setParams({ tab: undefined, targetFolderId: undefined });
     }
-  }, [route.params?.tab]);
+  }, [route.params?.tab, route.params?.targetFolderId]);
   const [currentQuestions, setCurrentQuestions] = useState<any[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -792,17 +795,8 @@ export const NewQuizScreen = () => {
 
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <TopBar title={currentFolder?.name || 'Folder'} />
-          
-          <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
-            <Pressable 
-              onPress={navigateBackFromFolder} 
-              style={[styles.tab, { flexDirection: 'row', justifyContent: 'flex-start', paddingHorizontal: theme.spacing.md }]}
-            >
-              <Ionicons name="chevron-back" size={20} color={isDark ? '#FFFFFF' : '#374151'} style={{ marginRight: 4 }} />
-              <Text style={[styles.tabText, { color: isDark ? '#FFFFFF' : '#374151', fontWeight: '600' }]}>Back</Text>
-            </Pressable>
-          </View>
+          <TopBar title="" onBack={navigateBackFromFolder} />
+
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
             <View style={{ alignItems: 'center', paddingVertical: theme.spacing.xxl }}>
@@ -840,7 +834,44 @@ export const NewQuizScreen = () => {
                 />
               </View>
             ))}
+
+            {/* Add Sub-Folder placeholder */}
+            <View style={[styles.bentoItem, { width: cardWidth }]}>
+              <Pressable onPress={() => setShowFolderModal(true)}>
+                <Card style={{ 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  padding: theme.spacing.md,
+                  height: 160,
+                  borderStyle: 'dashed',
+                  borderWidth: 2,
+                  borderColor: theme.colors.stroke,
+                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
+                  opacity: 0.8
+                }}>
+                  <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
+                    <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
+                  </View>
+                  <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
+                    <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
+                  </View>
+                </Card>
+              </Pressable>
+            </View>
           </View>
+
+          {/* CTA for Math Folder */}
+          {activeFolderId === 'math_quiz_folder' && (
+            <View style={styles.createAiButtonContainer}>
+              <Button
+                title="Generate New Quiz"
+                iconName="color-wand-outline"
+                iconSize={18}
+                style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
+                onPress={() => navigation.navigate('CreateQuizFromPhoto', { topicType: 'math' })}
+              />
+            </View>
+          )}
         </ScrollView>
       );
     }
@@ -890,7 +921,7 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="document-text-outline" size={18} color={activeTab === 'quizzes' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>My Quizzes</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'quizzes' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>My Quizzes</Text>
             </View>
           </Pressable>
           <Pressable 
@@ -899,7 +930,7 @@ export const NewQuizScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
               <Ionicons name="checkbox-outline" size={18} color={activeTab === 'tasks' ? '#374151' : subTextColor} />
-              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 16 }]}>My Tasks</Text>
+              <Text style={[styles.tabText, { color: subTextColor }, activeTab === 'tasks' && { color: '#374151', fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]}>My Tasks</Text>
             </View>
           </Pressable>
         </View>
@@ -2291,6 +2322,9 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.full,
     padding: theme.spacing.xs,
+    borderWidth: 1.5,
+    borderColor: '#BAE6FD',
+    borderStyle: 'dashed',
     ...theme.shadows.soft,
   },
   tab: {

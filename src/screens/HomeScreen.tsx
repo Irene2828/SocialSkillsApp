@@ -185,7 +185,7 @@ export const HomeScreen = () => {
         style={[StyleSheet.absoluteFill, { opacity: 0.15, resizeMode: 'repeat' }]} 
       />
       <ScreenWrapper transparent>
-        <TopBar title="" hideHome />
+        <TopBar title="" hideHome hideTitle />
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>

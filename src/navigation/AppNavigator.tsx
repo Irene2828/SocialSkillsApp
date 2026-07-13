@@ -9,6 +9,7 @@ import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { DrawingBoardScreen } from '../screens/DrawingBoardScreen';
 import { HomeScreen } from '../screens/HomeScreen';
+import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme, FONTS } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -36,7 +37,7 @@ const AppTabs = () => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
 
           if (route.name === 'NewQuiz') {
-            iconName = 'bulb-outline';
+            iconName = 'home-outline';
           } else if (route.name === 'MyRewards') {
             return <FontAwesome5 name="coins" size={size - 2} color={color} />;
           } else if (route.name === 'Puzzles') {
@@ -49,7 +50,7 @@ const AppTabs = () => {
         },
         tabBarLabel: ({ focused, color }) => {
           let label = '';
-          if (route.name === 'NewQuiz') label = 'Earn Coins';
+          if (route.name === 'NewQuiz') label = 'Home';
           else if (route.name === 'Puzzles') label = 'Puzzles';
           else if (route.name === 'Drawing') label = 'Draw';
           else if (route.name === 'MyRewards') label = 'Rewards';
@@ -98,7 +99,7 @@ const AppTabs = () => {
       <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
-        options={{ tabBarLabel: 'Earn Coins' }}
+        options={{ tabBarLabel: 'Home' }}
       />
       <Tab.Screen 
         name="Puzzles" 
@@ -124,6 +125,7 @@ export const AppNavigator = () => {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="AppTabs" component={AppTabs} />
+      <Stack.Screen name="CreateQuizFromPhoto" component={CreateQuizFromPhotoScreen} />
     </Stack.Navigator>
   );
 };

@@ -27,30 +27,6 @@ const MOCK_AI_CATEGORY: QuizCategory = {
   isCustom: true
 };
 
-const MOCK_MATH_CATEGORY: QuizCategory = {
-  id: 'math_ai_quiz1',
-  title: 'Quiz 1',
-  description: 'Practice basic math concepts!',
-  icon: 'calculator-outline',
-  isCustom: true,
-  folderId: 'math_quiz_folder'
-};
-
-const MOCK_MATH_QUESTIONS: Question[] = [
-  {
-    id: 'q_math_1',
-    category: 'math_ai_quiz1',
-    difficulty: 'Easy',
-    scenario: 'What is 5 + 3?',
-    options: ['7', '8', '9'],
-    correctAnswerIndex: 1,
-    explanation: '5 + 3 equals 8.',
-    whyOptions: ['Because it is the sum', 'Because 5 is more than 3', 'Because it is the rule'],
-    correctWhyIndex: 0,
-    whyConfirmation: 'Addition is combining two numbers to find the total.'
-  }
-];
-
 const MOCK_AI_QUESTIONS: Question[] = [
   {
     id: 'q_ai_1',
@@ -171,12 +147,10 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
         
         // Merge with our hardcoded AI mocks so they are always there for testing if needed
         const initialCategories = [
-          ...MOCK_AI_CATEGORY ? [MOCK_AI_CATEGORY] : [],
-          MOCK_MATH_CATEGORY
+          ...MOCK_AI_CATEGORY ? [MOCK_AI_CATEGORY] : []
         ];
         const initialQuestions = [
-          ...MOCK_AI_QUESTIONS ? MOCK_AI_QUESTIONS : [],
-          ...MOCK_MATH_QUESTIONS
+          ...MOCK_AI_QUESTIONS ? MOCK_AI_QUESTIONS : []
         ];
 
         setCustomCategories([...initialCategories, ...storedCategories.filter(c => c.id !== 'c_listening_ai' && c.id !== 'math_ai_quiz1')]);
