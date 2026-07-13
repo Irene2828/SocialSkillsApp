@@ -916,7 +916,7 @@ export const NewQuizScreen = () => {
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'quizzes' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#E2E8F0' }]} 
             onPress={() => setActiveTab('quizzes')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -925,7 +925,7 @@ export const NewQuizScreen = () => {
             </View>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'tasks' && { backgroundColor: 'rgba(186, 230, 253, 0.4)', borderColor: '#BAE6FD', borderWidth: 2 }]} 
+            style={styles.tab} 
             onPress={() => setActiveTab('tasks')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
@@ -2321,17 +2321,17 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
     backgroundColor: theme.colors.white,
     borderRadius: 0,
-    padding: theme.spacing.xs,
+    padding: 0,
     marginHorizontal: -theme.spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
     ...theme.shadows.soft,
   },
   tab: {
     flex: 1,
-    paddingVertical: theme.spacing.sm,
+    paddingVertical: theme.spacing.md,
     alignItems: 'center',
-    borderRadius: theme.borderRadius.full,
-    borderWidth: 2,
-    borderColor: 'transparent',
+    justifyContent: 'center',
   },
   activeTab: {
     backgroundColor: theme.colors.primary,
