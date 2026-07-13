@@ -877,6 +877,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 0,
     padding: 0,
+    marginHorizontal: -theme.spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#E2E8F0',
     ...theme.shadows.soft,

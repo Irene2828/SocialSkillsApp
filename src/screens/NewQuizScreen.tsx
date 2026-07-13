@@ -2329,6 +2329,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.white,
     borderRadius: 0,
     padding: 0,
+    marginHorizontal: -theme.spacing.md,
     borderBottomWidth: 1,
     borderBottomColor: '#BAE6FD',
     ...theme.shadows.soft,
