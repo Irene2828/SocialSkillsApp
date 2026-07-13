@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, useWindowDimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -20,8 +20,10 @@ const Stack = createNativeStackNavigator();
 
 const AppTabs = () => {
   const insets = useSafeAreaInsets();
-  const paddingBottom = Math.max(insets.bottom * 0.75, 10);
-  const height = 62 + paddingBottom * 1.2;
+  const { height: windowHeight } = useWindowDimensions();
+  const isSmallScreen = windowHeight < 700;
+  const paddingBottom = isSmallScreen ? Math.max(insets.bottom, 4) : Math.max(insets.bottom * 0.75, 10);
+  const height = isSmallScreen ? 52 + paddingBottom : 62 + paddingBottom * 1.2;
 
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -91,8 +93,8 @@ const AppTabs = () => {
           left: 0,
           right: 0,
           height: height,
-          paddingBottom: paddingBottom * 1.2,
-          paddingTop: 10,
+          paddingBottom: paddingBottom,
+          paddingTop: isSmallScreen ? 4 : 10,
           width: '100%',
         },
         tabBarItemStyle: {

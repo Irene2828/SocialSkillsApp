@@ -404,24 +404,24 @@ export const MyRewardsScreen = () => {
         {/* Bottom Section: Tabs and Lists */}
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
+            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }, activeTab === 'available' && { backgroundColor: '#F0F9FF' }]} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={11} />
+                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={11} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor }]}>All Rewards</Text>
               )}
             </View>
           </Pressable>
           <Pressable 
-            style={styles.tab} 
+            style={[styles.tab, activeTab === 'unlocked' && { backgroundColor: '#F0F9FF' }]} 
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={8} />
+                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={8} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor }]}>Unlocked</Text>
               )}

@@ -475,24 +475,24 @@ export const PuzzleScreen = () => {
           ListHeaderComponent={
             <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
               <Pressable 
-                style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
+                style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }, activeTab === 'animals' && { backgroundColor: '#F0F9FF' }]} 
                 onPress={() => setActiveTab('animals')}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   {activeTab === 'animals' ? (
-                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={7} />
+                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={7} />
                   ) : (
                     <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Animals</Text>
                   )}
                 </View>
               </Pressable>
               <Pressable 
-                style={styles.tab} 
+                style={[styles.tab, activeTab === 'cities' && { backgroundColor: '#F0F9FF' }]} 
                 onPress={() => setActiveTab('cities')}
               >
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   {activeTab === 'cities' ? (
-                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={6} />
+                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={6} />
                   ) : (
                     <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText }]}>Cities</Text>
                   )}

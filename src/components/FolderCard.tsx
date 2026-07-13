@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
+    fontSize: 18,
     fontWeight: '600',
     color: theme.colors.text,
     textAlign: 'center',

@@ -917,24 +917,24 @@ export const NewQuizScreen = () => {
         
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }]} 
+            style={[styles.tab, { borderRightWidth: 1, borderRightColor: '#BAE6FD' }, activeTab === 'quizzes' && { backgroundColor: '#F0F9FF' }]} 
             onPress={() => setActiveTab('quizzes')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'quizzes' ? (
-                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={10} />
+                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={10} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor }]}>My Quizzes</Text>
               )}
             </View>
           </Pressable>
           <Pressable 
-            style={styles.tab} 
+            style={[styles.tab, activeTab === 'tasks' && { backgroundColor: '#F0F9FF' }]} 
             onPress={() => setActiveTab('tasks')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'tasks' ? (
-                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 16, letterSpacing: 0.2, lineHeight: 22 }]} startIndex={0} totalLetters={8} />
+                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 14, letterSpacing: 0.2, lineHeight: 20 }]} startIndex={0} totalLetters={8} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor }]}>My Tasks</Text>
               )}
