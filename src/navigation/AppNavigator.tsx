@@ -10,6 +10,7 @@ import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { DrawingBoardScreen } from '../screens/DrawingBoardScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
+import { SettingsScreen } from '../screens/SettingsScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme, FONTS } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -44,6 +45,8 @@ const AppTabs = () => {
             iconName = 'extension-puzzle-outline';
           } else if (route.name === 'Drawing') {
             iconName = 'color-palette-outline';
+          } else if (route.name === 'Settings') {
+            iconName = 'options-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -54,6 +57,7 @@ const AppTabs = () => {
           else if (route.name === 'Puzzles') label = 'Puzzles';
           else if (route.name === 'Drawing') label = 'Draw';
           else if (route.name === 'MyRewards') label = 'Rewards';
+          else if (route.name === 'Settings') label = 'Settings';
           return (
             <Text style={{
               fontFamily: focused ? FONTS.semiBold : FONTS.medium,
@@ -115,6 +119,11 @@ const AppTabs = () => {
         name="MyRewards" 
         component={MyRewardsScreen} 
         options={{ tabBarLabel: 'Rewards' }}
+      />
+      <Tab.Screen 
+        name="Settings" 
+        component={SettingsScreen} 
+        options={{ tabBarLabel: 'Settings' }}
       />
     </Tab.Navigator>
   );

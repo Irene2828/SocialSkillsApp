@@ -38,44 +38,15 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             <Pressable onPress={onBack} style={{ padding: 8, marginLeft: -8 }}>
               <Ionicons name="arrow-back" size={24} color={textColor} />
             </Pressable>
-          ) : !hideHome ? (
-            <Pressable onPress={() => navigation.navigate('Home')} style={{ padding: 8, marginLeft: -8 }}>
-              {!isRocket ? (
-                <Ionicons name="log-out-outline" size={24} color={theme.colors.secondaryText} />
-              ) : (
-                <Ionicons name="log-out-outline" size={24} color={textColor} />
-              )}
-            </Pressable>
           ) : null}
         </View>
         
-        {hideTitle ? (
-          <View style={{ flex: 1 }} />
-        ) : !title ? (
-          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-             <Image 
-               source={require('../../assets/mascot_v2_transparent.png')}
-               style={{ width: 34, height: 34, resizeMode: 'contain', marginRight: 2, marginTop: -6 }}
-             />
-             <ElectrifiedText animated={false} text="Smart " style={[styles.title, { color: textColor, fontSize: headerFontSize }]} startIndex={0} totalLetters={13} />
-             <ElectrifiedText animated={false} text="Explorer" style={[styles.title, { color: textColor, fontSize: headerFontSize }]} startIndex={6} totalLetters={13} />
-          </View>
-        ) : (
-          <Text style={[styles.title, { color: textColor, fontSize: headerFontSize }]}>{title}</Text>
-        )}
+        <View style={{ flex: 1 }} />
         
         <View style={[styles.side, { alignItems: 'flex-end', flexDirection: 'row', justifyContent: 'flex-end' }]}>
           {rightComponent}
-          <Pressable onPress={() => setShowSettings(true)} style={{ padding: 8 }}>
-            {!isRocket ? (
-              <Ionicons name="options-outline" size={24} color={theme.colors.secondaryText} />
-            ) : (
-              <Ionicons name="options-outline" size={24} color={textColor} />
-            )}
-          </Pressable>
         </View>
       </View>
-      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </>
   );
 };

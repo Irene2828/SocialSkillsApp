@@ -1,142 +1,119 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Header } from '../components/Header';
-import { Card } from '../components/Card';
-import { TopicProgressList } from '../components/TopicProgressList';
-import { ParentLockToggle } from '../components/ParentLockToggle';
-import { Button } from '../components/Button';
-import { useProgress } from '../context/ProgressContext';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, Switch, TextInput } from 'react-native';
 import { theme } from '../theme';
-import { Ionicons } from '@expo/vector-icons';
-import { GlobalBackground } from '../components/GlobalBackground';
-import { useFeedback } from '../context/FeedbackContext';
+import { useRewards } from '../context/RewardsContext';
+import { Button } from '../components/Button';
+import { ScreenWrapper } from '../components/ScreenWrapper';
 
 export const SettingsScreen = () => {
-  const { achievements, isParentModeUnlocked, dailyLimit, setDailyLimit, resetAllData, childName, childAge, totalQuizzesCompleted } = useProgress();
-  const { showModal, showToast } = useFeedback();
+  const { isRewardsModeOn, setIsRewardsModeOn, parentsPin, setParentsPin } = useRewards();
+  const [localPin, setLocalPin] = useState(parentsPin);
 
-  const handleResetData = () => {
-    showModal({
-      title: "Reset Progress?",
-      message: "Are you sure? This will reset all progress and quizzes.",
-      type: "confirm",
-      confirmText: "Yes, Reset",
-      onConfirm: () => {
-        setTimeout(() => {
-          showModal({
-            title: "Final Confirmation",
-            message: "We are safely clearing the data. Continue?",
-            type: "confirm",
-            confirmText: "Reset",
-            onConfirm: () => {
-              resetAllData();
-              showToast({ message: "Reset complete." });
-            }
-          });
-        }, 350); // wait for previous modal to fully close
-      }
-    });
+  const handleSavePin = () => {
+    setParentsPin(localPin);
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <GlobalBackground />
-      <ScreenWrapper transparent>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* Achievements (Topic Progress) */}
-        <TopicProgressList totalCompletions={totalQuizzesCompleted} />
+    <ScreenWrapper>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Settings</Text>
+      </View>
 
-        {/* Parent Section */}
-        <ParentLockToggle />
+      <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
+        
+        {/* Rewards Mode Toggle */}
+        <View style={styles.settingRow}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.settingLabel}>Rewards Mode</Text>
+            <Text style={styles.settingDescription}>When ON, quizzes grant coins.</Text>
+          </View>
+          <Switch
+            value={isRewardsModeOn}
+            onValueChange={setIsRewardsModeOn}
+            trackColor={{ false: '#D1D5DB', true: theme.colors.primary }}
+            thumbColor={'#FFFFFF'}
+          />
+        </View>
 
-        {isParentModeUnlocked && (
-          <Card style={styles.parentControlsCard}>
-            <Text style={styles.controlTitle}>Daily Quiz Limit</Text>
-            <Text style={styles.controlDescription}>Prevent burnout by limiting quizzes per day.</Text>
-            <View style={styles.limitRow}>
-              {[1, 2, 3, 5, 10].map(limit => (
-                <Button 
-                  key={limit}
-                  title={`${limit}`}
-                  variant={dailyLimit === limit ? 'primary' : 'secondary'}
-                  onPress={() => setDailyLimit(limit)}
-                  style={styles.limitButton}
-                />
-              ))}
-            </View>
-            
-            <Text style={[styles.controlTitle, { marginTop: theme.spacing.lg, color: '#EF4444' }]}>Danger Zone</Text>
-            <Button 
-              title="Reset All Progress" 
-              variant="secondary" 
-              onPress={handleResetData} 
+        {/* Parents Pin */}
+        <View style={styles.settingSection}>
+          <Text style={styles.settingLabel}>Parents' PIN</Text>
+          <Text style={styles.settingDescription}>Set a PIN to lock settings or edit modes in the future.</Text>
+          
+          <View style={styles.pinRow}>
+            <TextInput
+              style={styles.pinInput}
+              value={localPin}
+              onChangeText={setLocalPin}
+              placeholder="Enter PIN"
+              keyboardType="number-pad"
+              secureTextEntry
+              maxLength={6}
             />
-          </Card>
-        )}
-        </ScrollView>
-      </ScreenWrapper>
-    </View>
+            <Button 
+              title="Save"
+              onPress={handleSavePin}
+              style={{ width: '100%', marginTop: theme.spacing.md }}
+            />
+          </View>
+        </View>
+
+      </ScrollView>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
+  header: {
+    padding: theme.spacing.xl,
+    paddingTop: 40,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    ...theme.typography.heading,
+    fontSize: 28,
+    color: theme.colors.text,
+  },
   scrollContent: {
-    paddingVertical: theme.spacing.xl,
-  },
-  profileCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: theme.spacing.xl,
-  },
-  avatarPlaceholder: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: theme.colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: theme.spacing.md,
-  },
-  profileInfo: {
     flex: 1,
+    paddingHorizontal: theme.spacing.xl,
   },
-  profileName: {
-    ...theme.typography.heading,
-    fontSize: 20,
-    color: theme.colors.text,
-  },
-  profileAge: {
-    ...theme.typography.body,
-    color: theme.colors.secondaryText,
-  },
-  sectionHeader: {
-    ...theme.typography.heading,
-    fontSize: 22,
-    marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.sm,
-    color: theme.colors.text,
-  },
-  parentControlsCard: {
+  settingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: theme.spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.stroke,
     marginBottom: theme.spacing.lg,
   },
-  controlTitle: {
-    ...theme.typography.heading,
-    fontSize: 18,
-    marginBottom: theme.spacing.xs,
+  settingSection: {
+    paddingVertical: theme.spacing.md,
   },
-  controlDescription: {
+  settingLabel: {
     ...theme.typography.body,
+    fontWeight: '700',
+    fontSize: 20,
+    color: theme.colors.text,
+    marginBottom: 4,
+  },
+  settingDescription: {
+    ...theme.typography.body,
+    fontSize: 16,
     color: theme.colors.secondaryText,
     marginBottom: theme.spacing.md,
   },
-  limitRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  pinRow: {
+    flexDirection: 'column',
   },
-  limitButton: {
-    marginRight: theme.spacing.sm,
-    marginBottom: theme.spacing.sm,
-    minWidth: 50,
-  },
+  pinInput: {
+    width: '100%',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+    borderColor: theme.colors.stroke,
+    borderRadius: theme.borderRadius.md,
+    padding: theme.spacing.md,
+    ...theme.typography.body,
+    fontSize: 18,
+  }
 });

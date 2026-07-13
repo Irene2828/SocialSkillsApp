@@ -2320,11 +2320,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: theme.spacing.md,
     backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.full,
+    borderRadius: 0,
     padding: theme.spacing.xs,
-    borderWidth: 1.5,
-    borderColor: '#BAE6FD',
-    borderStyle: 'dashed',
+    marginHorizontal: -theme.spacing.lg,
     ...theme.shadows.soft,
   },
   tab: {
