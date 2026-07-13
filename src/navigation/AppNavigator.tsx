@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, useWindowDimensions } from 'react-native';
+import { Text, Dimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -20,7 +20,7 @@ const Stack = createNativeStackNavigator();
 
 const AppTabs = () => {
   const insets = useSafeAreaInsets();
-  const { height: windowHeight } = useWindowDimensions();
+  const windowHeight = Dimensions.get('window').height;
   const isSmallScreen = windowHeight < 700;
   const paddingBottom = isSmallScreen ? Math.max(insets.bottom, 4) : Math.max(insets.bottom * 0.75, 10);
   const height = isSmallScreen ? 52 + paddingBottom : 62 + paddingBottom * 1.2;
