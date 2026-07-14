@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, ScrollView, Modal } from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, Modal, Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -226,7 +226,7 @@ export const DrawingBoardScreenWeb = () => {
             ]}
             onPress={() => setShowColorPicker(true)}
           >
-            <Ionicons name="aperture-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
+            <Image source={require('../../assets/color-wheel.png')} style={{ width: 24, height: 24, borderRadius: 12 }} />
           </Pressable>
         </ScrollView>
       </View>

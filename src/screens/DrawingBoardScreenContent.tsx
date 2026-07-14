@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView, Image } from 'react-native';
 import { Canvas, Path } from '@shopify/react-native-skia';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -208,7 +208,7 @@ export const DrawingBoardScreen = () => {
             ]}
             onPress={() => setShowColorPicker(true)}
           >
-            <Ionicons name="aperture-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
+            <Image source={require('../../assets/color-wheel.png')} style={{ width: 24, height: 24, borderRadius: 12 }} />
           </Pressable>
         </ScrollView>
       </View>
