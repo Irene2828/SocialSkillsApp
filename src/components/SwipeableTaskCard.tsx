@@ -135,12 +135,12 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
               isRocket && { color: '#FFFFFF' },
               task.isCompleted && styles.taskTitleCompleted,
               task.isCompleted && isRocket && { color: 'rgba(255, 255, 255, 0.5)' }
-            ]} numberOfLines={1}>
+            ]}>
               {task.title}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
               <FontAwesome5 name="coins" size={12} color={gradientColors[0]} style={{ marginRight: 4 }} />
-              <View style={{ flexDirection: 'row' }}>
+              <View style={{ flexDirection: 'row', flex: 1 }}>
                 {('+' + task.coinValue).split('').map((char, index) => (
                   <Text 
                     key={`cost-${index}`} 
@@ -154,31 +154,30 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
                   </Text>
                 ))}
               </View>
+              {task.isCompleted && (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Pressable 
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      onDelete(task.id);
+                    }}
+                    style={{ padding: 4, marginRight: 8 }}
+                  >
+                    <Ionicons name="trash-outline" size={18} color={theme.colors.error} />
+                  </Pressable>
+                  <Pressable 
+                    onPress={(e) => {
+                      e.stopPropagation();
+                      onToggle(task);
+                    }}
+                    style={{ padding: 4 }}
+                  >
+                    <Ionicons name="arrow-undo-outline" size={18} color={theme.colors.secondaryText} />
+                  </Pressable>
+                </View>
+              )}
             </View>
           </View>
-
-          {task.isCompleted && (
-            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-              <Pressable 
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onDelete(task.id);
-                }}
-                style={{ padding: 4, marginRight: 12 }}
-              >
-                <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
-              </Pressable>
-              <Pressable 
-                onPress={(e) => {
-                  e.stopPropagation();
-                  onToggle(task);
-                }}
-                style={{ padding: 4, marginRight: 4 }}
-              >
-                <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
-              </Pressable>
-            </View>
-          )}
         </View>
       </Animated.View>
     </View>
@@ -191,7 +190,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.sm,
-    height: 72,
+    minHeight: 72,
   },
   actionsContainer: {
     position: 'absolute',

@@ -36,7 +36,10 @@ export const TasksScreen = () => {
   const [newTaskCoins, setNewTaskCoins] = useState('10'); // Default 10 coins
 
   // Tasks ordered by creation time
-  const sortedTasks = [...tasks].sort((a, b) => b.createdAt - a.createdAt);
+  const sortedTasks = [...tasks].sort((a, b) => {
+    if (a.isCompleted !== b.isCompleted) return a.isCompleted ? 1 : -1;
+    return b.createdAt - a.createdAt;
+  });
 
   const handleToggleTask = (task: Task) => {
     if (task.isCompleted) return; // Do nothing if already completed
