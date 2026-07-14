@@ -489,7 +489,7 @@ export const PuzzleScreen = () => {
             
             <View style={styles.createAiButtonContainer}>
               <Button
-                title="Create New Puzzle with AI"
+                title="Generate New Puzzle"
                 iconName="extension-puzzle-outline"
                 style={[styles.createAiButton, { width: '100%', maxWidth: '100%' }]}
                 onPress={() => setShowAiMenu(true)}

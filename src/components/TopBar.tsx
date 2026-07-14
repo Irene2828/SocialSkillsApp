@@ -44,7 +44,6 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         !hideBorder && {
           borderBottomWidth: 1,
           borderBottomColor: '#BAE6FD',
-          backgroundColor: '#FFFFFF',
           shadowColor: '#38BDF8',
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.06,
