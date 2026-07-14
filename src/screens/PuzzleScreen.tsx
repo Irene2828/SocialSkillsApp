@@ -477,7 +477,6 @@ export const PuzzleScreen = () => {
                   <Text style={{ fontSize: 40 }}>🐼</Text>
                 </View>
                 <Text style={styles.cardName}>Cute Animals</Text>
-                <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, fontSize: 12 }}>{PUZZLES.filter(p => p.category === 'animals').length} puzzles</Text>
               </Pressable>
 
               <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
@@ -485,7 +484,6 @@ export const PuzzleScreen = () => {
                   <Text style={{ fontSize: 40 }}>🏙️</Text>
                 </View>
                 <Text style={styles.cardName}>Cities</Text>
-                <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, fontSize: 12 }}>{PUZZLES.filter(p => p.category === 'cities').length} puzzles</Text>
               </Pressable>
             </View>
             
