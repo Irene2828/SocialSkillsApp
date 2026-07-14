@@ -108,6 +108,7 @@ export const TasksScreen = () => {
           <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
             <Button 
               title="Add a New Task" 
+              iconName="add"
               onPress={() => setIsModalVisible(true)}
               style={styles.addButton}
               variant="primary"

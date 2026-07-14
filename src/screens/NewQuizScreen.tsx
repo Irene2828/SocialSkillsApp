@@ -56,7 +56,8 @@ export const NewQuizScreen = () => {
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const numColumns = 2;
-  const cardWidth = Math.floor((width - 32 - (16 * (numColumns - 1))) / numColumns);
+  const contentWidth = Math.min(width, 700);
+  const cardWidth = Math.floor((contentWidth - 32 - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();

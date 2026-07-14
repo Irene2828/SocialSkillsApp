@@ -27,9 +27,9 @@ const AppTabs = () => {
   const isTablet = windowWidth >= 768;
   const isSmallScreen = !isTablet && windowHeight < 700;
   // Tablet: taller bar for comfortable touch targets; small phone: compact bar
-  const paddingBottom = Math.max(insets.bottom, isTablet ? 8 : (isSmallScreen ? 4 : 6));
+  const paddingBottom = Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 4 : 6));
   const height = isTablet
-    ? 74 + paddingBottom
+    ? 64 + paddingBottom
     : isSmallScreen
     ? 52 + paddingBottom
     : 62 + Math.round(paddingBottom * 1.2);

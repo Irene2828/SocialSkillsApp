@@ -272,7 +272,8 @@ export const PuzzleScreen = () => {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
   const isTablet = screenWidth >= 768;
   const numColumns = 2;
-  const cardWidth = Math.floor((screenWidth - 32 - (16 * (numColumns - 1))) / numColumns);
+  const contentWidth = Math.min(screenWidth, 700);
+  const cardWidth = Math.floor((contentWidth - 32 - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = screenWidth < 380;
   const boardSize = Math.min(screenWidth - 48, 400);
 
@@ -493,6 +494,7 @@ export const PuzzleScreen = () => {
                 title="Generate New Puzzle"
                 iconName="extension-puzzle-outline"
                 style={[styles.createAiButton, { width: '100%', maxWidth: '100%' }]}
+                textStyle={{ fontSize: isTablet ? 16 : 13.5 }}
                 onPress={() => setShowAiMenu(true)}
               />
             </View>
