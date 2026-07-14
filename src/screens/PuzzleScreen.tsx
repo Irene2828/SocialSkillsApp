@@ -478,14 +478,14 @@ export const PuzzleScreen = () => {
                 <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
                   <Text style={{ fontSize: 40 }}>🐼</Text>
                 </View>
-                <Text style={styles.cardName}>Cute Animals</Text>
+                <Text style={styles.cardName} numberOfLines={2}>Cute Animals</Text>
               </Pressable>
 
               <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
                 <View style={[styles.cardIconContainer, { backgroundColor: '#FFEDD5' }]}>
                   <Text style={{ fontSize: 40 }}>🏙️</Text>
                 </View>
-                <Text style={styles.cardName}>Cities</Text>
+                <Text style={styles.cardName} numberOfLines={2}>Cities</Text>
               </Pressable>
             </View>
             
@@ -530,7 +530,7 @@ export const PuzzleScreen = () => {
                       styles.cardName,
                       isRocket && { color: '#FFFFFF' },
                       isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
-                    ]}>{puzzle.name}</Text>
+                    ]} numberOfLines={2}>{puzzle.name}</Text>
                   </Animated.View>
                 </Pressable>
 
@@ -700,7 +700,6 @@ export const PuzzleScreen = () => {
                       style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
                     >
                       <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
-                      <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
                     </Pressable>
                   </View>
                   <View style={{ flex: 2, alignItems: 'center' }}>

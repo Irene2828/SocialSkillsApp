@@ -141,7 +141,7 @@ export const TasksScreen = () => {
 
             <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
             <View style={[styles.coinInputContainer, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }]}>
-              <FontAwesome5 name="coins" size={16} color="#F59E0B" />
+              <FontAwesome5 name="coins" size={16} color={isRocket ? '#FFFFFF' : '#38BDF8'} />
               <TextInput
                 style={[styles.coinInput, isRocket && { color: '#FFFFFF' }]}
                 value={newTaskCoins}
@@ -153,17 +153,17 @@ export const TasksScreen = () => {
 
             <View style={styles.modalActions}>
               <Button 
-                title="Cancel" 
-                onPress={() => setIsModalVisible(false)}
-                style={{ flex: 1, marginRight: theme.spacing.sm, backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : '#E5E7EB' }}
-                textStyle={{ color: isDark ? '#FFFFFF' : theme.colors.text }}
-              />
-              <Button 
                 title="Save Task" 
                 onPress={handleAddTask}
-                style={{ flex: 1, marginLeft: theme.spacing.sm }}
+                style={{ width: '100%', marginBottom: theme.spacing.sm }}
                 variant="primary"
                 disabled={!newTaskTitle.trim()}
+              />
+              <Button 
+                title="Cancel" 
+                onPress={() => setIsModalVisible(false)}
+                style={{ width: '100%', backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : '#E5E7EB' }}
+                textStyle={{ color: isDark ? '#FFFFFF' : theme.colors.text }}
               />
             </View>
           </View>
@@ -342,7 +342,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   modalActions: {
-    flexDirection: 'row',
+    flexDirection: 'column',
+    width: '100%',
     marginTop: theme.spacing.xl,
   },
 });

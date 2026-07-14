@@ -94,7 +94,6 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             <Text 
               style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} 
               numberOfLines={2}
-              adjustsFontSizeToFit
             >
               {category.title}
             </Text>

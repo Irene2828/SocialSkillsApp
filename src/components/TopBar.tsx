@@ -64,7 +64,6 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
           {onBack ? (
             <Pressable onPress={onBack} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="arrow-back" size={24} color={textColor} />
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12 }]}>Back</Text>
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>

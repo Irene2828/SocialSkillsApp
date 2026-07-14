@@ -1855,6 +1855,7 @@ const styles = StyleSheet.create({
   bentoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    justifyContent: 'space-between',
     gap: theme.spacing.md,
   },
   bentoItem: {
