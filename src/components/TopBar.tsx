@@ -98,7 +98,9 @@ const styles = StyleSheet.create({
     height: 72,
     width: '100%',
     zIndex: 100,
-    marginBottom: theme.spacing.lg,
+    borderBottomWidth: 1,
+    borderBottomColor: '#BAE6FD',
+    marginBottom: 12, // Cut by 50% (was theme.spacing.lg which is 24)
   },
   side: {
     minWidth: 40,
