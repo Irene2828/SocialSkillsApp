@@ -10,7 +10,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { useTasks, Task } from '../context/TasksContext';
 import { useRewards } from '../context/RewardsContext';
-import { useFeedback } from '../context/FeedbackContext';
+
 import { QuizLibraryStackParamList } from '../navigation/QuizLibraryNavigator';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { TopBar } from '../components/TopBar';
@@ -28,7 +28,7 @@ export const TasksScreen = () => {
   
   const { tasks, addTask, toggleTaskCompletion, deleteTask, editTask } = useTasks();
   const { addCoins } = useRewards();
-  const { showModal } = useFeedback();
+
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -46,11 +46,6 @@ export const TasksScreen = () => {
     const wasJustCompleted = toggleTaskCompletion(task.id);
     if (wasJustCompleted) {
       addCoins(task.coinValue);
-      showModal({
-        title: 'Task Completed!',
-        message: 'Check your rewards to redeem earned coins for real rewards!',
-        type: 'success',
-      });
     }
   };
 
