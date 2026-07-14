@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, Modal } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../theme';
 import { useMood, getMoodColors } from '../context/MoodContext';
+import ColorPicker from 'react-native-wheel-color-picker';
 
 type Stroke = {
   path: string;
@@ -13,12 +14,13 @@ type Stroke = {
 };
 
 const COLORS = [
-  '#EF8B8B',
-  '#FFC857',
-  '#BEF264',
-  '#60A5FA',
-  '#A78BFA',
-  '#111827',
+  '#EF8B8B', // Pastel Red
+  '#FFC857', // Yellow
+  '#BEF264', // Green
+  '#60A5FA', // Blue
+  '#A78BFA', // Purple
+  '#FFD700', // Gold
+  '#111827', // Black
 ];
 
 const STROKE_WIDTHS = [
@@ -35,10 +37,14 @@ export const DrawingBoardScreenWeb = () => {
   const isDark = moodColors.isDark;
 
   const [paths, setPaths] = useState<Stroke[]>([]);
+  const [redoPaths, setRedoPaths] = useState<Stroke[]>([]);
   const [activeColor, setActiveColor] = useState(COLORS[5]);
   const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [currentPath, setCurrentPath] = useState<string>('');
+  const isDrawing = useRef(false);
 
   const canvasRef = useRef<any>(null);
 
@@ -46,12 +52,10 @@ export const DrawingBoardScreenWeb = () => {
     const el = canvasRef.current;
     if (el && typeof el.addEventListener === 'function') {
       const preventScroll = (e: TouchEvent) => {
-        // Prevent Safari from scrolling the page when drawing
         if (e.cancelable) {
           e.preventDefault();
         }
       };
-      // { passive: false } is required on iOS Safari to allow preventDefault
       el.addEventListener('touchmove', preventScroll, { passive: false });
       return () => {
         el.removeEventListener('touchmove', preventScroll);
@@ -74,16 +78,19 @@ export const DrawingBoardScreenWeb = () => {
   };
 
   const handleTouchStart = (e: any) => {
+    isDrawing.current = true;
     const { x, y } = getCoordinates(e);
     setCurrentPath(`M ${x} ${y}`);
   };
 
   const handleTouchMove = (e: any) => {
+    if (!isDrawing.current) return;
     const { x, y } = getCoordinates(e);
     setCurrentPath(prev => prev ? `${prev} L ${x} ${y}` : `M ${x} ${y}`);
   };
 
-  const handleTouchEnd = () => {
+  const handlePointerUp = (e: any) => {
+    isDrawing.current = false;
     setCurrentPath(prevPath => {
       if (prevPath) {
         setPaths(prev => [
@@ -94,22 +101,33 @@ export const DrawingBoardScreenWeb = () => {
             strokeWidth: activeStrokeWidth 
           }
         ]);
+        setRedoPaths([]); // Clear redo stack on new action
       }
       return '';
     });
   };
 
   const undo = () => {
+    if (paths.length === 0) return;
+    const lastPath = paths[paths.length - 1];
+    setRedoPaths(prev => [...prev, lastPath]);
     setPaths(prev => prev.slice(0, -1));
+  };
+
+  const redo = () => {
+    if (redoPaths.length === 0) return;
+    const pathToRestore = redoPaths[redoPaths.length - 1];
+    setPaths(prev => [...prev, pathToRestore]);
+    setRedoPaths(prev => prev.slice(0, -1));
   };
 
   const clearCanvas = () => {
     setPaths([]);
+    setRedoPaths([]);
   };
 
   return (
     <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-
       <View style={styles.container}>
         <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
@@ -120,13 +138,11 @@ export const DrawingBoardScreenWeb = () => {
           onMoveShouldSetResponder={() => true}
           onResponderGrant={handleTouchStart}
           onResponderMove={handleTouchMove}
-          onResponderRelease={handleTouchEnd}
-          onResponderTerminate={handleTouchEnd}
+          onResponderRelease={handlePointerUp}
+          onResponderTerminate={handlePointerUp}
         >
-          {/* @ts-ignore */}
           <svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>
             {paths.map((stroke, index) => (
-              // @ts-ignore
               <path
                 key={index}
                 d={stroke.path}
@@ -138,7 +154,6 @@ export const DrawingBoardScreenWeb = () => {
               />
             ))}
             {currentPath ? (
-              // @ts-ignore
               <path
                 d={currentPath}
                 stroke={activeColor}
@@ -148,7 +163,6 @@ export const DrawingBoardScreenWeb = () => {
                 fill="none"
               />
             ) : null}
-          {/* @ts-ignore */}
           </svg>
         </View>
       </View>
@@ -163,6 +177,10 @@ export const DrawingBoardScreenWeb = () => {
           <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
             <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+          </Pressable>
+          
+          <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
@@ -199,6 +217,17 @@ export const DrawingBoardScreenWeb = () => {
               onPress={() => setActiveColor(color)}
             />
           ))}
+          
+          <Pressable
+            style={[
+              styles.colorBtn,
+              { backgroundColor: !COLORS.includes(activeColor) ? activeColor : 'transparent', borderWidth: 2, borderColor: isDark ? '#FFFFFF' : theme.colors.neutralGrey, justifyContent: 'center', alignItems: 'center' },
+              !COLORS.includes(activeColor) && styles.activeColorBtn
+            ]}
+            onPress={() => setShowColorPicker(true)}
+          >
+            <Ionicons name="color-palette-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
+          </Pressable>
         </ScrollView>
       </View>
       ) : (
@@ -210,6 +239,27 @@ export const DrawingBoardScreenWeb = () => {
         </Pressable>
       )}
       </View>
+
+      {showColorPicker && (
+        <View style={styles.colorPickerModal}>
+          <View style={[styles.colorPickerContainer, isDark && { backgroundColor: moodColors.bg }]}>
+            <View style={{ flex: 1, padding: 20 }}>
+              <ColorPicker
+                color={activeColor}
+                onColorChange={(color: string) => setActiveColor(color)}
+                onColorChangeComplete={(color: string) => setActiveColor(color)}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
+            <Pressable style={[styles.closePickerBtn, { backgroundColor: activeColor }]} onPress={() => setShowColorPicker(false)}>
+              <Text style={styles.closePickerText}>Select Color</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -290,5 +340,38 @@ const styles = StyleSheet.create({
   activeColorBtn: {
     borderColor: 'rgba(0,0,0,0.2)',
     transform: [{ scale: 1.15 }],
+  },
+  colorPickerModal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  colorPickerContainer: {
+    width: '85%',
+    height: 400,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  closePickerBtn: {
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closePickerText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   }
 });

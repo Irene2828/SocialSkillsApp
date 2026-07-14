@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { theme } from '../theme';
 import { useMood, getMoodColors } from '../context/MoodContext';
+import ColorPicker from 'react-native-wheel-color-picker';
 
 type Stroke = {
   path: string;
@@ -20,6 +21,7 @@ const COLORS = [
   '#BEF264', // Green
   '#60A5FA', // Blue
   '#A78BFA', // Purple
+  '#FFD700', // Gold
   '#111827', // Black
 ];
 
@@ -37,10 +39,12 @@ export const DrawingBoardScreen = () => {
   const isDark = moodColors.isDark;
 
   const [paths, setPaths] = useState<Stroke[]>([]);
+  const [redoPaths, setRedoPaths] = useState<Stroke[]>([]);
   const [activeColor, setActiveColor] = useState(COLORS[5]);
   const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
   
+  const [showColorPicker, setShowColorPicker] = useState(false);
   const [currentPath, setCurrentPath] = useState<string>('');
 
   const getCoordinates = (e: any) => {
@@ -78,17 +82,29 @@ export const DrawingBoardScreen = () => {
             strokeWidth: activeStrokeWidth 
           }
         ]);
+        setRedoPaths([]); // Clear redo stack on new action
       }
       return '';
     });
   };
 
   const undo = () => {
+    if (paths.length === 0) return;
+    const lastPath = paths[paths.length - 1];
+    setRedoPaths(prev => [...prev, lastPath]);
     setPaths(prev => prev.slice(0, -1));
+  };
+
+  const redo = () => {
+    if (redoPaths.length === 0) return;
+    const pathToRestore = redoPaths[redoPaths.length - 1];
+    setPaths(prev => [...prev, pathToRestore]);
+    setRedoPaths(prev => prev.slice(0, -1));
   };
 
   const clearCanvas = () => {
     setPaths([]);
+    setRedoPaths([]);
   };
 
   return (
@@ -144,6 +160,10 @@ export const DrawingBoardScreen = () => {
             <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
           </Pressable>
           
+          <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+          </Pressable>
+          
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
             <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
           </Pressable>
@@ -173,11 +193,23 @@ export const DrawingBoardScreen = () => {
                 styles.colorBtn,
                 { backgroundColor: color },
                 activeColor === color && styles.activeColorBtn,
-                activeColor === color && color === '#111827' && isDark && { borderColor: 'rgba(255,255,255,0.5)' }
+                activeColor === color && color === '#111827' && isDark && { borderColor: 'rgba(255,255,255,0.2)' }
               ]}
               onPress={() => setActiveColor(color)}
             />
           ))}
+          
+          {/* Custom Color Wheel Button */}
+          <Pressable
+            style={[
+              styles.colorBtn,
+              { backgroundColor: !COLORS.includes(activeColor) ? activeColor : 'transparent', borderWidth: 2, borderColor: isDark ? '#FFFFFF' : theme.colors.neutralGrey, justifyContent: 'center', alignItems: 'center' },
+              !COLORS.includes(activeColor) && styles.activeColorBtn
+            ]}
+            onPress={() => setShowColorPicker(true)}
+          >
+            <Ionicons name="color-palette-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
+          </Pressable>
         </ScrollView>
       </View>
       ) : (
@@ -189,6 +221,27 @@ export const DrawingBoardScreen = () => {
         </Pressable>
       )}
       </GestureHandlerRootView>
+      
+      {showColorPicker && (
+        <View style={styles.colorPickerModal}>
+          <View style={[styles.colorPickerContainer, isDark && { backgroundColor: moodColors.bg }]}>
+            <View style={{ flex: 1, padding: 20 }}>
+              <ColorPicker
+                color={activeColor}
+                onColorChange={(color: string) => setActiveColor(color)}
+                onColorChangeComplete={(color: string) => setActiveColor(color)}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
+            <Pressable style={[styles.closePickerBtn, { backgroundColor: activeColor }]} onPress={() => setShowColorPicker(false)}>
+              <Text style={styles.closePickerText}>Select Color</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -269,6 +322,39 @@ const styles = StyleSheet.create({
   activeColorBtn: {
     borderColor: 'rgba(0,0,0,0.2)',
     transform: [{ scale: 1.15 }],
+  },
+  colorPickerModal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  colorPickerContainer: {
+    width: '85%',
+    height: 400,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  closePickerBtn: {
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closePickerText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
   }
 });
 
