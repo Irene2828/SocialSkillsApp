@@ -192,10 +192,11 @@ export const HomeScreen = () => {
           title="" 
           hideHome 
           hideTitle 
+          hideBorder
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
-              <Ionicons name="options-outline" size={24} color={moodColors.isDark ? '#FFFFFF' : theme.colors.text} />
-              <Text style={{ fontFamily: FONTS.medium, fontSize: isTablet ? 12 : 10, color: moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginTop: 4, textAlign: 'center' }}>Settings</Text>
+              <Ionicons name="options-outline" size={24} color="#38BDF8" />
+              <Text style={{ fontFamily: FONTS.medium, fontSize: isTablet ? 12 : 10, color: '#38BDF8', marginTop: 4, textAlign: 'center' }}>Settings</Text>
             </Pressable>
           }
         />

@@ -17,9 +17,10 @@ interface TopBarProps {
   hideHome?: boolean;
   hideTitle?: boolean;
   showSettingsAndRewards?: boolean;
+  hideBorder?: boolean;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder }) => {
   const navigation = useNavigation<any>();
   const { coinBalance } = useRewards();
   const [showSettings, setShowSettings] = useState(false);
@@ -37,7 +38,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
 
   return (
     <>
-      <View style={[styles.container, { position: 'relative' }]}>
+      <View style={[styles.container, { position: 'relative' }, hideBorder && { borderBottomWidth: 0 }]}>
         {/* Center: Title (absolutely positioned for perfect centering) */}
         <View style={styles.titleContainer} pointerEvents="none">
           {!hideTitle && (
