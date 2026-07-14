@@ -1023,7 +1023,7 @@ export const NewQuizScreen = () => {
         />
 
         {/* Progress container (above the ScrollView) */}
-        <View style={{ paddingHorizontal: 0, paddingBottom: theme.spacing.md }}>
+        <View style={{ paddingHorizontal: 0, paddingTop: theme.spacing.md, paddingBottom: theme.spacing.md }}>
           <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
             {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
               <LinearGradient
@@ -1199,7 +1199,7 @@ export const NewQuizScreen = () => {
       <ScreenWrapper transparent>
         {quizState === 'selection' && (
           <TopBar 
-            title={activeFolderId ? (folders.find(f => f.id === activeFolderId)?.name || "Quizzes") : "Quizzes"} 
+            title={activeFolderId ? (folders.find(f => f.id === activeFolderId)?.name || "Quizes") : "Quizes"} 
             showSettingsAndRewards={true} 
             onBack={activeFolderId ? navigateBackFromFolder : undefined}
           />

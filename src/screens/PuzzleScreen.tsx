@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    height: 158,
+    minHeight: 175,
     backgroundColor: theme.colors.white,
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,

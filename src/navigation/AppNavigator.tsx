@@ -64,7 +64,7 @@ const AppTabs = () => {
         },
         tabBarLabel: ({ focused, color }) => {
           let label = '';
-          if (route.name === 'NewQuiz') label = 'Quizzes';
+          if (route.name === 'NewQuiz') label = 'Quizes';
           else if (route.name === 'Tasks') label = 'Tasks';
           else if (route.name === 'Puzzles') label = 'Puzzles';
           else if (route.name === 'Drawing') label = 'Draw';
@@ -114,7 +114,7 @@ const AppTabs = () => {
       <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
-        options={{ tabBarLabel: 'Quizzes' }}
+        options={{ tabBarLabel: 'Quizes' }}
       />
       <Tab.Screen 
         name="Tasks" 

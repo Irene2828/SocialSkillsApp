@@ -158,31 +158,25 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
           </View>
 
           {task.isCompleted && (
-            <View style={{ alignItems: 'flex-end', justifyContent: 'center' }}>
-              <View style={[styles.receivedChip, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-                <Ionicons name="checkmark-circle-outline" size={16} color={isRocket ? '#FFFFFF' : theme.colors.text} style={{ marginRight: 4 }} />
-                <Text style={[styles.receivedText, isRocket && { color: '#FFFFFF' }]}>Task Done</Text>
-              </View>
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8 }}>
-                <Pressable 
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    onDelete(task.id);
-                  }}
-                  style={{ padding: 4, marginRight: 8 }}
-                >
-                  <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
-                </Pressable>
-                <Pressable 
-                  onPress={(e) => {
-                    e.stopPropagation();
-                    onToggle(task);
-                  }}
-                  style={{ padding: 4, marginRight: 4 }}
-                >
-                  <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
-                </Pressable>
-              </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+              <Pressable 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onDelete(task.id);
+                }}
+                style={{ padding: 4, marginRight: 12 }}
+              >
+                <Ionicons name="trash-outline" size={20} color={theme.colors.error} />
+              </Pressable>
+              <Pressable 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  onToggle(task);
+                }}
+                style={{ padding: 4, marginRight: 4 }}
+              >
+                <Ionicons name="arrow-undo-outline" size={20} color={theme.colors.secondaryText} />
+              </Pressable>
             </View>
           )}
         </View>
