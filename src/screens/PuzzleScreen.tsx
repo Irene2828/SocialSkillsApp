@@ -12,6 +12,7 @@ import { GlobalBackground } from '../components/GlobalBackground';
 import { ElectrifiedText } from '../components/ElectrifiedText';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
 import { SettingsModal } from '../components/SettingsModal';
+import { TopBar } from '../components/TopBar';
 import { SilverDust } from '../components/SilverDust';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
@@ -189,7 +190,7 @@ export const PuzzleScreen = () => {
   const [isSolved, setIsSolved] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
-  const [activeTab, setActiveTab] = useState<'animals' | 'cities'>('animals');
+  const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
 
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
@@ -223,7 +224,7 @@ export const PuzzleScreen = () => {
     loadPuzzles();
   }, []);
 
-  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => p.category === activeTab || p.id.startsWith('p_custom_'));
+  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => activeFolderId ? (p.category === activeFolderId || p.id.startsWith('p_custom_')) : false);
 
   const handleDeletePuzzle = (puzzle: PuzzleConfig) => {
     setActionMenuPuzzle(puzzle);
@@ -461,109 +462,102 @@ export const PuzzleScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground />
-      <ScreenWrapper transparent disableSafeAreaTop>
-        {/* TopBar removed to prevent space at top */}
+      <ScreenWrapper transparent>
+        <TopBar 
+          title={activeFolderId === 'animals' ? 'Cute Animals' : activeFolderId === 'cities' ? 'Cities' : 'Puzzles'} 
+          showSettingsAndRewards={true} 
+          onBack={activeFolderId ? () => setActiveFolderId(null) : undefined}
+        />
 
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-          data={allPuzzles}
-          keyExtractor={(item) => item.id}
-          key={numColumns}
-          numColumns={numColumns}
-          columnWrapperStyle={{ gap: theme.spacing.md, marginBottom: theme.spacing.md }}
-          ListHeaderComponent={
-            <View style={[styles.tabContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
-              <Pressable 
-                style={[styles.tab, activeTab === 'animals' && { backgroundColor: '#F0F9FF' }]} 
-                onPress={() => setActiveTab('animals')}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  {activeTab === 'animals' ? (
-                    <ElectrifiedText animated={false} text="Animals" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={7} />
-                  ) : (
-                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText, fontSize: 18, lineHeight: 26 }]}>Animals</Text>
-                  )}
+        {!activeFolderId ? (
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
+              <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('animals')}>
+                <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
+                  <Text style={{ fontSize: 40 }}>🐼</Text>
                 </View>
+                <Text style={styles.cardName}>Cute Animals</Text>
+                <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, fontSize: 12 }}>{PUZZLES.filter(p => p.category === 'animals').length} puzzles</Text>
               </Pressable>
-              <Pressable 
-                style={[styles.tab, activeTab === 'cities' && { backgroundColor: '#F0F9FF' }]} 
-                onPress={() => setActiveTab('cities')}
-              >
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  {activeTab === 'cities' ? (
-                    <ElectrifiedText animated={false} text="Cities" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={6} />
-                  ) : (
-                    <Text style={[styles.tabText, { color: isRocket ? '#FFFFFF' : theme.colors.secondaryText, fontSize: 18, lineHeight: 26 }]}>Cities</Text>
-                  )}
+
+              <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
+                <View style={[styles.cardIconContainer, { backgroundColor: '#FFEDD5' }]}>
+                  <Text style={{ fontSize: 40 }}>🏙️</Text>
                 </View>
+                <Text style={styles.cardName}>Cities</Text>
+                <Text style={{ textAlign: 'center', color: theme.colors.secondaryText, fontSize: 12 }}>{PUZZLES.filter(p => p.category === 'cities').length} puzzles</Text>
               </Pressable>
             </View>
-          }
-          ListFooterComponent={
+            
             <View style={styles.createAiButtonContainer}>
               <Button
-                title="Create New Puzzle"
+                title="Create New Puzzle with AI"
                 iconName="extension-puzzle-outline"
-                style={styles.createAiButton}
+                style={[styles.createAiButton, { width: '100%', maxWidth: '100%' }]}
                 onPress={() => setShowAiMenu(true)}
               />
             </View>
-          }
-          renderItem={({ item: puzzle }) => (
-            <View style={{ width: cardWidth, position: 'relative' }}>
-              <Pressable
-                onPress={() => {
-                  startPuzzle(puzzle);
-                }}
-              >
-                <Animated.View style={[
-                  styles.card,
-                  isRocket && {
-                    backgroundColor: 'rgba(255, 255, 255, 0.45)',
-                    borderColor: 'rgba(255, 255, 255, 0.35)',
-                    borderWidth: 1.5,
-                    shadowColor: '#000000',
-                    shadowOffset: { width: 0, height: 8 },
-                    shadowRadius: 24,
-                    shadowOpacity: 0.1,
-                  }
-                ]}>
-                  <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
-                    <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
-                  </View>
-                  <Text style={[
-                    styles.cardName,
-                    isRocket && { color: '#FFFFFF' },
-                    isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
-                  ]}>{puzzle.name}</Text>
-                </Animated.View>
-              </Pressable>
-
-              <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
-                <Pressable 
-                  hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
-                  onPress={(e) => { 
-                    if (e && e.stopPropagation) e.stopPropagation(); 
-                    setActionMenuPuzzle(puzzle);
-                    setShowActionMenu(true);
-                  }} 
-                  style={({ pressed }) => [
-                    {
-                      padding: 6,
-                      borderRadius: 20,
-                      backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+          </ScrollView>
+        ) : (
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
+            data={allPuzzles}
+            keyExtractor={(item) => item.id}
+            key={numColumns}
+            numColumns={numColumns}
+            columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: theme.spacing.md }}
+            renderItem={({ item: puzzle }) => (
+              <View style={{ width: cardWidth, position: 'relative' }}>
+                <Pressable onPress={() => startPuzzle(puzzle)}>
+                  <Animated.View style={[
+                    styles.card,
+                    isRocket && {
+                      backgroundColor: 'rgba(255, 255, 255, 0.45)',
+                      borderColor: 'rgba(255, 255, 255, 0.35)',
+                      borderWidth: 1.5,
+                      shadowColor: '#000000',
+                      shadowOffset: { width: 0, height: 8 },
+                      shadowRadius: 24,
+                      shadowOpacity: 0.1,
                     }
-                  ]}
-                >
-                  <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
+                  ]}>
+                    <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
+                      <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
+                    </View>
+                    <Text style={[
+                      styles.cardName,
+                      isRocket && { color: '#FFFFFF' },
+                      isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
+                    ]}>{puzzle.name}</Text>
+                  </Animated.View>
                 </Pressable>
+
+                <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
+                  <Pressable 
+                    hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+                    onPress={(e) => { 
+                      if (e && e.stopPropagation) e.stopPropagation(); 
+                      setActionMenuPuzzle(puzzle);
+                      setShowActionMenu(true);
+                    }} 
+                    style={({ pressed }) => [
+                      {
+                        padding: 6,
+                        borderRadius: 20,
+                        backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }
+                    ]}
+                  >
+                    <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
+                  </Pressable>
+                </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+        )}
       </ScreenWrapper>
 
       {/* AI Puzzle creation menu modal */}

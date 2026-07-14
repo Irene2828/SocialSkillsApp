@@ -392,7 +392,7 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar title="" />
+        <TopBar title="Rewards" showSettingsAndRewards={true} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
@@ -404,7 +404,7 @@ export const MyRewardsScreen = () => {
         {/* Bottom Section: Tabs and Lists */}
         <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
           <Pressable 
-            style={[styles.tab, activeTab === 'available' && { backgroundColor: '#F0F9FF' }]} 
+            style={styles.tab} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -416,7 +416,7 @@ export const MyRewardsScreen = () => {
             </View>
           </Pressable>
           <Pressable 
-            style={[styles.tab, activeTab === 'unlocked' && { backgroundColor: '#F0F9FF' }]} 
+            style={styles.tab} 
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>

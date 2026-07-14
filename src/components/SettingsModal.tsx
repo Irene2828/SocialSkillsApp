@@ -42,91 +42,87 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   };
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
-      <Pressable style={styles.overlay} onPress={onClose}>
-        <Animated.View style={[styles.modalContent, { opacity: fadeAnim }]} onStartShouldSetResponder={() => true}>
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Settings</Text>
-            <Pressable onPress={onClose} style={styles.closeButton}>
-              <Ionicons name="close" size={28} color={theme.colors.text} />
-            </Pressable>
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.4)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
+      <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      <View style={styles.modalCard}>
+        <View style={styles.header}>
+          <Text style={styles.headerTitle}>Settings</Text>
+          <Pressable onPress={onClose} style={styles.closeButton}>
+            <Ionicons name="close" size={28} color={theme.colors.text} />
+          </Pressable>
+        </View>
+
+        <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
+          
+          {/* Rewards Mode Toggle */}
+          <View style={styles.settingRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.settingLabel}>Rewards Mode</Text>
+              <Text style={styles.settingDescription}>When ON, quizzes grant coins.</Text>
+            </View>
+            <Switch
+              value={isRewardsModeOn}
+              onValueChange={setIsRewardsModeOn}
+              trackColor={{ false: '#D1D5DB', true: theme.colors.primary }}
+              thumbColor={'#FFFFFF'}
+            />
           </View>
 
-          <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
+          {/* Parents Pin */}
+          <View style={styles.settingSection}>
+            <Text style={styles.settingLabel}>Parents' PIN</Text>
+            <Text style={styles.settingDescription}>Set a PIN to lock settings or edit modes in the future.</Text>
             
-            {/* Rewards Mode Toggle */}
-            <View style={styles.settingRow}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.settingLabel}>Rewards Mode</Text>
-                <Text style={styles.settingDescription}>When ON, quizzes grant coins.</Text>
-              </View>
-              <Switch
-                value={isRewardsModeOn}
-                onValueChange={setIsRewardsModeOn}
-                trackColor={{ false: '#D1D5DB', true: theme.colors.primary }}
-                thumbColor={'#FFFFFF'}
+            <View style={styles.pinRow}>
+              <TextInput
+                style={styles.pinInput}
+                value={localPin}
+                onChangeText={setLocalPin}
+                placeholder="Enter PIN"
+                keyboardType="number-pad"
+                secureTextEntry
+                maxLength={6}
+              />
+              <Button 
+                title="Save"
+                onPress={handleSavePin}
+                style={{ width: '100%', marginTop: theme.spacing.md }}
               />
             </View>
-
-            {/* Parents Pin */}
-            <View style={styles.settingSection}>
-              <Text style={styles.settingLabel}>Parents' PIN</Text>
-              <Text style={styles.settingDescription}>Set a PIN to lock settings or edit modes in the future.</Text>
-              
-              <View style={styles.pinRow}>
-                <TextInput
-                  style={styles.pinInput}
-                  value={localPin}
-                  onChangeText={setLocalPin}
-                  placeholder="Enter PIN"
-                  keyboardType="number-pad"
-                  secureTextEntry
-                  maxLength={6}
-                />
-                <Button 
-                  title="Save"
-                  onPress={handleSavePin}
-                  style={{ width: '100%', marginTop: theme.spacing.md }}
-                />
-              </View>
-            </View>
-
-          </ScrollView>
-        </Animated.View>
-      </Pressable>
-    </Modal>
+          </View>
+        </ScrollView>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
-    flex: 1,
+  modalCard: {
+    width: '90%',
+    maxWidth: 500,
     backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: 'transparent',
+    borderRadius: 20,
+    maxHeight: '85%',
+    ...theme.shadows.soft,
+    overflow: 'hidden',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing.xl,
-    paddingTop: 60,
+    paddingHorizontal: theme.spacing.xl,
+    paddingTop: theme.spacing.xl,
+    paddingBottom: theme.spacing.md,
   },
   headerTitle: {
     ...theme.typography.heading,
-    fontSize: 28,
+    fontSize: 24,
     color: theme.colors.text,
   },
   closeButton: {
     padding: theme.spacing.xs,
   },
   scrollContent: {
-    flex: 1,
     paddingHorizontal: theme.spacing.xl,
   },
   settingRow: {
@@ -144,13 +140,13 @@ const styles = StyleSheet.create({
   settingLabel: {
     ...theme.typography.body,
     fontWeight: '700',
-    fontSize: 20,
+    fontSize: 18,
     color: theme.colors.text,
     marginBottom: 4,
   },
   settingDescription: {
     ...theme.typography.body,
-    fontSize: 16,
+    fontSize: 14,
     color: theme.colors.secondaryText,
     marginBottom: theme.spacing.md,
   },
@@ -165,6 +161,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
     ...theme.typography.body,
-    fontSize: 18,
+    fontSize: 16,
   }
 });

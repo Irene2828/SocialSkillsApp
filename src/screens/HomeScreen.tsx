@@ -8,6 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { TopBar } from '../components/TopBar';
 import { GlobalBackground } from '../components/GlobalBackground';
+import { SettingsModal } from '../components/SettingsModal';
 
 const useAttentionLoop = () => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -175,6 +176,7 @@ export const HomeScreen = () => {
   const moodColors = getMoodColors(mood);
   const titleColor = moodColors.isDark ? '#FFFFFF' : '#1E3A8A'; // Navy blue
   const subtitleColor = moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
+  const [showSettings, setShowSettings] = useState(false);
 
 
   return (
@@ -185,7 +187,17 @@ export const HomeScreen = () => {
         style={[StyleSheet.absoluteFill, { opacity: 0.15, resizeMode: 'repeat' }]} 
       />
       <ScreenWrapper transparent>
-        <TopBar title="" hideHome hideTitle />
+        <TopBar 
+          title="" 
+          hideHome 
+          hideTitle 
+          rightComponent={
+            <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
+              <Ionicons name="options-outline" size={24} color={moodColors.isDark ? '#FFFFFF' : theme.colors.text} />
+              <Text style={{ fontFamily: FONTS.medium, fontSize: 10, color: moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginTop: 4, textAlign: 'center' }}>Settings</Text>
+            </Pressable>
+          }
+        />
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
@@ -222,6 +234,7 @@ export const HomeScreen = () => {
             />
         </View>
       </ScreenWrapper>
+      <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
   );
 };

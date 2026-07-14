@@ -210,7 +210,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing.sm,
+    // gap is not supported in flexbox/flex-wrap on iOS 12.5.
+    // Each button child uses marginRight + marginBottom instead.
   },
   ageButton: {
     width: 48,
@@ -221,6 +222,9 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+    // Replaces gap removed from 'row' for iOS 12.5 compatibility
+    marginRight: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
   },
   ageButtonActive: {
     backgroundColor: theme.colors.primary,
@@ -242,6 +246,9 @@ const styles = StyleSheet.create({
     borderColor: theme.colors.border,
     alignItems: 'center',
     justifyContent: 'center',
+    // Replaces gap removed from 'row' for iOS 12.5 compatibility
+    marginRight: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
   },
   avatarButtonActive: {
     backgroundColor: theme.colors.primary,

@@ -33,6 +33,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    width: '100%',
+    maxWidth: 700,
+    alignSelf: 'center',
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.xs,
     paddingBottom: 0,

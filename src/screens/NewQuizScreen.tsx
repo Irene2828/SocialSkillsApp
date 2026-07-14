@@ -74,52 +74,7 @@ export const NewQuizScreen = () => {
 
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-  const [activeTab, setActiveTab] = useState<'quizzes' | 'tasks'>('quizzes');
-
-  // Tasks Hooks & State
-  const { tasks, addTask, toggleTaskCompletion, deleteTask, editTask } = useTasks();
-  const [isTaskModalVisible, setIsTaskModalVisible] = useState(false);
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newTaskCoins, setNewTaskCoins] = useState('10');
-
-  const handleToggleTask = (task: Task) => {
-    const wasJustCompleted = toggleTaskCompletion(task.id);
-    if (wasJustCompleted) {
-      addCoins(task.coinValue);
-      showToast({
-        message: `Task completed! +${task.coinValue} coins`,
-      });
-    } else if (task.isCompleted) {
-      // It was completed and is now being undone
-      addCoins(-task.coinValue);
-      showToast({
-        message: `Task undone. ${task.coinValue} coins deducted.`,
-      });
-    }
-  };
-
-  const handleAddTask = () => {
-    if (newTaskTitle.trim()) {
-      const coinValue = parseInt(newTaskCoins, 10) || 10;
-      if (editingTaskId) {
-        editTask(editingTaskId, newTaskTitle.trim(), coinValue);
-      } else {
-        addTask(newTaskTitle.trim(), coinValue);
-      }
-      setNewTaskTitle('');
-      setNewTaskCoins('10');
-      setEditingTaskId(null);
-      setIsTaskModalVisible(false);
-    }
-  };
-
-  const handleEditTask = (task: Task) => {
-    setNewTaskTitle(task.title);
-    setNewTaskCoins(task.coinValue.toString());
-    setEditingTaskId(task.id);
-    setIsTaskModalVisible(true);
-  };
+  const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
   const IQ_CATEGORIES: QuizCategory[] = [
     { id: 'iq_word_problems', title: 'Word Problems', description: 'Story-style math', icon: 'text-outline', isCustom: false },
@@ -738,9 +693,12 @@ export const NewQuizScreen = () => {
     // (Part 2 complete for why-questions, or single-part complete).
     // The Part 1→Part 2 transition is handled by QuestionView internally.
 
-    // Award score: 1 point per scenario completed
     if (isCorrect) {
       setScore(prev => prev + 1);
+      if (isRewardsModeOn) {
+        const amount = selectedCategory?.startsWith('math_ai') ? 2 : 1;
+        addCoins(amount);
+      }
     }
 
     // Reset why phase for next question
@@ -759,9 +717,6 @@ export const NewQuizScreen = () => {
         coinsEarned = 10;
       }
       
-      if (coinsEarned > 0) {
-        addCoins(coinsEarned);
-      }
       await recordQuizCompletion(finalScore, coinsEarned);
       setQuizState('completed');
       setIsProcessing(false);
@@ -796,7 +751,6 @@ export const NewQuizScreen = () => {
 
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <TopBar title="" onBack={navigateBackFromFolder} />
 
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
@@ -897,53 +851,12 @@ export const NewQuizScreen = () => {
       title: renamedCategories[c.id] || c.title
     }));
 
-    const sortedTasks = [...tasks].sort((a, b) => b.createdAt - a.createdAt);
 
-    const renderTask = (task: Task) => {
-      return (
-        <SwipeableTaskCard
-          key={task.id}
-          task={task}
-          onToggle={handleToggleTask}
-          onEdit={handleEditTask}
-          onDelete={deleteTask}
-        />
-      );
-    };
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        {/* TopBar removed */}
-        
-        <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
-          <Pressable 
-            style={[styles.tab, activeTab === 'quizzes' && { backgroundColor: '#F0F9FF' }]} 
-            onPress={() => setActiveTab('quizzes')}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {activeTab === 'quizzes' ? (
-                <ElectrifiedText animated={false} text="My Quizzes" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={10} />
-              ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>My Quizzes</Text>
-              )}
-            </View>
-          </Pressable>
-          <Pressable 
-            style={[styles.tab, activeTab === 'tasks' && { backgroundColor: '#F0F9FF' }]} 
-            onPress={() => setActiveTab('tasks')}
-          >
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              {activeTab === 'tasks' ? (
-                <ElectrifiedText animated={false} text="My Tasks" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
-              ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>My Tasks</Text>
-              )}
-            </View>
-          </Pressable>
-        </View>
 
-        {activeTab === 'quizzes' ? (
-          <View ref={bentoGridRef} style={styles.bentoGrid}>
+        <View ref={bentoGridRef} style={styles.bentoGrid}>
             {/* Built-in categories */}
             {builtInCategories.map((category: any) => (
               <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
@@ -1010,32 +923,7 @@ export const NewQuizScreen = () => {
               </Pressable>
             </View>
           </View>
-        ) : (
-          <View style={{ paddingHorizontal: theme.spacing.xs }}>
-            {tasks.length === 0 ? (
-              <View style={styles.emptyState}>
-                <Ionicons name="checkmark-done-circle-outline" size={64} color={isRocket ? 'rgba(255, 255, 255, 0.5)' : theme.colors.secondaryText} />
-                <Text style={[styles.emptyTitle, isDark && { color: '#FFFFFF' }]}>No tasks yet</Text>
-                <Text style={[styles.emptyText, isDark && { color: 'rgba(255,255,255,0.7)' }]}>Add some tasks to start earning coins!</Text>
-              </View>
-            ) : (
-              <View style={styles.section}>
-                {sortedTasks.map(renderTask)}
-              </View>
-            )}
 
-            <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
-              <Button 
-                title="Add a New Task" 
-                iconName="clipboard-outline"
-                onPress={() => setIsTaskModalVisible(true)}
-                style={styles.addButton}
-              />
-            </View>
-          </View>
-        )}
-
-        {activeTab === 'quizzes' && (
           <View style={styles.createAiButtonContainer}>
             <Button
               title="Generate New Quiz"
@@ -1045,7 +933,6 @@ export const NewQuizScreen = () => {
               onPress={() => setShowGenerateMenu(true)}
             />
           </View>
-        )}
       </ScrollView>
     );
   };
@@ -1128,61 +1015,30 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
-        {/* Sticky header — stays pinned at top */}
-        <View style={{ paddingBottom: theme.spacing.sm, zIndex: 10 }}>
-          <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.sm, zIndex: 2 }}>
-            <View style={{ flex: 1, alignItems: 'flex-start' }}>
-              <Pressable 
-                onPress={handleBackToHome}
-                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
-              >
-                <Ionicons name="chevron-back" size={24} color={baseTextColor} />
-                <Text style={{ ...theme.typography.body, color: isRocket ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginLeft: 2 }}>Back</Text>
-              </Pressable>
-            </View>
-            <View style={{ flex: 2, alignItems: 'center' }}>
-              <View style={[styles.screenFolderTab, { position: 'relative', top: 0, right: 0, left: 'auto', overflow: 'hidden', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }]}>
-                <LinearGradient
-                  colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-                  style={StyleSheet.absoluteFill}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 0, y: 1 }}
-                />
-                <Ionicons name="document-text-outline" size={16} color={baseTextColor} style={{ marginRight: 4 }} />
-                <Text style={[styles.screenFolderTabText, { color: baseTextColor }]} numberOfLines={1}>{categoryName}</Text>
-              </View>
-            </View>
-            <View style={{ flex: 1, alignItems: 'flex-end' }}>
-              {/* Settings removed */}
-            </View>
-          </View>
-        </View>
+        <TopBar 
+          title={categoryName || ''} 
+          onBack={handleBackToHome}
+          showSettingsAndRewards={true}
+        />
 
-        {/* Progress and coins container (above the ScrollView) */}
-        <View style={{ paddingHorizontal: 0, paddingBottom: theme.spacing.md, gap: theme.spacing.xs }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: theme.spacing.sm }}>
-            <View style={{ flex: 1, marginBottom: 0 }}>
-              <View style={{ marginBottom: 0, paddingHorizontal: 0 }}>
-                <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
-                  {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
-                    <LinearGradient
-                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                      style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-                    />
-                  ) : (
-                    <LinearGradient
-                      colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                      start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                      style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-                    />
-                  )}
-                </View>
-              </View>
-            </View>
-            {renderCoinJar()}
+        {/* Progress container (above the ScrollView) */}
+        <View style={{ paddingHorizontal: 0, paddingBottom: theme.spacing.md }}>
+          <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
+            {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
+              <LinearGradient
+                colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+              />
+            ) : (
+              <LinearGradient
+                colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
+              />
+            )}
           </View>
+        
 
           {/* Caption below progress bar — hidden on small screens */}
           {!isSmallScreen && (
@@ -1339,7 +1195,14 @@ export const NewQuizScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       
-      <ScreenWrapper transparent disableSafeAreaTop>
+      <ScreenWrapper transparent>
+        {quizState === 'selection' && (
+          <TopBar 
+            title={activeFolderId ? (folders.find(f => f.id === activeFolderId)?.name || "Quizzes") : "Quizzes"} 
+            showSettingsAndRewards={true} 
+            onBack={activeFolderId ? navigateBackFromFolder : undefined}
+          />
+        )}
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
           {quizState === 'in-progress' && renderInProgress()}
@@ -1359,8 +1222,8 @@ export const NewQuizScreen = () => {
               </Text>
               
               {!selectedImageUri ? (
-                <View style={{ width: '100%', gap: theme.spacing.md, marginBottom: theme.spacing.lg }}>
-                  <Pressable style={styles.photoOutlineButton} onPress={handleTakePhoto}>
+                <View style={{ width: '100%', marginBottom: theme.spacing.lg }}>
+                  <Pressable style={[styles.photoOutlineButton, { marginBottom: theme.spacing.md }]} onPress={handleTakePhoto}>
                     <Ionicons name="camera-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: theme.spacing.sm }} />
                     <Text style={styles.photoOutlineText}>Take Photo</Text>
                   </Pressable>
@@ -1964,63 +1827,7 @@ export const NewQuizScreen = () => {
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
 
       {/* Task Add/Edit Modal (Matching Rewards Modal Style) */}
-      <Modal
-        visible={isTaskModalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setIsTaskModalVisible(false)}
-      >
-        <Pressable style={{ flex: 1 }} onPress={() => {
-          setIsTaskModalVisible(false);
-          setEditingTaskId(null);
-          setNewTaskTitle('');
-        }}>
-          <View style={styles.whiteModalOverlay}>
-            <Pressable style={styles.rewardsModalCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-              <Text style={[styles.rewardsModalTitle, isDark && { color: '#FFFFFF' }]}>
-                {editingTaskId ? 'Edit Task' : 'Add New Task'}
-              </Text>
-              
-              <TextInput
-                style={[styles.rewardsModalInput, { marginBottom: theme.spacing.md }, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
-                value={newTaskTitle}
-                onChangeText={setNewTaskTitle}
-                placeholder="Task Name"
-                placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
-                autoFocus
-              />
 
-              <TextInput
-                style={[styles.rewardsModalInput, { marginBottom: theme.spacing.lg }, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
-                value={newTaskCoins}
-                onChangeText={setNewTaskCoins}
-                placeholder="Coins"
-                placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
-                keyboardType="numeric"
-                maxLength={4}
-              />
-
-              <Button 
-                title="Save Task" 
-                onPress={handleAddTask}
-                style={{ width: '100%', marginBottom: theme.spacing.md }}
-                variant="primary"
-                disabled={!newTaskTitle.trim()}
-              />
-              <Button 
-                title="Cancel" 
-                onPress={() => {
-                  setIsTaskModalVisible(false);
-                  setEditingTaskId(null);
-                  setNewTaskTitle('');
-                }}
-                style={{ width: '100%' }}
-                variant="secondary"
-              />
-            </Pressable>
-          </View>
-        </Pressable>
-      </Modal>
 
     </View>
   );
@@ -2591,7 +2398,7 @@ const styles = StyleSheet.create({
     maxWidth: 340,
     backgroundColor: '#BEF264',
     borderColor: '#BEF264',
-    ...theme.shadows.medium,
+    ...theme.shadows.soft,
   },
   coinInputContainer: {
     flexDirection: 'row',

@@ -133,10 +133,13 @@ const styles = StyleSheet.create({
     top: 8,
     right: 8,
     flexDirection: 'row',
-    gap: 4,
+    // gap in flexbox is not supported on iOS 12.5.
+    // Use marginLeft on action button children instead.
     zIndex: 10,
   },
   actionButton: {
     padding: 8,
+    // Replaces the gap removed from actionButtons for iOS 12.5 compatibility
+    marginLeft: 4,
   },
 });

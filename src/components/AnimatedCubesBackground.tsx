@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Dimensions, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
 const CUBE_COUNT = 30;
 const CUBE_COLORS = ['#FFFFFF'];
 
 export const AnimatedCubesBackground: React.FC = () => {
+  // useWindowDimensions() is reactive — updates on iPad orientation changes.
+  // The old module-level Dimensions.get('window') was a static snapshot.
+  const { width, height } = useWindowDimensions();
+
   const [cubes] = useState(() => {
     return Array.from({ length: CUBE_COUNT }).map((_, i) => {
       // Skew towards edges (0 and 1) to keep the center relatively clear for UI
@@ -15,16 +18,17 @@ export const AnimatedCubesBackground: React.FC = () => {
       
       return {
         id: i,
-        x: finalX * width,
+        xFraction: finalX, // store as 0..1 fraction, multiply by width at render time
         size: Math.random() * 12 + 6, // 6px to 18px cubes
-      color: CUBE_COLORS[Math.floor(Math.random() * CUBE_COLORS.length)],
-      duration: Math.random() * 10000 + 15000, // Very slow float: 15s to 25s
-      rotationDir: Math.random() > 0.5 ? 1 : -1,
-      randomOffset: Math.random(), // 0 to 1
-      animValue: new Animated.Value(0),
-    };
+        color: CUBE_COLORS[Math.floor(Math.random() * CUBE_COLORS.length)],
+        duration: Math.random() * 10000 + 15000, // Very slow float: 15s to 25s
+        rotationDir: Math.random() > 0.5 ? 1 : -1,
+        randomOffset: Math.random(), // 0 to 1
+        animValue: new Animated.Value(0),
+      };
     });
   });
+
 
   useEffect(() => {
     const animations = cubes.map(c => {
@@ -79,7 +83,7 @@ export const AnimatedCubesBackground: React.FC = () => {
             style={[
               styles.cube,
               {
-                left: c.x,
+                left: c.xFraction * width,
                 width: c.size,
                 height: c.size,
                 backgroundColor: c.color,

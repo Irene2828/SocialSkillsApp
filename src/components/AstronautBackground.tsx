@@ -1,18 +1,16 @@
 import React, { useMemo } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const { width, height } = Dimensions.get('window');
-
-const generateStars = (count: number) => {
+const generateStarFractions = (count: number) => {
   const stars = [];
-  // Use a seeded or consistent approach, but Math.random is fine if it runs once per mount.
-  // To avoid layout shifts on re-renders, we use useMemo.
+  // Store positions as 0..1 fractions so they scale with any screen size.
+  // This also correctly handles iPad orientation changes at runtime.
   for (let i = 0; i < count; i++) {
     stars.push({
       id: i,
-      x: Math.random() * width,
-      y: Math.random() * height,
+      xFraction: Math.random(),
+      yFraction: Math.random(),
       size: Math.random() * 2.5 + 0.5,
       opacity: Math.random() * 0.4 + 0.1,
     });
@@ -21,7 +19,10 @@ const generateStars = (count: number) => {
 };
 
 export const AstronautBackground = () => {
-  const stars = useMemo(() => generateStars(40), []);
+  // useWindowDimensions() is reactive — updates on iPad orientation changes.
+  // The old module-level Dimensions.get('window') was a static snapshot.
+  const { width, height } = useWindowDimensions();
+  const stars = useMemo(() => generateStarFractions(40), []);
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -36,8 +37,8 @@ export const AstronautBackground = () => {
           key={star.id}
           style={{
             position: 'absolute',
-            left: star.x,
-            top: star.y,
+            left: star.xFraction * width,
+            top: star.yFraction * height,
             width: star.size,
             height: star.size,
             borderRadius: star.size / 2,

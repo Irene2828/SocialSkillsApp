@@ -90,7 +90,7 @@ export const TasksScreen = () => {
       <GlobalBackground />
 
       <ScreenWrapper transparent>
-        <TopBar title="Tasks" onBack={() => navigation.goBack()} />
+        <TopBar title="Tasks" showSettingsAndRewards={true} />
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           
           {tasks.length === 0 ? (
@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: theme.spacing.lg,
     paddingBottom: 160, // Match spacing on other screens of the app
   },
   section: {
@@ -259,7 +258,8 @@ const styles = StyleSheet.create({
   rightContent: {
     flexDirection: 'column',
     alignItems: 'center',
-    gap: 4,
+    // gap is not supported in flexbox on iOS 12.5.
+    // Child items use marginBottom instead.
   },
   emptyState: {
     alignItems: 'center',
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     maxWidth: 340,
     backgroundColor: '#BEF264', // Match the green CTA color from MyRewardsScreen add button
     borderColor: '#BEF264',
-    ...theme.shadows.medium,
+    ...theme.shadows.soft,
   },
   modalOverlay: {
     flex: 1,
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: theme.borderRadius.lg,
     padding: theme.spacing.lg,
-    ...theme.shadows.medium,
+    ...theme.shadows.soft,
   },
   modalTitle: {
     fontFamily: FONTS.semiBold,

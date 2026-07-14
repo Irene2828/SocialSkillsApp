@@ -108,8 +108,10 @@ export const DrawingBoardScreenWeb = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
+    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+
+      <View style={styles.container}>
+        <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
           ref={canvasRef}
           collapsable={false} 
@@ -149,13 +151,6 @@ export const DrawingBoardScreenWeb = () => {
           {/* @ts-ignore */}
           </svg>
         </View>
-
-        <Pressable 
-          style={[styles.absoluteBackButton, { top: insets.top + 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
-          onPress={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('Home')}
-        >
-          <Ionicons name={navigation.canGoBack() ? "arrow-back" : "home-outline"} size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
-        </Pressable>
       </View>
 
       {isToolbarVisible ? (
@@ -214,6 +209,7 @@ export const DrawingBoardScreenWeb = () => {
           <Ionicons name="color-palette-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
         </Pressable>
       )}
+      </View>
     </View>
   );
 };

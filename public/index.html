@@ -3,24 +3,60 @@
   <head>
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!--
+      viewport-fit=cover: allows content to extend behind the iPhone notch and
+      home indicator so env(safe-area-inset-*) values can be used to inset content.
+      Removes shrink-to-fit (deprecated / ignored in modern Safari).
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>%WEB_TITLE%</title>
     <!-- The `react-native-web` recommended style reset: https://necolas.github.io/react-native-web/docs/setup/#root-element -->
     <style id="expo-reset">
-      /* These styles make the body full-height */
-      html,
-      body {
-        height: 100%;
+      /*
+       * Full-height layout for the Expo web shell.
+       *
+       * - `100vh` is the fallback for iOS Safari ≤ 15.3 (incl. iOS 12.5 on iPad Air),
+       *   which does not support the dvh unit.
+       * - `100dvh` (dynamic viewport height) is the progressive enhancement for
+       *   modern Safari (iOS 15.4+) and Chrome. It correctly excludes the
+       *   browser chrome (URL bar, bottom toolbar) that appears/disappears during
+       *   scroll, preventing content from being clipped or showing extra space.
+       *
+       * Browsers that do not understand `100dvh` will silently ignore it and
+       * keep using the `100vh` fallback — no JavaScript detection needed.
+       */
+      html {
+        height: 100vh;   /* fallback: iOS 12.5, older WebKit */
+        height: 100dvh;  /* progressive: modern Safari/Chrome (iOS 15.4+) */
       }
-      /* These styles disable body scrolling if you are using <ScrollView> */
       body {
+        height: 100vh;   /* fallback */
+        height: 100dvh;
+        /* Prevent body scroll — ScrollView components handle their own scroll */
         overflow: hidden;
       }
+
       /* These styles make the root element full-height */
       #root {
         display: flex;
-        height: 100%;
+        height: 100vh;   /* fallback */
+        height: 100dvh;
         flex: 1;
+        /*
+         * Web-layer safe area insets for the Expo web build.
+         * These add padding inside the root element so no content is hidden
+         * behind the iPhone notch (top) or home indicator (bottom).
+         *
+         * On the native iOS build, react-native-safe-area-context handles
+         * this via SafeAreaProvider / useSafeAreaInsets() — this CSS only
+         * applies when the app is opened as a web page in Safari.
+         *
+         * env() has broad support (iOS 11+), so no fallback is needed here.
+         */
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
       }
     </style>
     <script>
@@ -51,3 +87,4 @@
     <div id="root"></div>
   </body>
 </html>
+

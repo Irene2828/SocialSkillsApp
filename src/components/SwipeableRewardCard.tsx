@@ -214,7 +214,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    gap: theme.spacing.xs,
+    // gap is not supported in flexbox on iOS 12.5 / older WebKit.
+    // Use marginTop on the text child (actionText) instead — see below.
   },
   editBtn: {
     backgroundColor: theme.colors.neutralGrey,
@@ -228,6 +229,8 @@ const styles = StyleSheet.create({
   },
   actionText: {
     ...theme.typography.tab,
+    // Replaces the gap that was removed from actionBtn for iOS 12.5 compatibility
+    marginTop: theme.spacing.xs,
   },
   editActionText: {
     color: theme.colors.text,
