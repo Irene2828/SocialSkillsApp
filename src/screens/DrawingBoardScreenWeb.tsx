@@ -235,13 +235,14 @@ export const DrawingBoardScreenWeb = () => {
           style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="color-palette-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
         </Pressable>
       )}
       </View>
 
       {showColorPicker && (
         <View style={styles.colorPickerModal}>
+          <Pressable style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} onPress={() => setShowColorPicker(false)} />
           <View style={[styles.colorPickerContainer, isDark && { backgroundColor: moodColors.bg }]}>
             <View style={{ flex: 1, padding: 20 }}>
               <ColorPicker
@@ -254,8 +255,8 @@ export const DrawingBoardScreenWeb = () => {
                 row={false}
               />
             </View>
-            <Pressable style={[styles.closePickerBtn, { backgroundColor: activeColor }]} onPress={() => setShowColorPicker(false)}>
-              <Text style={styles.closePickerText}>Select Color</Text>
+            <Pressable style={[styles.closePickerBtn, { backgroundColor: theme.colors.primary }]} onPress={() => setShowColorPicker(false)}>
+              <Text style={[styles.closePickerText, { color: '#111827' }]}>Select Color</Text>
             </Pressable>
           </View>
         </View>
