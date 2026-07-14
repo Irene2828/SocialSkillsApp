@@ -279,7 +279,6 @@ const styles = StyleSheet.create({
   },
   toolbarContent: {
     alignItems: 'center',
-    gap: theme.spacing.md,
     paddingHorizontal: 8,
     paddingBottom: 40,
   },
@@ -288,7 +287,7 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: theme.colors.neutralGrey,
     opacity: 0.3,
-    marginVertical: 4,
+    marginVertical: 10,
     borderRadius: 1,
   },
   toolBtn: {
@@ -298,6 +297,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.03)',
+    marginVertical: 6,
   },
   strokeBtn: {
     width: 40,
@@ -308,6 +308,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderWidth: 2,
     borderColor: 'transparent',
+    marginVertical: 6,
   },
   activeStrokeBtn: {
     backgroundColor: theme.colors.neutralGrey,
@@ -319,6 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 3,
     borderColor: 'transparent',
+    marginVertical: 6,
   },
   activeColorBtn: {
     borderColor: 'rgba(0,0,0,0.2)',

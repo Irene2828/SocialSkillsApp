@@ -468,7 +468,6 @@ export const PuzzleScreen = () => {
           title={activeFolderId === 'animals' ? 'Cute Animals' : activeFolderId === 'cities' ? 'Cities' : 'Puzzles'} 
           showSettingsAndRewards={true} 
           onBack={activeFolderId ? () => setActiveFolderId(null) : undefined}
-          rightComponent={<View />}
         />
 
         {!activeFolderId ? (
