@@ -69,7 +69,6 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="home-outline" size={24} color={'#38BDF8'} />
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12 }]}>Home</Text>
             </Pressable>
           ) : null}
         </View>
