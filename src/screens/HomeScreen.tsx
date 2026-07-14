@@ -169,8 +169,9 @@ export const HomeScreen = () => {
   const navigation = useNavigation<any>();
   const { fadeAnim, scaleAnim } = useAttentionLoop();
   const floatAnim = useFloatAnim();
-  const { height } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const isSmallScreen = height < 700;
+  const isTablet = width >= 768;
   
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -194,7 +195,7 @@ export const HomeScreen = () => {
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
               <Ionicons name="options-outline" size={24} color={moodColors.isDark ? '#FFFFFF' : theme.colors.text} />
-              <Text style={{ fontFamily: FONTS.medium, fontSize: 10, color: moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginTop: 4, textAlign: 'center' }}>Settings</Text>
+              <Text style={{ fontFamily: FONTS.medium, fontSize: isTablet ? 12 : 10, color: moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText, marginTop: 4, textAlign: 'center' }}>Settings</Text>
             </Pressable>
           }
         />

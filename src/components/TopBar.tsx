@@ -51,12 +51,12 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
           {onBack ? (
             <Pressable onPress={onBack} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="arrow-back" size={24} color={textColor} />
-              <Text style={styles.headerLabel}>Back</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 12 : 10 }]}>Back</Text>
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="home-outline" size={24} color={'#38BDF8'} />
-              <Text style={styles.headerLabel}>Home</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 12 : 10 }]}>Home</Text>
             </Pressable>
           ) : null}
         </View>
@@ -80,7 +80,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                 </View>
                 <FontAwesome5 name="coins" size={16} color={isRocket ? '#FFFFFF' : '#38BDF8'} style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={styles.headerLabel}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 12 : 10 }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>

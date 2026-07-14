@@ -873,7 +873,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: theme.spacing.md,
+    marginBottom: 8, // Cut spacing by 50% (was theme.spacing.md which is 16)
     backgroundColor: 'transparent',
     borderRadius: 0,
     padding: 0,
