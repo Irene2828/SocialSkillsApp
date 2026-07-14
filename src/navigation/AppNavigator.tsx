@@ -51,7 +51,7 @@ const AppTabs = () => {
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
 
           if (route.name === 'NewQuiz') {
-            iconName = 'help-circle-outline';
+            iconName = 'document-text-outline';
           } else if (route.name === 'Tasks') {
             iconName = 'checkmark-done-circle-outline';
           } else if (route.name === 'Puzzles') {
