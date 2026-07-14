@@ -72,7 +72,7 @@ const AppTabs = () => {
             <Text style={{
               fontFamily: focused ? FONTS.semiBold : FONTS.medium,
               // Slightly larger labels on tablet for legibility
-              fontSize: isTablet ? 12 : 10,
+              fontSize: isTablet ? 14 : 12,
               color: color,
               marginTop: isTablet ? 6 : 4,
               textAlign: 'center'

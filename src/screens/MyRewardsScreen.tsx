@@ -712,6 +712,7 @@ export const MyRewardsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
+    paddingTop: 24,
     paddingBottom: 160,
   },
   topSection: {

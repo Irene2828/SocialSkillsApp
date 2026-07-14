@@ -820,6 +820,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
+    paddingTop: 24,
     paddingBottom: 160,
   },
   grid: {

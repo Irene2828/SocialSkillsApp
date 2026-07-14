@@ -1839,6 +1839,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
+    paddingTop: 24,
     paddingBottom: 160,
   },
   quickStartButton: {
