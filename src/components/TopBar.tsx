@@ -92,7 +92,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                 </View>
                 <FontAwesome5 name="coins" size={16} color={isRocket ? '#FFFFFF' : '#38BDF8'} style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: isRocket ? '#FFFFFF' : '#38BDF8' }]}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: isRocket ? '#FFFFFF' : '#0284C7' }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>
