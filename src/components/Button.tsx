@@ -38,8 +38,8 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   }
 
   const content = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-      <Text style={[styles.text, resolvedTextStyle, textStyle]} numberOfLines={1} adjustsFontSizeToFit>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', paddingHorizontal: 16 }}>
+      <Text style={[styles.text, resolvedTextStyle, textStyle, { flexShrink: 1 }]} numberOfLines={1} adjustsFontSizeToFit>
         {title}
       </Text>
       {iconName && (
