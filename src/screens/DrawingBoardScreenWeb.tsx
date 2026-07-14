@@ -226,7 +226,7 @@ export const DrawingBoardScreenWeb = () => {
             ]}
             onPress={() => setShowColorPicker(true)}
           >
-            <Ionicons name="color-palette-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
+            <Ionicons name="aperture-outline" size={20} color={isDark || !COLORS.includes(activeColor) ? '#FFFFFF' : theme.colors.text} />
           </Pressable>
         </ScrollView>
       </View>
