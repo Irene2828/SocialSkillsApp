@@ -196,7 +196,6 @@ export const HomeScreen = () => {
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
               <Ionicons name="options-outline" size={24} color="#38BDF8" />
-              <Text style={{ fontFamily: FONTS.medium, fontSize: isTablet ? 14 : 12, color: '#38BDF8', marginTop: 4, textAlign: 'center' }}>Settings</Text>
             </Pressable>
           }
         />

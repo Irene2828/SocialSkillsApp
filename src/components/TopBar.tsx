@@ -38,7 +38,20 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
 
   return (
     <>
-      <View style={[styles.container, { position: 'relative' }, hideBorder && { borderBottomWidth: 0 }]}>
+      <View style={[
+        styles.container, 
+        { position: 'relative' },
+        !hideBorder && {
+          borderBottomWidth: 1,
+          borderBottomColor: '#BAE6FD',
+          backgroundColor: '#FFFFFF',
+          shadowColor: '#38BDF8',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.06,
+          shadowRadius: 3,
+          elevation: 2,
+        }
+      ]}>
         {/* Center: Title (absolutely positioned for perfect centering) */}
         <View style={styles.titleContainer} pointerEvents="none">
           {!hideTitle && (
@@ -99,15 +112,7 @@ const styles = StyleSheet.create({
     height: 72,
     width: '100%',
     zIndex: 100,
-    borderBottomWidth: 1,
-    borderBottomColor: '#BAE6FD',
     marginBottom: 0, // No space under stroke
-    backgroundColor: '#FFFFFF', // Required for shadow to be visible on web/iOS
-    shadowColor: '#38BDF8',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 3,
-    elevation: 2,
   },
   side: {
     minWidth: 40,
