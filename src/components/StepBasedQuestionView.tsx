@@ -233,7 +233,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
             <View style={styles.completedPromptCard}>
-              <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.secondaryText} />
+              <Text style={[styles.stepNumberText, styles.completedStepNumberText, isRocket && glassTextShadow]}>
+                {cs.stepIndex + 1}.
+              </Text>
               <Text style={[styles.completedPromptText, isRocket && glassTextShadow]}>
                 {step.prompt}
               </Text>
@@ -263,7 +265,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
-              <Ionicons name="help-circle-outline" size={16} color="rgba(255, 255, 255, 0.80)" />
+              <Text style={[styles.stepNumberText, isRocket && glassTextShadow]}>
+                {currentStepIndex + 1}.
+              </Text>
               <Text style={[styles.promptText, isRocket && glassTextShadow]}>
               {currentStep.prompt}
             </Text>
@@ -416,7 +420,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: 10,
     lineHeight: 14,
-    letterSpacing: 0,
+    letterSpacing: 0.8,
     color: theme.colors.secondaryText,
     marginBottom: 4,
   },
@@ -429,9 +433,9 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   storyCallout: {
-    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: 12,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: 8,
@@ -442,15 +446,17 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     fontSize: 10,
     lineHeight: 14,
-    letterSpacing: 0,
+    letterSpacing: 0.8,
     color: 'rgba(255, 255, 255, 0.72)',
     marginBottom: 3,
   },
   storyCalloutText: {
     ...theme.typography.body,
-    fontFamily: FONTS.medium,
-    fontSize: 13,
-    lineHeight: 18,
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0.12,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0, 0, 0, 0.32)',
     textShadowOffset: { width: 0, height: 1 },
@@ -468,10 +474,10 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   factText: {
-    ...theme.typography.caption,
+    ...theme.typography.body,
     fontFamily: FONTS.regular,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: 15,
+    lineHeight: 21,
     color: '#FFFFFF',
     backgroundColor: 'transparent',
     borderWidth: 0,
@@ -495,9 +501,11 @@ const styles = StyleSheet.create({
   problemQuestionText: {
     ...theme.typography.body,
     flex: 1,
-    fontFamily: FONTS.medium,
-    fontSize: 13,
-    lineHeight: 18,
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0.12,
     color: '#FFFFFF',
     marginLeft: 6,
     textShadowColor: 'rgba(0, 0, 0, 0.32)',
@@ -506,33 +514,35 @@ const styles = StyleSheet.create({
   },
   followStepsHint: {
     fontFamily: FONTS.regular,
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: 0.15,
     color: theme.colors.secondaryText,
     marginTop: 0,
     marginBottom: 8,
   },
   problemToStepsDivider: {
-    width: 94,
+    width: 112,
     height: 2,
     borderRadius: 999,
     backgroundColor: 'rgba(147, 197, 253, 0.55)',
     alignSelf: 'center',
     marginTop: theme.spacing.xl,
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.lg,
   },
   promptText: {
     ...theme.typography.body,
     flex: 1,
     fontFamily: FONTS.semiBold,
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
-    lineHeight: 21,
+    lineHeight: 22,
+    letterSpacing: 0.12,
     textAlign: 'left',
-    color: '#FFFFFF',
-    marginLeft: 6,
+    color: '#061224',
+    marginLeft: 4,
     marginTop: 0,
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowColor: 'rgba(255, 255, 255, 0.42)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
@@ -543,14 +553,30 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     lineHeight: 21,
+    letterSpacing: 0.12,
     textAlign: 'left',
     color: 'rgba(255, 255, 255, 0.66)',
-    marginLeft: 6,
+    marginLeft: 4,
+  },
+  stepNumberText: {
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0.12,
+    color: '#061224',
+    marginLeft: 0,
+  },
+  completedStepNumberText: {
+    fontSize: 15,
+    lineHeight: 21,
+    color: 'rgba(255, 255, 255, 0.66)',
   },
 
   // Completed step styling
   completedStepContainer: {
     width: '100%',
+    marginBottom: theme.spacing.xl,
   },
   completedPromptCard: {
     flexDirection: 'row',
@@ -571,12 +597,13 @@ const styles = StyleSheet.create({
   activePromptCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    backgroundColor: 'rgba(190, 242, 100, 0.80)',
     borderWidth: 1,
-    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderColor: 'rgba(217, 249, 157, 0.72)',
     borderRadius: 12,
-    paddingHorizontal: theme.spacing.sm,
-    paddingVertical: 8,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 10,
+    marginTop: theme.spacing.sm,
     marginBottom: theme.spacing.md,
   },
 

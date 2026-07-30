@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 8, 18, 0.72)',
+    backgroundColor: 'rgba(2, 8, 18, 0.94)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    backgroundColor: '#102034',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.lg,
     borderWidth: 1,
@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     color: theme.colors.text,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: '#1B2C42',
   },
   coinInputContainer: {
     flexDirection: 'row',
@@ -338,7 +338,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: '#1B2C42',
   },
   coinInput: {
     flex: 1,

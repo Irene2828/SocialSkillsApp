@@ -42,7 +42,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(2, 8, 18, 0.72)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(2, 8, 18, 0.94)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       <View style={styles.modalCard}>
         <View style={styles.header}>
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '90%',
     maxWidth: 500,
-    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    backgroundColor: '#102034',
     borderRadius: theme.borderRadius.md,
     maxHeight: '85%',
     borderWidth: 1,
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   pinInput: {
     width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: '#1B2C42',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,

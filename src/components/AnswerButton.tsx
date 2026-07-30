@@ -82,10 +82,10 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     flex: 1,
     paddingLeft: theme.spacing.md,
-    fontFamily: FONTS.medium,
+    fontFamily: FONTS.regular,
     fontSize: 15,
     lineHeight: 21,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   defaultButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.055)',
@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
   correctText: {
     color: theme.colors.text,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   incorrectButton: {
     backgroundColor: 'transparent',

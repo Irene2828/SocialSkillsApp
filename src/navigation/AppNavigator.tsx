@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, useWindowDimensions } from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -14,7 +14,6 @@ import { HomeScreen } from '../screens/HomeScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { theme, FONTS } from '../theme';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -84,15 +83,10 @@ const AppTabs = () => {
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarBackground: () => (
-          <LinearGradient
-            colors={['rgba(6, 18, 36, 0.72)', 'rgba(6, 18, 36, 0.9)']}
-            style={{ flex: 1 }}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1 }}
-          />
+          <View style={{ flex: 1, backgroundColor: '#061224' }} />
         ),
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: '#061224',
           borderTopWidth: 1,
           borderTopColor: 'rgba(255, 255, 255, 0.14)',
           elevation: 0,
