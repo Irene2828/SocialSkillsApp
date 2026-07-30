@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable, ScrollView } from 'react-native';
 import { Question } from '../data/types';
-import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme, FONTS } from '../theme';
@@ -192,7 +191,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
   return (
     <View style={styles.container}>
-      <Card style={[styles.unifiedCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+      <View style={styles.unifiedCard}>
         {/* ===== PART 1 ===== */}
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
@@ -441,7 +440,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           </Modal>
         </Animated.View>
       )}
-      </Card>
+      </View>
     </View>
   );
 };
@@ -452,13 +451,12 @@ const styles = StyleSheet.create({
   },
   unifiedCard: {
     width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.055)',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderRadius: 0,
+    borderWidth: 0,
+    borderColor: 'transparent',
     shadowOpacity: 0,
     elevation: 0,
   },

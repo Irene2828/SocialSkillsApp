@@ -1,10 +1,10 @@
-// Instrument Sans — premium geometric sans-serif, narrow and elegant, close to Inter but more upscale.
+// DM Sans — warm premium sans: friendly for kids, polished enough for an Apple-grade tool.
 export const FONTS = {
-  regular: 'InstrumentSans_400Regular',
-  regularItalic: 'InstrumentSans_400Regular_Italic',
-  medium: 'InstrumentSans_500Medium',
-  semiBold: 'InstrumentSans_600SemiBold',
-  bold: 'InstrumentSans_700Bold',
+  regular: 'DMSans_400Regular',
+  regularItalic: 'DMSans_400Regular_Italic',
+  medium: 'DMSans_500Medium',
+  semiBold: 'DMSans_600SemiBold',
+  bold: 'DMSans_700Bold',
 };
 
 export const theme = {
@@ -83,11 +83,11 @@ export const theme = {
 
     // Button / CTA text — semi-bold for authority
     button: {
-      fontFamily: FONTS.medium,
-      fontSize: 16,
-      fontWeight: '500' as const,
+      fontFamily: FONTS.semiBold,
+      fontSize: 17,
+      fontWeight: '600' as const,
       color: '#111827',
-      lineHeight: 22,
+      lineHeight: 24,
       letterSpacing: 0,
     },
 

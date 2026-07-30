@@ -17,12 +17,12 @@ import { FeedbackProvider } from './src/context/FeedbackContext';
 import { MoodProvider } from './src/context/MoodContext';
 import {
   useFonts,
-  InstrumentSans_400Regular,
-  InstrumentSans_400Regular_Italic,
-  InstrumentSans_500Medium,
-  InstrumentSans_600SemiBold,
-  InstrumentSans_700Bold,
-} from '@expo-google-fonts/instrument-sans';
+  DMSans_400Regular,
+  DMSans_400Regular_Italic,
+  DMSans_500Medium,
+  DMSans_600SemiBold,
+  DMSans_700Bold,
+} from '@expo-google-fonts/dm-sans';
 import { View, ActivityIndicator } from 'react-native';
 
 const RootNavigator = () => {
@@ -31,11 +31,11 @@ const RootNavigator = () => {
 
 export default function App() {
   const [fontsLoaded] = useFonts({
-    InstrumentSans_400Regular,
-    InstrumentSans_400Regular_Italic,
-    InstrumentSans_500Medium,
-    InstrumentSans_600SemiBold,
-    InstrumentSans_700Bold,
+    DMSans_400Regular,
+    DMSans_400Regular_Italic,
+    DMSans_500Medium,
+    DMSans_600SemiBold,
+    DMSans_700Bold,
   });
 
   if (!fontsLoaded) {

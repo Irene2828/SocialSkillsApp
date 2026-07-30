@@ -580,7 +580,7 @@ export const PuzzleScreen = () => {
                   />
                   
                   <Button 
-                    title="Upload Image" 
+                    title="Choose Image" 
                     onPress={pickImage} 
                     style={[styles.uploadButton, { backgroundColor: 'rgba(255, 255, 255, 0.055)', borderWidth: 1, borderColor: theme.colors.stroke }]}
                   />
@@ -667,7 +667,7 @@ export const PuzzleScreen = () => {
                 autoFocus
               />
               <Button
-                title="Save"
+                title="Save Puzzle"
                 onPress={handleSaveRename}
                 style={{ width: '100%', marginBottom: theme.spacing.md }}
               />

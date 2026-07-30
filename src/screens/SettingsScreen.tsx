@@ -49,7 +49,7 @@ export const SettingsScreen = () => {
               maxLength={6}
             />
             <Button 
-              title="Save"
+              title="Save Settings"
               onPress={handleSavePin}
               style={{ width: '100%', marginTop: theme.spacing.md }}
             />

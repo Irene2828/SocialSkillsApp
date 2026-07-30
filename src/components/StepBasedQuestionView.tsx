@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Modal, useWindowDimensions, Pressable } from 'react-native';
 import { StepBasedQuestion } from '../data/types';
-import { Card } from './Card';
 import { AnswerButton } from './AnswerButton';
 import { Button } from './Button';
 import { theme, FONTS } from '../theme';
@@ -177,17 +176,19 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 
   return (
     <View style={styles.container}>
-      <Card style={styles.unifiedCard}>
+      <View style={styles.unifiedCard}>
         {/* Persistent Problem Text Card */}
         <View style={styles.mainCard}>
           {compactProblem ? (
             <View style={styles.problemSheet}>
-              <Text style={[styles.problemSheetLabel, isRocket && glassTextShadow]}>
-                Story
-              </Text>
-              <Text style={[styles.problemSheetStory, isRocket && glassTextShadow]}>
-                {compactProblem.story}
-              </Text>
+              <View style={styles.storyCallout}>
+                <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>
+                  Story
+                </Text>
+                <Text style={[styles.storyCalloutText, isRocket && glassTextShadow]}>
+                  {compactProblem.story}
+                </Text>
+              </View>
 
               <Text style={[styles.problemSheetLabel, isRocket && glassTextShadow]}>
                 Details
@@ -196,7 +197,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 {compactProblem.facts.map((fact, index) => (
                   <View key={`${fact}-${index}`} style={styles.factChip}>
                     <Text style={[styles.factText, isRocket && glassTextShadow]}>
-                      {fact}
+                      {`\u2022 ${fact}`}
                     </Text>
                   </View>
                 ))}
@@ -215,6 +216,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <Text style={[styles.followStepsHint, isRocket && glassTextShadow]}>
             (don't answer yet, follow the steps below to solve the problem)
           </Text>
+          <View style={styles.problemToStepsDivider} />
         </View>
 
       {/* ===== Completed Steps (stacked, read-only) ===== */}
@@ -286,7 +288,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           </View>
         </Animated.View>
       )}
-      </Card>
+      </View>
 
       {/* ===== Feedback Modal ===== */}
       <Modal
@@ -353,13 +355,12 @@ const styles = StyleSheet.create({
   },
   unifiedCard: {
     width: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.055)',
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.sm,
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-    borderStyle: 'solid',
+    backgroundColor: 'transparent',
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    borderRadius: 0,
+    borderWidth: 0,
+    borderColor: 'transparent',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -418,16 +419,44 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     marginBottom: theme.spacing.sm,
   },
+  storyCallout: {
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 8,
+    marginBottom: theme.spacing.md,
+  },
+  calloutLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0,
+    color: 'rgba(255, 255, 255, 0.72)',
+    marginBottom: 3,
+  },
+  storyCalloutText: {
+    ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
   factGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginHorizontal: -3,
-    marginBottom: theme.spacing.sm,
+    marginHorizontal: -4,
+    marginBottom: theme.spacing.md,
   },
   factChip: {
     width: '50%',
-    paddingHorizontal: 2.5,
-    marginBottom: 5,
+    paddingHorizontal: 4,
+    marginBottom: 8,
   },
   factText: {
     ...theme.typography.caption,
@@ -435,13 +464,13 @@ const styles = StyleSheet.create({
     fontSize: 11,
     lineHeight: 15,
     color: '#FFFFFF',
-    backgroundColor: 'rgba(255, 255, 255, 0.055)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-    borderRadius: 10,
-    paddingHorizontal: 7,
-    paddingVertical: 5,
-    minHeight: 38,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+    borderColor: 'transparent',
+    borderRadius: 0,
+    paddingHorizontal: 0,
+    paddingVertical: 0,
+    minHeight: 0,
   },
   problemQuestionStrip: {
     flexDirection: 'row',
@@ -451,8 +480,8 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(147, 197, 253, 0.30)',
     borderRadius: 12,
     paddingHorizontal: theme.spacing.sm,
-    paddingVertical: 7,
-    marginTop: 2,
+    paddingVertical: 8,
+    marginTop: theme.spacing.sm,
   },
   problemQuestionText: {
     ...theme.typography.body,
@@ -473,6 +502,15 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
     marginTop: 0,
     marginBottom: 8,
+  },
+  problemToStepsDivider: {
+    width: 94,
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: 'rgba(147, 197, 253, 0.55)',
+    alignSelf: 'center',
+    marginTop: theme.spacing.xl,
+    marginBottom: theme.spacing.md,
   },
   promptText: {
     ...theme.typography.heading,

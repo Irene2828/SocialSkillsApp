@@ -1058,7 +1058,7 @@ export const NewQuizScreen = () => {
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingBottom: 170, flexGrow: 1 }]}>
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: theme.spacing.sm, paddingBottom: 170, flexGrow: 1 }]}>
           {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -1244,7 +1244,7 @@ export const NewQuizScreen = () => {
               )}
               
               <Button 
-                title="Generate Quiz" 
+                title="Create Quiz" 
                 iconName="color-wand-outline"
                 iconSize={18} 
                 onPress={handleGenerateFromSelectedImage} 
@@ -1299,7 +1299,7 @@ export const NewQuizScreen = () => {
               />
               
               <Button 
-                title="Generate Quiz" 
+                title="Create Quiz" 
                 iconName="color-wand-outline"
                 iconSize={18} 
                 onPress={handleGenerateFromText} 
@@ -1760,7 +1760,7 @@ export const NewQuizScreen = () => {
                 maxLength={40}
               />
               <Button
-                title="Save"
+                title="Save Quiz"
                 onPress={handleSaveRename}
                 style={{ width: '100%', marginBottom: theme.spacing.md }}
               />
@@ -1790,7 +1790,7 @@ export const NewQuizScreen = () => {
               autoFocus
             />
             <Button
-              title="Create"
+              title="Create Folder"
               onPress={handleCreateFolder}
               style={{ width: '100%', marginTop: theme.spacing.md }}
             />
@@ -1820,7 +1820,7 @@ export const NewQuizScreen = () => {
                 maxLength={40}
               />
               <Button
-                title="Save"
+                title="Save Folder"
                 onPress={handleSaveFolderRename}
                 style={{ width: '100%', marginBottom: theme.spacing.md }}
               />

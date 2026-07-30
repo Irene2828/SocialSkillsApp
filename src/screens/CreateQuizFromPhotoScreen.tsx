@@ -218,7 +218,7 @@ export const CreateQuizFromPhotoScreen = () => {
           numberOfLines={3}
         />
         <Button 
-          title="Generate Quiz" 
+          title="Create Quiz" 
           iconName="color-wand-outline"
           iconSize={18} 
           onPress={handleGenerateFromText} 
@@ -238,13 +238,13 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
         <View style={styles.photoActionRow}>
           <Button 
-            title="Camera" 
+            title="Take Photo" 
             onPress={takePhoto} 
             variant="secondary"
             style={[styles.photoActionButton, { marginRight: theme.spacing.sm }]}
           />
           <Button 
-            title="Gallery" 
+            title="Choose Photo" 
             onPress={pickImage} 
             variant="secondary"
             style={styles.photoActionButton}
@@ -281,7 +281,7 @@ export const CreateQuizFromPhotoScreen = () => {
       </View>
       
       <Button 
-        title="Generate Quiz" 
+        title="Create Quiz" 
         iconName="color-wand-outline"
         iconSize={18} 
         onPress={handleGenerate} 

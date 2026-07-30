@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
       {iconName && (
         <Ionicons 
           name={iconName} 
-          size={iconSize || 18} 
+          size={iconSize || 20} 
           color={resolvedIconColor}
           style={[{ marginLeft: 6 }, iconStyle]} 
         />
@@ -121,9 +121,9 @@ const styles = StyleSheet.create({
   secondaryButton: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'rgba(56, 189, 248, 0.18)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(147, 197, 253, 0.28)',
     borderRadius: theme.borderRadius.full,
     minHeight: theme.layout.minTouchTarget,
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   },
   text: {
     ...theme.typography.button,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   primaryText: {
     color: '#111827',

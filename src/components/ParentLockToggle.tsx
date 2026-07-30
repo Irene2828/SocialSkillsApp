@@ -91,7 +91,7 @@ export const ParentLockToggle: React.FC = () => {
               style={styles.cancelButton}
             />
             <Button 
-              title="Submit" 
+              title="Unlock Parent Mode" 
               onPress={handleSubmitPin} 
               style={styles.submitButton}
             />
