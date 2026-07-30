@@ -42,8 +42,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
                   key={`cost-${index}`} 
                   style={[
                     styles.costText, 
-                    { marginLeft: 0 },
-                    { color: gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                    { marginLeft: 0 }
                   ]}
                 >
                   {char}
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
   costText: {
     fontFamily: FONTS.semiBold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: '#F8FAFC',
     textShadowColor: 'rgba(0, 0, 0, 0.32)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,

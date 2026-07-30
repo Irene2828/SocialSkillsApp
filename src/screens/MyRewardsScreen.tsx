@@ -11,7 +11,6 @@ import { Header } from '../components/Header';
 import { CoinBalanceCard } from '../components/CoinBalanceCard';
 import { RewardList } from '../components/RewardList';
 import { RewardCard } from '../components/RewardCard';
-import { ElectrifiedText } from '../components/ElectrifiedText';
 import { UnlockedRewardItem } from '../components/UnlockedRewardItem';
 import { AddRewardForm } from '../components/AddRewardForm';
 import { GoldenDust } from '../components/GoldenDust';
@@ -409,7 +408,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]} startIndex={0} totalLetters={11} />
+                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]}>All Rewards</Text>
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>All Rewards</Text>
               )}
@@ -421,7 +420,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
+                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]}>Unlocked</Text>
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>Unlocked</Text>
               )}
