@@ -195,11 +195,12 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         {/* ===== PART 1 ===== */}
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
-          <View style={styles.scenarioCard}>
+          <View style={styles.scenarioCallout}>
             {whyQuestion && null}
-            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.scenario}</Text>
+            <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>Situation</Text>
+            <Text style={[styles.scenarioText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.scenario}</Text>
           {question.prompt && (
-            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.prompt}</Text>
+            <Text style={[styles.promptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.prompt}</Text>
           )}
           </View>
         </View>
@@ -325,11 +326,12 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         >
 
           <View style={styles.cardWrapper}>
-            <View style={styles.scenarioCard}>
+            <View style={styles.scenarioCallout}>
 
-              <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.scenario}</Text>
+              <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>Think</Text>
+              <Text style={[styles.scenarioText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.scenario}</Text>
               {whyQuestion.prompt && (
-                <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.prompt}</Text>
+                <Text style={[styles.promptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.prompt}</Text>
               )}
             </View>
           </View>
@@ -492,6 +494,23 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
     paddingVertical: theme.spacing.sm,
   },
+  scenarioCallout: {
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 8,
+    marginBottom: theme.spacing.lg,
+  },
+  calloutLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    color: 'rgba(255, 255, 255, 0.72)',
+    marginBottom: 3,
+  },
   partLabelText: {
     ...theme.typography.caption,
     fontSize: 16,
@@ -501,23 +520,29 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   scenarioText: {
-    ...theme.typography.heading,
-    fontFamily: FONTS.regular,
-    fontSize: 27,
-    fontWeight: '400',
-    lineHeight: 38,
+    ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 22,
     textAlign: 'left',
-    color: theme.colors.text,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   promptText: {
-    ...theme.typography.heading,
-    fontFamily: FONTS.regular,
-    fontSize: 27,
+    ...theme.typography.body,
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
     fontWeight: '600',
-    lineHeight: 38,
-    textAlign: 'center',
-    color: theme.colors.text,
-    marginTop: theme.spacing.xl,
+    lineHeight: 22,
+    textAlign: 'left',
+    color: '#FFFFFF',
+    marginTop: theme.spacing.sm,
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   dashedExplanationContainer: {
     width: '100%',

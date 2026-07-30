@@ -211,7 +211,14 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               </View>
             </View>
           ) : (
-            <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && glassTextShadow]}>{question.problemText}</Text>
+            <View style={styles.storyCallout}>
+              <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>
+                Problem
+              </Text>
+              <Text style={[styles.storyCalloutText, isRocket && glassTextShadow]}>
+                {question.problemText}
+              </Text>
+            </View>
           )}
           <Text style={[styles.followStepsHint, isRocket && glassTextShadow]}>
             (don't answer yet, follow the steps below to solve the problem)
@@ -226,7 +233,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
             <View style={styles.completedPromptCard}>
-              <Text style={[styles.promptText, { opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+              <Text style={[styles.completedPromptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                 {step.prompt}
               </Text>
             </View>
@@ -255,7 +262,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
-              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, isRocket && glassTextShadow]}>
+              <Text style={[styles.promptText, isRocket && glassTextShadow]}>
               {currentStep.prompt}
             </Text>
           </View>
@@ -514,13 +521,22 @@ const styles = StyleSheet.create({
   },
   promptText: {
     ...theme.typography.heading,
-    fontFamily: FONTS.regular,
-    fontSize: 24,
+    fontFamily: FONTS.semiBold,
+    fontSize: 22,
     fontWeight: '600',
-    lineHeight: 34,
+    lineHeight: 30,
     textAlign: 'left',
     color: theme.colors.text,
-    marginTop: theme.spacing.md,
+    marginTop: 0,
+  },
+  completedPromptText: {
+    ...theme.typography.subheading,
+    fontFamily: FONTS.medium,
+    fontSize: 17,
+    fontWeight: '500',
+    lineHeight: 24,
+    textAlign: 'left',
+    color: theme.colors.secondaryText,
   },
 
   // Completed step styling
