@@ -126,30 +126,31 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.md,
     borderWidth: 1,
     borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   containerFulfilled: {
-    backgroundColor: theme.colors.errorSoft,
-    borderColor: theme.colors.border,
+    backgroundColor: 'rgba(255, 255, 255, 0.035)',
+    borderColor: 'rgba(255, 255, 255, 0.10)',
     opacity: 0.7,
   },
   iconContainer: {
     width: 48,
     height: 48,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.errorSoft, // solid light grey
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: theme.spacing.md,
   },
   iconContainerFulfilled: {
-    backgroundColor: theme.colors.border,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   textContainer: {
     flex: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontWeight: '500',
     color: theme.colors.secondaryText,
-    letterSpacing: 0.1,
+    letterSpacing: 0,
     marginBottom: theme.spacing.xs,
   },
   titleFulfilled: {
@@ -186,7 +187,9 @@ const styles = StyleSheet.create({
   receivedChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
@@ -194,6 +197,9 @@ const styles = StyleSheet.create({
   },
   receivedText: {
     ...theme.typography.tab,
-    color: theme.colors.text,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
 });

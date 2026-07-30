@@ -402,14 +402,14 @@ export const MyRewardsScreen = () => {
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
-        <View style={[styles.tabContainer, isDark && { backgroundColor: 'rgba(255, 255, 255, 0.2)', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.15)', shadowOpacity: 0 }]}>
+        <View style={styles.tabContainer}>
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={11} />
+                <ElectrifiedText animated={false} text="All Rewards" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]} startIndex={0} totalLetters={11} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>All Rewards</Text>
               )}
@@ -421,7 +421,7 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0.2, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
+                <ElectrifiedText animated={false} text="Unlocked" style={[styles.tabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]} startIndex={0} totalLetters={8} />
               ) : (
                 <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>Unlocked</Text>
               )}
@@ -755,7 +755,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -766,10 +766,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: 0,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   successRewardRow: {
     flexDirection: 'row',
@@ -787,9 +791,9 @@ const styles = StyleSheet.create({
   },
   successRewardLabel: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
     marginLeft: 12,
@@ -841,8 +845,8 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight: '400',
     lineHeight: 26,
-    letterSpacing: 0.2,
-    color: '#111827',
+    letterSpacing: 0,
+    color: theme.colors.text,
     textAlign: 'center',
   },
   approveButton: {
@@ -856,7 +860,7 @@ const styles = StyleSheet.create({
   },
   pinTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.text,
@@ -864,21 +868,26 @@ const styles = StyleSheet.create({
   pinInput: {
     width: 120,
     height: 60,
-    borderWidth: 2,
+    borderWidth: 1,
     
     borderRadius: theme.borderRadius.md,
     fontSize: 32,
     textAlign: 'center',
     letterSpacing: 8,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    color: theme.colors.text,
   },
   tabContainer: {
     flexDirection: 'row',
     marginBottom: 8, // Cut spacing by 50% (was theme.spacing.md which is 16)
-    backgroundColor: 'transparent',
-    borderRadius: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderRadius: theme.borderRadius.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     padding: 0,
-    marginHorizontal: -theme.spacing.md,
+    marginHorizontal: 0,
+    overflow: 'hidden',
   },
   tab: {
     flex: 1,
@@ -887,9 +896,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTab: {
-    backgroundColor: 'rgba(186, 230, 253, 0.4)',
-    borderColor: '#BAE6FD',
-    borderWidth: 2,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderWidth: 1,
   },
   tabText: {
     ...theme.typography.button,
@@ -912,10 +921,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.lg,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   editInput: {
     width: '100%',
@@ -925,7 +936,8 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     ...theme.typography.body,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   toastWrapper: {
     position: 'absolute',
@@ -981,6 +993,6 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
     color: theme.colors.primary,
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
   },
 });

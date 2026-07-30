@@ -26,6 +26,44 @@ interface CompletedStep {
   correctOption: number;
 }
 
+const parseCompactProblemText = (problemText: string) => {
+  const storyMatch = problemText.match(/Story:\s*([\s\S]*?)(?=\n\s*Facts:|$)/i);
+  const factsMatch = problemText.match(/Facts:\s*([\s\S]*?)(?=\n\s*Question:|$)/i);
+  const questionMatch = problemText.match(/Question:\s*([\s\S]*)$/i);
+
+  if (!storyMatch || !factsMatch || !questionMatch) {
+    return null;
+  }
+
+  const facts = factsMatch[1]
+    .split('\n')
+    .map(line => line.replace(/^\s*[-•]\s*/, '').trim())
+    .filter(Boolean);
+
+  if (!facts.length) {
+    return null;
+  }
+
+  const story = storyMatch[1].trim();
+  const storySentences = story.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map(sentence => sentence.trim()).filter(Boolean) || [story];
+  const detailStartIndex = storySentences.findIndex(sentence =>
+    /\b(will use|needs to|prices?|costs?|packet|decides|choose|between|how much|how many)\b/i.test(sentence)
+  );
+  const introSentences = detailStartIndex > 0
+    ? storySentences.slice(0, detailStartIndex)
+    : storySentences.slice(0, Math.min(2, storySentences.length));
+  const detailsSentences = detailStartIndex > 0
+    ? storySentences.slice(detailStartIndex)
+    : storySentences.slice(introSentences.length);
+
+  return {
+    story: introSentences.join(' ').trim() || story,
+    details: detailsSentences.join(' ').trim(),
+    facts,
+    question: questionMatch[1].trim(),
+  };
+};
+
 export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
@@ -135,14 +173,46 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
     displayIsCorrectRef.current = isCorrect;
   }
   const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
+  const compactProblem = parseCompactProblemText(question.problemText);
 
   return (
     <View style={styles.container}>
-      <Card style={[styles.unifiedCard, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)' }]}>
+      <Card style={styles.unifiedCard}>
         {/* Persistent Problem Text Card */}
         <View style={styles.mainCard}>
-          <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.problemText}</Text>
-          <Text style={[{ fontFamily: 'InstrumentSans_400Regular', fontSize: 16, color: '#6B7280', marginTop: -8, marginBottom: 12 }, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, glassTextShadow]}>
+          {compactProblem ? (
+            <View style={styles.problemSheet}>
+              <Text style={[styles.problemSheetLabel, isRocket && glassTextShadow]}>
+                Story
+              </Text>
+              <Text style={[styles.problemSheetStory, isRocket && glassTextShadow]}>
+                {compactProblem.story}
+              </Text>
+
+              <Text style={[styles.problemSheetLabel, isRocket && glassTextShadow]}>
+                Details
+              </Text>
+              <View style={styles.factGrid}>
+                {compactProblem.facts.map((fact, index) => (
+                  <View key={`${fact}-${index}`} style={styles.factChip}>
+                    <Text style={[styles.factText, isRocket && glassTextShadow]}>
+                      {fact}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+
+              <View style={styles.problemQuestionStrip}>
+                <Ionicons name="flag-outline" size={16} color={theme.colors.secondaryText} />
+                <Text style={[styles.problemQuestionText, isRocket && glassTextShadow]}>
+                  {compactProblem.question}
+                </Text>
+              </View>
+            </View>
+          ) : (
+            <Text style={[styles.problemText, isSmallScreen && { fontSize: 22 }, isRocket && glassTextShadow]}>{question.problemText}</Text>
+          )}
+          <Text style={[styles.followStepsHint, isRocket && glassTextShadow]}>
             (don't answer yet, follow the steps below to solve the problem)
           </Text>
         </View>
@@ -154,7 +224,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
             <View style={styles.completedPromptCard}>
-              <Text style={[styles.promptText, { opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+              <Text style={[styles.promptText, { opacity: 0.8 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
                 {step.prompt}
               </Text>
             </View>
@@ -183,7 +253,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
-            <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>
+              <Text style={[styles.promptText, isSmallScreen && { fontSize: 20 }, isRocket && glassTextShadow]}>
               {currentStep.prompt}
             </Text>
           </View>
@@ -283,13 +353,15 @@ const styles = StyleSheet.create({
   },
   unifiedCard: {
     width: '100%',
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: theme.spacing.lg,
-    paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1.5,
-    borderColor: '#BAE6FD',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderStyle: 'solid',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   animatedContainer: {
     width: '100%',
@@ -306,7 +378,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.regular,
     fontWeight: '400',
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     color: theme.colors.secondaryText,
     marginBottom: 8,
     textAlign: 'left',
@@ -325,11 +397,88 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     marginBottom: theme.spacing.md,
   },
+  problemSheet: {
+    width: '100%',
+    marginBottom: theme.spacing.sm,
+  },
+  problemSheetLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.medium,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0,
+    color: theme.colors.secondaryText,
+    marginBottom: 4,
+  },
+  problemSheetStory: {
+    ...theme.typography.body,
+    fontFamily: FONTS.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: theme.colors.text,
+    marginBottom: theme.spacing.sm,
+  },
+  factGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginHorizontal: -3,
+    marginBottom: theme.spacing.sm,
+  },
+  factChip: {
+    width: '50%',
+    paddingHorizontal: 2.5,
+    marginBottom: 5,
+  },
+  factText: {
+    ...theme.typography.caption,
+    fontFamily: FONTS.regular,
+    fontSize: 11,
+    lineHeight: 15,
+    color: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderRadius: 10,
+    paddingHorizontal: 7,
+    paddingVertical: 5,
+    minHeight: 38,
+  },
+  problemQuestionStrip: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 7,
+    marginTop: 2,
+  },
+  problemQuestionText: {
+    ...theme.typography.body,
+    flex: 1,
+    fontFamily: FONTS.medium,
+    fontSize: 13,
+    lineHeight: 18,
+    color: '#FFFFFF',
+    marginLeft: 6,
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  },
+  followStepsHint: {
+    fontFamily: FONTS.regular,
+    fontSize: 12,
+    lineHeight: 17,
+    color: theme.colors.secondaryText,
+    marginTop: 0,
+    marginBottom: 8,
+  },
   promptText: {
     ...theme.typography.heading,
     fontFamily: FONTS.regular,
     fontSize: 24,
-    fontWeight: '700',
+    fontWeight: '600',
     lineHeight: 34,
     textAlign: 'left',
     color: theme.colors.text,
@@ -378,11 +527,11 @@ const styles = StyleSheet.create({
   },
 
   optionsContainer: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: 120,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.92)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -409,9 +558,9 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
   },
@@ -440,9 +589,9 @@ const styles = StyleSheet.create({
   },
   coinRewardText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,

@@ -2,7 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, FONTS } from '../theme';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
-import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface CoinBalanceCardProps {
   balance: number;
@@ -10,51 +9,25 @@ interface CoinBalanceCardProps {
 }
 
 export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onReset }) => {
-  const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
-  const isRocket = mood === 'rocket';
-
-  const glassStyle = isRocket ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    borderWidth: 1.5,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 24,
-    shadowOpacity: 0.1,
-  } : {};
-
-  const glassTextShadow = isRocket ? {
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  } : {};
-
-  const gradientColors = [
-    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
-    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
-    '#3B82F6', '#60A5FA', '#93C5FD'
-  ];
-
   return (
     <View style={styles.cardContainer}>
-      <View style={[styles.card, glassStyle]}>
+      <View style={styles.card}>
         {onReset && (
           <Pressable 
             onPress={onReset}
             style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, padding: 4 }}
           >
-            <Ionicons name="refresh-outline" size={20} color={isRocket ? '#FFFFFF' : theme.colors.secondaryText} style={{ opacity: 0.6 }} />
+            <Ionicons name="refresh-outline" size={20} color={theme.colors.secondaryText} style={{ opacity: 0.6 }} />
           </Pressable>
         )}
         <View style={styles.content}>
-          <Text style={[styles.earnedText, isRocket && { color: 'rgba(255, 255, 255, 0.75)' }, isRocket && glassTextShadow]}>You've earned:</Text>
+          <Text style={styles.earnedText}>You've earned:</Text>
           <View style={styles.balanceRow}>
             <FontAwesome5 
               name="coins" 
               size={34} 
-              color={isRocket ? '#FFFFFF' : gradientColors[0]} 
-              style={{ marginRight: 12, marginTop: 4, textShadowColor: isRocket ? 'rgba(0,0,0,0.4)' : undefined, textShadowRadius: isRocket ? 2 : undefined, textShadowOffset: isRocket ? {width:0, height:1} : undefined }}
+              color={theme.colors.text} 
+              style={{ marginRight: 12, marginTop: 4 }}
             />
             <View style={{ flexDirection: 'row' }}>
               {balance.toString().split('').map((char, index) => (
@@ -62,8 +35,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   key={`num-${index}`}
                   style={[
                     styles.balanceNumber, 
-                    isRocket && glassTextShadow, 
-                    { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                    { color: theme.colors.text }
                   ]}
                 >
                   {char}
@@ -77,8 +49,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   style={[
                     styles.balanceLabel, 
                     { marginLeft: 0 },
-                    isRocket && glassTextShadow, 
-                    { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + balance.toString().length + 1 + index, gradientColors.length - 1)] }
+                    { color: theme.colors.secondaryText }
                   ]}
                 >
                   {char}
@@ -86,7 +57,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
               ))}
             </View>
           </View>
-          <Text style={[styles.subtitleText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }, isRocket && glassTextShadow]}>Redeem coins for rewards of your choice anytime!</Text>
+          <Text style={styles.subtitleText}>Redeem coins for rewards of your choice anytime!</Text>
         </View>
       </View>
     </View>
@@ -101,12 +72,13 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
-    ...theme.shadows.soft,
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
+    shadowOpacity: 0,
+    elevation: 0,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
     position: 'relative',
     minHeight: 120,
   },
@@ -122,7 +94,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontWeight: '500',
     color: theme.colors.secondaryText,
-    letterSpacing: 0.1,
+    letterSpacing: 0,
     marginBottom: theme.spacing.xs,
   },
   balanceRow: {

@@ -1024,7 +1024,7 @@ export const NewQuizScreen = () => {
 
         {/* Progress container (above the ScrollView) */}
         <View style={{ paddingHorizontal: 0, paddingTop: theme.spacing.md, paddingBottom: theme.spacing.md }}>
-          <View style={{ height: 10, backgroundColor: theme.colors.white, borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
+          <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
             {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
               <LinearGradient
                 colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
@@ -1058,7 +1058,7 @@ export const NewQuizScreen = () => {
         </View>
 
         {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingBottom: 80, flexGrow: 1 }]}>
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingBottom: 170, flexGrow: 1 }]}>
           {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -1160,7 +1160,7 @@ export const NewQuizScreen = () => {
                         key={`earn-${index}`} 
                         style={[
                           styles.completedCoinText, 
-                          { fontFamily: FONTS.bold, fontSize: 22, marginLeft: 0 },
+                          { fontFamily: FONTS.semiBold, fontSize: 22, marginLeft: 0 },
                           isRocket && { color: '#FFFFFF' },
                           { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
                         ]}
@@ -1170,7 +1170,7 @@ export const NewQuizScreen = () => {
                     ))}
                     <Text style={[
                       styles.completedCoinText, 
-                      { fontFamily: FONTS.bold, fontSize: 22, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(5, gradientColors.length - 1)] }
+                      { fontFamily: FONTS.semiBold, fontSize: 22, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(5, gradientColors.length - 1)] }
                     ]}> Coins Earned!</Text>
                   </View>
                 </View>
@@ -1775,8 +1775,12 @@ export const NewQuizScreen = () => {
         transparent
         animationType="fade"
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <Pressable style={styles.modalOverlay} onPress={() => {
+          setShowFolderModal(false);
+          setPendingDragQuizId(null);
+          if (generatedQuizzes) setShowFolderSelection(true);
+        }}>
+          <Pressable style={styles.modalContent} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <Text style={styles.modalTitle}>New Folder</Text>
             <TextInput
               style={styles.input}
@@ -1797,8 +1801,8 @@ export const NewQuizScreen = () => {
             }}>
               <Text style={styles.linkButtonText}>Cancel</Text>
             </Pressable>
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
 
       {/* Rename Folder Modal */}
@@ -1889,7 +1893,7 @@ const styles = StyleSheet.create({
   },
   completedContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
@@ -1921,9 +1925,9 @@ const styles = StyleSheet.create({
   },
   completedCoinText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,
@@ -1948,7 +1952,7 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: theme.spacing.sm,
-    letterSpacing: 0.3,
+    letterSpacing: 0,
   },
   coinsEarnedText: {
     ...theme.typography.heading,
@@ -1975,7 +1979,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.regular,
     fontWeight: '400',
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginTop: 4,
@@ -1985,7 +1989,7 @@ const styles = StyleSheet.create({
   coinJarContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     paddingHorizontal: theme.spacing.md,
     paddingVertical: theme.spacing.sm,
     borderRadius: theme.borderRadius.full,
@@ -2010,12 +2014,12 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     fontSize: 14,
     fontWeight: '400',
-    letterSpacing: 0.1,
+    letterSpacing: 0,
     color: theme.colors.text,
   },
   coinJarText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     color: theme.colors.text, // Text in coin jar is dark in the design
     marginLeft: 4,
   },
@@ -2032,7 +2036,7 @@ const styles = StyleSheet.create({
 
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -2043,10 +2047,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: 0,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   pinContainer: {
     width: '100%',
@@ -2055,7 +2063,7 @@ const styles = StyleSheet.create({
   },
   pinTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.text,
@@ -2063,20 +2071,23 @@ const styles = StyleSheet.create({
   pinInput: {
     width: 120,
     height: 60,
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     textAlign: 'center',
     ...theme.typography.heading,
     marginBottom: theme.spacing.md,
     color: theme.colors.text,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   levelCard: {
     width: '100%',
     maxWidth: 500,
     padding: theme.spacing.xl,
-    borderRadius: 0,
-    backgroundColor: 'transparent',
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -2118,9 +2129,12 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderRadius: theme.borderRadius.md,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   levelQuestionCount: {
     ...theme.typography.button,
@@ -2163,18 +2177,18 @@ const styles = StyleSheet.create({
   },
   levelChip: {
     flex: 1,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: theme.borderRadius.full,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     paddingVertical: 12,
     paddingHorizontal: 8,
     alignItems: 'center',
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
   },
   levelChipSelected: {
     borderColor: theme.colors.primary,
-    backgroundColor: '#F7FEE7', // Super light brand green
+    backgroundColor: 'rgba(190, 242, 100, 0.18)',
   },
   levelChipText: {
     ...theme.typography.button,
@@ -2243,11 +2257,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 48,
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
     color: theme.colors.text,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   photoOutlineButton: {
     flexDirection: 'row',
@@ -2255,10 +2270,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: theme.borderRadius.full,
-    borderWidth: 2,
-    borderColor: theme.colors.neutralGrey,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderStyle: 'dashed',
     width: '100%',
   },
@@ -2293,7 +2308,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButton: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   cancelButtonText: {
     ...theme.typography.button,
@@ -2308,38 +2323,41 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
     ...theme.typography.body,
     width: '100%',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   modalContent: {
     width: '100%',
-    backgroundColor: 'transparent',
-    borderRadius: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderRadius: theme.borderRadius.md,
     padding: theme.spacing.xl,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     shadowOpacity: 0,
     elevation: 0,
   },
   addFolderCard: {
     width: '100%',
     height: 140,
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 0,
-    borderColor: theme.colors.stroke,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     alignItems: 'center',
     justifyContent: 'center',
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   addFolderIconContainer: {
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: '#F7FEE7',
+    backgroundColor: 'rgba(190, 242, 100, 0.18)',
     borderWidth: 1,
     borderColor: theme.colors.primary,
     justifyContent: 'center',
@@ -2355,11 +2373,12 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   modalOptionText: {
     ...theme.typography.body,
@@ -2367,11 +2386,12 @@ const styles = StyleSheet.create({
   },
   modalInput: {
     width: '100%',
+    minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     ...theme.typography.body,
     color: theme.colors.text,
   },
@@ -2422,7 +2442,7 @@ const styles = StyleSheet.create({
   },
   whiteModalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -2433,13 +2453,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: 0,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   rewardsModalTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     marginBottom: theme.spacing.xl,
     textAlign: 'center',
     color: theme.colors.text,
@@ -2448,10 +2470,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 48,
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
     color: theme.colors.text,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
 });

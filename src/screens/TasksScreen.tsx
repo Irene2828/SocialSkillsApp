@@ -24,7 +24,6 @@ export const TasksScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
-  const isRocket = mood === 'rocket';
   
   const { tasks, addTask, toggleTaskCompletion, deleteTask, editTask } = useTasks();
   const { addCoins } = useRewards();
@@ -93,9 +92,9 @@ export const TasksScreen = () => {
           
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="checkmark-done-circle-outline" size={64} color={isRocket ? 'rgba(255, 255, 255, 0.5)' : theme.colors.secondaryText} />
-              <Text style={[styles.emptyTitle, isDark && { color: '#FFFFFF' }]}>No tasks yet</Text>
-              <Text style={[styles.emptyText, isDark && { color: 'rgba(255,255,255,0.7)' }]}>Add some tasks to start earning coins!</Text>
+              <Ionicons name="checkmark-done-circle-outline" size={64} color="rgba(255, 255, 255, 0.48)" />
+              <Text style={styles.emptyTitle}>No tasks yet</Text>
+              <Text style={styles.emptyText}>Add some tasks to start earning coins!</Text>
             </View>
           ) : (
             <View style={styles.section}>
@@ -121,27 +120,27 @@ export const TasksScreen = () => {
         transparent={true}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={[styles.modalContent, isRocket && { backgroundColor: '#1E293B', borderColor: 'rgba(255,255,255,0.1)', borderWidth: 1 }]}>
-            <Text style={[styles.modalTitle, isDark && { color: '#FFFFFF' }]}>
+        <Pressable style={styles.modalOverlay} onPress={() => setIsModalVisible(false)}>
+          <Pressable style={styles.modalContent} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+            <Text style={styles.modalTitle}>
               {editingTaskId ? 'Edit Task' : 'New Task'}
             </Text>
             
-            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }]}>What needs to be done?</Text>
+            <Text style={styles.inputLabel}>What needs to be done?</Text>
             <TextInput
-              style={[styles.input, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', color: '#FFFFFF', borderColor: 'rgba(255,255,255,0.2)' }]}
+              style={styles.input}
               value={newTaskTitle}
               onChangeText={setNewTaskTitle}
               placeholder="e.g., Clean your room"
-              placeholderTextColor={isDark ? 'rgba(255,255,255,0.5)' : '#9CA3AF'}
+              placeholderTextColor="rgba(255,255,255,0.44)"
               autoFocus
             />
 
-            <Text style={[styles.inputLabel, isDark && { color: '#FFFFFF' }, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
-            <View style={[styles.coinInputContainer, isRocket && { backgroundColor: 'rgba(255,255,255,0.1)', borderColor: 'rgba(255,255,255,0.2)' }]}>
-              <FontAwesome5 name="coins" size={16} color={isRocket ? '#FFFFFF' : '#38BDF8'} />
+            <Text style={[styles.inputLabel, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
+            <View style={styles.coinInputContainer}>
+              <FontAwesome5 name="coins" size={16} color="#38BDF8" />
               <TextInput
-                style={[styles.coinInput, isRocket && { color: '#FFFFFF' }]}
+                style={styles.coinInput}
                 value={newTaskCoins}
                 onChangeText={setNewTaskCoins}
                 keyboardType="number-pad"
@@ -160,12 +159,12 @@ export const TasksScreen = () => {
               <Button 
                 title="Cancel" 
                 onPress={() => setIsModalVisible(false)}
-                style={{ width: '100%', backgroundColor: isRocket ? 'rgba(255,255,255,0.1)' : '#E5E7EB' }}
-                textStyle={{ color: isDark ? '#FFFFFF' : theme.colors.text }}
+                style={{ width: '100%' }}
+                variant="secondary"
               />
             </View>
-          </View>
-        </View>
+          </Pressable>
+        </Pressable>
       </Modal>
     </View>
   );
@@ -187,10 +186,11 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     alignItems: 'center',
     justifyContent: 'center',
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   headerTitle: {
     fontFamily: FONTS.semiBold,
@@ -215,13 +215,17 @@ const styles = StyleSheet.create({
   taskCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
     marginBottom: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 18 },
+    shadowOpacity: 0.2,
+    shadowRadius: 34,
+    elevation: 0,
   },
   taskCardCompleted: {
     opacity: 0.6,
@@ -288,7 +292,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -296,10 +300,13 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: '#FFFFFF',
-    borderRadius: theme.borderRadius.lg,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderRadius: theme.borderRadius.md,
     padding: theme.spacing.lg,
-    ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   modalTitle: {
     fontFamily: FONTS.semiBold,
@@ -318,18 +325,20 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     color: theme.colors.text,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   coinInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
   },
   coinInput: {
     flex: 1,

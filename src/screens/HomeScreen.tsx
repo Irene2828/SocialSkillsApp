@@ -104,9 +104,9 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
   }, [anim]);
 
   const gradientColors = [
-    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
-    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
-    '#3B82F6', '#60A5FA', '#93C5FD'
+    '#FFFFFF', '#F8FAFC', '#E5E7EB', '#CBD5E1', '#F8FAFC',
+    '#FFFFFF', '#D1D5DB', '#F9FAFB', '#E2E8F0', '#FFFFFF',
+    '#CBD5E1', '#F8FAFC', '#FFFFFF'
   ];
 
   return (
@@ -114,7 +114,7 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
       {text.split('').map((char, index) => {
         const center = (startIndex + index) / totalLetters;
         const spread = 0.15; // 15% of the text glows at once
-        const staticGradientColor = gradientColors[startIndex + index] || '#1E3A8A';
+        const staticGradientColor = gradientColors[startIndex + index] || '#FFFFFF';
 
         const color = anim.interpolate({
           inputRange: [
@@ -123,27 +123,13 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
             1.5, 2
           ],
           outputRange: [
-            style.color || '#1E3A8A', 
-            style.color || '#1E3A8A', '#38BDF8', style.color || '#1E3A8A',
-            style.color || '#1E3A8A', staticGradientColor
+            style.color || '#FFFFFF', 
+            style.color || '#FFFFFF', '#FFFFFF', style.color || '#FFFFFF',
+            style.color || '#FFFFFF', staticGradientColor
           ],
           extrapolate: 'clamp',
         });
         
-        const shadowColor = anim.interpolate({
-          inputRange: [
-            -1,
-            center - spread, center, center + spread,
-            1.5, 2
-          ],
-          outputRange: [
-            'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0)', // No shadow in static mode
-          ],
-          extrapolate: 'clamp',
-        });
-
         return (
           <Animated.Text 
             key={`${char}-${index}`} 
@@ -151,9 +137,6 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
               style, 
               { 
                 color,
-                textShadowColor: shadowColor,
-                textShadowRadius: 8,
-                textShadowOffset: { width: 0, height: 0 },
               }
             ]}
           >
@@ -175,7 +158,7 @@ export const HomeScreen = () => {
   
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
-  const titleColor = moodColors.isDark ? '#FFFFFF' : '#1E3A8A'; // Navy blue
+  const titleColor = '#FFFFFF';
   const subtitleColor = moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
   const [showSettings, setShowSettings] = useState(false);
 
@@ -183,10 +166,6 @@ export const HomeScreen = () => {
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground showCubes />
-      <Image 
-        source={require('../../assets/space_bg.png')} 
-        style={[StyleSheet.absoluteFill, { opacity: 0.15, resizeMode: 'repeat' }]} 
-      />
       <ScreenWrapper transparent>
         <TopBar 
           title="" 
@@ -260,10 +239,12 @@ const styles = StyleSheet.create({
   startSubtitle: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
-    letterSpacing: 0.1,
+    letterSpacing: 0,
     marginBottom: theme.spacing.md,
   },
   actionButton: {
     width: '100%',
+    maxWidth: 460,
+    alignSelf: 'center',
   },
 });

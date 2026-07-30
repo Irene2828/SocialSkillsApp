@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
     color: theme.colors.text,
     marginBottom: 4,
@@ -106,12 +106,13 @@ const styles = StyleSheet.create({
   },
   pinInput: {
     width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     ...theme.typography.body,
     fontSize: 18,
+    color: theme.colors.text,
   }
 });

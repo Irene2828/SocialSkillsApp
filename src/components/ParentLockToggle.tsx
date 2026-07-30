@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     fontSize: 18,
     marginBottom: theme.spacing.sm,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     textAlign: 'center',
   },
   errorText: {

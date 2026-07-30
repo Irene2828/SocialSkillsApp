@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme';
-import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface FolderCardProps {
   name: string;
@@ -15,25 +14,6 @@ interface FolderCardProps {
 
 export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, onDelete, onLayout, isDragTarget }) => {
   const containerRef = useRef<View>(null);
-  const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
-
-  const isRocket = mood === 'rocket';
-  const glassContainerStyle = isRocket ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    borderWidth: 1.5,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 24,
-    shadowOpacity: 0.1,
-  } : {};
-
-  const glassTextShadow = isRocket ? {
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
-  } : {};
 
   const handleLayout = () => {
     if (onLayout && containerRef.current) {
@@ -44,14 +24,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
   };
 
   return (
-    <View ref={containerRef} onLayout={handleLayout} style={[styles.container, glassContainerStyle, isDragTarget && styles.dragTarget]}>
+    <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
+            <Ionicons name="folder-outline" size={32} color={theme.colors.text} />
           </View>
           <View style={styles.textContainer}>
-            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, glassTextShadow]} numberOfLines={2}>{name}</Text>
+            <Text style={styles.title} numberOfLines={2}>{name}</Text>
           </View>
         </View>
       </Pressable>
@@ -67,13 +47,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                backgroundColor: pressed ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
+            <Ionicons name="ellipsis-vertical" size={20} color={theme.colors.secondaryText} />
           </Pressable>
         </View>
       )}
@@ -85,17 +65,18 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     minHeight: 170,
-    backgroundColor: theme.colors.white,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
     position: 'relative',
   },
   dragTarget: {
     borderColor: theme.colors.primary,
     borderWidth: 2,
-    backgroundColor: '#F7FEE7',
+    backgroundColor: 'rgba(190, 242, 100, 0.18)',
   },
   pressable: {
     flex: 1,

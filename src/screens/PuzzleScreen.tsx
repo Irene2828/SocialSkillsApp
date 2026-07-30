@@ -513,13 +513,10 @@ export const PuzzleScreen = () => {
                   <Animated.View style={[
                     styles.card,
                     isRocket && {
-                      backgroundColor: 'rgba(255, 255, 255, 0.45)',
-                      borderColor: 'rgba(255, 255, 255, 0.35)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.025)',
+                      borderColor: 'rgba(255, 255, 255, 0.20)',
                       borderWidth: 1.5,
-                      shadowColor: '#000000',
-                      shadowOffset: { width: 0, height: 8 },
-                      shadowRadius: 24,
-                      shadowOpacity: 0.1,
+                      shadowOpacity: 0,
                     }
                   ]}>
                     <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
@@ -585,7 +582,7 @@ export const PuzzleScreen = () => {
                   <Button 
                     title="Upload Image" 
                     onPress={pickImage} 
-                    style={[styles.uploadButton, { backgroundColor: theme.colors.white, borderWidth: 1, borderColor: theme.colors.stroke }]}
+                    style={[styles.uploadButton, { backgroundColor: 'rgba(255, 255, 255, 0.055)', borderWidth: 1, borderColor: theme.colors.stroke }]}
                   />
                   <Text style={styles.supportedText}>Supports JPG, PNG</Text>
                 </Pressable>
@@ -833,16 +830,17 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     minHeight: 175,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.018)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.lg * 2,
+    paddingTop: theme.spacing.lg,
     paddingBottom: theme.spacing.lg,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    borderColor: 'rgba(255, 255, 255, 0.20)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   deleteBadge: {
     position: 'absolute',
@@ -856,7 +854,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     zIndex: 10,
     borderWidth: 2,
-    borderColor: theme.colors.white,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   cardIconContainer: {
     marginBottom: 4,
@@ -911,7 +909,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 14,
     fontWeight: '600',
-    letterSpacing: 0.1,
+    letterSpacing: 0,
     color: theme.colors.text,
   },
   cardTitle: {
@@ -925,7 +923,7 @@ const styles = StyleSheet.create({
   headlineText: {
     ...theme.typography.subheading,
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '600',
     color: theme.colors.text,
     textAlign: 'center',
     marginBottom: theme.spacing.md,
@@ -949,7 +947,7 @@ const styles = StyleSheet.create({
   },
   completedContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: theme.spacing.md,
@@ -981,9 +979,9 @@ const styles = StyleSheet.create({
   },
   completedCoinText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,
@@ -1029,7 +1027,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     borderWidth: 2,
     borderColor: theme.colors.stroke,
     justifyContent: 'center',
@@ -1058,7 +1056,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -1068,9 +1066,10 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    borderRadius: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderRadius: theme.borderRadius.md,
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -1117,10 +1116,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: 0,
+    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   pinContainer: {
     width: '100%',
@@ -1129,7 +1130,7 @@ const styles = StyleSheet.create({
   },
   pinTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
     color: theme.colors.text,
@@ -1138,7 +1139,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 60,
     borderWidth: 2,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     textAlign: 'center',
     ...theme.typography.heading,
@@ -1149,7 +1150,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 48,
     borderWidth: 1,
-    borderColor: theme.colors.border,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
@@ -1159,11 +1160,12 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   modalOptionText: {
     ...theme.typography.body,

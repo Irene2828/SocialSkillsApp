@@ -27,7 +27,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
-  const textColor = isRocket ? '#FFFFFF' : theme.colors.text;
+  const textColor = '#FFFFFF';
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
@@ -43,12 +43,12 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         { position: 'relative' },
         !hideBorder && {
           borderBottomWidth: 1,
-          borderBottomColor: '#BAE6FD',
-          shadowColor: '#38BDF8',
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.06,
-          shadowRadius: 3,
-          elevation: 2,
+          borderBottomColor: 'rgba(255, 255, 255, 0.18)',
+          shadowColor: '#0F172A',
+          shadowOffset: { width: 0, height: 10 },
+          shadowOpacity: 0.05,
+          shadowRadius: 18,
+          elevation: 0,
         }
       ]}>
         {/* Center: Title (absolutely positioned for perfect centering) */}
@@ -67,7 +67,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color={'#38BDF8'} />
+              <Ionicons name="home-outline" size={24} color="#38BDF8" />
             </Pressable>
           ) : null}
         </View>
@@ -78,10 +78,10 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             <Pressable onPress={() => navigation.navigate('MyRewards' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: isRocket ? '#FFFFFF' : '#38BDF8', marginRight: 2 }]}>+</Text>
+                  <Text style={[styles.coinText, { color: '#38BDF8', marginRight: 2 }]}>+</Text>
                   {String(coinBalance).split('').map((char, index) => {
                     const gradientColors = ['#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985', '#0C4A6E'];
-                    const color = isRocket ? '#FFFFFF' : gradientColors[Math.min(index + 1, gradientColors.length - 1)];
+                    const color = gradientColors[Math.min(index + 1, gradientColors.length - 1)];
                     return (
                       <Text key={`coin-${index}`} style={[styles.coinText, { color }]}>
                         {char}
@@ -89,9 +89,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={16} color={isRocket ? '#FFFFFF' : '#38BDF8'} style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={16} color="#38BDF8" style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: isRocket ? '#FFFFFF' : '#0284C7' }]}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#38BDF8' }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
     fontSize: 20,
     color: theme.colors.text,
     textAlign: 'center',
@@ -136,16 +136,22 @@ const styles = StyleSheet.create({
   coinBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
-    ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   coinText: {
-    fontFamily: FONTS.bold,
+    fontFamily: FONTS.semiBold,
     fontSize: 14,
-    color: '#D97706',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   coinIcon: {
     marginTop: 1,

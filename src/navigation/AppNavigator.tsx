@@ -38,9 +38,8 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const footerBgColor = isRocket ? moodColors.bg : 'rgba(186, 230, 253, 0.4)';
-  const activeColor = isRocket ? '#FFFFFF' : theme.colors.text;
-  const inactiveColor = isRocket ? 'rgba(255, 255, 255, 0.4)' : 'rgba(0, 0, 0, 0.5)';
+  const activeColor = '#FFFFFF';
+  const inactiveColor = 'rgba(255, 255, 255, 0.42)';
 
   return (
     <Tab.Navigator
@@ -86,7 +85,7 @@ const AppTabs = () => {
         headerShown: false,
         tabBarBackground: () => (
           <LinearGradient
-            colors={isRocket ? [moodColors.bg, moodColors.bg] : ['#FFFFFF', '#F0F9FF']}
+            colors={['rgba(6, 18, 36, 0.72)', 'rgba(6, 18, 36, 0.9)']}
             style={{ flex: 1 }}
             start={{ x: 0, y: 0 }}
             end={{ x: 0, y: 1 }}
@@ -94,7 +93,8 @@ const AppTabs = () => {
         ),
         tabBarStyle: {
           backgroundColor: 'transparent',
-          borderTopWidth: 0,
+          borderTopWidth: 1,
+          borderTopColor: 'rgba(255, 255, 255, 0.14)',
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',

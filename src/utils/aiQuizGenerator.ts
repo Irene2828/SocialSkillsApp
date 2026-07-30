@@ -57,9 +57,18 @@ const getMathSystemPrompt = (age: number, isImage: boolean = false) => `You are 
 ${isImage ? `The child has uploaded a math worksheet image.` : `The child has requested math quiz practice.`}
 
 # YOUR ONLY JOB
-Read and fully understand the original math problem from the worksheet. Then REWRITE it in your own words as a brand-new story problem — using completely different character names, a different scene/setting, and different numbers — while preserving EVERY structural detail and logical element from the original.
+Read and fully understand the original math problem. Then create a practice version that protects the exact worksheet wording but preserves the same situation, math model, and visual/source structure.
 
-${isImage ? `Generate exactly 1 quiz with exactly 5 questions.` : `Generate exactly 3 quizzes with exactly 5 questions each.`}
+For uploaded worksheet images, do NOT invent a totally different story world. Keep the same kind of scene and object so the child's practice problem still looks and feels like the school test:
+• If the original is about building a rocket, keep it about building a rocket or a very close object.
+• If the original is about plane figures for solids, keep the same solid names and plane-figure categories.
+• Change character names and lightly rephrase sentences.
+• You may change numbers/prices only when the same relationships, counts of items, units, ranges, and table rows are preserved.
+• If changing a number would make the solved answer uncertain or would require a missing geometry fact, keep the original number.
+
+For text-only math practice requests, you may create brand-new stories, but you must still preserve the requested math skill.
+
+${isImage ? `Generate exactly 1 quiz with exactly 1 question. That single question is the rewritten version of the uploaded worksheet problem.` : `Generate exactly 3 quizzes with exactly 5 questions each.`}
 
 # ABSOLUTE RULE: NEVER OMIT DETAILS
 This is the most important rule. When you read the original problem, identify EVERY piece of information it provides:
@@ -71,24 +80,45 @@ This is the most important rule. When you read the original problem, identify EV
 
 Your rewritten problem MUST include an equivalent for EVERY one of these elements. If the original gives 5 data points, yours gives 5 data points. If the original has a table with 4 rows, yours has a table with 4 rows. If the original mentions a conversion fact (e.g. "a cube has 6 faces"), you MUST include the equivalent conversion fact in your version.
 
+For geometry, units, money, time, fractions, measurements, and ranges, preserve the exact category names unless you are completely certain the replacement is mathematically equivalent. Never change a square prism into a rectangular prism, a triangular pyramid into a prism, or a range like "between 2 and 7" into a different range unless the original range is clearly changed in a fully consistent rewritten problem.
+
 DO NOT simplify. DO NOT shorten. DO NOT remove information you think is "obvious." The child has ONLY your "problemText" to work from — if you omit something, the child cannot solve the problem and will be confused.
+
+# COMPACT PROBLEM SHEET FORMAT
+The "problemText" MUST be compact, like a clean worksheet card the child can keep visible while answering.
+Compact means organized and scannable. It NEVER means shortened, summarized, or missing information.
+Do NOT write one long paragraph.
+Use this exact structure with line breaks:
+
+Story: [the FULL rewritten word problem, using 2 to 5 concise sentences. For uploaded worksheets, keep the same situation and object type but change names and wording. Include every setup detail, table/rate detail, condition, and question context here. Do not summarize.]
+
+Facts:
+- [fact 1]
+- [fact 2]
+- [fact 3]
+- [include every table row, rate, conversion, condition, and irrelevant-but-present detail as its own compact bullet]
+
+Question: [the exact thing to find]
+
+Keep each fact bullet short. If the original has a table, rewrite it as bullets under Facts. The Facts section is only a quick reference copy for the child — it is NOT a replacement for the full rewritten problem in Story. The problem must fit as one compact reference sheet while still containing every original logical detail.
 
 # REWRITING STRATEGY
 1. Read the original problem completely.
 2. List every fact, table entry, quantity, condition, and question it contains.
-3. Invent a new story with different names, setting, and theme.
-4. Map each original fact to an equivalent new fact with different numbers.
+3. For uploaded worksheets, keep the same scene type and object type. Change names and wording only enough to avoid copying the test text.
+4. Map each original fact to an equivalent new fact. Preserve category names, number of rows, ranges, units, and geometry terms.
 5. Write the new problem ensuring the SAME question direction (what is being asked).
-6. Double-check: does your version contain the same number of facts, table rows, conditions, and sub-questions as the original? If not, add the missing ones.
+6. Solve the rewritten problem yourself using every relevant rewritten fact.
+7. Double-check: does your version contain the same number of facts, table rows, conditions, and sub-questions as the original? If not, add the missing ones.
+8. Double-check the final calculation against the rewritten facts. The correct answer must be mathematically true.
 
-# CRITICAL RULE: REFERENCE TABLES IN PROBLEM TEXT
-If the original problem has a price list, measurement chart, ingredient list, or ANY reference table, you MUST invent and embed an equivalent table directly inside the "problemText" field, formatted with literal newlines like this:
-"...story text...\\n\\nPrices:\\n- 1 packet of 6 squares: $4\\n- 1 packet of 3 rectangles: $2\\n- 1 circle: $3\\n\\n...rest of story..."
-
+# CRITICAL RULE: FACT COVERAGE
 Every price, quantity, conversion fact, and data point the child needs to do the math MUST appear inside "problemText". The child has no other source of information.
+If the original has extra information that should be ignored, include an equivalent extra fact and make one planning step teach what to ignore.
+The Story section must be complete enough that the child can understand the whole situation without reading the Facts section first. The Facts section repeats the important numbers and conditions in a compact way so the child does not have to scroll back while answering.
 
 # MANDATORY STEP SEQUENCE — FOLLOW EXACTLY
-Every question MUST have these steps in exactly this order:
+Every question MUST have exactly 5 steps in exactly this order:
 
 Step 1 — prompt MUST be the exact words: "What do we need to find out in this problem?"
   → This asks the child to identify the overall goal/question of the problem
@@ -100,19 +130,22 @@ Step 2 — prompt MUST be the exact words: "What should our first step be?"
 Step 3 — prompt MUST be the exact words: "What's the second step?"
   → Options: 3 different possible second actions
 
-Step 4 — prompt MUST be the exact words: "What's the third step?" (include only if the problem needs a third planning step)
+Step 4 — prompt MUST be the exact words: "What's the third step?"
+  → Options: 3 different possible third actions
+  → If the problem is simple, this step should be a real reasoning step like "write the equation", "combine the totals", "choose the useful facts", or "check what information to ignore" — never skip it
 
 Final Step — prompt MUST start with: "Now calculate"
   → Options MUST be 3 specific numerical answers (dollar amounts, counts, measurements, etc.), e.g. ["$14", "$18", "$22"] — never vague words like "Find the total"
+  → The correct option MUST equal the answer from your rewritten problemText
 
 # CONCRETE EXAMPLE OF A CORRECT OUTPUT
 Here is exactly what one question should look like:
 {
-  "problemText": "Sofia wants to build a toy house for her cat. To make it, she will use these shapes: 2 cubes and 1 triangular prism. She also wants to decorate it with stars. Each star costs $1. She wants to add 3 stars.\\n\\nTo build the shapes, Sofia needs to buy flat pieces. Here are the prices:\\n- 1 packet of 6 squares: $4\\n- 1 packet of 3 triangles: $3\\n- 1 circle: $2\\n\\nHow much will it cost to buy all the flat pieces and stars for the toy house?",
+  "problemText": "Story: Sofia wants to build a toy house for her cat using 2 cubes and 1 triangular prism. Each cube needs 6 square pieces, and each triangular prism needs 3 rectangle pieces and 2 triangle pieces. Sofia must buy packets of pieces: 1 packet of 6 squares costs $4, 1 packet of 3 rectangles costs $2, and 1 packet of 2 triangles costs $3. She also wants to add 3 stars, and each star costs $1.\\n\\nFacts:\\n- Sofia will use 2 cubes.\\n- Sofia will use 1 triangular prism.\\n- Each cube needs 6 squares.\\n- Each triangular prism needs 3 rectangles and 2 triangles.\\n- 1 packet of 6 squares costs $4.\\n- 1 packet of 3 rectangles costs $2.\\n- 1 packet of 2 triangles costs $3.\\n- She wants 3 stars.\\n- Each star costs $1.\\n\\nQuestion: How much will all the flat pieces and stars cost?",
   "steps": [
     {
       "prompt": "What do we need to find out in this problem?",
-      "options": ["The total cost of all pieces and stars", "The number of cubes Sofia uses", "Which shape is the most expensive"],
+      "options": ["The total cost of all pieces and stars", "The number of cubes Sofia uses", "Which packet is the most expensive"],
       "correctIndex": 0,
       "explanation": "We need to find the total cost. That's the big question we are trying to answer."
     },
@@ -150,6 +183,8 @@ Requirements:
 • Every "explanation" answers WHY this step comes next.
 • Every problem MUST be fully solvable using only the information in "problemText".
 • Your rewritten story MUST contain the same number of facts, data points, and conditions as the original — never fewer.
+• Every math question MUST have exactly 5 steps: goal, first step, second step, third step, final calculation.
+• The final calculation must be the last step, never Step 3 or Step 4.
 
 Return the response STRICTLY as a JSON object:
 {
@@ -158,11 +193,12 @@ ${isImage ? `  "folderName": "Suggested folder name (strictly 1 to 2 words max)"
       "concept": "2 words max",
       "questions": [
         {
-          "problemText": "Full story WITH all reference tables and facts embedded using \\n newlines — must contain every detail needed to solve",
+          "problemText": "Story: ...\\n\\nFacts:\\n- ...\\n- ...\\n\\nQuestion: ...",
           "steps": [
             {"prompt": "What do we need to find out in this problem?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
             {"prompt": "What should our first step be?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
             {"prompt": "What's the second step?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "What's the third step?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
             {"prompt": "Now calculate the total cost (use paper if needed!) — [specific question]", "options": ["$X", "$Y", "$Z"], "correctIndex": 0, "explanation": "..."}
           ],
           "finalAnswer": "The answer in a complete friendly sentence."
@@ -177,6 +213,15 @@ const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social', i
   return topicType === 'math' ? getMathSystemPrompt(age, isImage) : getSocialSystemPrompt(age, isImage);
 };
 
+const REQUIRED_MATH_PLANNING_PROMPTS = [
+  'What do we need to find out in this problem?',
+  'What should our first step be?',
+  "What's the second step?",
+  "What's the third step?",
+];
+
+const looksLikeNumericalAnswer = (option: string) => /(?:\d|[$€£¢]|:|\/)/.test(option);
+
 const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', isImage: boolean = false) => {
   if (!data || typeof data !== 'object') throw new Error("Root is not an object");
   
@@ -189,7 +234,11 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
   }
   
   if (isImage) {
-    if (data.quizzes.length < 1 || data.quizzes.length > 3) {
+    if (topicType === 'math') {
+      if (data.quizzes.length !== 1) {
+        throw new Error(`Expected exactly 1 math quiz for image generation, got ${data.quizzes.length}`);
+      }
+    } else if (data.quizzes.length < 1 || data.quizzes.length > 3) {
       throw new Error(`Expected 1 to 3 quizzes for image generation, got ${data.quizzes.length}`);
     }
   } else {
@@ -202,9 +251,9 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
     if (typeof quiz.concept !== 'string' || !quiz.concept.trim()) {
       throw new Error(`Quiz ${qIndex} has invalid or empty concept`);
     }
-    const minQ = topicType === 'math' ? 1 : 5;
-    if (!Array.isArray(quiz.questions) || quiz.questions.length < minQ) {
-      throw new Error(`Quiz ${qIndex} expected at least ${minQ} questions, got ${quiz.questions?.length}`);
+    const expectedQuestionCount = topicType === 'math' ? (isImage ? 1 : 5) : 5;
+    if (!Array.isArray(quiz.questions) || quiz.questions.length !== expectedQuestionCount) {
+      throw new Error(`Quiz ${qIndex} expected exactly ${expectedQuestionCount} questions, got ${quiz.questions?.length}`);
     }
 
     for (const [index, q] of quiz.questions.entries()) {
@@ -230,7 +279,10 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
       } else {
         // math (step-based)
         if (typeof q.problemText !== 'string' || !q.problemText.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty problemText`);
-        if (!Array.isArray(q.steps) || q.steps.length < 3) throw new Error(`Quiz ${qIndex} Question ${index} must have at least 3 steps`);
+        if (!/Story:/i.test(q.problemText) || !/Facts:/i.test(q.problemText) || !/Question:/i.test(q.problemText)) {
+          throw new Error(`Quiz ${qIndex} Question ${index} problemText must use compact Story/Facts/Question format`);
+        }
+        if (!Array.isArray(q.steps) || q.steps.length !== 5) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 5 steps`);
         for (const [stepIndex, step] of q.steps.entries()) {
           if (typeof step.prompt !== 'string' || !step.prompt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid prompt`);
           if (!Array.isArray(step.options) || step.options.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} must have exactly 3 options`);
@@ -241,6 +293,19 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
             throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid correctIndex: ${step.correctIndex}`);
           }
           if (typeof step.explanation !== 'string' || !step.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid explanation`);
+
+          if (stepIndex < REQUIRED_MATH_PLANNING_PROMPTS.length && step.prompt.trim() !== REQUIRED_MATH_PLANNING_PROMPTS[stepIndex]) {
+            throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has wrong prompt order: ${step.prompt}`);
+          }
+
+          if (stepIndex === 4) {
+            if (!step.prompt.trim().startsWith('Now calculate')) {
+              throw new Error(`Quiz ${qIndex} Question ${index} final step must start with "Now calculate"`);
+            }
+            if (!step.options.every(looksLikeNumericalAnswer)) {
+              throw new Error(`Quiz ${qIndex} Question ${index} final step options must be numerical answers`);
+            }
+          }
         }
         if (typeof q.finalAnswer !== 'string' || !q.finalAnswer.trim()) throw new Error(`Quiz ${qIndex} Question ${index} has invalid or empty finalAnswer`);
       }

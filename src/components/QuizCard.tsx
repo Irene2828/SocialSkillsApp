@@ -2,8 +2,6 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Card } from './Card';
 import { theme } from '../theme';
-import { useMood, getMoodColors } from '../context/MoodContext';
-import { GradientIcon } from './GradientIcon';
 import { QuizCategory } from '../data/types';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { ScalePressable } from './ScalePressable';
@@ -35,13 +33,7 @@ const getCategoryIcon = (category: QuizCategory): { name: string; family: 'Ionic
 
 export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOptionsPress, isFeatured, isDeleted, onUndo }) => {
   const { name: iconName, family: iconFamily } = getCategoryIcon(category);
-  const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
-  const isRocket = mood === 'rocket';
   const cardBorderColor = category.color || theme.colors.stroke;
-  const iconBorderColor = theme.colors.stroke;
-  const iconBackgroundColor = theme.colors.errorSoft;
-  const iconColor = '#7DD3FC'; // 20% darker than stroke (#BAE6FD)
 
   if (isDeleted) {
     return (
@@ -49,7 +41,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor, opacity: 0.5, alignItems: 'center', justifyContent: 'center' }]}>
           <Text style={styles.title}>Deleted</Text>
           <Pressable onPress={onUndo} style={{ marginTop: 8, padding: 8, backgroundColor: theme.colors.primarySoft, borderRadius: 8 }}>
-            <Text style={{ color: theme.colors.primary, fontWeight: 'bold' }}>Undo</Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Undo</Text>
           </Pressable>
         </Card>
       </View>
@@ -62,7 +54,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         onPress={onPressStart} 
         style={{ flex: 1 }}
       >
-        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: theme.colors.stroke, backgroundColor: theme.colors.white }]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.14)', backgroundColor: 'rgba(255, 255, 255, 0.055)' }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
@@ -74,31 +66,22 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             styles.iconContainer, 
             isFeatured && styles.featuredIconContainer,
           ]}>
-            {isRocket ? (
-              iconFamily === 'FontAwesome5' ? (
-                <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#FFFFFF" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
-              ) : (
-                <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#FFFFFF" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
-              )
+            {iconFamily === 'FontAwesome5' ? (
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={theme.colors.text} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <GradientIcon 
-                iconFamily={iconFamily as any} 
-                name={iconName} 
-                size={isFeatured ? 24 : 32} 
-                style={[styles.icon, isFeatured && { marginBottom: 2 }]} 
-              />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={theme.colors.text} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text 
-              style={[styles.title, isFeatured && styles.featuredTitle, isRocket && { color: '#FFFFFF' }, isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }]} 
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: theme.colors.text }]} 
               numberOfLines={2}
             >
               {category.title}
             </Text>
             {isFeatured && category.description && (
-              <Text style={[styles.descriptionText, isRocket && { color: 'rgba(255, 255, 255, 0.7)' }]}>
+              <Text style={[styles.descriptionText, { color: theme.colors.secondaryText }]}>
                 {category.description}
               </Text>
             )}
@@ -120,13 +103,13 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                backgroundColor: pressed ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color={isRocket ? '#FFFFFF' : '#6B7280'} />
+            <Ionicons name="ellipsis-vertical" size={20} color={theme.colors.secondaryText} />
           </Pressable>
         </View>
       )}
@@ -189,8 +172,8 @@ const styles = StyleSheet.create({
   newBadgeText: {
     ...theme.typography.body,
     fontSize: 10,
-    fontWeight: '800',
-    color: '#FFFFFF',
+    fontWeight: '600',
+    color: theme.colors.text,
   },
   recommendedBadge: {
     backgroundColor: theme.colors.primarySoft,
@@ -205,7 +188,7 @@ const styles = StyleSheet.create({
   recommendedBadgeText: {
     ...theme.typography.label,
     fontSize: 10,
-    fontWeight: '700',
+    fontWeight: '600',
     color: '#3F6212', // Darker green for readability
   },
   iconContainer: {
@@ -234,7 +217,7 @@ const styles = StyleSheet.create({
   featuredTitle: {
     textAlign: 'left',
     fontSize: 18,
-    fontWeight: '700',
+    fontWeight: '600',
   },
   descriptionText: {
     ...theme.typography.caption,

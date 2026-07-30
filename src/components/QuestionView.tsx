@@ -198,9 +198,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         <View style={styles.cardWrapper}>
           <View style={styles.scenarioCard}>
             {whyQuestion && null}
-            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.scenario}</Text>
+            <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.scenario}</Text>
           {question.prompt && (
-            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{question.prompt}</Text>
+            <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.prompt}</Text>
           )}
           </View>
         </View>
@@ -273,7 +273,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                           key={`earn-part1-${index}`} 
                           style={[
                             styles.coinRewardText,
-                            { fontFamily: FONTS.bold, fontSize: 20, marginLeft: 0 },
+                            { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
                             isRocket && { color: '#FFFFFF' },
                             { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
                           ]}
@@ -283,7 +283,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       ))}
                       <Text style={[
                         styles.coinRewardText,
-                        { fontFamily: FONTS.bold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                        { fontFamily: FONTS.semiBold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
                       ]}> Coin Earned!</Text>
                     </View>
                   </View>
@@ -328,9 +328,9 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           <View style={styles.cardWrapper}>
             <View style={styles.scenarioCard}>
 
-              <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.scenario}</Text>
+              <Text style={[styles.scenarioText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.scenario}</Text>
               {whyQuestion.prompt && (
-                <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, glassTextShadow]}>{whyQuestion.prompt}</Text>
+                <Text style={[styles.promptText, isSmallScreen && { fontSize: 25 }, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.prompt}</Text>
               )}
             </View>
           </View>
@@ -397,7 +397,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                             key={`earn-part2-${index}`} 
                             style={[
                               styles.coinRewardText,
-                              { fontFamily: FONTS.bold, fontSize: 20, marginLeft: 0 },
+                              { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
                               isRocket && { color: '#FFFFFF' },
                               { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
                             ]}
@@ -407,7 +407,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                         ))}
                         <Text style={[
                           styles.coinRewardText,
-                          { fontFamily: FONTS.bold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                          { fontFamily: FONTS.semiBold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
                         ]}> Coin Earned!</Text>
                       </View>
                     </View>
@@ -452,13 +452,15 @@ const styles = StyleSheet.create({
   },
   unifiedCard: {
     width: '100%',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     paddingHorizontal: theme.spacing.lg,
     paddingVertical: theme.spacing.md,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1.5,
-    borderColor: '#BAE6FD',
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderStyle: 'solid',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   cardWrapper: {
     position: 'relative',
@@ -480,10 +482,10 @@ const styles = StyleSheet.create({
   },
   folderTabText: {
     ...theme.typography.body,
-    fontWeight: '900',
+    fontWeight: '600',
     fontSize: 14,
     color: theme.colors.text,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
   },
   animatedContainer: {
     width: '100%',
@@ -507,13 +509,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 38,
     textAlign: 'left',
-    color: '#111827',
+    color: theme.colors.text,
   },
   promptText: {
     ...theme.typography.heading,
     fontFamily: FONTS.regular,
     fontSize: 27,
-    fontWeight: '700',
+    fontWeight: '600',
     lineHeight: 38,
     textAlign: 'center',
     color: theme.colors.text,
@@ -523,10 +525,10 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     borderWidth: 1,
-    borderColor: '#BAE6FD',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderStyle: 'dashed',
     borderRadius: 16,
-    backgroundColor: '#F0F9FF',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.md,
   },
@@ -541,7 +543,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF', // Standardized white overlay 90%
+    backgroundColor: 'rgba(2, 8, 18, 0.92)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -568,9 +570,9 @@ const styles = StyleSheet.create({
   },
   feedbackTitle: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
   },
@@ -583,9 +585,9 @@ const styles = StyleSheet.create({
   },
   coinRewardText: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 20,
-    letterSpacing: 0.5,
+    letterSpacing: 0,
     textAlign: 'center',
     color: theme.colors.text,
     marginLeft: theme.spacing.xs,
@@ -603,7 +605,7 @@ const styles = StyleSheet.create({
   part2DividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: '#D1D5DB',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
   },
   part2DividerText: {
     ...theme.typography.caption,

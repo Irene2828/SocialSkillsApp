@@ -142,7 +142,10 @@ export const CreateQuizFromPhotoScreen = () => {
   };
 
   const handleStartQuiz = () => {
-    navigation.navigate('NewQuiz', { playCategory: generatedQuiz.concept });
+    navigation.navigate('AppTabs', {
+      screen: 'NewQuiz',
+      params: { playCategory: generatedQuiz.concept },
+    });
     setScreenState('idle'); // reset for next time
   };
 
@@ -192,15 +195,18 @@ export const CreateQuizFromPhotoScreen = () => {
     });
 
     setScreenState('idle');
-    navigation.navigate('NewQuiz', { tab: 'ai', targetFolderId: folderId });
+    navigation.navigate('AppTabs', {
+      screen: 'NewQuiz',
+      params: { tab: 'ai', targetFolderId: folderId },
+    });
   };
 
   const renderIdle = () => (
     <View style={styles.idleContainer}>
-      <Card style={[styles.uploadCard, { marginBottom: theme.spacing.lg }]}>
+      <Card style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
           <Ionicons name="text-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
-          <Text style={styles.sectionHeaderTitle}>Type a Topic or Concept</Text>
+          <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
         </View>
         <TextInput
           style={styles.textInput}
@@ -212,36 +218,39 @@ export const CreateQuizFromPhotoScreen = () => {
           numberOfLines={3}
         />
         <Button 
-          title="Generate from Text" 
+          title="Generate Quiz" 
           iconName="color-wand-outline"
           iconSize={18} 
           onPress={handleGenerateFromText} 
           disabled={!textPrompt.trim()}
           style={styles.button}
         />
-      </Card>
 
-      <Text style={styles.orText}>— OR —</Text>
-
-      <Card style={styles.uploadCard}>
-        <View style={styles.sectionHeaderRow}>
-          <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
-          <Text style={styles.sectionHeaderTitle}>Upload a Photo</Text>
+        <View style={styles.dividerRow}>
+          <View style={styles.dividerLine} />
+          <Text style={styles.dividerText}>or use a photo</Text>
+          <View style={styles.dividerLine} />
         </View>
-        
-        <Button 
-          title="Take Photo" 
-          onPress={takePhoto} 
-          style={styles.button}
-        />
-        
-        <Button 
-          title="Upload from Gallery" 
-          onPress={pickImage} 
-          variant="secondary"
-          style={styles.button}
-        />
-        <Text style={styles.supportedText}>Supported: JPG, PNG, HEIC</Text>
+
+        <View style={[styles.sectionHeaderRow, { marginBottom: theme.spacing.sm }]}>
+          <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
+          <Text style={styles.sectionHeaderTitle}>Create from Photo</Text>
+        </View>
+        <View style={styles.photoActionRow}>
+          <Button 
+            title="Camera" 
+            onPress={takePhoto} 
+            variant="secondary"
+            style={[styles.photoActionButton, { marginRight: theme.spacing.sm }]}
+          />
+          <Button 
+            title="Gallery" 
+            onPress={pickImage} 
+            variant="secondary"
+            style={styles.photoActionButton}
+          />
+        </View>
+        <Text style={styles.supportedText}>JPG, PNG, HEIC</Text>
       </Card>
     </View>
   );
@@ -381,7 +390,7 @@ export const CreateQuizFromPhotoScreen = () => {
           {screenState !== 'generating' && screenState !== 'success' && (
             <View style={styles.headerSubtitleContainer}>
               <Text style={styles.headerSubtitle}>
-                Type a concept or upload a photo, and AI will create original quiz questions.
+                Choose text or photo. AI will build the quiz.
               </Text>
             </View>
           )}
@@ -399,11 +408,11 @@ export const CreateQuizFromPhotoScreen = () => {
 const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
-    paddingTop: theme.spacing.xl,
+    paddingTop: theme.spacing.lg,
     paddingBottom: theme.spacing.xl,
   },
   headerSubtitleContainer: {
-    marginBottom: theme.spacing.lg,
+    marginBottom: theme.spacing.md,
   },
   headerSubtitle: {
     ...theme.typography.body,
@@ -415,11 +424,11 @@ const styles = StyleSheet.create({
   },
   uploadCard: {
     width: '100%',
-    padding: theme.spacing.xl,
+    padding: theme.spacing.lg,
     alignItems: 'center',
-    backgroundColor: theme.colors.white,
-    borderWidth: 2,
-    borderColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
     borderStyle: 'dashed',
     borderRadius: theme.borderRadius.md,
   },
@@ -427,11 +436,12 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.xl,
-    ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   button: {
     width: '100%',
@@ -534,7 +544,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginHorizontal: theme.spacing.xs,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: theme.colors.background,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: theme.colors.stroke,
@@ -554,7 +564,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#E2E8F0',
@@ -583,7 +593,7 @@ const styles = StyleSheet.create({
   },
   successOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(2, 8, 18, 0.72)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -591,12 +601,14 @@ const styles = StyleSheet.create({
   successCard: {
     width: '100%',
     maxWidth: 500,
-    backgroundColor: 'transparent',
-    borderRadius: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderRadius: theme.borderRadius.md,
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
     alignItems: 'center',
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   successDismissHint: {
     ...theme.typography.caption,
@@ -619,15 +631,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: '100%',
-    minHeight: 80,
+    minHeight: 72,
     borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     fontSize: 16,
     color: theme.colors.text,
     textAlignVertical: 'top',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     marginBottom: theme.spacing.md,
   },
   orText: {
@@ -635,7 +647,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: theme.colors.secondaryText,
     marginVertical: theme.spacing.md,
-    fontWeight: '700',
+    fontWeight: '600',
+  },
+  dividerRow: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.md,
+  },
+  dividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+  },
+  dividerText: {
+    ...theme.typography.caption,
+    marginHorizontal: theme.spacing.sm,
+    color: theme.colors.secondaryText,
+  },
+  photoActionRow: {
+    width: '100%',
+    flexDirection: 'row',
+  },
+  photoActionButton: {
+    flex: 1,
+    marginBottom: 0,
   },
   titleContainer: {
     position: 'relative',

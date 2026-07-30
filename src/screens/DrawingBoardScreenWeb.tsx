@@ -127,7 +127,7 @@ export const DrawingBoardScreenWeb = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
       <View style={styles.container}>
         <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
         <View 
@@ -269,7 +269,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: theme.colors.background,
+    backgroundColor: '#FFFFFF',
   },
   canvasContainer: {
     flex: 1,
@@ -375,6 +375,6 @@ const styles = StyleSheet.create({
   closePickerText: {
     color: '#FFFFFF',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   }
 });

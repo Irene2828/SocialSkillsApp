@@ -42,7 +42,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(0, 0, 0, 0.4)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(2, 8, 18, 0.72)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       <View style={styles.modalCard}>
         <View style={styles.header}>
@@ -63,7 +63,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
             <Switch
               value={isRewardsModeOn}
               onValueChange={setIsRewardsModeOn}
-              trackColor={{ false: '#D1D5DB', true: theme.colors.primary }}
+              trackColor={{ false: 'rgba(255, 255, 255, 0.14)', true: theme.colors.primary }}
               thumbColor={'#FFFFFF'}
             />
           </View>
@@ -79,6 +79,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                 value={localPin}
                 onChangeText={setLocalPin}
                 placeholder="Enter PIN"
+                placeholderTextColor="rgba(255,255,255,0.44)"
                 keyboardType="number-pad"
                 secureTextEntry
                 maxLength={6}
@@ -100,10 +101,13 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '90%',
     maxWidth: 500,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    borderRadius: theme.borderRadius.md,
     maxHeight: '85%',
-    ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
     overflow: 'hidden',
   },
   header: {
@@ -139,7 +143,7 @@ const styles = StyleSheet.create({
   },
   settingLabel: {
     ...theme.typography.body,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 18,
     color: theme.colors.text,
     marginBottom: 4,
@@ -155,12 +159,13 @@ const styles = StyleSheet.create({
   },
   pinInput: {
     width: '100%',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
-    borderRadius: theme.borderRadius.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     ...theme.typography.body,
     fontSize: 16,
+    color: theme.colors.text,
   }
 });

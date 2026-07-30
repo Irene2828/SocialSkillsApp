@@ -40,16 +40,11 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
 
   const translateX = useRef(new Animated.Value(0)).current;
   const [isOpen, setIsOpen] = useState(false);
-
-  const glassCardStyle = isRocket ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    borderWidth: 1.5,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 24,
-    shadowOpacity: 0.1,
-  } : {};
+  const actionsOpacity = translateX.interpolate({
+    inputRange: [-ACTION_WIDTH, -24, 0],
+    outputRange: [1, 0.25, 0],
+    extrapolate: 'clamp',
+  });
 
   const glassTextShadow = isRocket ? {
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
@@ -114,7 +109,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
   return (
     <View style={styles.wrapper}>
       {/* Action buttons revealed behind the card */}
-      <View style={styles.actionsContainer}>
+      <Animated.View style={[styles.actionsContainer, { opacity: actionsOpacity }]}>
         <Pressable
           style={[styles.actionBtn, styles.editBtn]}
           onPress={() => { close(); onEdit(reward); }}
@@ -129,16 +124,16 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
           <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
           <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
-      </View>
+      </Animated.View>
 
       {/* Swipeable card */}
       <Animated.View
-        style={[styles.card, glassCardStyle, { transform: [{ translateX }] }]}
+        style={[styles.card, { transform: [{ translateX }] }]}
         {...panResponder.panHandlers}
       >
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
-          <View style={[styles.iconContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
-            <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={isRocket ? '#FFFFFF' : gradientColors[0]} />
+          <View style={styles.iconContainer}>
+            <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color={gradientColors[0]} />
           </View>
           <View style={styles.textContainer}>
             <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
@@ -146,11 +141,11 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
             </Text>
             
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-              <View style={[styles.costContainer, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.2)' }]}>
+              <View style={styles.costContainer}>
                 <FontAwesome5
                   name="coins"
                   size={14}
-                  color={isRocket ? '#FFFFFF' : gradientColors[0]}
+                  color={gradientColors[0]}
                 />
                 <View style={{ flexDirection: 'row', marginLeft: 4 }}>
                   {reward.cost.toString().split('').map((char, index) => (
@@ -158,9 +153,8 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                       key={`cost-${index}`} 
                       style={[
                         styles.costText, 
-                        isRocket && { color: '#FFFFFF' }, 
                         { marginLeft: 0 },
-                        { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                        { color: gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
                       ]}
                     >
                       {char}
@@ -176,7 +170,6 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                   style={[
                     styles.redeemButton,
                     styles.redeemButtonActive,
-                    isRocket && { backgroundColor: '#FFFFFF', borderColor: '#BEF264' }
                   ]}
                   variant="secondary"
                   disabled={isProcessing}
@@ -218,12 +211,12 @@ const styles = StyleSheet.create({
     // Use marginTop on the text child (actionText) instead — see below.
   },
   editBtn: {
-    backgroundColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     borderTopLeftRadius: theme.borderRadius.md,
     borderBottomLeftRadius: theme.borderRadius.md,
   },
   deleteBtn: {
-    backgroundColor: theme.colors.secondaryText,
+    backgroundColor: 'rgba(59, 130, 246, 0.34)',
     borderTopRightRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },
@@ -236,14 +229,18 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   deleteActionText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   card: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     borderRadius: theme.borderRadius.md,
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
-    ...theme.shadows.soft,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   inner: {
     flexDirection: 'row',
@@ -265,7 +262,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: theme.colors.errorSoft,
+    backgroundColor: 'rgba(56, 189, 248, 0.22)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -276,24 +273,29 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: theme.colors.secondaryText,
-    letterSpacing: 0.1,
+    color: theme.colors.text,
+    letterSpacing: 0,
     marginBottom: theme.spacing.xs,
     textTransform: 'capitalize',
   },
   costContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.errorSoft,
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.sm,
     alignSelf: 'flex-start',
   },
   costText: {
-    fontFamily: FONTS.bold,
+    fontFamily: FONTS.semiBold,
     fontSize: 14,
-    color: theme.colors.text,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   redeemButton: {
     minWidth: 80,
@@ -301,9 +303,9 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     paddingHorizontal: theme.spacing.md,
     alignSelf: 'center',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1.5,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.16)',
   },
   redeemButtonActive: {
     borderColor: theme.colors.primary,
@@ -314,7 +316,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.xs,
     paddingHorizontal: theme.spacing.md,
     alignSelf: 'center',
-    backgroundColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginRight: theme.spacing.md,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     padding: theme.spacing.sm,
     borderRadius: theme.borderRadius.full,
   },

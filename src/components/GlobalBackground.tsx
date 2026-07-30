@@ -1,13 +1,12 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { useMood, getMoodColors } from '../context/MoodContext';
+import { Image, View, StyleSheet } from 'react-native';
+import { useMood } from '../context/MoodContext';
 import { BotanicalBackground } from './BotanicalBackground';
 import { CelestialBackground } from './CelestialBackground';
 import { AstronautBackground } from './AstronautBackground';
 import { RocketBackground } from './RocketBackground';
 import { AnimatedCubesBackground } from './AnimatedCubesBackground';
 import { LinearGradient } from 'expo-linear-gradient';
-import { theme } from '../theme';
 
 interface GlobalBackgroundProps {
   showCubes?: boolean;
@@ -32,20 +31,45 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = 
     }
   };
 
-  const moodColors = getMoodColors(mood);
-
   return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      {!moodColors.isDark && (
-        <LinearGradient
-          colors={['#FFFFFF', '#F0F9FF', '#FFFFFF']}
-          style={StyleSheet.absoluteFill}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-        />
-      )}
+    <View style={styles.container} pointerEvents="none">
+      <LinearGradient
+        colors={['#061224', '#0B2038', '#061224']}
+        style={StyleSheet.absoluteFill}
+        start={{ x: 0.1, y: 0 }}
+        end={{ x: 0.9, y: 1 }}
+      />
+      <Image
+        source={require('../../assets/space_bg.png')}
+        style={styles.pattern}
+      />
       {renderMood()}
       {showCubes && <AnimatedCubesBackground />}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    minHeight: '100%',
+    backgroundColor: '#061224',
+  },
+  pattern: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    opacity: 0.12,
+    resizeMode: 'cover',
+  },
+});

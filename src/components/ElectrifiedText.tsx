@@ -57,20 +57,6 @@ export const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13
           extrapolate: 'clamp',
         });
         
-        const shadowColor = anim.interpolate({
-          inputRange: [
-            -1,
-            center - spread, center, center + spread,
-            1.5, 2
-          ],
-          outputRange: [
-            'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0.8)', 'rgba(56, 189, 248, 0)',
-            'rgba(56, 189, 248, 0)', 'rgba(56, 189, 248, 0)', // No shadow in static mode
-          ],
-          extrapolate: 'clamp',
-        });
-
         return (
           <Animated.Text 
             key={`${char}-${index}`} 
@@ -78,9 +64,6 @@ export const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13
               style, 
               { 
                 color,
-                textShadowColor: shadowColor,
-                textShadowRadius: 8,
-                textShadowOffset: { width: 0, height: 0 },
               }
             ]}
           >

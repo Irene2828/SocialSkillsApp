@@ -26,13 +26,13 @@ const styles = StyleSheet.create({
   },
   barBackground: {
     height: 10,
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.10)',
     borderRadius: theme.borderRadius.full,
     overflow: 'hidden',
   },
   barFill: {
     height: '100%',
-    backgroundColor: '#4B5563',
+    backgroundColor: theme.colors.primary,
     borderRadius: theme.borderRadius.full,
     borderWidth: 1,
     borderColor: theme.colors.stroke,

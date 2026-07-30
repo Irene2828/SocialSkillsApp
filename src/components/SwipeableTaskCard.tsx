@@ -11,7 +11,6 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Task } from '../context/TasksContext';
 import { theme, FONTS } from '../theme';
 
-import { useMood, getMoodColors } from '../context/MoodContext';
 
 const ACTION_WIDTH = 140; // 70 for edit + 70 for delete
 const SWIPE_THRESHOLD = 60;
@@ -29,12 +28,13 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
-  const isRocket = mood === 'rocket';
-
   const translateX = useRef(new Animated.Value(0)).current;
   const [isOpen, setIsOpen] = useState(false);
+  const actionsOpacity = translateX.interpolate({
+    inputRange: [-ACTION_WIDTH, -24, 0],
+    outputRange: [1, 0.25, 0],
+    extrapolate: 'clamp',
+  });
 
   useEffect(() => {
     if (task.isCompleted) {
@@ -82,7 +82,7 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
     <View style={styles.wrapper}>
       {/* Action buttons revealed behind the card */}
       {!task.isCompleted && (
-        <View style={styles.actionsContainer}>
+        <Animated.View style={[styles.actionsContainer, { opacity: actionsOpacity }]}>
         <Pressable
           style={[styles.actionBtn, styles.editBtn]}
           onPress={() => {
@@ -99,10 +99,10 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
             onDelete(task.id);
           }}
         >
-          <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
+          <Ionicons name="trash-outline" size={22} color={theme.colors.text} />
           <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
-        </View>
+        </Animated.View>
       )}
 
       {/* Foreground Task Card */}
@@ -113,7 +113,7 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
         ]}
         {...panResponder.panHandlers}
       >
-        <View style={[styles.taskCard, task.isCompleted && styles.taskCardCompleted, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.1)', borderColor: 'rgba(255, 255, 255, 0.2)' }]}>
+        <View style={[styles.taskCard, task.isCompleted && styles.taskCardCompleted]}>
           <Pressable 
             style={[styles.checkboxContainer, task.isCompleted && { opacity: 0.5 }]}
             onPress={() => onToggle(task)}
@@ -122,19 +122,15 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
             <View style={[
               styles.checkbox,
               task.isCompleted && styles.checkboxChecked,
-              isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)' },
-              task.isCompleted && isRocket && { backgroundColor: '#BEF264', borderColor: '#BEF264' }
             ]}>
-              {task.isCompleted && <Ionicons name="checkmark" size={16} color={isRocket ? '#0F172A' : '#FFFFFF'} />}
+              {task.isCompleted && <Ionicons name="checkmark" size={16} color="#0F172A" />}
             </View>
           </Pressable>
 
           <View style={styles.taskInfo}>
             <Text style={[
               styles.taskTitle,
-              isRocket && { color: '#FFFFFF' },
               task.isCompleted && styles.taskTitleCompleted,
-              task.isCompleted && isRocket && { color: 'rgba(255, 255, 255, 0.5)' }
             ]}>
               {task.title}
             </Text>
@@ -145,9 +141,8 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
                   <Text 
                     key={`cost-${index}`} 
                     style={[
-                      { fontFamily: FONTS.bold, fontSize: 14 },
-                      isRocket && { color: '#FFFFFF' }, 
-                      { color: isRocket ? '#FFFFFF' : (index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1]) }
+                      { fontFamily: FONTS.semiBold, fontSize: 14 },
+                      { color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
                     ]}
                   >
                     {char}
@@ -208,12 +203,12 @@ const styles = StyleSheet.create({
     // Use marginTop on actionText instead — see below.
   },
   editBtn: {
-    backgroundColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
     borderTopLeftRadius: theme.borderRadius.md,
     borderBottomLeftRadius: theme.borderRadius.md,
   },
   deleteBtn: {
-    backgroundColor: theme.colors.secondaryText,
+    backgroundColor: 'rgba(59, 130, 246, 0.34)',
     borderTopRightRadius: theme.borderRadius.md,
     borderBottomRightRadius: theme.borderRadius.md,
   },
@@ -226,7 +221,10 @@ const styles = StyleSheet.create({
     color: theme.colors.text,
   },
   deleteActionText: {
-    color: theme.colors.white,
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   foreground: {
     width: '100%',
@@ -235,17 +233,18 @@ const styles = StyleSheet.create({
   taskCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
-    borderWidth: 2,
-    borderColor: theme.colors.stroke,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     height: '100%',
-    ...theme.shadows.soft,
+    shadowOpacity: 0,
+    elevation: 0,
   },
   taskCardCompleted: {
-    backgroundColor: theme.colors.errorSoft,
-    borderColor: theme.colors.border,
+    backgroundColor: 'rgba(255, 255, 255, 0.035)',
+    borderColor: 'rgba(255, 255, 255, 0.10)',
     opacity: 0.7,
   },
   checkboxContainer: {

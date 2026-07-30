@@ -3,7 +3,6 @@ import { Text, StyleSheet, View } from 'react-native';
 import { theme } from '../theme';
 import { ScalePressable } from './ScalePressable';
 import { Ionicons } from '@expo/vector-icons';
-import { useMood } from '../context/MoodContext';
 
 interface AnswerButtonProps {
   text: string;
@@ -13,9 +12,6 @@ interface AnswerButtonProps {
 }
 
 export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state, disabled }) => {
-  const { mood } = useMood();
-  const isRocket = mood === 'rocket';
-
   let buttonStyle = styles.defaultButton;
   let textStyle = styles.defaultText;
   let iconName: keyof typeof Ionicons.glyphMap = 'radio-button-off';
@@ -39,22 +35,16 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       break;
   }
 
-  // Glass style overrides for Rocket theme (default state only)
-  const glassButton = isRocket && state === 'default' ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
-    borderColor: 'rgba(255, 255, 255, 0.3)',
-    borderWidth: 1.5,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
-    shadowOpacity: 0.08,
+  const glassButton = state === 'default' ? {
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderWidth: 1,
+    shadowOpacity: 0,
+    elevation: 0,
   } : {};
 
-  const glassText = isRocket && state === 'default' ? {
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+  const glassText = state === 'default' ? {
+    color: theme.colors.text,
   } : {};
 
   return (
@@ -64,7 +54,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       disabled={disabled}
     >
       {state === 'default' ? (
-        <View style={[styles.checkboxCircle, isRocket && { borderColor: 'rgba(255, 255, 255, 0.6)' }]} />
+        <View style={styles.checkboxCircle} />
       ) : (
         <Ionicons name={iconName} size={24} color={iconColor} />
       )}
@@ -82,7 +72,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    borderRadius: theme.borderRadius.sm,
+    paddingHorizontal: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
   },
   text: {
     ...theme.typography.body,
@@ -91,10 +85,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   defaultButton: {
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
   },
   defaultText: {
-    color: '#111827',
+    color: theme.colors.text,
   },
   correctButton: {
     backgroundColor: 'transparent',
@@ -114,7 +108,7 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: theme.colors.primary,
+    borderColor: 'rgba(255, 255, 255, 0.48)',
     backgroundColor: 'transparent',
   },
 });

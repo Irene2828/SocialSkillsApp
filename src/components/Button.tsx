@@ -3,7 +3,6 @@ import { Text, StyleSheet, PressableProps, View, useWindowDimensions } from 'rea
 import { ScalePressable } from './ScalePressable';
 import { theme } from '../theme';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useMood, getMoodColors } from '../context/MoodContext';
 
 import { Ionicons } from '@expo/vector-icons';
 
@@ -20,22 +19,20 @@ interface ButtonProps extends Omit<PressableProps, 'style'> {
 
 export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', style, onPressIn, onPressOut, iconName, iconSize, iconColor, iconStyle, textStyle, ...props }) => {
   const [isPressed, setIsPressed] = useState(false);
-  const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
 
   const isPrimary = variant === 'primary';
   const isSecondary = variant === 'secondary';
   const isOutline = variant === 'outline';
-  const isRocket = mood === 'rocket';
 
   let resolvedTextStyle: any = styles.secondaryText;
   if (isPrimary || (isOutline && isPressed)) {
     resolvedTextStyle = styles.primaryText;
   } else if (isOutline) {
-    resolvedTextStyle = [styles.outlineText, isRocket && { color: '#FFFFFF' }];
+    resolvedTextStyle = styles.outlineText;
   }
+  const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#111827' : theme.colors.text);
 
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', paddingHorizontal: 16 }}>
@@ -46,7 +43,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
         <Ionicons 
           name={iconName} 
           size={iconSize || 18} 
-          color={iconColor || theme.colors.text} 
+          color={resolvedIconColor}
           style={[{ marginLeft: 6 }, iconStyle]} 
         />
       )}
@@ -69,7 +66,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
         styles.button,
         isPrimary && [styles.primaryButtonContainer, { backgroundColor: theme.colors.primary, shadowColor: theme.colors.primary }],
         isSecondary && styles.secondaryButton,
-        isOutline && [styles.outlineButton, isRocket && { borderColor: '#FFFFFF' }],
+        isOutline && styles.outlineButton,
         isOutline && isPressed && [styles.outlineButtonPressed, { backgroundColor: theme.colors.primary }],
         isTablet && (isPrimary || isSecondary) && { maxWidth: 360, alignSelf: 'center' },
         style,
@@ -105,7 +102,12 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
     borderWidth: 1,
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
+    shadowColor: theme.colors.primary,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0,
+    shadowRadius: 28,
+    elevation: 0,
   },
   primaryGradient: {
     width: '100%',
@@ -119,17 +121,20 @@ const styles = StyleSheet.create({
   secondaryButton: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
-    backgroundColor: theme.colors.errorSoft,
-    borderWidth: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: theme.borderRadius.full,
+    minHeight: theme.layout.minTouchTarget,
   },
   outlineButton: {
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
     backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: theme.colors.text,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.20)',
     borderRadius: theme.borderRadius.full,
+    minHeight: theme.layout.minTouchTarget,
   },
   outlineButtonPressed: {
     backgroundColor: theme.colors.primary,
@@ -139,12 +144,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   primaryText: {
-    color: '#374151',
+    color: '#111827',
   },
   secondaryText: {
-    color: '#374151',
+    color: theme.colors.text,
   },
   outlineText: {
-    color: '#374151',
+    color: theme.colors.text,
   },
 });

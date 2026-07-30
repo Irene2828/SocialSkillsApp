@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 32,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: 'white',
     marginBottom: theme.spacing.md,
   },

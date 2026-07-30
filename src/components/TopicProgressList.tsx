@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: theme.colors.white,
+    backgroundColor: 'rgba(255, 255, 255, 0.055)',
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
     marginBottom: theme.spacing.sm,
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
   badgeText: {
     ...theme.typography.body,
     color: theme.colors.primary,
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 14,
   },
 });

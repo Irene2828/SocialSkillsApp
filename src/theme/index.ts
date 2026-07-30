@@ -9,7 +9,7 @@ export const FONTS = {
 
 export const theme = {
   colors: {
-    background: '#F0F1F3',
+    background: '#061224',
     primary: '#BEF264',
     primarySoft: '#ECFCCB',
     success: '#BEF264',
@@ -18,42 +18,42 @@ export const theme = {
     danger: '#EF8B8B',       // muted dusty-rose — signals destructive without alarming kids
     dangerSoft: '#FEE2E2',   // light red background for danger zones
     error: '#9CA3AF',
-    errorSoft: '#F3F4F6',
-    neutralGrey: '#E5E7EB',
+    errorSoft: '#EEF2F7',
+    neutralGrey: 'rgba(255, 255, 255, 0.14)',
     accent: '#FFC857',
-    stroke: '#BAE6FD', // Sky Blue 200 (was #D1D5DB)
-    text: '#111827',
-    secondaryText: '#6B7280',
-    white: '#FFFFFF',
-    border: '#F3F4F6',
+    stroke: 'rgba(255, 255, 255, 0.18)',
+    text: '#FFFFFF',
+    secondaryText: 'rgba(255, 255, 255, 0.68)',
+    white: 'rgba(255, 255, 255, 0.08)',
+    border: 'rgba(255, 255, 255, 0.14)',
   },
   typography: {
     // Large display headlines
     heading: {
-      fontFamily: FONTS.semiBold,
+      fontFamily: FONTS.medium,
       fontSize: 24,
-      fontWeight: '600' as const,
-      color: '#111827',
+      fontWeight: '500' as const,
+      color: '#FFFFFF',
       lineHeight: 32,
-      letterSpacing: -0.2,
+      letterSpacing: 0,
     },
 
     // Hero display text
     display: {
-      fontFamily: FONTS.semiBold,
+      fontFamily: FONTS.medium,
       fontSize: 42,
-      fontWeight: '600' as const,
-      color: '#111827',
+      fontWeight: '500' as const,
+      color: '#FFFFFF',
       lineHeight: 52,
-      letterSpacing: -0.2,
+      letterSpacing: 0,
     },
 
     // Subheading text
     subheading: {
-      fontFamily: FONTS.semiBold,
+      fontFamily: FONTS.medium,
       fontSize: 20,
-      fontWeight: '600' as const,
-      color: '#111827',
+      fontWeight: '500' as const,
+      color: '#FFFFFF',
       lineHeight: 28,
       letterSpacing: 0,
     },
@@ -65,9 +65,9 @@ export const theme = {
       fontFamily: FONTS.semiBold,
       fontSize: 13,
       fontWeight: '600' as const,
-      color: '#6B7280',
+      color: 'rgba(255, 255, 255, 0.68)',
       lineHeight: 18,
-      letterSpacing: 0.6,
+      letterSpacing: 0,
       textTransform: 'uppercase' as const,
     },
 
@@ -76,19 +76,19 @@ export const theme = {
       fontFamily: FONTS.regular,
       fontSize: 16,
       fontWeight: '400' as const,
-      color: '#374151',
+      color: 'rgba(255, 255, 255, 0.82)',
       lineHeight: 24,
-      letterSpacing: 0.1,
+      letterSpacing: 0,
     },
 
     // Button / CTA text — semi-bold for authority
     button: {
-      fontFamily: FONTS.semiBold,
+      fontFamily: FONTS.medium,
       fontSize: 16,
-      fontWeight: '600' as const,
+      fontWeight: '500' as const,
       color: '#111827',
       lineHeight: 22,
-      letterSpacing: 0.2,
+      letterSpacing: 0,
     },
 
     // Captions and hints
@@ -96,9 +96,9 @@ export const theme = {
       fontFamily: FONTS.regular,
       fontSize: 14,
       fontWeight: '400' as const,
-      color: '#6B7280',
+      color: 'rgba(255, 255, 255, 0.68)',
       lineHeight: 20,
-      letterSpacing: 0.15,
+      letterSpacing: 0,
     },
 
     // Tab bar labels
@@ -106,9 +106,9 @@ export const theme = {
       fontFamily: FONTS.medium,
       fontSize: 12,
       fontWeight: '500' as const,
-      color: '#6B7280',
+      color: 'rgba(255, 255, 255, 0.68)',
       lineHeight: 16,
-      letterSpacing: 0.1,
+      letterSpacing: 0,
     },
   },
   spacing: {
@@ -128,14 +128,14 @@ export const theme = {
   },
   shadows: {
     soft: {
-      shadowColor: '#9CA3AF',
+      shadowColor: '#000000',
       shadowOffset: { width: 0, height: 12 },
-      shadowOpacity: 0.08,
+      shadowOpacity: 0.07,
       shadowRadius: 24,
       elevation: 1,
     },
     glow: {
-      shadowColor: '#9CA3AF',
+      shadowColor: '#38BDF8',
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.1,
       shadowRadius: 24,
