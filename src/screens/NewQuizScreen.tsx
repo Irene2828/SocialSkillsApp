@@ -1031,7 +1031,10 @@ export const NewQuizScreen = () => {
             showSettingsAndRewards={true}
           />
 
-          <View style={{ paddingHorizontal: 0, paddingTop: theme.spacing.md, paddingBottom: theme.spacing.md }}>
+          <View style={styles.progressSection}>
+            <Text style={styles.progressCounter}>
+              {currentIndex + 1}/{currentQuestions.length}
+            </Text>
             <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
               {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
                 <LinearGradient
@@ -1971,6 +1974,19 @@ const styles = StyleSheet.create({
   },
   primaryButton: {
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
+  },
+  progressSection: {
+    paddingHorizontal: 0,
+    paddingTop: theme.spacing.md,
+    paddingBottom: theme.spacing.md,
+  },
+  progressCounter: {
+    fontFamily: FONTS.medium,
+    fontSize: 12,
+    lineHeight: 16,
+    color: '#38BDF8',
+    textAlign: 'left',
+    marginBottom: 4,
   },
   questionCaption: {
     ...theme.typography.body,

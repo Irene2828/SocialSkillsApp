@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 0,
-    height: 72,
+    height: 58,
     width: '100%',
     zIndex: 100,
     marginBottom: theme.spacing.md,

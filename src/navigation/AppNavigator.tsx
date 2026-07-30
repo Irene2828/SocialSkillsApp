@@ -26,12 +26,12 @@ const AppTabs = () => {
   const isTablet = windowWidth >= 768;
   const isSmallScreen = !isTablet && windowHeight < 700;
   // Tablet: taller bar for comfortable touch targets; small phone: compact bar
-  const paddingBottom = Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 4 : 6));
+  const paddingBottom = Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10));
   const height = isTablet
     ? 64 + paddingBottom
     : isSmallScreen
-    ? 52 + paddingBottom
-    : 62 + Math.round(paddingBottom * 1.2);
+    ? 60 + paddingBottom
+    : 68 + Math.round(paddingBottom * 1.2);
 
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
@@ -71,8 +71,9 @@ const AppTabs = () => {
               fontFamily: focused ? FONTS.semiBold : FONTS.medium,
               // Slightly larger labels on tablet for legibility
               fontSize: isTablet ? 14 : 12,
+              lineHeight: isTablet ? 18 : 15,
               color: color,
-              marginTop: isTablet ? 6 : 4,
+              marginTop: isTablet ? 5 : 2,
               textAlign: 'center'
             }}>
               {label}
@@ -83,12 +84,12 @@ const AppTabs = () => {
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarBackground: () => (
-          <View style={{ flex: 1, backgroundColor: '#061224' }} />
+          <View style={{ flex: 1, backgroundColor: '#05101F' }} />
         ),
         tabBarStyle: {
-          backgroundColor: '#061224',
-          borderTopWidth: 1,
-          borderTopColor: 'rgba(255, 255, 255, 0.14)',
+          backgroundColor: '#05101F',
+          borderTopWidth: 0,
+          borderTopColor: 'transparent',
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',
@@ -97,7 +98,7 @@ const AppTabs = () => {
           right: 0,
           height: height,
           paddingBottom: paddingBottom,
-          paddingTop: isTablet ? 10 : (isSmallScreen ? 4 : 10),
+          paddingTop: isTablet ? 10 : (isSmallScreen ? 8 : 10),
           width: '100%',
         },
         tabBarItemStyle: {
