@@ -233,7 +233,8 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           <View key={`completed-${cs.stepIndex}`} style={styles.completedStepContainer}>
             {/* Completed step prompt */}
             <View style={styles.completedPromptCard}>
-              <Text style={[styles.completedPromptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+              <Ionicons name="checkmark-circle-outline" size={16} color={theme.colors.secondaryText} />
+              <Text style={[styles.completedPromptText, isRocket && glassTextShadow]}>
                 {step.prompt}
               </Text>
             </View>
@@ -262,6 +263,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
+              <Ionicons name="help-circle-outline" size={16} color="rgba(255, 255, 255, 0.80)" />
               <Text style={[styles.promptText, isRocket && glassTextShadow]}>
               {currentStep.prompt}
             </Text>
@@ -520,33 +522,45 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   promptText: {
-    ...theme.typography.heading,
+    ...theme.typography.body,
+    flex: 1,
     fontFamily: FONTS.semiBold,
-    fontSize: 22,
+    fontSize: 15,
     fontWeight: '600',
-    lineHeight: 30,
+    lineHeight: 21,
     textAlign: 'left',
-    color: theme.colors.text,
+    color: '#FFFFFF',
+    marginLeft: 6,
     marginTop: 0,
+    textShadowColor: 'rgba(0, 0, 0, 0.32)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   completedPromptText: {
-    ...theme.typography.subheading,
-    fontFamily: FONTS.medium,
-    fontSize: 17,
-    fontWeight: '500',
-    lineHeight: 24,
+    ...theme.typography.body,
+    flex: 1,
+    fontFamily: FONTS.semiBold,
+    fontSize: 15,
+    fontWeight: '600',
+    lineHeight: 21,
     textAlign: 'left',
-    color: theme.colors.secondaryText,
+    color: 'rgba(255, 255, 255, 0.66)',
+    marginLeft: 6,
   },
 
   // Completed step styling
   completedStepContainer: {
     width: '100%',
-    opacity: 0.7,
   },
   completedPromptCard: {
-    paddingHorizontal: 0,
-    paddingVertical: theme.spacing.xs,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(56, 189, 248, 0.16)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.16)',
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 8,
     marginBottom: theme.spacing.sm,
   },
   completedAnswerContainer: {
@@ -555,9 +569,15 @@ const styles = StyleSheet.create({
 
   // Active step styling
   activePromptCard: {
-    paddingHorizontal: 0,
-    paddingVertical: theme.spacing.xs,
-    marginBottom: theme.spacing.lg,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    borderWidth: 1,
+    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderRadius: 12,
+    paddingHorizontal: theme.spacing.sm,
+    paddingVertical: 8,
+    marginBottom: theme.spacing.md,
   },
 
   // Step section dividers

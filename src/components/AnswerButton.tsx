@@ -1,6 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, View } from 'react-native';
-import { theme } from '../theme';
+import { theme, FONTS } from '../theme';
 import { ScalePressable } from './ScalePressable';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -82,7 +82,10 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     flex: 1,
     paddingLeft: theme.spacing.md,
-    fontWeight: '400',
+    fontFamily: FONTS.medium,
+    fontSize: 15,
+    lineHeight: 21,
+    fontWeight: '500',
   },
   defaultButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.055)',
@@ -104,9 +107,9 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   checkboxCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.48)',
     backgroundColor: 'transparent',
