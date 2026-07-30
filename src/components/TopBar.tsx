@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     height: 72,
     width: '100%',
     zIndex: 100,
-    marginBottom: 0, // No space under stroke
+    marginBottom: theme.spacing.md,
   },
   side: {
     minWidth: 40,

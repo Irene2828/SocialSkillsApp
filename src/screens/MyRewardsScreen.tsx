@@ -391,8 +391,8 @@ export const MyRewardsScreen = () => {
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar title="Rewards" showSettingsAndRewards={true} />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <TopBar title="Rewards" showSettingsAndRewards={true} />
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}

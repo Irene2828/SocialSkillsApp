@@ -87,8 +87,8 @@ export const TasksScreen = () => {
       <GlobalBackground />
 
       <ScreenWrapper transparent>
-        <TopBar title="Tasks" showSettingsAndRewards={true} />
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
+          <TopBar title="Tasks" showSettingsAndRewards={true} />
           
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>

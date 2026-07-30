@@ -83,22 +83,23 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: theme.spacing.md,
     fontFamily: FONTS.regular,
-    fontSize: 15,
-    lineHeight: 21,
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: 0.15,
     fontWeight: '400',
   },
   defaultButton: {
     backgroundColor: 'rgba(255, 255, 255, 0.055)',
   },
   defaultText: {
-    color: theme.colors.text,
+    color: theme.colors.secondaryText,
   },
   correctButton: {
     backgroundColor: 'transparent',
   },
   correctText: {
-    color: theme.colors.text,
-    fontWeight: '500',
+    color: theme.colors.secondaryText,
+    fontWeight: '400',
   },
   incorrectButton: {
     backgroundColor: 'transparent',

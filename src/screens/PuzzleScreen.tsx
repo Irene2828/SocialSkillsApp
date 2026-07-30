@@ -464,14 +464,12 @@ export const PuzzleScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        <TopBar 
-          title={activeFolderId === 'animals' ? 'Cute Animals' : activeFolderId === 'cities' ? 'Cities' : 'Puzzles'} 
-          showSettingsAndRewards={true} 
-          onBack={activeFolderId ? () => setActiveFolderId(null) : undefined}
-        />
-
         {!activeFolderId ? (
           <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+            <TopBar
+              title="Puzzles"
+              showSettingsAndRewards={true}
+            />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
               <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('animals')}>
                 <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
@@ -500,6 +498,13 @@ export const PuzzleScreen = () => {
           </ScrollView>
         ) : (
           <FlatList
+            ListHeaderComponent={(
+              <TopBar
+                title={activeFolderId === 'animals' ? 'Cute Animals' : 'Cities'}
+                showSettingsAndRewards={true}
+                onBack={() => setActiveFolderId(null)}
+              />
+            )}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={styles.scrollContent}
             data={allPuzzles}

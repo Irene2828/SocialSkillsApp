@@ -752,7 +752,11 @@ export const NewQuizScreen = () => {
 
       return (
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
+          <TopBar
+            title={currentFolder?.name || "Quizes"}
+            showSettingsAndRewards={true}
+            onBack={navigateBackFromFolder}
+          />
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
             <View style={{ alignItems: 'center', paddingVertical: theme.spacing.xxl }}>
@@ -856,6 +860,10 @@ export const NewQuizScreen = () => {
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <TopBar
+          title="Quizes"
+          showSettingsAndRewards={true}
+        />
 
         <View ref={bentoGridRef} style={styles.bentoGrid}>
             {/* Built-in categories */}
@@ -1016,49 +1024,45 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
-        <TopBar 
-          title={categoryName || ''} 
-          onBack={handleBackToHome}
-          showSettingsAndRewards={true}
-        />
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
+          <TopBar
+            title={categoryName || ''}
+            onBack={handleBackToHome}
+            showSettingsAndRewards={true}
+          />
 
-        {/* Progress container (above the ScrollView) */}
-        <View style={{ paddingHorizontal: 0, paddingTop: theme.spacing.md, paddingBottom: theme.spacing.md }}>
-          <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
-            {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
-              <LinearGradient
-                colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-              />
-            ) : (
-              <LinearGradient
-                colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }} 
-              />
-            )}
-          </View>
-        
-
-          {/* Caption below progress bar — hidden on small screens */}
-          {!isSmallScreen && (
-            <View style={{ marginTop: 2 }}>
+          <View style={{ paddingHorizontal: 0, paddingTop: theme.spacing.md, paddingBottom: theme.spacing.md }}>
+            <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
               {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
-                <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
-                  <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
-                </Text>
+                <LinearGradient
+                  colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
+                />
               ) : (
-                <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
-                  <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
-                </Text>
+                <LinearGradient
+                  colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
+                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
+                  style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
+                />
               )}
             </View>
-          )}
-        </View>
 
-        {/* Scrollable question content */}
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: theme.spacing.sm, paddingBottom: 170, flexGrow: 1 }]}>
+            {!isSmallScreen && (
+              <View style={{ marginTop: 2 }}>
+                {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
+                  <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
+                    <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
+                  </Text>
+                ) : (
+                  <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
+                    <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
+                  </Text>
+                )}
+              </View>
+            )}
+          </View>
+
           {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
@@ -1197,13 +1201,6 @@ export const NewQuizScreen = () => {
       <GlobalBackground />
       
       <ScreenWrapper transparent>
-        {quizState === 'selection' && (
-          <TopBar 
-            title={activeFolderId ? (folders.find(f => f.id === activeFolderId)?.name || "Quizes") : "Quizes"} 
-            showSettingsAndRewards={true} 
-            onBack={activeFolderId ? navigateBackFromFolder : undefined}
-          />
-        )}
         <View style={styles.content}>
           {quizState === 'selection' && renderSelection()}
           {quizState === 'in-progress' && renderInProgress()}
