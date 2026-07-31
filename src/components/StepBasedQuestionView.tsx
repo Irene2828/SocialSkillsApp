@@ -182,21 +182,21 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
           {compactProblem ? (
             <View style={styles.problemSheet}>
               <View style={styles.storyCallout}>
-                <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>
+                <Text style={styles.calloutLabel}>
                   Story
                 </Text>
-                <Text style={[styles.storyCalloutText, isRocket && glassTextShadow]}>
+                <Text style={styles.storyCalloutText}>
                   {compactProblem.story}
                 </Text>
               </View>
 
-              <Text style={[styles.problemSheetLabel, isRocket && glassTextShadow]}>
+              <Text style={styles.problemSheetLabel}>
                 Details
               </Text>
               <View style={styles.factGrid}>
                 {compactProblem.facts.map((fact, index) => (
                   <View key={`${fact}-${index}`} style={styles.factChip}>
-                    <Text style={[styles.factText, isRocket && glassTextShadow]}>
+                    <Text style={styles.factText}>
                       {`\u2022 ${fact}`}
                     </Text>
                   </View>
@@ -205,22 +205,22 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
 
               <View style={styles.problemQuestionStrip}>
                 <Ionicons name="flag-outline" size={16} color={theme.colors.secondaryText} />
-                <Text style={[styles.problemQuestionText, isRocket && glassTextShadow]}>
+                <Text style={styles.problemQuestionText}>
                   {compactProblem.question}
                 </Text>
               </View>
             </View>
           ) : (
             <View style={styles.storyCallout}>
-              <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>
+              <Text style={styles.calloutLabel}>
                 Problem
               </Text>
-              <Text style={[styles.storyCalloutText, isRocket && glassTextShadow]}>
+              <Text style={styles.storyCalloutText}>
                 {question.problemText}
               </Text>
             </View>
           )}
-          <Text style={[styles.followStepsHint, isRocket && glassTextShadow]}>
+          <Text style={styles.followStepsHint}>
             (don't answer yet, follow the steps below to solve the problem)
           </Text>
           <View style={styles.problemToStepsDivider} />
@@ -413,13 +413,19 @@ const styles = StyleSheet.create({
   },
   problemSheet: {
     width: '100%',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingTop: 8,
     paddingBottom: theme.spacing.sm,
     marginBottom: theme.spacing.sm,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1,
   },
   problemSheetLabel: {
     ...theme.typography.label,
@@ -427,7 +433,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.72)',
     marginBottom: 4,
   },
   problemSheetStory: {
@@ -435,17 +441,22 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     fontSize: 14,
     lineHeight: 20,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     marginBottom: theme.spacing.sm,
   },
   storyCallout: {
-    backgroundColor: 'transparent',
-    borderWidth: 0,
-    borderColor: 'transparent',
-    borderRadius: 0,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     marginBottom: theme.spacing.md,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1,
   },
   calloutLabel: {
     ...theme.typography.label,
@@ -453,7 +464,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: 'rgba(255, 255, 255, 0.72)',
+    color: 'rgba(15, 26, 44, 0.72)',
     marginBottom: 3,
   },
   storyCalloutText: {
@@ -463,10 +474,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    color: '#0F1A2C',
   },
   factGrid: {
     flexDirection: 'row',

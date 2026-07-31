@@ -197,10 +197,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
         <View style={styles.cardWrapper}>
           <View style={styles.scenarioCallout}>
             {whyQuestion && null}
-            <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>Situation</Text>
-            <Text style={[styles.scenarioText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.scenario}</Text>
+            <Text style={styles.calloutLabel}>Situation</Text>
+            <Text style={styles.scenarioText}>{question.scenario}</Text>
           {question.prompt && (
-            <Text style={[styles.promptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.prompt}</Text>
+            <Text style={styles.promptText}>{question.prompt}</Text>
           )}
           </View>
         </View>
@@ -493,13 +493,18 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.sm,
   },
   scenarioCallout: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 12,
     paddingHorizontal: 20,
     paddingVertical: 16,
     marginBottom: theme.spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1,
   },
   calloutLabel: {
     ...theme.typography.label,
@@ -507,7 +512,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: 'rgba(255, 255, 255, 0.72)',
+    color: 'rgba(15, 26, 44, 0.72)',
     marginBottom: 8,
   },
   partLabelText: {
@@ -526,10 +531,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.12,
     textAlign: 'left',
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    color: '#0F1A2C',
   },
   promptText: {
     ...theme.typography.body,
@@ -539,11 +541,8 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.18,
     textAlign: 'left',
-    color: '#FFFFFF',
+    color: '#0F1A2C',
     marginTop: theme.spacing.sm,
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   dashedExplanationContainer: {
     width: '100%',

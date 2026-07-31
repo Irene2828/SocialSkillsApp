@@ -37,8 +37,8 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const activeColor = '#FFFFFF';
-  const inactiveColor = 'rgba(255, 255, 255, 0.45)';
+  const activeColor = '#0F1A2C';
+  const inactiveColor = 'rgba(15, 26, 44, 0.45)';
 
   return (
     <Tab.Navigator
@@ -84,12 +84,12 @@ const AppTabs = () => {
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarBackground: () => (
-          <View style={{ flex: 1, backgroundColor: 'transparent' }} />
+          <View style={{ flex: 1, backgroundColor: '#00CED1' }} />
         ),
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: '#00CED1',
           borderTopWidth: 1,
-          borderTopColor: 'rgba(255, 255, 255, 0.15)',
+          borderTopColor: 'rgba(15, 26, 44, 0.15)',
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',
