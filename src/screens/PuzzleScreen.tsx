@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   diffBtnTextSelected: {
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   createAiButtonContainer: {
     width: '100%',

@@ -224,7 +224,7 @@ export const DrawingBoardScreen = () => {
           style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : '#374151'} />
+          <Ionicons name="eye-outline" size={24} color="#00CED1" />
         </Pressable>
       )}
       </GestureHandlerRootView>
@@ -245,7 +245,7 @@ export const DrawingBoardScreen = () => {
               />
             </View>
             <Pressable style={[styles.closePickerBtn, { backgroundColor: theme.colors.primary }]} onPress={() => setShowColorPicker(false)}>
-              <Text style={[styles.closePickerText, { color: '#111827' }]}>Select Color</Text>
+              <Text style={[styles.closePickerText, { color: '#0F1A2C' }]}>Select Color</Text>
             </Pressable>
           </View>
         </View>

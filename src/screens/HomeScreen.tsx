@@ -159,7 +159,7 @@ export const HomeScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const titleColor = '#FFFFFF';
-  const subtitleColor = moodColors.isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
+  const subtitleColor = '#0F1A2C';
   const [showSettings, setShowSettings] = useState(false);
 
 
@@ -174,7 +174,7 @@ export const HomeScreen = () => {
           hideBorder
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
-              <Ionicons name="options-outline" size={24} color="#38BDF8" />
+              <Ionicons name="options-outline" size={24} color="#0F1A2C" />
             </Pressable>
           }
         />

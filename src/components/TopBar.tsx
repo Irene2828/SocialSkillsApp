@@ -28,7 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
-  const textColor = '#FFFFFF';
+  const textColor = '#0F1A2C';
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
@@ -69,7 +69,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color="#FFFFFF" />
+              <Ionicons name="home-outline" size={24} color="#0F1A2C" />
             </Pressable>
           ) : null}
         </View>

@@ -244,7 +244,7 @@ export const DrawingBoardScreenWeb = () => {
           style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : '#374151'} />
+          <Ionicons name="eye-outline" size={24} color="#00CED1" />
         </Pressable>
       )}
       </View>

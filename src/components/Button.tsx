@@ -32,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   } else if (isOutline) {
     resolvedTextStyle = styles.outlineText;
   }
-  const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#111827' : theme.colors.text);
+  const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#0F1A2C' : theme.colors.text);
 
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>

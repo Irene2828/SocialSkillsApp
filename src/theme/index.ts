@@ -86,7 +86,7 @@ export const theme = {
       fontFamily: FONTS.semiBold,
       fontSize: 17,
       fontWeight: '600' as const,
-      color: '#111827',
+      color: '#0F1A2C',
       lineHeight: 24,
       letterSpacing: 0,
     },
