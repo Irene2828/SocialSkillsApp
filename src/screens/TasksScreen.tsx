@@ -92,9 +92,7 @@ export const TasksScreen = () => {
           
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>
-              <Ionicons name="checkmark-done-circle-outline" size={64} color="rgba(255, 255, 255, 0.48)" />
               <Text style={styles.emptyTitle}>No tasks yet</Text>
-              <Text style={styles.emptyText}>Add some tasks to start earning coins!</Text>
             </View>
           ) : (
             <View style={styles.section}>

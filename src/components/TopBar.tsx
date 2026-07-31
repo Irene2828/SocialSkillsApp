@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.medium,
     fontSize: 20,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     textAlign: 'center',
   },
   titleContainer: {
