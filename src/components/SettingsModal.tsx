@@ -42,12 +42,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
   };
 
   return (
-    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(2, 8, 18, 0.94)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
+    <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(224, 251, 252, 0.96)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       <View style={styles.modalCard}>
         <View style={[styles.header, { justifyContent: 'flex-end' }]}>
           <Pressable onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color={theme.colors.text} />
+            <Ionicons name="close" size={28} color="#0F1A2C" />
           </Pressable>
         </View>
 
@@ -62,7 +62,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
             <Switch
               value={isRewardsModeOn}
               onValueChange={setIsRewardsModeOn}
-              trackColor={{ false: 'rgba(255, 255, 255, 0.14)', true: theme.colors.primary }}
+              trackColor={{ false: 'rgba(15, 26, 44, 0.15)', true: theme.colors.primary }}
               thumbColor={'#FFFFFF'}
             />
           </View>
@@ -78,7 +78,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                 value={localPin}
                 onChangeText={setLocalPin}
                 placeholder="Enter PIN"
-                placeholderTextColor="rgba(255,255,255,0.44)"
+                placeholderTextColor="rgba(15, 26, 44, 0.44)"
                 keyboardType="number-pad"
                 secureTextEntry
                 maxLength={6}
@@ -100,11 +100,11 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '90%',
     maxWidth: 500,
-    backgroundColor: '#102034',
+    backgroundColor: 'rgba(224, 251, 252, 0.95)',
     borderRadius: theme.borderRadius.md,
     maxHeight: '85%',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowOpacity: 0,
     elevation: 0,
     overflow: 'hidden',
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...theme.typography.heading,
     fontSize: 24,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   closeButton: {
     padding: theme.spacing.xs,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: theme.spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: theme.colors.stroke,
+    borderBottomColor: 'rgba(15, 26, 44, 0.08)',
     marginBottom: theme.spacing.lg,
   },
   settingSection: {
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     fontSize: 18,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     marginBottom: 4,
   },
   settingDescription: {
     ...theme.typography.body,
     fontSize: 14,
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
     marginBottom: theme.spacing.md,
   },
   pinRow: {
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
   },
   pinInput: {
     width: '100%',
-    backgroundColor: '#1B2C42',
+    backgroundColor: 'rgba(15, 26, 44, 0.05)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(15, 26, 44, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     ...theme.typography.body,
     fontSize: 16,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   }
 });

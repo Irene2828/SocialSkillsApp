@@ -978,8 +978,8 @@ export const NewQuizScreen = () => {
       ? ((currentWordProblemStep + 1) / totalWordProblemSteps)
       : ((currentIndex + 1) / currentQuestions.length);
     const counterText = isWordProblem
-      ? `${currentWordProblemStep + 1}/${totalWordProblemSteps}`
-      : `${currentIndex + 1}/${currentQuestions.length}`;
+      ? `${currentWordProblemStep + 1} / ${totalWordProblemSteps}`
+      : `${currentIndex + 1} / ${currentQuestions.length}`;
 
     return (
       <View style={styles.inProgressContainer}>
@@ -993,15 +993,13 @@ export const NewQuizScreen = () => {
           <View style={styles.progressSection}>
             <View style={{ height: 26, position: 'relative', width: '100%' }}>
               <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
-                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#FFFFFF', fontWeight: '600' }]}>
+                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#FFFFFF', fontWeight: '600', letterSpacing: 2 }]}>
                   {counterText}
                 </Text>
               </View>
               <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.45)', width: '100%', position: 'absolute', bottom: 0 }}>
-                <LinearGradient
-                  colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{ height: '100%', width: `${progressPercent * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: 'transparent' }}
+                <View
+                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#FFFFFF', borderRadius: theme.borderRadius.full }}
                 />
               </View>
             </View>
@@ -2059,6 +2057,7 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     ...theme.typography.subheading,
+    color: '#0F1A2C',
     marginBottom: theme.spacing.md,
   },
   photoIconContainer: {
@@ -2343,25 +2342,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#1B2C42',
+    backgroundColor: 'rgba(15, 26, 44, 0.05)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(15, 26, 44, 0.15)',
   },
   modalOptionText: {
     ...theme.typography.body,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   modalInput: {
     width: '100%',
     minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#1B2C42',
+    backgroundColor: 'rgba(15, 26, 44, 0.05)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(15, 26, 44, 0.15)',
     ...theme.typography.body,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   section: {
     marginBottom: theme.spacing.xl,

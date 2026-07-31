@@ -26,7 +26,10 @@ import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
+import { useNavigation } from '@react-navigation/native';
+
 export const MyRewardsScreen = () => {
+  const navigation = useNavigation<any>();
   const { coinBalance, deductCoins, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();

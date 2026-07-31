@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, Pressable, ActivityIndicator, Animated, ScrollView, Modal, TextInput } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { Header } from '../components/Header';
+import { TopBar } from '../components/TopBar';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { SilverDust } from '../components/SilverDust';
 import { Button } from '../components/Button';
@@ -205,7 +205,7 @@ export const CreateQuizFromPhotoScreen = () => {
     <View style={styles.idleContainer}>
       <Card style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="text-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
+          <Ionicons name="text-outline" size={24} color="#0F1A2C" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
         </View>
         <TextInput
@@ -213,7 +213,7 @@ export const CreateQuizFromPhotoScreen = () => {
           value={textPrompt}
           onChangeText={setTextPrompt}
           placeholder="Create a quiz to test rejection reactions during recess at school"
-          placeholderTextColor="#9CA3AF"
+          placeholderTextColor="rgba(15, 26, 44, 0.44)"
           multiline
           numberOfLines={3}
         />
@@ -233,7 +233,7 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
 
         <View style={[styles.sectionHeaderRow, { marginBottom: theme.spacing.sm }]}>
-          <Ionicons name="camera-outline" size={24} color={theme.colors.text} style={{ marginRight: 8 }} />
+          <Ionicons name="camera-outline" size={24} color="#0F1A2C" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Photo</Text>
         </View>
         <View style={styles.photoActionRow}>
@@ -384,13 +384,10 @@ export const CreateQuizFromPhotoScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <Header 
+          <TopBar 
             title="Create Quiz" 
-            rightElement={
-              <Pressable onPress={() => navigation.goBack()} style={{ padding: 4 }}>
-                <Ionicons name="close" size={28} color={theme.colors.text} />
-              </Pressable>
-            }
+            onBack={() => navigation.goBack()}
+            showSettingsAndRewards={false}
           />
           {screenState !== 'generating' && screenState !== 'success' && (
             <View style={styles.headerSubtitleContainer}>
@@ -421,7 +418,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     ...theme.typography.body,
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
   },
   idleContainer: {
     width: '100%',
@@ -431,10 +428,9 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    backgroundColor: 'rgba(224, 251, 252, 0.95)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.16)',
-    borderStyle: 'dashed',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: theme.borderRadius.md,
   },
   iconContainer: {
@@ -632,25 +628,25 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     ...theme.typography.subheading,
     fontSize: 18,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   textInput: {
     width: '100%',
     minHeight: 72,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(15, 26, 44, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     fontSize: 16,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     textAlignVertical: 'top',
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: 'rgba(15, 26, 44, 0.05)',
     marginBottom: theme.spacing.md,
   },
   orText: {
     ...theme.typography.label,
     textAlign: 'center',
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
     marginVertical: theme.spacing.md,
     fontWeight: '600',
   },
@@ -663,12 +659,12 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+    backgroundColor: 'rgba(15, 26, 44, 0.15)',
   },
   dividerText: {
     ...theme.typography.caption,
     marginHorizontal: theme.spacing.sm,
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.6)',
   },
   photoActionRow: {
     width: '100%',
