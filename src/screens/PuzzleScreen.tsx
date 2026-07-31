@@ -518,8 +518,8 @@ export const PuzzleScreen = () => {
                   <Animated.View style={[
                     styles.card,
                     isRocket && {
-                      backgroundColor: 'rgba(8, 28, 54, 0.65)',
-                      borderColor: 'rgba(255, 255, 255, 0.15)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.65)',
+                      borderColor: 'rgba(255, 255, 255, 0.4)',
                       borderWidth: 1.5,
                       shadowOpacity: 0,
                     }
@@ -529,8 +529,7 @@ export const PuzzleScreen = () => {
                     </View>
                     <Text style={[
                       styles.cardName,
-                      isRocket && { color: '#FFFFFF' },
-                      isRocket && { textShadowColor: 'rgba(0,0,0,0.4)', textShadowOffset: { width: 0, height: 1 }, textShadowRadius: 2 }
+                      isRocket && { color: '#0F1A2C' },
                     ]} numberOfLines={2}>{puzzle.name}</Text>
                   </Animated.View>
                 </Pressable>
@@ -547,13 +546,13 @@ export const PuzzleScreen = () => {
                       {
                         padding: 6,
                         borderRadius: 20,
-                        backgroundColor: pressed ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.03)',
+                        backgroundColor: pressed ? 'rgba(15,26,44,0.1)' : 'rgba(15,26,44,0.05)',
                         alignItems: 'center',
                         justifyContent: 'center',
                       }
                     ]}
                   >
-                    <Ionicons name="ellipsis-vertical" size={20} color="rgba(255, 255, 255, 0.7)" />
+                    <Ionicons name="ellipsis-vertical" size={20} color="rgba(15, 26, 44, 0.7)" />
                   </Pressable>
                 </View>
               </View>
@@ -835,7 +834,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     minHeight: 175,
-    backgroundColor: 'rgba(8, 28, 54, 0.65)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
@@ -843,7 +842,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -875,13 +874,13 @@ const styles = StyleSheet.create({
   },
   cardName: {
     ...theme.typography.body,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     textAlign: 'center',
     fontWeight: '600',
   },
   cardDifficulty: {
     ...theme.typography.caption,
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
     textAlign: 'center',
     marginTop: 4,
   },

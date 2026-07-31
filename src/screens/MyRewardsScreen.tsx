@@ -33,7 +33,7 @@ export const MyRewardsScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
-  const subTextColor = 'rgba(255, 255, 255, 0.7)';
+  const subTextColor = 'rgba(15, 26, 44, 0.55)';
 
   const [showUndo, setShowUndo] = useState(false);
   const [undoState, setUndoState] = useState<{ type: 'delete' | 'fulfill' | 'delete-custom'; itemId: string } | null>(null);
@@ -361,7 +361,7 @@ export const MyRewardsScreen = () => {
                   
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color={theme.colors.text} />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#0F1A2C" />
                     </View>
                     <Text style={styles.successRewardLabel} numberOfLines={1} adjustsFontSizeToFit>{redeemedReward.title}</Text>
                   </View>
@@ -794,17 +794,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
     marginLeft: 12,
     textTransform: 'capitalize',
   },
   successTitleNormal: {
     ...theme.typography.subheading,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   successTitleHighlighted: {
     ...theme.typography.subheading,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   underlinedWordContainer: {
     position: 'relative',
@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
   successCopyBox: {
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: theme.colors.stroke,
+    borderColor: 'rgba(15, 26, 44, 0.2)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     width: '100%',
@@ -845,7 +845,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 26,
     letterSpacing: 0,
-    color: theme.colors.text,
+    color: '#0F1A2C',
     textAlign: 'center',
   },
   approveButton: {
@@ -862,20 +862,19 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   pinInput: {
     width: 120,
     height: 60,
     borderWidth: 1,
-    
     borderRadius: theme.borderRadius.md,
     fontSize: 32,
     textAlign: 'center',
     letterSpacing: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
-    borderColor: 'rgba(255, 255, 255, 0.14)',
-    color: theme.colors.text,
+    backgroundColor: 'rgba(15, 26, 44, 0.05)',
+    borderColor: 'rgba(15, 26, 44, 0.15)',
+    color: '#0F1A2C',
   },
   tabContainer: {
     flexDirection: 'row',

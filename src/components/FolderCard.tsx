@@ -28,7 +28,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color={theme.colors.text} />
+            <Ionicons name="folder-outline" size={32} color="#0F1A2C" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={2}>{name}</Text>
@@ -47,13 +47,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.08)',
+                backgroundColor: pressed ? 'rgba(15,26,44,0.1)' : 'rgba(15,26,44,0.05)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="rgba(255, 255, 255, 0.7)" />
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(15, 26, 44, 0.7)" />
           </Pressable>
         </View>
       )}
@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 158,
-    backgroundColor: 'rgba(8, 28, 54, 0.65)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderRadius: theme.borderRadius.md,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     shadowOpacity: 0,
     elevation: 0,
     position: 'relative',
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: theme.colors.text,
+    color: '#0F1A2C',
     textAlign: 'center',
   },
   actionButtons: {

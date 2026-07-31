@@ -233,18 +233,21 @@ const styles = StyleSheet.create({
   taskCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(8, 28, 54, 0.65)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     height: '100%',
-    shadowOpacity: 0,
-    elevation: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1,
   },
   taskCardCompleted: {
-    backgroundColor: 'rgba(8, 28, 54, 0.4)',
-    borderColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    borderColor: 'rgba(255, 255, 255, 0.25)',
     opacity: 0.7,
   },
   checkboxContainer: {
@@ -270,16 +273,16 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontFamily: FONTS.medium,
     fontSize: 16,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   taskTitleCompleted: {
     textDecorationLine: 'line-through',
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.5)',
   },
   receivedChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.colors.neutralGrey,
+    backgroundColor: 'rgba(15, 26, 44, 0.08)',
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: theme.spacing.xs,
     borderRadius: theme.borderRadius.full,
@@ -287,6 +290,6 @@ const styles = StyleSheet.create({
   },
   receivedText: {
     ...theme.typography.tab,
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
 });

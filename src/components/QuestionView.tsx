@@ -242,7 +242,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           transparent={true}
           animationType="fade"
         >
-          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
+          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleCloseModal}>
             {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && <SilverDust />}
             <Pressable style={[
               styles.feedbackContainerBackground
@@ -252,7 +252,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
 
                 <View style={styles.feedbackTitleContainer}>
-                  <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+                  <Text style={[styles.feedbackTitle, isRocket && { color: '#0F1A2C' }]}>
                     {displayIsCorrect 
                       ? (whyQuestion ? "That's correct!" : (showCoinReward ? 'Correct!' : "That's correct!"))
                       : "Not quite, try again!"}
@@ -264,7 +264,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <FontAwesome5 
                       name="coins" 
                       size={20} 
-                      color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                      color="#0F1A2C" 
                       style={{ marginRight: 8 }}
                     />
                     <View style={{ flexDirection: 'row' }}>
@@ -274,8 +274,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                           style={[
                             styles.coinRewardText,
                             { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                            isRocket && { color: '#FFFFFF' },
-                            { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                            { color: '#0F1A2C' }
                           ]}
                         >
                           {char}
@@ -283,7 +282,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       ))}
                       <Text style={[
                         styles.coinRewardText,
-                        { fontFamily: FONTS.semiBold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#0F1A2C' }
                       ]}> Coin Earned!</Text>
                     </View>
                   </View>
@@ -292,8 +291,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 {displayIsCorrect ? (
                   <>
                     {showExplanation && part1ShowCoin && (
-                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                        <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{question.explanation}</Text>
+                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(15, 26, 44, 0.2)', backgroundColor: 'rgba(15, 26, 44, 0.05)' }]}>
+                        <Text style={[styles.explanationText, isRocket && { color: '#0F1A2C' }]}>{question.explanation}</Text>
                       </View>
                     )}
                     <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
@@ -368,7 +367,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             transparent={true}
             animationType="fade"
           >
-            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleClosePart2Modal}>
+            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleClosePart2Modal}>
               {part2DisplayIsCorrect && isRewardsModeOn && <SilverDust />}
               <Pressable style={[
                 styles.feedbackContainerBackground
@@ -377,7 +376,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   {/* {!part2DisplayIsCorrect && <WrongAnswerSpaceman />} */}
                   {/* {part2DisplayIsCorrect && <CorrectAnswerSpaceman />} */}
                   <View style={styles.feedbackTitleContainer}>
-                    <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+                    <Text style={[styles.feedbackTitle, isRocket && { color: '#0F1A2C' }]}>
                       {part2DisplayIsCorrect 
                         ? 'Correct!'
                         : "Not quite, try again!"}
@@ -389,7 +388,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       <FontAwesome5 
                         name="coins" 
                         size={20} 
-                        color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                        color="#0F1A2C" 
                         style={{ marginRight: 8 }}
                       />
                       <View style={{ flexDirection: 'row' }}>
@@ -399,8 +398,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                             style={[
                               styles.coinRewardText,
                               { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                              isRocket && { color: '#FFFFFF' },
-                              { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
+                              { color: '#0F1A2C' }
                             ]}
                           >
                             {char}
@@ -408,15 +406,15 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                         ))}
                         <Text style={[
                           styles.coinRewardText,
-                          { fontFamily: FONTS.semiBold, fontSize: 20, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(4, gradientColors.length - 1)] }
+                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#0F1A2C' }
                         ]}> Coin Earned!</Text>
                       </View>
                     </View>
                   )}
 
                   {part2DisplayIsCorrect && (
-                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.3)', backgroundColor: 'rgba(255, 255, 255, 0.15)' }]}>
-                      <Text style={[styles.explanationText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.explanation}</Text>
+                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(15, 26, 44, 0.2)', backgroundColor: 'rgba(15, 26, 44, 0.05)' }]}>
+                      <Text style={[styles.explanationText, isRocket && { color: '#0F1A2C' }]}>{whyQuestion.explanation}</Text>
                     </View>
                   )}
 
@@ -551,10 +549,10 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     borderStyle: 'dashed',
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.md,
   },
@@ -562,14 +560,14 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 18,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 8, 18, 0.92)',
+    backgroundColor: 'rgba(255, 255, 255, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -600,9 +598,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
-
   coinRewardContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -615,7 +612,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
     marginLeft: theme.spacing.xs,
   },
   continueButton: {
@@ -631,13 +628,13 @@ const styles = StyleSheet.create({
   part2DividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    backgroundColor: 'rgba(15, 26, 44, 0.15)',
   },
   part2DividerText: {
     ...theme.typography.caption,
     fontSize: 14,
     fontWeight: '600',
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
     paddingHorizontal: theme.spacing.md,
   },
 });

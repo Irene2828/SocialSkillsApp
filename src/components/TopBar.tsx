@@ -80,18 +80,18 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             <Pressable onPress={() => navigation.navigate('MyRewards' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: '#FFFFFF', marginRight: 2 }]}>+</Text>
+                  <Text style={[styles.coinText, { color: '#0F1A2C', marginRight: 2 }]}>+</Text>
                   {String(coinBalance).split('').map((char, index) => {
                     return (
-                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#FFFFFF' }]}>
+                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#0F1A2C' }]}>
                         {char}
                       </Text>
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={16} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={16} color="#0F1A2C" style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#FFFFFF' }]}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#0F1A2C' }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>
@@ -141,12 +141,12 @@ const styles = StyleSheet.create({
   coinBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(8, 28, 54, 0.65)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     shadowOpacity: 0,
     elevation: 0,
   },

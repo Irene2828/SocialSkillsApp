@@ -309,7 +309,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(6, 18, 36, 0.95)' }]} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && isFinalStep && isRewardsModeOn && <SilverDust />}
           <Pressable style={[
             styles.feedbackContainerBackground
@@ -318,7 +318,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
               {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
               <View style={styles.feedbackTitleContainer}>
-                <Text style={[styles.feedbackTitle, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>
+                <Text style={[styles.feedbackTitle, isRocket && { color: '#0F1A2C' }]}>
                   {displayIsCorrect 
                     ? "That's Correct!" 
                     : "Not quite, try again!"}
@@ -330,9 +330,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   <FontAwesome5 
                     name="coins" 
                     size={24} 
-                    color="#4B5563" 
+                    color="#0F1A2C" 
                   />
-                  <Text style={[styles.coinRewardText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, isRocket && { color: '#0F1A2C' }]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
@@ -588,9 +588,9 @@ const styles = StyleSheet.create({
   completedPromptCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(56, 189, 248, 0.16)',
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
     borderWidth: 1,
-    borderColor: 'rgba(147, 197, 253, 0.16)',
+    borderColor: 'rgba(255, 255, 255, 0.25)',
     borderRadius: 12,
     paddingHorizontal: 6,
     paddingVertical: 8,
@@ -604,9 +604,9 @@ const styles = StyleSheet.create({
   activePromptCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderWidth: 1,
-    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
     borderRadius: 12,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: 10,
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 8, 18, 0.92)',
+    backgroundColor: 'rgba(255, 255, 255, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -670,7 +670,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   dashedExplanationContainer: {
     width: '100%',
@@ -687,7 +687,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 18,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   coinRewardContainer: {
     flexDirection: 'row',
@@ -701,7 +701,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
     marginLeft: theme.spacing.xs,
   },
   continueButton: {

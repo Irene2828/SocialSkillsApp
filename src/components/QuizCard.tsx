@@ -54,7 +54,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         onPress={onPressStart} 
         style={{ flex: 1 }}
       >
-        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.15)', backgroundColor: 'rgba(8, 28, 54, 0.65)' }]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.4)', backgroundColor: 'rgba(255, 255, 255, 0.65)' }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
@@ -67,21 +67,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             isFeatured && styles.featuredIconContainer,
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color={theme.colors.text} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#0F1A2C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color={theme.colors.text} style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#0F1A2C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text 
-              style={[styles.title, isFeatured && styles.featuredTitle, { color: theme.colors.text }]} 
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#0F1A2C' }]} 
               numberOfLines={2}
             >
               {category.title}
             </Text>
             {isFeatured && category.description && (
-              <Text style={[styles.descriptionText, { color: theme.colors.secondaryText }]}>
+              <Text style={[styles.descriptionText, { color: 'rgba(15, 26, 44, 0.7)' }]}>
                 {category.description}
               </Text>
             )}
@@ -103,13 +103,13 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)',
+                backgroundColor: pressed ? 'rgba(15,26,44,0.1)' : 'rgba(15,26,44,0.05)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="rgba(255, 255, 255, 0.7)" />
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(15, 26, 44, 0.7)" />
           </Pressable>
         </View>
       )}
