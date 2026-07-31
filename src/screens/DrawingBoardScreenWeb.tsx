@@ -174,7 +174,7 @@ export const DrawingBoardScreenWeb = () => {
           { 
             paddingTop: insets.top + 16, 
             paddingBottom: insets.bottom + 16, 
-            backgroundColor: isDark ? 'rgba(16, 32, 52, 0.8)' : 'rgba(255, 255, 255, 0.8)' 
+            backgroundColor: 'rgba(0, 206, 209, 0.8)' 
           },
           isMobile && { width: 56 }
         ]}>

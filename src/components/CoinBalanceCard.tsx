@@ -49,7 +49,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   style={[
                     styles.balanceLabel, 
                     { marginLeft: 0 },
-                    { color: '#FFFFFF' }
+                    { color: '#0F1A2C' }
                   ]}
                 >
                   {char}

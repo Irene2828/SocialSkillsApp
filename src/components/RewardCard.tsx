@@ -22,7 +22,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
   return (
     <View style={[styles.card, !canAfford && styles.cardDimmed]}>
       <View style={styles.iconContainer}>
-        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color={gradientColors[0]} />
+        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color="#0F1A2C" />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
@@ -34,7 +34,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             <FontAwesome5 
               name="coins" 
               size={14} 
-              color={gradientColors[0]} 
+              color="#0F1A2C" 
             />
             <View style={{ flexDirection: 'row', marginLeft: 4 }}>
               {reward.cost.toString().split('').map((char, index) => (
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: theme.borderRadius.sm,
-    backgroundColor: 'rgba(56, 189, 248, 0.22)',
+    backgroundColor: 'rgba(15, 26, 44, 0.08)',
     justifyContent: 'center',
     alignItems: 'center',
   },

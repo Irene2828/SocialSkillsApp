@@ -993,15 +993,15 @@ export const NewQuizScreen = () => {
           <View style={styles.progressSection}>
             <View style={{ height: 26, position: 'relative', width: '100%' }}>
               <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
-                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0 }]}>
+                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#FFFFFF', fontWeight: '600' }]}>
                   {counterText}
                 </Text>
               </View>
-              <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke, width: '100%', position: 'absolute', bottom: 0 }}>
+              <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.45)', width: '100%', position: 'absolute', bottom: 0 }}>
                 <LinearGradient
                   colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{ height: '100%', width: `${progressPercent * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
+                  style={{ height: '100%', width: `${progressPercent * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: 'transparent' }}
                 />
               </View>
             </View>
