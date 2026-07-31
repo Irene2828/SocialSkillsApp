@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing.md,
+    paddingBottom: theme.spacing.md / 2,
     height: 158,
     position: 'relative',
     borderWidth: 2,
@@ -137,6 +138,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     justifyContent: 'center',
     padding: theme.spacing.md,
+    paddingBottom: theme.spacing.md / 2,
   },
   cardContent: {
     alignItems: 'center',
