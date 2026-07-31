@@ -233,11 +233,11 @@ const styles = StyleSheet.create({
   taskCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderRadius: theme.borderRadius.md,
     padding: theme.spacing.md,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     height: '100%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -246,8 +246,8 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   taskCardCompleted: {
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    backgroundColor: 'rgba(224, 251, 252, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     opacity: 0.7,
   },
   checkboxContainer: {

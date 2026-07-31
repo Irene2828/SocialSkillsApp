@@ -242,7 +242,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
           transparent={true}
           animationType="fade"
         >
-          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleCloseModal}>
+          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleCloseModal}>
             {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && <SilverDust />}
             <Pressable style={[
               styles.feedbackContainerBackground
@@ -291,7 +291,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 {displayIsCorrect ? (
                   <>
                     {showExplanation && part1ShowCoin && (
-                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(15, 26, 44, 0.2)', backgroundColor: 'rgba(15, 26, 44, 0.05)' }]}>
+                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
                         <Text style={[styles.explanationText, isRocket && { color: '#0F1A2C' }]}>{question.explanation}</Text>
                       </View>
                     )}
@@ -367,7 +367,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
             transparent={true}
             animationType="fade"
           >
-            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleClosePart2Modal}>
+            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleClosePart2Modal}>
               {part2DisplayIsCorrect && isRewardsModeOn && <SilverDust />}
               <Pressable style={[
                 styles.feedbackContainerBackground
@@ -413,7 +413,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   )}
 
                   {part2DisplayIsCorrect && (
-                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(15, 26, 44, 0.2)', backgroundColor: 'rgba(15, 26, 44, 0.05)' }]}>
+                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
                       <Text style={[styles.explanationText, isRocket && { color: '#0F1A2C' }]}>{whyQuestion.explanation}</Text>
                     </View>
                   )}
@@ -549,10 +549,10 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderStyle: 'dashed',
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     marginBottom: theme.spacing.xl,
     marginTop: theme.spacing.md,
   },
@@ -567,7 +567,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.96)',
+    backgroundColor: 'rgba(224, 251, 252, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

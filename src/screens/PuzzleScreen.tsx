@@ -834,7 +834,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     minHeight: 175,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
@@ -842,7 +842,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -1060,7 +1060,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 8, 18, 0.94)',
+    backgroundColor: 'rgba(224, 251, 252, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -1070,9 +1070,9 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: '#102034',
+    backgroundColor: 'rgba(224, 251, 252, 0.95)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: theme.borderRadius.md,
   },
   levelTitle: {

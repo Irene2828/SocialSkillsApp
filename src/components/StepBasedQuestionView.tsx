@@ -309,7 +309,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         transparent={true}
         animationType="fade"
       >
-        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(255, 255, 255, 0.96)' }]} onPress={handleCloseModal}>
+        <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleCloseModal}>
           {displayIsCorrect && isFinalStep && isRewardsModeOn && <SilverDust />}
           <Pressable style={[
             styles.feedbackContainerBackground
@@ -588,9 +588,9 @@ const styles = StyleSheet.create({
   completedPromptCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: 'rgba(224, 251, 252, 0.45)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: 12,
     paddingHorizontal: 6,
     paddingVertical: 8,
@@ -604,9 +604,9 @@ const styles = StyleSheet.create({
   activePromptCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     borderRadius: 12,
     paddingHorizontal: theme.spacing.sm,
     paddingVertical: 10,
@@ -639,7 +639,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.96)',
+    backgroundColor: 'rgba(224, 251, 252, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,

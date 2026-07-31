@@ -117,7 +117,7 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(224, 251, 252, 0.96)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: theme.spacing.sm,
     textAlign: 'center',
-    color: theme.colors.text,
+    color: '#0F1A2C',
   },
   modalMessage: {
     ...theme.typography.body,
     fontStyle: 'italic',
     fontSize: 19,
     textAlign: 'center',
-    color: theme.colors.secondaryText,
+    color: 'rgba(15, 26, 44, 0.7)',
     marginBottom: theme.spacing.lg,
   },
   actionButton: {
