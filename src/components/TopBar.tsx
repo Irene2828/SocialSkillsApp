@@ -122,11 +122,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#2A1E5C',
     textAlign: 'center',
+    letterSpacing: -0.3,
   },
   titleContainer: {
     position: 'absolute',
