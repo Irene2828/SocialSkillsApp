@@ -9,7 +9,7 @@ export const FONTS = {
 
 export const theme = {
   colors: {
-    background: '#061224',
+    background: '#00CED1',
     primary: '#BEF264',
     primarySoft: '#ECFCCB',
     success: '#BEF264',

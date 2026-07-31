@@ -28,7 +28,7 @@ export const RocketBackground = () => {
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       <LinearGradient
-        colors={['#061224', '#0B1B36', '#080C16']}
+        colors={['#14D2A4', '#00CED1', '#0EA5E9']}
         style={StyleSheet.absoluteFill}
         start={{ x: 0, y: 0.2 }}
         end={{ x: 1, y: 0.8 }}

@@ -34,7 +34,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = 
   return (
     <View style={styles.container} pointerEvents="none">
       <LinearGradient
-        colors={['#061224', '#0B2038', '#061224']}
+        colors={['#14D2A4', '#00CED1', '#0EA5E9']}
         style={StyleSheet.absoluteFill}
         start={{ x: 0.1, y: 0 }}
         end={{ x: 0.9, y: 1 }}
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     minHeight: '100%',
-    backgroundColor: '#061224',
+    backgroundColor: '#00CED1',
   },
   pattern: {
     position: 'absolute',
