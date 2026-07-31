@@ -318,7 +318,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
               {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
               <View style={styles.feedbackTitleContainer}>
-                <Text style={[styles.feedbackTitle, isRocket && { color: '#0A2F35' }]}>
+                <Text style={[styles.feedbackTitle, isRocket && { color: '#2A1E5C' }]}>
                   {displayIsCorrect 
                     ? "That's Correct!" 
                     : "Not quite, try again!"}
@@ -330,9 +330,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   <FontAwesome5 
                     name="coins" 
                     size={24} 
-                    color="#0A2F35" 
+                    color="#2A1E5C" 
                   />
-                  <Text style={[styles.coinRewardText, isRocket && { color: '#0A2F35' }]}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, isRocket && { color: '#2A1E5C' }]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: 'rgba(15, 26, 44, 0.72)',
+    color: 'rgba(42, 30, 92, 0.72)',
     marginBottom: 4,
   },
   problemSheetStory: {
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     fontSize: 14,
     lineHeight: 20,
-    color: '#0A2F35',
+    color: '#2A1E5C',
     marginBottom: theme.spacing.sm,
   },
   storyCallout: {
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     lineHeight: 14,
     letterSpacing: 0.8,
-    color: 'rgba(15, 26, 44, 0.72)',
+    color: 'rgba(42, 30, 92, 0.72)',
     marginBottom: 3,
   },
   storyCalloutText: {
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   factGrid: {
     flexDirection: 'row',
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   dashedExplanationContainer: {
     width: '100%',
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 18,
     textAlign: 'center',
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   coinRewardContainer: {
     flexDirection: 'row',
@@ -709,7 +709,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#0A2F35',
+    color: '#2A1E5C',
     marginLeft: theme.spacing.xs,
   },
   continueButton: {

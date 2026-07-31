@@ -37,8 +37,8 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const activeColor = '#0A2F35';
-  const inactiveColor = 'rgba(15, 26, 44, 0.45)';
+  const activeColor = '#2A1E5C';
+  const inactiveColor = 'rgba(42, 30, 92, 0.45)';
 
   return (
     <Tab.Navigator
@@ -89,7 +89,7 @@ const AppTabs = () => {
         tabBarStyle: {
           backgroundColor: '#00CED1',
           borderTopWidth: 1,
-          borderTopColor: 'rgba(15, 26, 44, 0.15)',
+          borderTopColor: 'rgba(42, 30, 92, 0.15)',
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',

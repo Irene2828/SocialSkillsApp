@@ -47,7 +47,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
       <View style={styles.modalCard}>
         <View style={[styles.header, { justifyContent: 'flex-end' }]}>
           <Pressable onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#0A2F35" />
+            <Ionicons name="close" size={28} color="#2A1E5C" />
           </Pressable>
         </View>
 
@@ -62,7 +62,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
             <Switch
               value={isRewardsModeOn}
               onValueChange={setIsRewardsModeOn}
-              trackColor={{ false: 'rgba(15, 26, 44, 0.15)', true: theme.colors.primary }}
+              trackColor={{ false: 'rgba(42, 30, 92, 0.15)', true: theme.colors.primary }}
               thumbColor={'#FFFFFF'}
             />
           </View>
@@ -78,7 +78,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
                 value={localPin}
                 onChangeText={setLocalPin}
                 placeholder="Enter PIN"
-                placeholderTextColor="rgba(15, 26, 44, 0.44)"
+                placeholderTextColor="rgba(42, 30, 92, 0.44)"
                 keyboardType="number-pad"
                 secureTextEntry
                 maxLength={6}
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...theme.typography.heading,
     fontSize: 24,
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   closeButton: {
     padding: theme.spacing.xs,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: theme.spacing.lg,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(15, 26, 44, 0.08)',
+    borderBottomColor: 'rgba(42, 30, 92, 0.08)',
     marginBottom: theme.spacing.lg,
   },
   settingSection: {
@@ -144,13 +144,13 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     fontSize: 18,
-    color: '#0A2F35',
+    color: '#2A1E5C',
     marginBottom: 4,
   },
   settingDescription: {
     ...theme.typography.body,
     fontSize: 14,
-    color: 'rgba(15, 26, 44, 0.7)',
+    color: 'rgba(42, 30, 92, 0.7)',
     marginBottom: theme.spacing.md,
   },
   pinRow: {
@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
   },
   pinInput: {
     width: '100%',
-    backgroundColor: 'rgba(15, 26, 44, 0.05)',
+    backgroundColor: 'rgba(42, 30, 92, 0.05)',
     borderWidth: 1,
-    borderColor: 'rgba(15, 26, 44, 0.15)',
+    borderColor: 'rgba(42, 30, 92, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     ...theme.typography.body,
     fontSize: 16,
-    color: '#0A2F35',
+    color: '#2A1E5C',
   }
 });

@@ -28,7 +28,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color="#0A2F35" />
+            <Ionicons name="folder-outline" size={32} color="#2A1E5C" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={2}>{name}</Text>
@@ -47,13 +47,13 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(15,26,44,0.1)' : 'rgba(15,26,44,0.05)',
+                backgroundColor: pressed ? 'rgba(42, 30, 92,0.1)' : 'rgba(42, 30, 92,0.05)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="rgba(15, 26, 44, 0.7)" />
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(42, 30, 92, 0.7)" />
           </Pressable>
         </View>
       )}
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.typography.body,
     fontWeight: '600',
-    color: '#0A2F35',
+    color: '#2A1E5C',
     textAlign: 'center',
   },
   actionButtons: {

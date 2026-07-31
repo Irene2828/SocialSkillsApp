@@ -28,7 +28,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
-  const textColor = '#0A2F35';
+  const textColor = '#2A1E5C';
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
@@ -69,7 +69,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color="#0A2F35" />
+              <Ionicons name="home-outline" size={24} color="#2A1E5C" />
             </Pressable>
           ) : null}
         </View>
@@ -80,18 +80,18 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             <Pressable onPress={() => navigation.navigate('MyRewards' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: '#0A2F35', marginRight: 2 }]}>+</Text>
+                  <Text style={[styles.coinText, { color: '#2A1E5C', marginRight: 2 }]}>+</Text>
                   {String(coinBalance).split('').map((char, index) => {
                     return (
-                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#0A2F35' }]}>
+                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#2A1E5C' }]}>
                         {char}
                       </Text>
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={16} color="#0A2F35" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={16} color="#2A1E5C" style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#0A2F35' }]}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#2A1E5C' }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: FONTS.medium,
     fontSize: 20,
-    color: '#0A2F35',
+    color: '#2A1E5C',
     textAlign: 'center',
   },
   titleContainer: {

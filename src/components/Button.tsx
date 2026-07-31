@@ -32,7 +32,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   } else if (isOutline) {
     resolvedTextStyle = styles.outlineText;
   }
-  const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#0A2F35' : theme.colors.text);
+  const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#2A1E5C' : theme.colors.text);
 
   const content = (
     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   primaryText: {
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   secondaryText: {
     color: theme.colors.text,

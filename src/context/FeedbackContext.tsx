@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: theme.spacing.sm,
     textAlign: 'center',
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   modalMessage: {
     ...theme.typography.body,
     fontStyle: 'italic',
     fontSize: 19,
     textAlign: 'center',
-    color: 'rgba(15, 26, 44, 0.7)',
+    color: 'rgba(42, 30, 92, 0.7)',
     marginBottom: theme.spacing.lg,
   },
   actionButton: {

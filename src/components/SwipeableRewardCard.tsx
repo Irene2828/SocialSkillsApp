@@ -133,7 +133,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
       >
         <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
           <View style={styles.iconContainer}>
-            <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color="#0A2F35" />
+            <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color="#2A1E5C" />
           </View>
           <View style={styles.textContainer}>
             <Text style={[styles.title, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]} numberOfLines={2} adjustsFontSizeToFit>
@@ -145,7 +145,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 <FontAwesome5
                   name="coins"
                   size={14}
-                  color="#0A2F35"
+                  color="#2A1E5C"
                 />
                 <View style={{ flexDirection: 'row', marginLeft: 4 }}>
                   {reward.cost.toString().split('').map((char, index) => (
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: theme.borderRadius.md,
-    backgroundColor: 'rgba(15, 26, 44, 0.08)',
+    backgroundColor: 'rgba(42, 30, 92, 0.08)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: '#0A2F35',
+    color: '#2A1E5C',
     letterSpacing: 0,
     marginBottom: theme.spacing.xs,
     textTransform: 'capitalize',
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   costText: {
     fontFamily: FONTS.semiBold,
     fontSize: 14,
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   redeemButton: {
     minWidth: 80,

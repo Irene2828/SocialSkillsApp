@@ -67,21 +67,21 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             isFeatured && styles.featuredIconContainer,
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#0A2F35" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#2A1E5C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#0A2F35" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#2A1E5C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text 
-              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#0A2F35' }]} 
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#2A1E5C' }]} 
               numberOfLines={2}
             >
               {category.title}
             </Text>
             {isFeatured && category.description && (
-              <Text style={[styles.descriptionText, { color: 'rgba(15, 26, 44, 0.7)' }]}>
+              <Text style={[styles.descriptionText, { color: 'rgba(42, 30, 92, 0.7)' }]}>
                 {category.description}
               </Text>
             )}
@@ -103,13 +103,13 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
               {
                 padding: 6,
                 borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(15,26,44,0.1)' : 'rgba(15,26,44,0.05)',
+                backgroundColor: pressed ? 'rgba(42, 30, 92,0.1)' : 'rgba(42, 30, 92,0.05)',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="rgba(15, 26, 44, 0.7)" />
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(42, 30, 92, 0.7)" />
           </Pressable>
         </View>
       )}

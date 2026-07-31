@@ -205,7 +205,7 @@ export const CreateQuizFromPhotoScreen = () => {
     <View style={styles.idleContainer}>
       <Card style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="text-outline" size={24} color="#0A2F35" style={{ marginRight: 8 }} />
+          <Ionicons name="text-outline" size={24} color="#2A1E5C" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
         </View>
         <TextInput
@@ -213,7 +213,7 @@ export const CreateQuizFromPhotoScreen = () => {
           value={textPrompt}
           onChangeText={setTextPrompt}
           placeholder="Create a quiz to test rejection reactions during recess at school"
-          placeholderTextColor="rgba(15, 26, 44, 0.44)"
+          placeholderTextColor="rgba(42, 30, 92, 0.44)"
           multiline
           numberOfLines={3}
         />
@@ -233,7 +233,7 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
 
         <View style={[styles.sectionHeaderRow, { marginBottom: theme.spacing.sm }]}>
-          <Ionicons name="camera-outline" size={24} color="#0A2F35" style={{ marginRight: 8 }} />
+          <Ionicons name="camera-outline" size={24} color="#2A1E5C" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Photo</Text>
         </View>
         <View style={styles.photoActionRow}>
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     ...theme.typography.body,
-    color: 'rgba(15, 26, 44, 0.7)',
+    color: 'rgba(42, 30, 92, 0.7)',
   },
   idleContainer: {
     width: '100%',
@@ -628,25 +628,25 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     ...theme.typography.subheading,
     fontSize: 18,
-    color: '#0A2F35',
+    color: '#2A1E5C',
   },
   textInput: {
     width: '100%',
     minHeight: 72,
     borderWidth: 1.5,
-    borderColor: 'rgba(15, 26, 44, 0.15)',
+    borderColor: 'rgba(42, 30, 92, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     fontSize: 16,
-    color: '#0A2F35',
+    color: '#2A1E5C',
     textAlignVertical: 'top',
-    backgroundColor: 'rgba(15, 26, 44, 0.05)',
+    backgroundColor: 'rgba(42, 30, 92, 0.05)',
     marginBottom: theme.spacing.md,
   },
   orText: {
     ...theme.typography.label,
     textAlign: 'center',
-    color: 'rgba(15, 26, 44, 0.7)',
+    color: 'rgba(42, 30, 92, 0.7)',
     marginVertical: theme.spacing.md,
     fontWeight: '600',
   },
@@ -659,12 +659,12 @@ const styles = StyleSheet.create({
   dividerLine: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(15, 26, 44, 0.15)',
+    backgroundColor: 'rgba(42, 30, 92, 0.15)',
   },
   dividerText: {
     ...theme.typography.caption,
     marginHorizontal: theme.spacing.sm,
-    color: 'rgba(15, 26, 44, 0.6)',
+    color: 'rgba(42, 30, 92, 0.6)',
   },
   photoActionRow: {
     width: '100%',
