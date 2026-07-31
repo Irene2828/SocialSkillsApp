@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.xl,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.55)',
     shadowColor: theme.colors.primary,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0,
