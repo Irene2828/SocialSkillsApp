@@ -465,14 +465,14 @@ export const PuzzleScreen = () => {
               showSettingsAndRewards={true}
             />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
-              <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('animals')}>
+              <Pressable style={[styles.folderCard, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('animals')}>
                 <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
                   <Text style={{ fontSize: 40 }}>🐼</Text>
                 </View>
                 <Text style={styles.cardName} numberOfLines={2}>Cute Animals</Text>
               </Pressable>
 
-              <Pressable style={[styles.card, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
+              <Pressable style={[styles.folderCard, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
                 <View style={[styles.cardIconContainer, { backgroundColor: '#FFEDD5' }]}>
                   <Text style={{ fontSize: 40 }}>🏙️</Text>
                 </View>
@@ -832,6 +832,21 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
+    paddingBottom: theme.spacing.lg / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  folderCard: {
+    width: '100%',
+    minHeight: 175,
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    borderRadius: theme.borderRadius.md,
+    paddingHorizontal: theme.spacing.lg,
+    paddingTop: theme.spacing.lg / 2,
     paddingBottom: theme.spacing.lg / 2,
     alignItems: 'center',
     justifyContent: 'center',
