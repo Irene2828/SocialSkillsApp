@@ -141,10 +141,10 @@ const styles = StyleSheet.create({
   },
   text: {
     ...theme.typography.button,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   primaryText: {
-    color: '#111827',
+    color: '#0F1A2C',
   },
   secondaryText: {
     color: theme.colors.text,

@@ -37,6 +37,7 @@ export const DrawingBoardScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
+  const isMobile = Dimensions.get('window').width < 768;
 
   const [paths, setPaths] = useState<Stroke[]>([]);
   const [redoPaths, setRedoPaths] = useState<Stroke[]>([]);
@@ -149,23 +150,31 @@ export const DrawingBoardScreen = () => {
       </View>
 
       {isToolbarVisible ? (
-        <View style={[styles.rightToolbar, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
+        <View style={[
+          styles.rightToolbar, 
+          { 
+            paddingTop: insets.top + 16, 
+            paddingBottom: insets.bottom + 16, 
+            backgroundColor: isDark ? 'rgba(16, 32, 52, 0.8)' : 'rgba(255, 255, 255, 0.8)' 
+          },
+          isMobile && { width: 56 }
+        ]}>
           <Pressable style={styles.toolBtn} onPress={() => setIsToolbarVisible(false)}>
-            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
+            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
           </Pressable>
           <View style={styles.dividerHorizontal} />
           
-          <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
+          <ScrollView contentContainerStyle={[styles.toolbarContent, isMobile && { paddingHorizontal: 4 }]} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
-            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
-            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
-            <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
+            <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
           </Pressable>
 
           <View style={styles.dividerHorizontal} />
@@ -174,13 +183,16 @@ export const DrawingBoardScreen = () => {
             <Pressable
               key={sw.id}
               style={[
-                styles.strokeBtn,
-                activeStrokeWidth === sw.value && styles.activeStrokeBtn,
-                isDark && activeStrokeWidth === sw.value && { borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(255,255,255,0.1)' }
+                styles.toolBtn,
+                activeStrokeWidth === sw.value && styles.activeToolBtn
               ]}
               onPress={() => setActiveStrokeWidth(sw.value)}
             >
-              <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : theme.colors.text} />
+              <Ionicons 
+                name={sw.icon} 
+                size={sw.size} 
+                color={activeStrokeWidth === sw.value ? theme.colors.primary : (isDark ? '#FFFFFF' : '#374151')} 
+              />
             </Pressable>
           ))}
 
@@ -191,21 +203,16 @@ export const DrawingBoardScreen = () => {
               key={color}
               style={[
                 styles.colorBtn,
-                { backgroundColor: color },
-                activeColor === color && styles.activeColorBtn,
-                activeColor === color && color === '#111827' && isDark && { borderColor: 'rgba(255,255,255,0.2)' }
+                activeColor === color && styles.activeColorBtn
               ]}
               onPress={() => setActiveColor(color)}
-            />
+            >
+              <View style={[styles.colorInner, { backgroundColor: color }]} />
+            </Pressable>
           ))}
           
-          {/* Custom Color Wheel Button */}
-          <Pressable
-            style={[
-              styles.colorBtn,
-              { backgroundColor: !COLORS.includes(activeColor) ? activeColor : 'transparent', borderWidth: 2, borderColor: isDark ? '#FFFFFF' : theme.colors.neutralGrey, justifyContent: 'center', alignItems: 'center' },
-              !COLORS.includes(activeColor) && styles.activeColorBtn
-            ]}
+          <Pressable 
+            style={[styles.colorBtn, styles.customColorBtn]} 
             onPress={() => setShowColorPicker(true)}
           >
             <Image source={require('../../assets/color-wheel.png')} style={{ width: 24, height: 24, borderRadius: 12 }} />
@@ -217,7 +224,7 @@ export const DrawingBoardScreen = () => {
           style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : '#374151'} />
         </Pressable>
       )}
       </GestureHandlerRootView>

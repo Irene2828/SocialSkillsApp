@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, ScrollView, Modal, Image } from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, Modal, Image, Dimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -35,6 +35,7 @@ export const DrawingBoardScreenWeb = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
+  const isMobile = Dimensions.get('window').width < 768;
 
   const [paths, setPaths] = useState<Stroke[]>([]);
   const [redoPaths, setRedoPaths] = useState<Stroke[]>([]);
@@ -168,23 +169,31 @@ export const DrawingBoardScreenWeb = () => {
       </View>
 
       {isToolbarVisible ? (
-        <View style={[styles.rightToolbar, { paddingTop: insets.top + 16, paddingBottom: insets.bottom + 16, backgroundColor: isDark ? moodColors.bg : '#FFFFFF' }]}>
+        <View style={[
+          styles.rightToolbar, 
+          { 
+            paddingTop: insets.top + 16, 
+            paddingBottom: insets.bottom + 16, 
+            backgroundColor: isDark ? 'rgba(16, 32, 52, 0.8)' : 'rgba(255, 255, 255, 0.8)' 
+          },
+          isMobile && { width: 56 }
+        ]}>
           <Pressable style={styles.toolBtn} onPress={() => setIsToolbarVisible(false)}>
-            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
+            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
           </Pressable>
           <View style={styles.dividerHorizontal} />
           
-          <ScrollView contentContainerStyle={styles.toolbarContent} showsVerticalScrollIndicator={false}>
+          <ScrollView contentContainerStyle={[styles.toolbarContent, isMobile && { paddingHorizontal: 4 }]} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
-            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
-            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : theme.colors.text)} />
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
-            <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : theme.colors.text} />
+            <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
           </Pressable>
 
           <View style={styles.dividerHorizontal} />
@@ -199,7 +208,7 @@ export const DrawingBoardScreenWeb = () => {
               ]}
               onPress={() => setActiveStrokeWidth(sw.value)}
             >
-              <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : theme.colors.text} />
+              <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : '#374151'} />
             </Pressable>
           ))}
 
@@ -235,7 +244,7 @@ export const DrawingBoardScreenWeb = () => {
           style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : theme.colors.text} />
+          <Ionicons name="eye-outline" size={24} color={isDark ? '#FFFFFF' : '#374151'} />
         </Pressable>
       )}
       </View>

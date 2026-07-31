@@ -386,6 +386,11 @@ export const CreateQuizFromPhotoScreen = () => {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           <Header 
             title="Create Quiz" 
+            rightElement={
+              <Pressable onPress={() => navigation.goBack()} style={{ padding: 4 }}>
+                <Ionicons name="close" size={28} color={theme.colors.text} />
+              </Pressable>
+            }
           />
           {screenState !== 'generating' && screenState !== 'success' && (
             <View style={styles.headerSubtitleContainer}>

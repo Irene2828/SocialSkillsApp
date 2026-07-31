@@ -967,12 +967,19 @@ export const NewQuizScreen = () => {
     if (currentQuestions.length === 0) return null;
     const baseQuestion = currentQuestions[currentIndex] as Question;
     const hasWhyData = false; // baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
-
     let categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
     const customCat = customCategories.find(c => c.id === selectedCategory);
     if (customCat) {
       categoryName = customCat.title;
     }
+
+    const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai');
+    const progressPercent = isWordProblem
+      ? ((currentWordProblemStep + 1) / totalWordProblemSteps)
+      : ((currentIndex + 1) / currentQuestions.length);
+    const counterText = isWordProblem
+      ? `${currentWordProblemStep + 1}/${totalWordProblemSteps}`
+      : `${currentIndex + 1}/${currentQuestions.length}`;
 
     return (
       <View style={styles.inProgressContainer}>
@@ -984,28 +991,24 @@ export const NewQuizScreen = () => {
           />
 
           <View style={styles.progressSection}>
-            <Text style={styles.progressCounter}>
-              {currentIndex + 1}/{currentQuestions.length}
-            </Text>
-            <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke }}>
-              {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
+            <View style={{ height: 26, position: 'relative', width: '100%' }}>
+              <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
+                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0 }]}>
+                  {counterText}
+                </Text>
+              </View>
+              <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.055)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderStyle: 'dashed', borderColor: theme.colors.stroke, width: '100%', position: 'absolute', bottom: 0 }}>
                 <LinearGradient
                   colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
                   start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{ height: '100%', width: `${((currentWordProblemStep + 1) / totalWordProblemSteps) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
+                  style={{ height: '100%', width: `${progressPercent * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
                 />
-              ) : (
-                <LinearGradient
-                  colors={['#38BDF8', '#0EA5E9', '#0284C7', '#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']}
-                  start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-                  style={{ height: '100%', width: `${((currentIndex + 1) / currentQuestions.length) * 100}%`, borderRadius: theme.borderRadius.full, borderWidth: 1, borderColor: theme.colors.stroke }}
-                />
-              )}
+              </View>
             </View>
 
             {!isSmallScreen && (
               <View style={{ marginTop: 2 }}>
-                {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
+                {isWordProblem ? (
                   <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
                     <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
                   </Text>

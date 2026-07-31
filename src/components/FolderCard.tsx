@@ -53,7 +53,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color={theme.colors.secondaryText} />
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(255, 255, 255, 0.7)" />
           </Pressable>
         </View>
       )}
@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 158,
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(56, 189, 248, 0.34)',
     borderRadius: theme.borderRadius.md,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(147, 197, 253, 0.30)',
     shadowOpacity: 0,
     elevation: 0,
     position: 'relative',

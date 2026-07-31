@@ -499,8 +499,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.14)',
     borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     marginBottom: theme.spacing.lg,
   },
   calloutLabel: {
@@ -510,7 +510,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     letterSpacing: 0.8,
     color: 'rgba(255, 255, 255, 0.72)',
-    marginBottom: 3,
+    marginBottom: 8,
   },
   partLabelText: {
     ...theme.typography.caption,
