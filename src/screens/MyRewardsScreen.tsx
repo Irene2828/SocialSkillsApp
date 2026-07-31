@@ -398,9 +398,9 @@ export const MyRewardsScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
       <GlobalBackground />
-      <ScreenWrapper transparent>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <TopBar title="Rewards" showSettingsAndRewards={true} />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <ScreenWrapper transparent>
+          <TopBar title="Rewards" showSettingsAndRewards={true} />
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
@@ -484,6 +484,7 @@ export const MyRewardsScreen = () => {
             </View>
           )}
         </View>
+      </ScreenWrapper>
 
         {navigation && (
           <>
@@ -510,7 +511,6 @@ export const MyRewardsScreen = () => {
         )}
       </ScrollView>
       {renderSuccessModal()}
-      </ScreenWrapper>
 
       {/* Reset Balance PIN Modal */}
       <Modal visible={showResetPin} transparent animationType="fade">
