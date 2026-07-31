@@ -485,7 +485,6 @@ export const PuzzleScreen = () => {
                 title="Generate New Puzzle"
                 iconName="extension-puzzle-outline"
                 style={[styles.createAiButton, { width: '100%', maxWidth: '100%' }]}
-                textStyle={{ fontSize: isTablet ? 16 : 13.5 }}
                 onPress={() => setShowAiMenu(true)}
               />
             </View>
@@ -885,7 +884,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     color: '#2A1E5C',
     textAlign: 'center',
-    fontWeight: '600',
+    fontWeight: '400',
   },
   cardDifficulty: {
     ...theme.typography.caption,

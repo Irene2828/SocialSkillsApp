@@ -212,14 +212,14 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
-    fontWeight: '600',
+    fontWeight: '400',
     color: theme.colors.text,
     textAlign: 'center',
   },
   featuredTitle: {
     textAlign: 'left',
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '400',
   },
   descriptionText: {
     ...theme.typography.caption,

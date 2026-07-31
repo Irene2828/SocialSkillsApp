@@ -993,13 +993,13 @@ export const NewQuizScreen = () => {
           <View style={styles.progressSection}>
             <View style={{ height: 26, position: 'relative', width: '100%' }}>
               <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
-                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#FFFFFF', fontWeight: '600', letterSpacing: 2 }]}>
+                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#2A1E5C', fontWeight: '600', letterSpacing: 0.5 }]}>
                   {counterText}
                 </Text>
               </View>
               <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.45)', width: '100%', position: 'absolute', bottom: 0 }}>
                 <View
-                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#FFFFFF', borderRadius: theme.borderRadius.full }}
+                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#2A1E5C', borderRadius: theme.borderRadius.full }}
                 />
               </View>
             </View>

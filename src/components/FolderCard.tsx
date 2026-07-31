@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...theme.typography.body,
-    fontWeight: '600',
+    fontWeight: '400',
     color: '#2A1E5C',
     textAlign: 'center',
   },
