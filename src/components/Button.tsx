@@ -78,7 +78,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
       {isPrimary && (
         <LinearGradient
           colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-          style={StyleSheet.absoluteFill}
+          style={[StyleSheet.absoluteFill, { borderRadius: theme.borderRadius.full }]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
         />
