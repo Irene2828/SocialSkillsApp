@@ -34,10 +34,10 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = 
   return (
     <View style={styles.container} pointerEvents="none">
       <LinearGradient
-        colors={['#14D2A4', '#00CED1', '#0EA5E9']}
+        colors={['#0EA5E9', '#00CED1', '#14D2A4']}
         style={StyleSheet.absoluteFill}
-        start={{ x: 0.1, y: 0 }}
-        end={{ x: 0.9, y: 1 }}
+        start={{ x: 0.1, y: 1 }}
+        end={{ x: 0.9, y: 0 }}
       />
       <Image
         source={require('../../assets/space_bg.png')}
