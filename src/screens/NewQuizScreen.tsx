@@ -77,9 +77,7 @@ export const NewQuizScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
-  const IQ_CATEGORIES: QuizCategory[] = [
-    { id: 'iq_word_problems', title: 'Word Problems', description: 'Story-style math', icon: 'text-outline', isCustom: false },
-  ];
+  const IQ_CATEGORIES: QuizCategory[] = [];
 
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
@@ -795,29 +793,6 @@ export const NewQuizScreen = () => {
               </View>
             ))}
 
-            {/* Add Sub-Folder placeholder */}
-            <View style={[styles.bentoItem, { width: cardWidth }]}>
-              <Pressable onPress={() => setShowFolderModal(true)}>
-                <Card style={{ 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  padding: theme.spacing.md,
-                  height: 158,
-                  borderStyle: 'dashed',
-                  borderWidth: 2,
-                  borderColor: theme.colors.stroke,
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                  opacity: 0.8
-                }}>
-                  <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-                    <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
-                  </View>
-                  <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
-                    <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
-                  </View>
-                </Card>
-              </Pressable>
-            </View>
           </View>
 
           {/* CTA for Math Folder */}
@@ -908,29 +883,6 @@ export const NewQuizScreen = () => {
               </View>
             ))}
             
-            {/* Add Folder placeholder */}
-            <View style={[styles.bentoItem, { width: cardWidth }]}>
-              <Pressable onPress={() => setShowFolderModal(true)}>
-                <Card style={{ 
-                  alignItems: 'center', 
-                  justifyContent: 'center', 
-                  padding: theme.spacing.md,
-                  height: 158,
-                  borderStyle: 'dashed',
-                  borderWidth: 2,
-                  borderColor: theme.colors.stroke,
-                  backgroundColor: 'rgba(255, 255, 255, 0.4)',
-                  opacity: 0.8
-                }}>
-                  <View style={{ marginTop: 12, marginBottom: 4, width: 44, height: 44, justifyContent: 'center', alignItems: 'center' }}>
-                    <Ionicons name="add" size={32} color={isRocket ? '#FFFFFF' : '#7DD3FC'} />
-                  </View>
-                  <View style={{ alignItems: 'center', width: '100%', minHeight: 56, justifyContent: 'flex-start' }}>
-                    <Text style={{ ...theme.typography.body, fontWeight: '600', textAlign: 'center', color: theme.colors.secondaryText }}>Add Folder</Text>
-                  </View>
-                </Card>
-              </Pressable>
-            </View>
           </View>
 
           <View style={styles.createAiButtonContainer}>
@@ -1844,7 +1796,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingTop: 24,
+    paddingTop: 0,
     paddingBottom: 160,
   },
   quickStartButton: {

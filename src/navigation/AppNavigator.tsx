@@ -84,10 +84,10 @@ const AppTabs = () => {
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarBackground: () => (
-          <View style={{ flex: 1, backgroundColor: '#05101F' }} />
+          <View style={{ flex: 1, backgroundColor: '#08182B' }} />
         ),
         tabBarStyle: {
-          backgroundColor: '#05101F',
+          backgroundColor: '#08182B',
           borderTopWidth: 0,
           borderTopColor: 'transparent',
           elevation: 0,

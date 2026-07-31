@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     maxWidth: 700,
     alignSelf: 'center',
     paddingHorizontal: 10,
-    paddingTop: theme.spacing.xs,
+    paddingTop: 0,
     paddingBottom: 0,
   },
 });

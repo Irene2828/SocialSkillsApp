@@ -14,8 +14,8 @@ export const Card: React.FC<ViewProps> = ({ children, style, ...props }) => {
   };
 
   const combinedStyle = {
-    ...flattenedStyle,
     ...glassStyle,
+    ...flattenedStyle,
   };
 
   return (

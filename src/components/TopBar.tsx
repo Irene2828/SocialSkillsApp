@@ -18,9 +18,10 @@ interface TopBarProps {
   hideTitle?: boolean;
   showSettingsAndRewards?: boolean;
   hideBorder?: boolean;
+  compact?: boolean;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact }) => {
   const navigation = useNavigation<any>();
   const { coinBalance } = useRewards();
   const [showSettings, setShowSettings] = useState(false);
@@ -40,6 +41,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
     <>
       <View style={[
         styles.container, 
+        compact && styles.compactContainer,
         { position: 'relative' },
         !hideBorder && {
           borderBottomWidth: 1,
@@ -106,14 +108,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 0,
-    height: 58,
+    paddingTop: 8,
+    paddingBottom: 4,
     width: '100%',
     zIndex: 100,
     marginBottom: theme.spacing.md,
   },
+  compactContainer: {
+    paddingTop: 6,
+    paddingBottom: 2,
+  },
   side: {
     minWidth: 40,
-    height: '100%',
+    alignSelf: 'stretch',
     justifyContent: 'center',
   },
   title: {

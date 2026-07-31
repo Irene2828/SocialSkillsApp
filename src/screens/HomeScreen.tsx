@@ -181,7 +181,7 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer}>
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]}>
-            <Animated.View style={{ position: 'absolute', top: -45, left: -15, width: 90, height: 90, zIndex: 10, transform: [{ translateY: floatAnim }], alignItems: 'center' }}>
+            <Animated.View style={{ position: 'absolute', top: -95, left: -15, width: 90, height: 90, zIndex: 10, transform: [{ translateY: floatAnim }], alignItems: 'center' }}>
               <View style={{ 
                 position: 'absolute', 
                 bottom: 85, // Stops just at the top of his helmet

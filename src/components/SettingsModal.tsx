@@ -45,8 +45,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
     <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(2, 8, 18, 0.94)', zIndex: 9999, elevation: 9999, justifyContent: 'center', alignItems: 'center' }]}>
       <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       <View style={styles.modalCard}>
-        <View style={styles.header}>
-          <Text style={styles.headerTitle}>Settings</Text>
+        <View style={[styles.header, { justifyContent: 'flex-end' }]}>
           <Pressable onPress={onClose} style={styles.closeButton}>
             <Ionicons name="close" size={28} color={theme.colors.text} />
           </Pressable>

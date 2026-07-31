@@ -28,10 +28,8 @@ export const PuzzleMenuScreen = () => {
   return (
     <View style={styles.container}>
       <GlobalBackground />
-      <View style={{ paddingTop: insets.top }}>
-        <TopBar title="" onBack={() => navigation.goBack()} />
-      </View>
       <ScreenWrapper transparent>
+        <TopBar title="" onBack={() => navigation.goBack()} />
         <View style={styles.content}>
           <View style={[styles.cardsContainer, { flexDirection: isTablet ? 'row' : 'column', alignItems: 'center' }]}>
             <Pressable 

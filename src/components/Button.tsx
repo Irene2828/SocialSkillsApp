@@ -35,7 +35,7 @@ export const Button: React.FC<ButtonProps> = ({ title, variant = 'primary', styl
   const resolvedIconColor = iconColor || (isPrimary || (isOutline && isPressed) ? '#111827' : theme.colors.text);
 
   const content = (
-    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%', paddingHorizontal: 16 }}>
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
       <Text style={[styles.text, resolvedTextStyle, textStyle, { flexShrink: 1 }]} numberOfLines={1} adjustsFontSizeToFit>
         {title}
       </Text>
