@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -42,6 +43,14 @@ export const MyRewardsScreen = () => {
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
   const subTextColor = 'rgba(15, 26, 44, 0.55)';
+  
+  const insets = useSafeAreaInsets();
+  const { width } = Dimensions.get('window');
+  const isTablet = width >= 768;
+  const isSmallScreen = width < 380;
+  const footerPaddingBottom = Math.max(insets.bottom, isTablet ? 12 : 8);
+  const footerHeight = isTablet ? 64 + footerPaddingBottom : isSmallScreen ? 60 + footerPaddingBottom : 68 + Math.round(footerPaddingBottom * 1.2);
+  const footerPaddingTop = isTablet ? 5 : (isSmallScreen ? 4 : 5);
 
   const [showUndo, setShowUndo] = useState(false);
   const [undoState, setUndoState] = useState<{ type: 'delete' | 'fulfill' | 'delete-custom'; itemId: string } | null>(null);
@@ -489,22 +498,22 @@ export const MyRewardsScreen = () => {
         {navigation && (
           <>
             <View style={styles.footerSpacer} />
-            <View style={styles.customFooter}>
-              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-                <Ionicons name="document-text-outline" size={24} color="#0A2F35" />
-                <Text style={styles.footerTabText}>Quizes</Text>
+            <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
+              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
+                <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#0A2F35" />
+                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
               </Pressable>
-              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-                <Ionicons name="checkmark-done-circle-outline" size={24} color="#0A2F35" />
-                <Text style={styles.footerTabText}>Tasks</Text>
+              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
+                <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#0A2F35" />
+                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
               </Pressable>
-              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-                <Ionicons name="extension-puzzle-outline" size={24} color="#0A2F35" />
-                <Text style={styles.footerTabText}>Puzzles</Text>
+              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
+                <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#0A2F35" />
+                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
               </Pressable>
-              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-                <Ionicons name="color-palette-outline" size={24} color="#0A2F35" />
-                <Text style={styles.footerTabText}>Draw</Text>
+              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
+                <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#0A2F35" />
+                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
               </Pressable>
             </View>
           </>
@@ -1033,8 +1042,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00CED1',
     borderTopWidth: 1,
     borderTopColor: 'rgba(15, 26, 44, 0.15)',
-    marginHorizontal: -theme.spacing.xl,
-    marginBottom: -theme.spacing.xl,
+    width: '100%',
     paddingBottom: 12,
     alignItems: 'center',
     justifyContent: 'space-around',
