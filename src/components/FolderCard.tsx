@@ -80,7 +80,8 @@ const styles = StyleSheet.create({
   },
   pressable: {
     flex: 1,
-    padding: theme.spacing.md,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.md / 2,
     paddingBottom: theme.spacing.md / 2,
     alignItems: 'center',
     justifyContent: 'center',
