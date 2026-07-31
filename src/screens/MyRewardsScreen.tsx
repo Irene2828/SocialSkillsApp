@@ -369,7 +369,7 @@ export const MyRewardsScreen = () => {
                   
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#0F1A2C" />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#0A2F35" />
                     </View>
                     <Text style={styles.successRewardLabel} numberOfLines={1} adjustsFontSizeToFit>{redeemedReward.title}</Text>
                   </View>
@@ -490,19 +490,19 @@ export const MyRewardsScreen = () => {
             <View style={styles.footerSpacer} />
             <View style={styles.customFooter}>
               <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-                <Ionicons name="document-text-outline" size={24} color="#0F1A2C" />
+                <Ionicons name="document-text-outline" size={24} color="#0A2F35" />
                 <Text style={styles.footerTabText}>Quizes</Text>
               </Pressable>
               <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-                <Ionicons name="checkmark-done-circle-outline" size={24} color="#0F1A2C" />
+                <Ionicons name="checkmark-done-circle-outline" size={24} color="#0A2F35" />
                 <Text style={styles.footerTabText}>Tasks</Text>
               </Pressable>
               <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-                <Ionicons name="extension-puzzle-outline" size={24} color="#0F1A2C" />
+                <Ionicons name="extension-puzzle-outline" size={24} color="#0A2F35" />
                 <Text style={styles.footerTabText}>Puzzles</Text>
               </Pressable>
               <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-                <Ionicons name="color-palette-outline" size={24} color="#0F1A2C" />
+                <Ionicons name="color-palette-outline" size={24} color="#0A2F35" />
                 <Text style={styles.footerTabText}>Draw</Text>
               </Pressable>
             </View>
@@ -825,17 +825,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginLeft: 12,
     textTransform: 'capitalize',
   },
   successTitleNormal: {
     ...theme.typography.subheading,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   successTitleHighlighted: {
     ...theme.typography.subheading,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   underlinedWordContainer: {
     position: 'relative',
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 26,
     letterSpacing: 0,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     textAlign: 'center',
   },
   approveButton: {
@@ -893,7 +893,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   pinInput: {
     width: 120,
@@ -905,7 +905,7 @@ const styles = StyleSheet.create({
     letterSpacing: 8,
     backgroundColor: 'rgba(15, 26, 44, 0.05)',
     borderColor: 'rgba(15, 26, 44, 0.15)',
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   tabContainer: {
     flexDirection: 'row',
@@ -936,7 +936,7 @@ const styles = StyleSheet.create({
     color: 'rgba(15, 26, 44, 0.6)',
   },
   activeTabText: {
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   emptyText: {
     ...theme.typography.body,
@@ -1048,7 +1048,7 @@ const styles = StyleSheet.create({
   footerTabText: {
     fontFamily: FONTS.medium,
     fontSize: 12,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginTop: 2,
     textAlign: 'center',
   },

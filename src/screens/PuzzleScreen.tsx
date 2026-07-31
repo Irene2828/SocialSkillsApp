@@ -523,7 +523,7 @@ export const PuzzleScreen = () => {
                     </View>
                     <Text style={[
                       styles.cardName,
-                      isRocket && { color: '#0F1A2C' },
+                      isRocket && { color: '#0A2F35' },
                     ]} numberOfLines={2}>{puzzle.name}</Text>
                   </Animated.View>
                 </Pressable>
@@ -704,8 +704,8 @@ export const PuzzleScreen = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 1 }}
                       />
-                      <Ionicons name="extension-puzzle-outline" size={16} color="#0F1A2C" style={{ marginRight: 4 }} />
-                      <Text style={[styles.screenFolderTabText, { color: '#0F1A2C' }]} numberOfLines={1}>{selectedPuzzle?.name}</Text>
+                      <Ionicons name="extension-puzzle-outline" size={16} color="#0A2F35" style={{ marginRight: 4 }} />
+                      <Text style={[styles.screenFolderTabText, { color: '#0A2F35' }]} numberOfLines={1}>{selectedPuzzle?.name}</Text>
                     </View>
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -868,7 +868,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     ...theme.typography.body,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     textAlign: 'center',
     fontWeight: '600',
   },
@@ -1041,7 +1041,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   diffBtnTextSelected: {
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   createAiButtonContainer: {
     width: '100%',
@@ -1137,24 +1137,24 @@ const styles = StyleSheet.create({
     width: 120,
     height: 60,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(10, 47, 53, 0.15)',
     borderRadius: theme.borderRadius.sm,
     textAlign: 'center',
     ...theme.typography.heading,
     marginBottom: theme.spacing.md,
-    color: theme.colors.text,
-    backgroundColor: '#1B2C42',
+    color: '#0A2F35',
+    backgroundColor: 'rgba(10, 47, 53, 0.05)',
   },
   editInput: {
     width: '100%',
     height: 48,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(10, 47, 53, 0.15)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
-    color: theme.colors.text,
-    backgroundColor: '#1B2C42',
+    color: '#0A2F35',
+    backgroundColor: 'rgba(10, 47, 53, 0.05)',
   },
   modalOptionCard: {
     width: '100%',
@@ -1162,13 +1162,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: 52,
     padding: theme.spacing.md,
-    backgroundColor: '#1B2C42',
+    backgroundColor: 'rgba(10, 47, 53, 0.05)',
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(10, 47, 53, 0.15)',
   },
   modalOptionText: {
     ...theme.typography.body,
-    color: theme.colors.text,
+    color: '#0A2F35',
   },
 });

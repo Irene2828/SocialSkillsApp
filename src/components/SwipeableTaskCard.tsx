@@ -123,7 +123,7 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
               styles.checkbox,
               task.isCompleted && styles.checkboxChecked,
             ]}>
-              {task.isCompleted && <Ionicons name="checkmark" size={16} color="#0F172A" />}
+              {task.isCompleted && <Ionicons name="checkmark" size={16} color="#0A2F35" />}
             </View>
           </Pressable>
 
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   taskTitle: {
     fontFamily: FONTS.medium,
     fontSize: 16,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   taskTitleCompleted: {
     textDecorationLine: 'line-through',
@@ -290,6 +290,6 @@ const styles = StyleSheet.create({
   },
   receivedText: {
     ...theme.typography.tab,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
 });

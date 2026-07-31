@@ -17,7 +17,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
             onPress={onReset}
             style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, padding: 4 }}
           >
-            <Ionicons name="refresh-outline" size={20} color="#0F1A2C" style={{ opacity: 0.8 }} />
+            <Ionicons name="refresh-outline" size={20} color="#0A2F35" style={{ opacity: 0.8 }} />
           </Pressable>
         )}
         <View style={styles.content}>
@@ -26,7 +26,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
             <FontAwesome5 
               name="coins" 
               size={34} 
-              color="#0F1A2C" 
+              color="#0A2F35" 
               style={{ marginRight: 12, marginTop: 4 }}
             />
             <View style={{ flexDirection: 'row' }}>
@@ -35,7 +35,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   key={`num-${index}`}
                   style={[
                     styles.balanceNumber, 
-                    { color: '#0F1A2C' }
+                    { color: '#0A2F35' }
                   ]}
                 >
                   {char}
@@ -49,7 +49,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   style={[
                     styles.balanceLabel, 
                     { marginLeft: 0 },
-                    { color: '#0F1A2C' }
+                    { color: '#0A2F35' }
                   ]}
                 >
                   {char}
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: '#0F1A2C',
+    color: '#0A2F35',
     letterSpacing: 0,
     marginBottom: theme.spacing.xs,
   },
@@ -107,14 +107,14 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: 54,
     fontWeight: '500',
-    color: '#0F1A2C',
+    color: '#0A2F35',
     lineHeight: 60,
   },
   balanceLabel: {
     ...theme.typography.heading,
     fontFamily: FONTS.medium,
     fontSize: 24,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     fontWeight: '500',
     marginLeft: theme.spacing.sm,
   },

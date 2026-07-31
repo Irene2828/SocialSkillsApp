@@ -22,7 +22,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
   return (
     <View style={[styles.card, !canAfford && styles.cardDimmed]}>
       <View style={styles.iconContainer}>
-        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color="#0F1A2C" />
+        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color="#0A2F35" />
       </View>
       <View style={styles.textContainer}>
         <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
@@ -34,7 +34,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             <FontAwesome5 
               name="coins" 
               size={14} 
-              color="#0F1A2C" 
+              color="#0A2F35" 
             />
             <View style={{ flexDirection: 'row', marginLeft: 4 }}>
               {reward.cost.toString().split('').map((char, index) => (
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: '#0F1A2C',
+    color: '#0A2F35',
     letterSpacing: 0,
     marginBottom: 4,
     textTransform: 'capitalize',
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   costText: {
     fontFamily: FONTS.semiBold,
     fontSize: 14,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   redeemButton: {
     minWidth: 80,

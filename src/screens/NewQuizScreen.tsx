@@ -2032,7 +2032,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   pinInput: {
     width: 120,
@@ -2043,7 +2043,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     ...theme.typography.heading,
     marginBottom: theme.spacing.md,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     backgroundColor: 'rgba(15, 26, 44, 0.05)',
   },
   levelCard: {
@@ -2057,7 +2057,7 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     ...theme.typography.subheading,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginBottom: theme.spacing.md,
   },
   photoIconContainer: {
@@ -2349,7 +2349,7 @@ const styles = StyleSheet.create({
   },
   modalOptionText: {
     ...theme.typography.body,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   modalInput: {
     width: '100%',
@@ -2360,7 +2360,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(15, 26, 44, 0.15)',
     ...theme.typography.body,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   section: {
     marginBottom: theme.spacing.xl,
@@ -2431,7 +2431,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.xl,
     textAlign: 'center',
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   rewardsModalInput: {
     width: '100%',
@@ -2439,7 +2439,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(15, 26, 44, 0.15)',
     borderRadius: theme.borderRadius.sm,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     backgroundColor: 'rgba(15, 26, 44, 0.05)',
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,

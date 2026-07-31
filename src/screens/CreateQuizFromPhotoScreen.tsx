@@ -205,7 +205,7 @@ export const CreateQuizFromPhotoScreen = () => {
     <View style={styles.idleContainer}>
       <Card style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="text-outline" size={24} color="#0F1A2C" style={{ marginRight: 8 }} />
+          <Ionicons name="text-outline" size={24} color="#0A2F35" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
         </View>
         <TextInput
@@ -233,7 +233,7 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
 
         <View style={[styles.sectionHeaderRow, { marginBottom: theme.spacing.sm }]}>
-          <Ionicons name="camera-outline" size={24} color="#0F1A2C" style={{ marginRight: 8 }} />
+          <Ionicons name="camera-outline" size={24} color="#0A2F35" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Photo</Text>
         </View>
         <View style={styles.photoActionRow}>
@@ -628,7 +628,7 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     ...theme.typography.subheading,
     fontSize: 18,
-    color: '#0F1A2C',
+    color: '#0A2F35',
   },
   textInput: {
     width: '100%',
@@ -638,7 +638,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     fontSize: 16,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     textAlignVertical: 'top',
     backgroundColor: 'rgba(15, 26, 44, 0.05)',
     marginBottom: theme.spacing.md,

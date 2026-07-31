@@ -37,7 +37,7 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const activeColor = '#0F1A2C';
+  const activeColor = '#0A2F35';
   const inactiveColor = 'rgba(15, 26, 44, 0.45)';
 
   return (

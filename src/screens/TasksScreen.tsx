@@ -309,14 +309,14 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: FONTS.semiBold,
     fontSize: 24,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginBottom: theme.spacing.lg,
     textAlign: 'center',
   },
   inputLabel: {
     fontFamily: FONTS.medium,
     fontSize: 14,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginBottom: theme.spacing.xs,
   },
   input: {
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(15, 26, 44, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     backgroundColor: 'rgba(15, 26, 44, 0.05)',
   },
   coinInputContainer: {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     fontSize: 16,
     padding: theme.spacing.md,
-    color: '#0F1A2C',
+    color: '#0A2F35',
     marginLeft: 8,
   },
   modalActions: {
