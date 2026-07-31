@@ -29,7 +29,12 @@ import { useMood, getMoodColors } from '../context/MoodContext';
 import { useNavigation } from '@react-navigation/native';
 
 export const MyRewardsScreen = () => {
-  const navigation = useNavigation<any>();
+  let navigation: any = null;
+  try {
+    navigation = useNavigation<any>();
+  } catch (e) {
+    // Fail-silent when rendered outside navigation context (e.g. DesignReviewScreen)
+  }
   const { coinBalance, deductCoins, rewards, unlockedRewards, addUnlockedReward, toggleRewardFulfilled, deleteReward, updateReward, addReward, deleteUnlockedReward, restoreUnlockedReward, restoreReward } = useRewards();
   const { isParentModeUnlocked } = useProgress();
   const { showModal, showToast } = useFeedback();
@@ -480,6 +485,29 @@ export const MyRewardsScreen = () => {
           )}
         </View>
 
+        {navigation && (
+          <>
+            <View style={styles.footerSpacer} />
+            <View style={styles.customFooter}>
+              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
+                <Ionicons name="document-text-outline" size={24} color="#0F1A2C" />
+                <Text style={styles.footerTabText}>Quizes</Text>
+              </Pressable>
+              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
+                <Ionicons name="checkmark-done-circle-outline" size={24} color="#0F1A2C" />
+                <Text style={styles.footerTabText}>Tasks</Text>
+              </Pressable>
+              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
+                <Ionicons name="extension-puzzle-outline" size={24} color="#0F1A2C" />
+                <Text style={styles.footerTabText}>Puzzles</Text>
+              </Pressable>
+              <Pressable style={styles.footerTab} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
+                <Ionicons name="color-palette-outline" size={24} color="#0F1A2C" />
+                <Text style={styles.footerTabText}>Draw</Text>
+              </Pressable>
+            </View>
+          </>
+        )}
       </ScrollView>
       {renderSuccessModal()}
       </ScreenWrapper>
@@ -715,7 +743,7 @@ export const MyRewardsScreen = () => {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 0,
-    paddingBottom: 160,
+    paddingBottom: 0,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
@@ -995,5 +1023,33 @@ const styles = StyleSheet.create({
     color: theme.colors.primary,
     fontSize: 14,
     fontWeight: '600',
+  },
+  footerSpacer: {
+    height: 40,
+  },
+  customFooter: {
+    flexDirection: 'row',
+    height: 72,
+    backgroundColor: '#00CED1',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(15, 26, 44, 0.15)',
+    marginHorizontal: -theme.spacing.xl,
+    marginBottom: -theme.spacing.xl,
+    paddingBottom: 12,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  footerTab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    paddingTop: 8,
+  },
+  footerTabText: {
+    fontFamily: FONTS.medium,
+    fontSize: 12,
+    color: '#0F1A2C',
+    marginTop: 2,
+    textAlign: 'center',
   },
 });
