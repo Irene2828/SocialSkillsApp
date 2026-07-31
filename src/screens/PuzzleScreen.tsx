@@ -518,8 +518,8 @@ export const PuzzleScreen = () => {
                   <Animated.View style={[
                     styles.card,
                     isRocket && {
-                      backgroundColor: 'rgba(56, 189, 248, 0.34)',
-                      borderColor: 'rgba(147, 197, 253, 0.30)',
+                      backgroundColor: 'rgba(8, 28, 54, 0.65)',
+                      borderColor: 'rgba(255, 255, 255, 0.15)',
                       borderWidth: 1.5,
                       shadowOpacity: 0,
                     }
@@ -835,7 +835,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     minHeight: 175,
-    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    backgroundColor: 'rgba(8, 28, 54, 0.65)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.lg,
@@ -843,7 +843,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     shadowOpacity: 0,
     elevation: 0,
   },

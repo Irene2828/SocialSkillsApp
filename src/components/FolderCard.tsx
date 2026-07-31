@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 158,
-    backgroundColor: 'rgba(56, 189, 248, 0.34)',
+    backgroundColor: 'rgba(8, 28, 54, 0.65)',
     borderRadius: theme.borderRadius.md,
     borderWidth: 2,
-    borderColor: 'rgba(147, 197, 253, 0.30)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     shadowOpacity: 0,
     elevation: 0,
     position: 'relative',

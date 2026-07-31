@@ -33,7 +33,7 @@ export const MyRewardsScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
-  const subTextColor = isDark ? 'rgba(255,255,255,0.7)' : theme.colors.secondaryText;
+  const subTextColor = 'rgba(255, 255, 255, 0.7)';
 
   const [showUndo, setShowUndo] = useState(false);
   const [undoState, setUndoState] = useState<{ type: 'delete' | 'fulfill' | 'delete-custom'; itemId: string } | null>(null);
@@ -768,9 +768,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    backgroundColor: 'rgba(8, 28, 54, 0.95)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.20)',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -880,10 +880,10 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     marginBottom: 8, // Cut spacing by 50% (was theme.spacing.md which is 16)
-    backgroundColor: 'rgba(255, 255, 255, 0.055)',
+    backgroundColor: 'rgba(8, 28, 54, 0.65)',
     borderRadius: theme.borderRadius.sm,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
     padding: 0,
     marginHorizontal: 0,
     overflow: 'hidden',
@@ -895,8 +895,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTab: {
-    backgroundColor: 'rgba(255, 255, 255, 0.055)',
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    backgroundColor: 'rgba(8, 28, 54, 0.85)',
+    borderColor: 'rgba(255, 255, 255, 0.25)',
     borderWidth: 1,
   },
   tabText: {
@@ -923,9 +923,9 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'rgba(255, 255, 255, 0.075)',
+    backgroundColor: 'rgba(8, 28, 54, 0.95)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(255, 255, 255, 0.20)',
   },
   editInput: {
     width: '100%',
