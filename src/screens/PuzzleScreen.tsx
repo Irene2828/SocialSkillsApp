@@ -613,7 +613,7 @@ export const PuzzleScreen = () => {
                     setShowRenameModal(true);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
 
@@ -636,7 +636,7 @@ export const PuzzleScreen = () => {
                     }
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>

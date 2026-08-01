@@ -1415,7 +1415,7 @@ export const NewQuizScreen = () => {
                     setShowPhotoMenu(true);
                   }}
                 >
-                  <Ionicons name="camera-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="camera-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Generate from Screenshot</Text>
                 </Pressable>
 
@@ -1426,16 +1426,9 @@ export const NewQuizScreen = () => {
                     setShowAiMenu(true);
                   }}
                 >
-                  <Ionicons name="color-wand-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="color-wand-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Generate from Prompt</Text>
                 </Pressable>
-                
-                <Button 
-                  title="Cancel" 
-                  variant="secondary"
-                  onPress={() => setShowGenerateMenu(false)} 
-                  style={{ width: '100%', marginTop: 12 }}
-                />
               </View>
             </Pressable>
           </View>
@@ -1457,7 +1450,7 @@ export const NewQuizScreen = () => {
                     handleOpenRename(actionMenuCategory);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
 
@@ -1468,7 +1461,7 @@ export const NewQuizScreen = () => {
                     setShowMoveFolderMenu(true);
                   }}
                 >
-                  <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="folder-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Move to Folder</Text>
                 </Pressable>
 
@@ -1481,7 +1474,7 @@ export const NewQuizScreen = () => {
                       setShowActionMenu(false);
                     }}
                   >
-                    <Ionicons name="log-out-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                    <Ionicons name="log-out-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                     <Text style={styles.modalOptionText}>Remove from Folder</Text>
                   </Pressable>
                 )}
@@ -1494,7 +1487,7 @@ export const NewQuizScreen = () => {
                     setShowDeletePin(true);
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>
@@ -1526,7 +1519,7 @@ export const NewQuizScreen = () => {
                     setShowRenameFolderModal(true);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
                 
@@ -1537,7 +1530,7 @@ export const NewQuizScreen = () => {
                     setShowMoveFolderMenu2(true);
                   }}
                 >
-                  <Ionicons name="folder-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="folder-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Move to Folder</Text>
                 </Pressable>
 
@@ -1548,7 +1541,7 @@ export const NewQuizScreen = () => {
                     removeFolder(actionMenuFolder?.id);
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>
