@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, useWindowDimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
@@ -84,12 +85,17 @@ const AppTabs = () => {
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
         tabBarBackground: () => (
-          <View style={{ flex: 1, backgroundColor: '#00CED1' }} />
+          <LinearGradient
+            colors={['rgba(255, 241, 242, 0.45)', 'rgba(243, 232, 255, 0.55)', 'rgba(224, 231, 255, 0.4)']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={{ flex: 1 }}
+          />
         ),
         tabBarStyle: {
-          backgroundColor: '#00CED1',
+          backgroundColor: 'transparent',
           borderTopWidth: 1,
-          borderTopColor: 'rgba(42, 30, 92, 0.15)',
+          borderTopColor: 'rgba(255, 255, 255, 0.45)',
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',

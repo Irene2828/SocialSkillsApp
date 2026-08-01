@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, useWindowDimensions, Image, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { theme, FONTS } from '../theme';
@@ -44,7 +45,14 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         styles.container, 
         compact && styles.compactContainer,
         noEdgeToEdge && styles.noEdgeToEdge,
+        { position: 'relative', overflow: 'hidden' },
       ]}>
+        <LinearGradient
+          colors={['rgba(255, 241, 242, 0.45)', 'rgba(243, 232, 255, 0.55)', 'rgba(224, 231, 255, 0.4)']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={StyleSheet.absoluteFill}
+        />
         {/* Center: Title (absolutely positioned for perfect centering) */}
         <View style={styles.titleContainer} pointerEvents="none">
           {!hideTitle && (
@@ -103,6 +111,8 @@ const styles = StyleSheet.create({
     marginHorizontal: -10,
     zIndex: 100,
     marginBottom: theme.spacing.sm,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.45)',
   },
   compactContainer: {
     paddingTop: 6,
@@ -110,6 +120,7 @@ const styles = StyleSheet.create({
   },
   noEdgeToEdge: {
     marginHorizontal: 0,
+    borderBottomWidth: 0,
   },
   side: {
     minWidth: 40,
