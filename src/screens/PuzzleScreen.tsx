@@ -695,7 +695,7 @@ export const PuzzleScreen = () => {
           <ScreenWrapper transparent>
             {!isSolved ? (
               <>
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 24, marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
                   <View style={{ flex: 1, alignItems: 'flex-start' }}>
                     <Pressable 
                       onPress={() => setSelectedPuzzle(null)}

@@ -431,6 +431,9 @@ export const MyRewardsScreen = () => {
               )}
             </View>
           </Pressable>
+
+          <View style={{ width: 1.5, height: '45%', backgroundColor: 'rgba(42, 30, 92, 0.16)', alignSelf: 'center' }} />
+
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('unlocked')}
@@ -918,7 +921,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     flexDirection: 'row',
-    marginBottom: 8, // Cut spacing by 50% (was theme.spacing.md which is 16)
+    marginBottom: 20,
     padding: 0,
     marginHorizontal: 0,
     overflow: 'hidden',

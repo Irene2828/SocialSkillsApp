@@ -61,7 +61,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color="#FFFFFF" />
+              <Ionicons name="home-outline" size={24} color={isRocket ? '#FFFFFF' : '#2A1E5C'} />
             </Pressable>
           ) : null}
         </View>
@@ -69,7 +69,18 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         {/* Right Side: rightComponent OR Coins button */}
         <View style={[styles.side, { alignItems: 'center', justifyContent: 'center' }]}>
           {rightComponent ? rightComponent : showSettingsAndRewards ? (
-            <Pressable onPress={() => navigation.navigate('MyRewards' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Pressable 
+              onPress={() => navigation.navigate('MyRewards' as never)} 
+              style={{ 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.45)',
+                borderRadius: 20,
+                paddingHorizontal: 10,
+                paddingVertical: 4,
+              }}
+            >
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={[styles.coinText, { color: '#FFFFFF', marginRight: 2 }]}>+</Text>
@@ -81,9 +92,20 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={16} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#FFFFFF' }]}>Redeem</Text>
+              <Text 
+                style={{ 
+                  fontFamily: FONTS.medium,
+                  fontSize: isTablet ? 14 : 12,
+                  lineHeight: isTablet ? 18 : 15,
+                  color: '#FFFFFF',
+                  marginTop: -2,
+                  textAlign: 'center'
+                }}
+              >
+                Redeem
+              </Text>
             </Pressable>
           ) : null}
         </View>
@@ -142,14 +164,7 @@ const styles = StyleSheet.create({
   coinBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowOpacity: 0,
-    elevation: 0,
+    marginBottom: 2,
   },
   coinText: {
     fontFamily: FONTS.semiBold,

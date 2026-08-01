@@ -221,7 +221,19 @@ export const DrawingBoardScreen = () => {
       </View>
       ) : (
         <Pressable 
-          style={[styles.absoluteBackButton, { top: insets.top + 16, left: 'auto', right: 16 }, isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }]} 
+          style={[
+            styles.absoluteBackButton, 
+            { 
+              top: insets.top + 16, 
+              left: 'auto', 
+              right: 16,
+              shadowOpacity: 0,
+              elevation: 0,
+              borderWidth: 0.8,
+              borderColor: '#00CED1',
+            }, 
+            isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }
+          ]} 
           onPress={() => setIsToolbarVisible(true)}
         >
           <Ionicons name="eye-outline" size={24} color="#00CED1" />
@@ -365,6 +377,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '600',
+  },
+  activeToolBtn: {
+    backgroundColor: 'rgba(0,0,0,0.08)',
+  },
+  colorInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+  },
+  customColorBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0,
   }
 });
 

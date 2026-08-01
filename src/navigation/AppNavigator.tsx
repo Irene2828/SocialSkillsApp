@@ -39,7 +39,7 @@ const AppTabs = () => {
   const isRocket = mood === 'rocket';
 
   const activeColor = '#FFFFFF';
-  const inactiveColor = 'rgba(255, 255, 255, 0.45)';
+  const inactiveColor = '#FFFFFF';
 
   return (
     <Tab.Navigator
@@ -59,7 +59,18 @@ const AppTabs = () => {
             iconName = 'color-palette-outline';
           }
 
-          return <Ionicons name={iconName} size={iconSize} color={color} />;
+          return (
+            <View style={{
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.24)' : 'transparent',
+              paddingHorizontal: 18,
+              paddingVertical: 3,
+              borderRadius: 16,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Ionicons name={iconName} size={iconSize} color={color} />
+            </View>
+          );
         },
         tabBarLabel: ({ focused, color }) => {
           let label = '';
