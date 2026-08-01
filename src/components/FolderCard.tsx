@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../theme';
 
@@ -24,7 +25,14 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
   };
 
   return (
-    <View ref={containerRef} onLayout={handleLayout} style={[styles.container, isDragTarget && styles.dragTarget]}>
+    <LinearGradient
+      ref={containerRef as any}
+      onLayout={handleLayout}
+      colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={[styles.container, isDragTarget && styles.dragTarget]}
+    >
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
@@ -57,7 +65,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
           </Pressable>
         </View>
       )}
-    </View>
+    </LinearGradient>
   );
 };
 
@@ -65,7 +73,6 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 158,
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
     borderRadius: theme.borderRadius.md,
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.4)',

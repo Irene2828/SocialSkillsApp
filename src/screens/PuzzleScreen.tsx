@@ -466,6 +466,12 @@ export const PuzzleScreen = () => {
             />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
               <Pressable style={[styles.folderCard, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('animals')}>
+                <LinearGradient
+                  colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={[StyleSheet.absoluteFill, { borderRadius: theme.borderRadius.md }]}
+                />
                 <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
                   <Text style={{ fontSize: 40 }}>🐼</Text>
                 </View>
@@ -473,6 +479,12 @@ export const PuzzleScreen = () => {
               </Pressable>
 
               <Pressable style={[styles.folderCard, { width: cardWidth, marginBottom: theme.spacing.md }]} onPress={() => setActiveFolderId('cities')}>
+                <LinearGradient
+                  colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={[StyleSheet.absoluteFill, { borderRadius: theme.borderRadius.md }]}
+                />
                 <View style={[styles.cardIconContainer, { backgroundColor: '#FFEDD5' }]}>
                   <Text style={{ fontSize: 40 }}>🏙️</Text>
                 </View>
@@ -508,15 +520,20 @@ export const PuzzleScreen = () => {
             renderItem={({ item: puzzle }) => (
               <View style={{ width: cardWidth, position: 'relative' }}>
                 <Pressable onPress={() => startPuzzle(puzzle)}>
-                  <Animated.View style={[
+                   <Animated.View style={[
                     styles.card,
                     isRocket && {
-                      backgroundColor: 'rgba(255, 255, 255, 0.65)',
                       borderColor: 'rgba(255, 255, 255, 0.4)',
                       borderWidth: 1.5,
                       shadowOpacity: 0,
                     }
                   ]}>
+                    <LinearGradient
+                      colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={[StyleSheet.absoluteFill, { borderRadius: theme.borderRadius.md }]}
+                    />
                     <View style={[styles.cardIconContainer, { overflow: 'hidden' }]}>
                       <Image source={puzzle.image} style={{ width: '100%', height: '100%' }} resizeMode="cover" />
                     </View>
@@ -827,7 +844,6 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     height: 158,
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.md,
@@ -842,7 +858,6 @@ const styles = StyleSheet.create({
   folderCard: {
     width: '100%',
     height: 158,
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
     borderRadius: theme.borderRadius.md,
     paddingHorizontal: theme.spacing.md,
     paddingTop: theme.spacing.md / 2,

@@ -1,44 +1,34 @@
 import React from 'react';
-import { View, StyleSheet, ViewProps } from 'react-native';
+import { StyleSheet, ViewProps } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../theme';
 
 export const Card: React.FC<ViewProps> = ({ children, style, ...props }) => {
   const flattenedStyle = StyleSheet.flatten(style) || {};
+  const { backgroundColor, ...otherStyles } = flattenedStyle;
 
-  const glassStyle = {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+  const combinedStyle = {
+    borderRadius: theme.borderRadius.md,
     borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.05,
     shadowRadius: 16,
     elevation: 2,
-  };
-
-  const combinedStyle = {
-    ...glassStyle,
-    ...flattenedStyle,
+    ...otherStyles,
   };
 
   return (
-    <View style={[styles.card, combinedStyle]} {...props}>
+    <LinearGradient
+      colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={combinedStyle}
+      {...props}
+    >
       {children}
-    </View>
+    </LinearGradient>
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderRadius: theme.borderRadius.md,
-    padding: theme.spacing.xl,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.05,
-    shadowRadius: 16,
-    elevation: 2,
-  },
-});
