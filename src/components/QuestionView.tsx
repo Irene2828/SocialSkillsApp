@@ -452,7 +452,7 @@ const styles = StyleSheet.create({
   unifiedCard: {
     width: '100%',
     backgroundColor: 'transparent',
-    paddingHorizontal: 0,
+    paddingHorizontal: 24, // theme.spacing.lg
     paddingVertical: 0,
     borderRadius: 0,
     borderWidth: 0,

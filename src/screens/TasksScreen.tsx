@@ -207,6 +207,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
   },
   sectionTitle: {
     fontFamily: FONTS.semiBold,
@@ -271,6 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 60,
+    paddingHorizontal: theme.spacing.lg,
   },
   emptyTitle: {
     fontFamily: FONTS.semiBold,

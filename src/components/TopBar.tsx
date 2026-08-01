@@ -119,10 +119,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 22,
+    paddingHorizontal: 24, // theme.spacing.lg
     paddingTop: 12,
     paddingBottom: 12,
-    marginHorizontal: -10,
+    marginHorizontal: 0, // removed hack
     zIndex: 100,
     marginBottom: 20,
     borderBottomWidth: 1,

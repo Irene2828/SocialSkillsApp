@@ -418,6 +418,7 @@ export const MyRewardsScreen = () => {
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
+        <View style={{ paddingHorizontal: theme.spacing.lg }}>
         <Card style={styles.tabContainer}>
           <Pressable 
             style={styles.tab} 
@@ -447,6 +448,7 @@ export const MyRewardsScreen = () => {
             </View>
           </Pressable>
         </Card>
+        </View>
 
         <View style={styles.bentoSection}>
           {activeTab === 'available' ? (
@@ -759,6 +761,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
+    paddingHorizontal: theme.spacing.lg,
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,
@@ -784,7 +787,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   bentoSection: {
-    // Removed padding to allow full width on small screens
+    paddingHorizontal: theme.spacing.lg,
   },
   helpButton: {
     width: 32,

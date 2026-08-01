@@ -57,7 +57,8 @@ export const NewQuizScreen = () => {
   const isTablet = width >= 768;
   const numColumns = 2;
   const contentWidth = Math.min(width, 700);
-  const cardWidth = Math.floor((contentWidth - 32 - (16 * (numColumns - 1))) / numColumns);
+  const paddingH = 24; // theme.spacing.lg
+  const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();
   const { quizzesTakenToday, dailyLimit, recordQuizCompletion, childName, quizOffsets, setQuizOffset } = useProgress();
@@ -995,7 +996,6 @@ export const NewQuizScreen = () => {
             title={categoryName || ''}
             onBack={handleBackToHome}
             showSettingsAndRewards={true}
-            compact={true}
           />
 
           <View style={styles.progressSection}>
@@ -1816,6 +1816,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    paddingHorizontal: theme.spacing.lg,
   },
   bentoItem: {
     width: '100%',
@@ -1824,6 +1825,7 @@ const styles = StyleSheet.create({
   emptyAiContainer: {
     alignItems: 'center',
     paddingTop: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.lg,
   },
   emptyAiText: {
     ...theme.typography.subheading,
@@ -1932,7 +1934,7 @@ const styles = StyleSheet.create({
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
   },
   progressSection: {
-    paddingHorizontal: 0,
+    paddingHorizontal: theme.spacing.lg,
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,
   },
@@ -2053,6 +2055,11 @@ const styles = StyleSheet.create({
     color: '#064E3B',
     marginBottom: theme.spacing.md,
   },
+  progressBarContainer: {
+    marginVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+  },
+
   photoIconContainer: {
     marginBottom: theme.spacing.md,
     width: 60,

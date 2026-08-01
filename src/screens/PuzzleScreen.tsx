@@ -268,7 +268,8 @@ export const PuzzleScreen = () => {
   const isTablet = screenWidth >= 768;
   const numColumns = 2;
   const contentWidth = Math.min(screenWidth, 700);
-  const cardWidth = Math.floor((contentWidth - 32 - (16 * (numColumns - 1))) / numColumns);
+  const paddingH = 24; // theme.spacing.lg
+  const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = screenWidth < 380;
   const boardSize = Math.min(screenWidth - 48, 400);
 
@@ -460,13 +461,14 @@ export const PuzzleScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         {!activeFolderId ? (
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <>
             <TopBar
               title="Puzzles"
               showSettingsAndRewards={true}
             />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
-              <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('animals')}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: theme.spacing.lg }]}>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
+                <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('animals')}>
                 <Card style={styles.folderCard}>
                   <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
                     <Text style={{ fontSize: 40 }}>🐼</Text>
@@ -493,19 +495,19 @@ export const PuzzleScreen = () => {
                 onPress={() => setShowAiMenu(true)}
               />
             </View>
-          </ScrollView>
+            </ScrollView>
+          </>
         ) : (
-          <FlatList
-            ListHeaderComponent={(
-              <TopBar
-                title={activeFolderId === 'animals' ? 'Cute Animals' : 'Cities'}
-                showSettingsAndRewards={true}
-                onBack={() => setActiveFolderId(null)}
-              />
-            )}
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContent}
-            data={allPuzzles}
+          <>
+            <TopBar
+              title={activeFolderId === 'animals' ? 'Cute Animals' : 'Cities'}
+              showSettingsAndRewards={true}
+              onBack={() => setActiveFolderId(null)}
+            />
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={[styles.scrollContent, { paddingHorizontal: theme.spacing.lg }]}
+              data={allPuzzles}
             keyExtractor={(item) => item.id}
             key={numColumns}
             numColumns={numColumns}
@@ -555,6 +557,7 @@ export const PuzzleScreen = () => {
               </View>
             )}
           />
+          </>
         )}
       </ScreenWrapper>
 

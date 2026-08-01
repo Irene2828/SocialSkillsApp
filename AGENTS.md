@@ -105,3 +105,18 @@ Whenever generating or modifying mobile UI:
 
 Assume that reducing unnecessary visual weight generally improves perceived quality on mobile devices.
 
+# Systemic Fix Rule
+
+Never patch only the currently visible route, screen, or viewport when a shared component, token, layout primitive, or responsive rule may be responsible.
+
+Before applying any visual or layout fix, the agent must:
+
+1. **Search for all usages** of the affected component, token, or style before editing anything.
+2. **Identify the root cause** — is it a shared component, layout wrapper, design token, breakpoint rule, or genuinely screen-specific?
+3. **Default to shared.** Only classify as screen-specific after proving it is not shared.
+4. **Fix at the shared level**, not at the page or screen level.
+5. **Preserve intentional exceptions.** If a screen deliberately differs, document why and leave it intact.
+6. **Verify every affected surface** — every route or screen that renders the affected component, not just the one currently visible.
+7. **Report what was checked** — list the surfaces verified, the widths or devices tested, and the specific observations made.
+
+If the problem genuinely affects only one route or screen, document why before applying a screen-specific fix.
