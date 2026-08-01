@@ -211,7 +211,8 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   title: {
-    ...theme.typography.label,
+    ...theme.typography.body,
+    fontWeight: '400',
     color: theme.colors.text,
     textAlign: 'center',
   },

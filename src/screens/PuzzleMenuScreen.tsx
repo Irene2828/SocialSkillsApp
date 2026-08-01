@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardTitle: {
-    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 20,
     marginTop: 8,
     textAlign: 'center',
   },

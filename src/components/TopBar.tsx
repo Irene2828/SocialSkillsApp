@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 22,
     paddingTop: 12,
-    paddingBottom: 24,
+    paddingBottom: 12,
     marginHorizontal: -10,
     zIndex: 100,
     marginBottom: 20,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   compactContainer: {
     paddingTop: 6,
-    paddingBottom: 4,
+    paddingBottom: 2,
     marginBottom: theme.spacing.sm,
   },
   noEdgeToEdge: {
