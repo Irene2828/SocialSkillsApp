@@ -2013,14 +2013,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.md,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowOpacity: 0,
-    elevation: 0,
   },
   pinContainer: {
     width: '100%',
@@ -2050,10 +2044,6 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 500,
     padding: theme.spacing.xl,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
   },
   levelTitle: {
     ...theme.typography.subheading,
@@ -2088,7 +2078,7 @@ const styles = StyleSheet.create({
   supportedText: {
     ...theme.typography.caption,
     marginTop: theme.spacing.xs,
-    color: theme.colors.secondaryText,
+    color: 'rgba(42, 30, 92, 0.5)',
     textAlign: 'center',
   },
   uploadCard: {
@@ -2096,12 +2086,6 @@ const styles = StyleSheet.create({
     maxWidth: 500,
     padding: theme.spacing.xl,
     alignItems: 'center',
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: theme.borderRadius.md,
-    shadowOpacity: 0,
-    elevation: 0,
   },
   levelQuestionCount: {
     ...theme.typography.button,

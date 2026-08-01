@@ -130,19 +130,20 @@ export const TasksScreen = () => {
               value={newTaskTitle}
               onChangeText={setNewTaskTitle}
               placeholder="e.g., Clean your room"
-              placeholderTextColor="rgba(255,255,255,0.44)"
+              placeholderTextColor="rgba(42, 30, 92, 0.44)"
               autoFocus
             />
 
             <Text style={[styles.inputLabel, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
             <View style={styles.coinInputContainer}>
-              <FontAwesome5 name="coins" size={16} color="#38BDF8" />
+              <FontAwesome5 name="coins" size={16} color="#2A1E5C" />
               <TextInput
                 style={styles.coinInput}
                 value={newTaskCoins}
                 onChangeText={setNewTaskCoins}
                 keyboardType="number-pad"
                 maxLength={4}
+                placeholderTextColor="rgba(42, 30, 92, 0.44)"
               />
             </View>
 
@@ -298,13 +299,7 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '100%',
     maxWidth: 400,
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderRadius: theme.borderRadius.md,
     padding: theme.spacing.lg,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowOpacity: 0,
-    elevation: 0,
   },
   modalTitle: {
     fontFamily: FONTS.semiBold,

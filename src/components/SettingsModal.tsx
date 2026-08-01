@@ -100,13 +100,7 @@ const styles = StyleSheet.create({
   modalCard: {
     width: '90%',
     maxWidth: 500,
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderRadius: theme.borderRadius.md,
     maxHeight: '85%',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowOpacity: 0,
-    elevation: 0,
     overflow: 'hidden',
   },
   header: {
