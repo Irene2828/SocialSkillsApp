@@ -503,19 +503,19 @@ export const MyRewardsScreen = () => {
             <View style={styles.footerSpacer} />
             <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
               <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-                <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#2A1E5C" />
+                <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
                 <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
               </Pressable>
               <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-                <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#2A1E5C" />
+                <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
                 <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
               </Pressable>
               <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-                <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#2A1E5C" />
+                <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
                 <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
               </Pressable>
               <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-                <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#2A1E5C" />
+                <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
                 <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
               </Pressable>
             </View>
@@ -1040,7 +1040,7 @@ const styles = StyleSheet.create({
     height: 72,
     backgroundColor: '#00CED1',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(42, 30, 92, 0.15)',
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
     width: '100%',
     paddingBottom: 12,
     alignItems: 'center',
@@ -1055,7 +1055,7 @@ const styles = StyleSheet.create({
   footerTabText: {
     fontFamily: FONTS.medium,
     fontSize: 12,
-    color: '#2A1E5C',
+    color: '#FFFFFF',
     marginTop: 2,
     textAlign: 'center',
   },
