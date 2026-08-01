@@ -384,18 +384,7 @@ export const CreateQuizFromPhotoScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <TopBar 
-            title="Create Quiz" 
-            onBack={() => navigation.goBack()}
-            showSettingsAndRewards={false}
-          />
-          {screenState !== 'generating' && screenState !== 'success' && (
-            <View style={styles.headerSubtitleContainer}>
-              <Text style={styles.headerSubtitle}>
-                Choose text or photo. AI will build the quiz.
-              </Text>
-            </View>
-          )}
+
           {screenState === 'idle' && renderIdle()}
           {screenState === 'imageSelected' && renderImageSelected()}
           {screenState === 'generating' && renderGenerating()}
@@ -428,10 +417,6 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: theme.spacing.lg,
     alignItems: 'center',
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: theme.borderRadius.md,
   },
   iconContainer: {
     width: 120,
