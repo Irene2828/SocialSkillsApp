@@ -1,10 +1,10 @@
-// DM Sans — warm premium sans: friendly for kids, polished enough for an Apple-grade tool.
+// Fredoka for headings/labels, Nunito for body/captions.
 export const FONTS = {
-  regular: 'DMSans_400Regular',
-  regularItalic: 'DMSans_400Regular_Italic',
-  medium: 'DMSans_500Medium',
-  semiBold: 'DMSans_600SemiBold',
-  bold: 'DMSans_700Bold',
+  regular: 'Nunito_400Regular',
+  regularItalic: 'Nunito_400Regular_Italic',
+  medium: 'Fredoka_500Medium',
+  semiBold: 'Fredoka_600SemiBold',
+  bold: 'Fredoka_700Bold',
 };
 
 export const theme = {
