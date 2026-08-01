@@ -84,14 +84,7 @@ const AppTabs = () => {
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
-        tabBarBackground: () => (
-          <LinearGradient
-            colors={['rgba(255, 241, 242, 0.45)', 'rgba(243, 232, 255, 0.55)', 'rgba(224, 231, 255, 0.4)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{ flex: 1 }}
-          />
-        ),
+
         tabBarStyle: {
           backgroundColor: 'transparent',
           borderTopWidth: 1,
