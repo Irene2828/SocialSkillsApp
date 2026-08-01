@@ -318,7 +318,7 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
               {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
               <View style={styles.feedbackTitleContainer}>
-                <Text style={[styles.feedbackTitle, isRocket && { color: '#2A1E5C' }]}>
+                <Text style={[styles.feedbackTitle, isRocket && { color: '#064E3B' }]}>
                   {displayIsCorrect 
                     ? "That's Correct!" 
                     : "Not quite, try again!"}
@@ -330,9 +330,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   <FontAwesome5 
                     name="coins" 
                     size={24} 
-                    color="#2A1E5C" 
+                    color="#064E3B" 
                   />
-                  <Text style={[styles.coinRewardText, isRocket && { color: '#2A1E5C' }]}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, isRocket && { color: '#064E3B' }]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     fontSize: 14,
     lineHeight: 20,
-    color: '#2A1E5C',
+    color: '#064E3B',
     marginBottom: theme.spacing.sm,
   },
   storyCallout: {
@@ -474,7 +474,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   factGrid: {
     flexDirection: 'row',
@@ -678,7 +678,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   dashedExplanationContainer: {
     width: '100%',
@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 18,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   coinRewardContainer: {
     flexDirection: 'row',
@@ -709,7 +709,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
     marginLeft: theme.spacing.xs,
   },
   continueButton: {

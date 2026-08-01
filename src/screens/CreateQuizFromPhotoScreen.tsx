@@ -205,7 +205,7 @@ export const CreateQuizFromPhotoScreen = () => {
     <View style={styles.idleContainer}>
       <View style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
-          <Ionicons name="text-outline" size={24} color="#2A1E5C" style={{ marginRight: 8 }} />
+          <Ionicons name="text-outline" size={24} color="#064E3B" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
         </View>
         <TextInput
@@ -233,7 +233,7 @@ export const CreateQuizFromPhotoScreen = () => {
         </View>
 
         <View style={[styles.sectionHeaderRow, { marginBottom: theme.spacing.sm }]}>
-          <Ionicons name="camera-outline" size={24} color="#2A1E5C" style={{ marginRight: 8 }} />
+          <Ionicons name="camera-outline" size={24} color="#064E3B" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Photo</Text>
         </View>
         <View style={styles.photoActionRow}>
@@ -386,7 +386,7 @@ export const CreateQuizFromPhotoScreen = () => {
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
           {/* X close button */}
           <Pressable onPress={() => navigation.goBack()} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#2A1E5C" />
+            <Ionicons name="close" size={28} color="#064E3B" />
           </Pressable>
 
           {screenState === 'idle' && renderIdle()}
@@ -623,7 +623,7 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     ...theme.typography.subheading,
     fontSize: 18,
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   textInput: {
     width: '100%',
@@ -633,7 +633,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     fontSize: 16,
-    color: '#2A1E5C',
+    color: '#064E3B',
     textAlignVertical: 'top',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
     marginBottom: theme.spacing.md,

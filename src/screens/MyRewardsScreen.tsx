@@ -378,7 +378,7 @@ export const MyRewardsScreen = () => {
                   
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#2A1E5C" />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#064E3B" />
                     </View>
                     <Text style={styles.successRewardLabel} numberOfLines={1} adjustsFontSizeToFit>{redeemedReward.title}</Text>
                   </View>
@@ -837,17 +837,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
     marginLeft: 12,
     textTransform: 'capitalize',
   },
   successTitleNormal: {
     ...theme.typography.subheading,
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   successTitleHighlighted: {
     ...theme.typography.subheading,
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   underlinedWordContainer: {
     position: 'relative',
@@ -888,7 +888,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 26,
     letterSpacing: 0,
-    color: '#2A1E5C',
+    color: '#064E3B',
     textAlign: 'center',
   },
   approveButton: {
@@ -905,7 +905,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   pinInput: {
     width: 120,
@@ -917,7 +917,7 @@ const styles = StyleSheet.create({
     letterSpacing: 8,
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
     borderColor: 'rgba(42, 30, 92, 0.15)',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   tabContainer: {
     flexDirection: 'row',
@@ -944,7 +944,7 @@ const styles = StyleSheet.create({
     color: 'rgba(42, 30, 92, 0.6)',
   },
   activeTabText: {
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   emptyText: {
     ...theme.typography.body,

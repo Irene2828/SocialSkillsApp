@@ -47,7 +47,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
   } : {};
 
   const glassText = state === 'default' ? {
-    color: '#2A1E5C',
+    color: '#064E3B',
   } : {};
 
   return (
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(224, 251, 252, 0.85)',
   },
   defaultText: {
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   correctButton: {
     backgroundColor: 'transparent',

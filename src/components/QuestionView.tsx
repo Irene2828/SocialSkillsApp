@@ -252,7 +252,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                 {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
 
                 <View style={styles.feedbackTitleContainer}>
-                  <Text style={[styles.feedbackTitle, isRocket && { color: '#2A1E5C' }]}>
+                  <Text style={[styles.feedbackTitle, isRocket && { color: '#064E3B' }]}>
                     {displayIsCorrect 
                       ? (whyQuestion ? "That's correct!" : (showCoinReward ? 'Correct!' : "That's correct!"))
                       : "Not quite, try again!"}
@@ -264,7 +264,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <FontAwesome5 
                       name="coins" 
                       size={20} 
-                      color="#2A1E5C" 
+                      color="#064E3B" 
                       style={{ marginRight: 8 }}
                     />
                     <View style={{ flexDirection: 'row' }}>
@@ -274,7 +274,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                           style={[
                             styles.coinRewardText,
                             { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                            { color: '#2A1E5C' }
+                            { color: '#064E3B' }
                           ]}
                         >
                           {char}
@@ -282,7 +282,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       ))}
                       <Text style={[
                         styles.coinRewardText,
-                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#2A1E5C' }
+                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#064E3B' }
                       ]}> Coin Earned!</Text>
                     </View>
                   </View>
@@ -292,7 +292,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   <>
                     {showExplanation && part1ShowCoin && (
                       <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
-                        <Text style={[styles.explanationText, isRocket && { color: '#2A1E5C' }]}>{question.explanation}</Text>
+                        <Text style={[styles.explanationText, isRocket && { color: '#064E3B' }]}>{question.explanation}</Text>
                       </View>
                     )}
                     <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
@@ -376,7 +376,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                   {/* {!part2DisplayIsCorrect && <WrongAnswerSpaceman />} */}
                   {/* {part2DisplayIsCorrect && <CorrectAnswerSpaceman />} */}
                   <View style={styles.feedbackTitleContainer}>
-                    <Text style={[styles.feedbackTitle, isRocket && { color: '#2A1E5C' }]}>
+                    <Text style={[styles.feedbackTitle, isRocket && { color: '#064E3B' }]}>
                       {part2DisplayIsCorrect 
                         ? 'Correct!'
                         : "Not quite, try again!"}
@@ -388,7 +388,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       <FontAwesome5 
                         name="coins" 
                         size={20} 
-                        color="#2A1E5C" 
+                        color="#064E3B" 
                         style={{ marginRight: 8 }}
                       />
                       <View style={{ flexDirection: 'row' }}>
@@ -398,7 +398,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                             style={[
                               styles.coinRewardText,
                               { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                              { color: '#2A1E5C' }
+                              { color: '#064E3B' }
                             ]}
                           >
                             {char}
@@ -406,7 +406,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                         ))}
                         <Text style={[
                           styles.coinRewardText,
-                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#2A1E5C' }
+                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#064E3B' }
                         ]}> Coin Earned!</Text>
                       </View>
                     </View>
@@ -414,7 +414,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
 
                   {part2DisplayIsCorrect && (
                     <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
-                      <Text style={[styles.explanationText, isRocket && { color: '#2A1E5C' }]}>{whyQuestion.explanation}</Text>
+                      <Text style={[styles.explanationText, isRocket && { color: '#064E3B' }]}>{whyQuestion.explanation}</Text>
                     </View>
                   )}
 
@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.12,
     textAlign: 'left',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   promptText: {
     ...theme.typography.body,
@@ -541,7 +541,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.18,
     textAlign: 'left',
-    color: '#2A1E5C',
+    color: '#064E3B',
     marginTop: theme.spacing.sm,
   },
   dashedExplanationContainer: {
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontSize: 18,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
@@ -597,7 +597,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
   },
   coinRewardContainer: {
     flexDirection: 'row',
@@ -611,7 +611,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#2A1E5C',
+    color: '#064E3B',
     marginLeft: theme.spacing.xs,
   },
   continueButton: {

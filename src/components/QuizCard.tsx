@@ -67,15 +67,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             isFeatured && styles.featuredIconContainer,
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#2A1E5C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#064E3B" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#2A1E5C" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#064E3B" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text 
-              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#2A1E5C' }]} 
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#064E3B' }]} 
               numberOfLines={2}
             >
               {category.title}
@@ -211,8 +211,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   title: {
-    ...theme.typography.body,
-    fontWeight: '400',
+    ...theme.typography.label,
     color: theme.colors.text,
     textAlign: 'center',
   },

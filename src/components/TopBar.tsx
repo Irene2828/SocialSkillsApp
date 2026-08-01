@@ -61,7 +61,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color={isRocket ? '#FFFFFF' : '#2A1E5C'} />
+              <Ionicons name="home-outline" size={24} color={isRocket ? '#FFFFFF' : '#064E3B'} />
             </Pressable>
           ) : null}
         </View>
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 22,
     paddingTop: 12,
-    paddingBottom: 12,
+    paddingBottom: 24,
     marginHorizontal: -10,
     zIndex: 100,
     marginBottom: 20,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   compactContainer: {
     paddingTop: 6,
-    paddingBottom: 2,
+    paddingBottom: 4,
     marginBottom: theme.spacing.sm,
   },
   noEdgeToEdge: {
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: 20,
     fontWeight: '500',
-    color: '#2A1E5C',
+    color: '#064E3B',
     textAlign: 'center',
     letterSpacing: 0.4,
   },

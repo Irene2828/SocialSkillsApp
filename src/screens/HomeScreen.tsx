@@ -159,7 +159,7 @@ export const HomeScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const titleColor = '#FFFFFF';
-  const subtitleColor = '#2A1E5C';
+  const subtitleColor = '#064E3B';
   const [showSettings, setShowSettings] = useState(false);
 
 
@@ -175,7 +175,7 @@ export const HomeScreen = () => {
           noEdgeToEdge
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
-              <Ionicons name="options-outline" size={24} color="#2A1E5C" />
+              <Ionicons name="options-outline" size={24} color="#064E3B" />
             </Pressable>
           }
         />
@@ -211,7 +211,7 @@ export const HomeScreen = () => {
               iconName="rocket-outline"
               onPress={() => navigation.navigate('AppTabs')}
               style={styles.actionButton}
-              textStyle={{ fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 17, letterSpacing: 0.8 }}
+              textStyle={{ fontFamily: FONTS.medium, fontWeight: '500', fontSize: 17, letterSpacing: 0.8 }}
             />
         </View>
       </ScreenWrapper>
