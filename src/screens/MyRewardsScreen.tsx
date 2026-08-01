@@ -22,7 +22,6 @@ import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useFeedback } from '../context/FeedbackContext';
 import { theme, FONTS } from '../theme';
-import { Card } from '../components/Card';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';

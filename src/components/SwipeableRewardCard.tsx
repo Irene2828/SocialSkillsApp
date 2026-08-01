@@ -183,8 +183,9 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
               )}
             </View>
           </View>
-        </Card>
-      </Animated.View>
+        </View>
+      </Card>
+    </Animated.View>
     </View>
   );
 };
