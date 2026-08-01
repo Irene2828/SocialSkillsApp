@@ -177,7 +177,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 />
               ) : (
                 <View style={styles.lockedButton}>
-                  <Ionicons name="lock-closed" size={14} color={theme.colors.secondaryText} style={{ marginRight: 4 }} />
+                  <Ionicons name="lock-closed" size={14} color="rgba(42, 30, 92, 0.6)" style={{ marginRight: 4 }} />
                   <Text style={styles.lockedButtonText}>Locked</Text>
                 </View>
               )}
@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardDimmed: {
-    opacity: 0.5,
+    opacity: 0.88,
   },
   leftContent: {
     flexDirection: 'row',
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   lockedButtonText: {
     ...theme.typography.button,
-    color: theme.colors.secondaryText,
+    color: 'rgba(42, 30, 92, 0.6)',
     fontSize: 14,
   },
 });

@@ -38,8 +38,8 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const activeColor = '#2A1E5C';
-  const inactiveColor = 'rgba(42, 30, 92, 0.45)';
+  const activeColor = '#FFFFFF';
+  const inactiveColor = 'rgba(255, 255, 255, 0.45)';
 
   return (
     <Tab.Navigator

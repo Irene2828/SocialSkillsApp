@@ -1178,20 +1178,19 @@ export const NewQuizScreen = () => {
         <Pressable style={{ flex: 1 }} onPress={() => setShowPhotoMenu(false)}>
           <View style={styles.modalOverlay}>
             <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-              <Text style={styles.levelTitle}>Create a Quiz from a Screenshot</Text>
-              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
+              <Text style={[styles.questionCaption, { color: 'rgba(42, 30, 92, 0.7)', marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
                 Turn a screenshot into an interactive social or math quiz automatically.
               </Text>
               
               {!selectedImageUri ? (
                 <View style={{ width: '100%', marginBottom: theme.spacing.lg }}>
                   <Pressable style={[styles.photoOutlineButton, { marginBottom: theme.spacing.md }]} onPress={handleTakePhoto}>
-                    <Ionicons name="camera-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: theme.spacing.sm }} />
+                    <Ionicons name="camera-outline" size={24} color="#2A1E5C" style={{ marginRight: theme.spacing.sm }} />
                     <Text style={styles.photoOutlineText}>Take Photo</Text>
                   </Pressable>
                   
                   <Pressable style={styles.photoOutlineButton} onPress={handlePickImage}>
-                    <Ionicons name="images-outline" size={24} color={theme.colors.secondaryText} style={{ marginRight: theme.spacing.sm }} />
+                    <Ionicons name="images-outline" size={24} color="#2A1E5C" style={{ marginRight: theme.spacing.sm }} />
                     <Text style={styles.photoOutlineText}>Upload from Gallery</Text>
                   </Pressable>
                 </View>
@@ -2225,16 +2224,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: theme.spacing.md,
     paddingHorizontal: theme.spacing.lg,
-    backgroundColor: 'rgba(255, 255, 255, 0.10)',
+    backgroundColor: 'rgba(42, 30, 92, 0.05)',
     borderRadius: theme.borderRadius.full,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.14)',
+    borderColor: 'rgba(42, 30, 92, 0.2)',
     borderStyle: 'dashed',
     width: '100%',
   },
   photoOutlineText: {
     ...theme.typography.button,
-    color: theme.colors.text,
+    color: '#2A1E5C',
   },
   modalTitle: {
     ...theme.typography.heading,

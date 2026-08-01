@@ -29,7 +29,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
-  const textColor = '#2A1E5C';
+  const textColor = '#FFFFFF';
   const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
@@ -61,7 +61,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             </Pressable>
           ) : showSettingsAndRewards ? (
             <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color="#2A1E5C" />
+              <Ionicons name="home-outline" size={24} color="#FFFFFF" />
             </Pressable>
           ) : null}
         </View>
@@ -72,18 +72,18 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             <Pressable onPress={() => navigation.navigate('MyRewards' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: '#2A1E5C', marginRight: 2 }]}>+</Text>
+                  <Text style={[styles.coinText, { color: '#FFFFFF', marginRight: 2 }]}>+</Text>
                   {String(coinBalance).split('').map((char, index) => {
                     return (
-                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#2A1E5C' }]}>
+                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#FFFFFF' }]}>
                         {char}
                       </Text>
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={16} color="#2A1E5C" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={16} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
-              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#2A1E5C' }]}>Redeem</Text>
+              <Text style={[styles.headerLabel, { fontSize: isTablet ? 14 : 12, color: '#FFFFFF' }]}>Redeem</Text>
             </Pressable>
           ) : null}
         </View>
