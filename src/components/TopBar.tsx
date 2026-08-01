@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#2A1E5C',
     textAlign: 'center',
-    letterSpacing: -0.3,
+    letterSpacing: 0.4,
   },
   titleContainer: {
     position: 'absolute',

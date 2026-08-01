@@ -35,7 +35,7 @@ export const theme = {
       fontWeight: '500' as const,
       color: '#FFFFFF',
       lineHeight: 32,
-      letterSpacing: 0,
+      letterSpacing: 0.3,
     },
 
     // Hero display text
@@ -45,7 +45,7 @@ export const theme = {
       fontWeight: '500' as const,
       color: '#FFFFFF',
       lineHeight: 52,
-      letterSpacing: 0,
+      letterSpacing: 0.4,
     },
 
     // Subheading text
@@ -55,7 +55,7 @@ export const theme = {
       fontWeight: '500' as const,
       color: '#FFFFFF',
       lineHeight: 28,
-      letterSpacing: 0,
+      letterSpacing: 0.3,
     },
 
 
@@ -67,7 +67,7 @@ export const theme = {
       fontWeight: '600' as const,
       color: 'rgba(255, 255, 255, 0.68)',
       lineHeight: 18,
-      letterSpacing: 0,
+      letterSpacing: 0.6,
       textTransform: 'uppercase' as const,
     },
 
@@ -88,7 +88,7 @@ export const theme = {
       fontWeight: '600' as const,
       color: '#2A1E5C',
       lineHeight: 24,
-      letterSpacing: 0,
+      letterSpacing: 0.5,
     },
 
     // Captions and hints
@@ -108,7 +108,7 @@ export const theme = {
       fontWeight: '500' as const,
       color: 'rgba(255, 255, 255, 0.68)',
       lineHeight: 16,
-      letterSpacing: 0,
+      letterSpacing: 0.4,
     },
   },
   spacing: {
