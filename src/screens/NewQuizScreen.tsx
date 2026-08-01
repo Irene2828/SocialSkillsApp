@@ -94,6 +94,7 @@ export const NewQuizScreen = () => {
 
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [showGenerateMenu, setShowGenerateMenu] = useState(false);
+  const [generateTopicType, setGenerateTopicType] = useState<'social' | 'math'>('social');
   const [actionMenuCategory, setActionMenuCategory] = useState<any>(null);
   const [showMoveFolderMenu, setShowMoveFolderMenu] = useState(false);
 
@@ -803,7 +804,10 @@ export const NewQuizScreen = () => {
                 iconName="color-wand-outline"
                 iconSize={18}
                 style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-                onPress={() => navigation.navigate('CreateQuizFromPhoto', { topicType: 'math' })}
+                onPress={() => {
+                  setGenerateTopicType('math');
+                  setShowGenerateMenu(true);
+                }}
               />
             </View>
           )}
@@ -891,7 +895,10 @@ export const NewQuizScreen = () => {
               iconName="color-wand-outline"
               iconSize={18}
               style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-              onPress={() => setShowGenerateMenu(true)}
+              onPress={() => {
+                setGenerateTopicType(activeTab === 'general' ? 'social' : 'math');
+                setShowGenerateMenu(true);
+              }}
             />
           </View>
       </ScrollView>
@@ -988,6 +995,7 @@ export const NewQuizScreen = () => {
             title={categoryName || ''}
             onBack={handleBackToHome}
             showSettingsAndRewards={true}
+            compact={true}
           />
 
           <View style={styles.progressSection}>

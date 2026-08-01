@@ -102,13 +102,14 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginHorizontal: -10,
     zIndex: 100,
-    marginBottom: theme.spacing.sm,
+    marginBottom: 20,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.45)',
   },
   compactContainer: {
     paddingTop: 6,
     paddingBottom: 2,
+    marginBottom: theme.spacing.sm,
   },
   noEdgeToEdge: {
     marginHorizontal: 0,
@@ -154,9 +155,6 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     fontSize: 14,
     color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   coinIcon: {
     marginTop: 1,

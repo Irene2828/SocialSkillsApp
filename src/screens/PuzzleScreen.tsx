@@ -561,37 +561,40 @@ export const PuzzleScreen = () => {
       {/* AI Puzzle creation menu modal */}
       <Modal visible={showAiMenu} transparent animationType="fade">
         <Pressable style={{ flex: 1 }} onPress={() => setShowAiMenu(false)}>
-          <View style={[styles.modalOverlay, { padding: 0 }]}>
-            <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
-              <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
-                <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
-                  <Pressable onPress={() => setShowAiMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
-                    <Ionicons name="close" size={28} color="#2A1E5C" />
-                  </Pressable>
-                  <Text style={styles.levelTitle}>Create AI Puzzle</Text>
-                  <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
-                    Upload a page or take a photo, and AI will turn it into a fun puzzle.
-                  </Text>
-                  
-                  <View style={styles.iconContainer}>
-                    <Ionicons name="camera-outline" size={64} color={theme.colors.primary} />
-                  </View>
-                  
-                  <Button 
-                    title="Take Photo" 
-                    onPress={takePhoto} 
-                    style={styles.uploadButton}
-                  />
-                  
-                  <Button 
-                    title="Choose Image" 
-                    onPress={pickImage} 
-                    style={[styles.uploadButton, { backgroundColor: 'rgba(255, 255, 255, 0.055)', borderWidth: 1, borderColor: theme.colors.stroke }]}
-                  />
-                  <Text style={styles.supportedText}>Supports JPG, PNG</Text>
-                </Pressable>
+          <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
+            <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Pressable onPress={() => setShowAiMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
+                <Ionicons name="close" size={28} color="#2A1E5C" />
               </Pressable>
-            </ScrollView>
+              <Text style={[styles.levelTitle, { marginBottom: theme.spacing.md }]}>Create AI Puzzle</Text>
+              <Text style={[styles.questionCaption, { marginBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.md, textAlign: 'center' }]}>
+                Upload a page or take a photo, and AI will turn it into a fun puzzle.
+              </Text>
+              
+              <View style={{ width: '100%', gap: theme.spacing.sm }}>
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowAiMenu(false);
+                    takePhoto();
+                  }}
+                >
+                  <Ionicons name="camera-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Take Photo</Text>
+                </Pressable>
+
+                <Pressable 
+                  style={styles.modalOptionCard}
+                  onPress={() => {
+                    setShowAiMenu(false);
+                    pickImage();
+                  }}
+                >
+                  <Ionicons name="image-outline" size={24} color="#2A1E5C" style={{ marginRight: 12 }} />
+                  <Text style={styles.modalOptionText}>Choose Image</Text>
+                </Pressable>
+              </View>
+            </Pressable>
           </View>
         </Pressable>
       </Modal>

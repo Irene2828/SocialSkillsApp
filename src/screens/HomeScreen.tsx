@@ -211,7 +211,7 @@ export const HomeScreen = () => {
               iconName="rocket-outline"
               onPress={() => navigation.navigate('AppTabs')}
               style={styles.actionButton}
-              textStyle={{ fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 17 }}
+              textStyle={{ fontFamily: FONTS.semiBold, fontWeight: '600', fontSize: 17, letterSpacing: 0.8 }}
             />
         </View>
       </ScreenWrapper>

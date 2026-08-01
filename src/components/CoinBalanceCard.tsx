@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, FONTS } from '../theme';
+import { Card } from './Card';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
 
 interface CoinBalanceCardProps {
@@ -11,7 +12,7 @@ interface CoinBalanceCardProps {
 export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onReset }) => {
   return (
     <View style={styles.cardContainer}>
-      <View style={styles.card}>
+      <Card style={styles.card}>
         {onReset && (
           <Pressable 
             onPress={onReset}
@@ -59,7 +60,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
           </View>
           <Text style={styles.subtitleText}>Redeem coins for rewards of your choice anytime!</Text>
         </View>
-      </View>
+      </Card>
     </View>
   );
 };
@@ -72,13 +73,6 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderRadius: theme.borderRadius.md,
-    overflow: 'hidden',
-    shadowOpacity: 0,
-    elevation: 0,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
     position: 'relative',
     minHeight: 120,
   },
@@ -104,18 +98,18 @@ const styles = StyleSheet.create({
   },
   balanceNumber: {
     ...theme.typography.heading,
-    fontFamily: FONTS.medium,
+    fontFamily: FONTS.regular,
     fontSize: 54,
-    fontWeight: '500',
+    fontWeight: '400',
     color: '#2A1E5C',
     lineHeight: 60,
   },
   balanceLabel: {
     ...theme.typography.heading,
-    fontFamily: FONTS.medium,
+    fontFamily: FONTS.regular,
     fontSize: 24,
     color: '#2A1E5C',
-    fontWeight: '500',
+    fontWeight: '400',
     marginLeft: theme.spacing.sm,
   },
   subtitleText: {

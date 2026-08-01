@@ -22,6 +22,7 @@ import { useRewards } from '../context/RewardsContext';
 import { useProgress } from '../context/ProgressContext';
 import { useFeedback } from '../context/FeedbackContext';
 import { theme, FONTS } from '../theme';
+import { Card } from '../components/Card';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
@@ -418,16 +419,16 @@ export const MyRewardsScreen = () => {
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
-        <View style={styles.tabContainer}>
+        <Card style={styles.tabContainer}>
           <Pressable 
             style={styles.tab} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]}>All Rewards</Text>
+                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.medium, fontWeight: '500', fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>All Rewards</Text>
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>All Rewards</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>All Rewards</Text>
               )}
             </View>
           </Pressable>
@@ -437,13 +438,13 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.semiBold, fontWeight: '500', fontSize: 18, letterSpacing: 0, lineHeight: 26 }]}>Unlocked</Text>
+                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.medium, fontWeight: '500', fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>Unlocked</Text>
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, lineHeight: 26 }]}>Unlocked</Text>
+                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>Unlocked</Text>
               )}
             </View>
           </Pressable>
-        </View>
+        </Card>
 
         <View style={styles.bentoSection}>
           {activeTab === 'available' ? (
@@ -919,10 +920,6 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: 'row',
     marginBottom: 8, // Cut spacing by 50% (was theme.spacing.md which is 16)
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderRadius: theme.borderRadius.sm,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
     padding: 0,
     marginHorizontal: 0,
     overflow: 'hidden',

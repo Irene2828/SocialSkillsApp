@@ -11,6 +11,7 @@ import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { Reward } from '../data/types';
 import { theme, FONTS } from '../theme';
 import { Button } from './Button';
+import { Card } from './Card';
 
 import { useMood, getMoodColors } from '../context/MoodContext';
 
@@ -128,10 +129,11 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
 
       {/* Swipeable card */}
       <Animated.View
-        style={[styles.card, { transform: [{ translateX }] }]}
+        style={[{ transform: [{ translateX }] }]}
         {...panResponder.panHandlers}
       >
-        <View style={[styles.inner, !canAfford && styles.cardDimmed]}>
+        <Card style={!canAfford && styles.cardDimmed}>
+          <View style={styles.inner}>
           <View style={styles.iconContainer}>
             <Ionicons name={reward.icon as any || 'gift-outline'} size={24} color="#2A1E5C" />
           </View>
@@ -181,7 +183,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
               )}
             </View>
           </View>
-        </View>
+        </Card>
       </Animated.View>
     </View>
   );
@@ -234,15 +236,7 @@ const styles = StyleSheet.create({
     textShadowRadius: 2,
   },
   card: {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderRadius: theme.borderRadius.md,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 1,
+    width: '100%',
   },
   inner: {
     flexDirection: 'row',
