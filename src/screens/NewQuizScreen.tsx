@@ -989,7 +989,7 @@ export const NewQuizScreen = () => {
       : `${currentIndex + 1} / ${currentQuestions.length}`;
 
     return (
-      <ScreenWrapper>
+      <View style={styles.inProgressContainer}>
         <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
           <TopBar
             title={categoryName || ''}
@@ -1077,7 +1077,7 @@ export const NewQuizScreen = () => {
             );
           })()}
         </ScrollView>
-      </ScreenWrapper>
+      </View>
     );
   };
 
