@@ -578,6 +578,9 @@ export const PuzzleScreen = () => {
             <ScrollView contentContainerStyle={{ flexGrow: 1 }} showsVerticalScrollIndicator={false} style={{ width: '100%' }}>
               <Pressable style={{ flex: 1, justifyContent: 'center', alignItems: 'center', padding: theme.spacing.xl, minHeight: '100%' }} onPress={() => setShowAiMenu(false)}>
                 <Pressable style={styles.uploadCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+                  <Pressable onPress={() => setShowAiMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
+                    <Ionicons name="close" size={28} color="#2A1E5C" />
+                  </Pressable>
                   <Text style={styles.levelTitle}>Create AI Puzzle</Text>
                   <Text style={[styles.questionCaption, { marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.md }]}>
                     Upload a page or take a photo, and AI will turn it into a fun puzzle.

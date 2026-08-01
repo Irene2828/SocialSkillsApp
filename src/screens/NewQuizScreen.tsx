@@ -1400,6 +1400,9 @@ export const NewQuizScreen = () => {
         <Pressable style={{ flex: 1 }} onPress={() => setShowGenerateMenu(false)}>
           <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
             <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <Pressable onPress={() => setShowGenerateMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
+                <Ionicons name="close" size={28} color="#2A1E5C" />
+              </Pressable>
               <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>Generate New Quiz</Text>
               
               <View style={{ width: '100%', gap: theme.spacing.sm }}>
@@ -1427,12 +1430,12 @@ export const NewQuizScreen = () => {
                   <Text style={styles.modalOptionText}>Generate from Prompt</Text>
                 </Pressable>
                 
-                <Pressable 
-                  style={[styles.modalOptionCard, { justifyContent: 'center', marginTop: 12 }]}
-                  onPress={() => setShowGenerateMenu(false)}
-                >
-                  <Text style={[styles.modalOptionText, { color: theme.colors.danger, textAlign: 'center' }]}>Cancel</Text>
-                </Pressable>
+                <Button 
+                  title="Cancel" 
+                  variant="secondary"
+                  onPress={() => setShowGenerateMenu(false)} 
+                  style={{ width: '100%', marginTop: 12 }}
+                />
               </View>
             </Pressable>
           </View>

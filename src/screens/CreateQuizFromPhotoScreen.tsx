@@ -203,7 +203,7 @@ export const CreateQuizFromPhotoScreen = () => {
 
   const renderIdle = () => (
     <View style={styles.idleContainer}>
-      <Card style={styles.uploadCard}>
+      <View style={styles.uploadCard}>
         <View style={styles.sectionHeaderRow}>
           <Ionicons name="text-outline" size={24} color="#2A1E5C" style={{ marginRight: 8 }} />
           <Text style={styles.sectionHeaderTitle}>Create from Text</Text>
@@ -251,15 +251,15 @@ export const CreateQuizFromPhotoScreen = () => {
           />
         </View>
         <Text style={styles.supportedText}>JPG, PNG, HEIC</Text>
-      </Card>
+      </View>
     </View>
   );
 
   const renderImageSelected = () => (
     <View style={styles.idleContainer}>
-      <Card style={styles.previewCard}>
+      <View style={styles.previewCard}>
         {imageUri && <Image source={{ uri: imageUri }} style={styles.previewImage} />}
-      </Card>
+      </View>
       
       <View style={styles.rowButtons}>
         <Button 
@@ -384,6 +384,10 @@ export const CreateQuizFromPhotoScreen = () => {
       <GlobalBackground />
       <ScreenWrapper transparent>
         <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          {/* X close button */}
+          <Pressable onPress={() => navigation.goBack()} style={styles.closeButton}>
+            <Ionicons name="close" size={28} color="#2A1E5C" />
+          </Pressable>
 
           {screenState === 'idle' && renderIdle()}
           {screenState === 'imageSelected' && renderImageSelected()}
@@ -399,8 +403,14 @@ export const CreateQuizFromPhotoScreen = () => {
 const styles = StyleSheet.create({
   content: {
     flexGrow: 1,
+    justifyContent: 'center',
     paddingTop: theme.spacing.lg,
     paddingBottom: theme.spacing.xl,
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    padding: 8,
+    marginBottom: theme.spacing.sm,
   },
   headerSubtitleContainer: {
     marginBottom: theme.spacing.md,

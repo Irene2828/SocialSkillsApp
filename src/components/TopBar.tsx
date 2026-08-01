@@ -20,9 +20,10 @@ interface TopBarProps {
   showSettingsAndRewards?: boolean;
   hideBorder?: boolean;
   compact?: boolean;
+  noEdgeToEdge?: boolean;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact, noEdgeToEdge }) => {
   const navigation = useNavigation<any>();
   const { coinBalance } = useRewards();
   const [showSettings, setShowSettings] = useState(false);
@@ -43,6 +44,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
       <View style={[
         styles.container, 
         compact && styles.compactContainer,
+        noEdgeToEdge && styles.noEdgeToEdge,
         { position: 'relative', overflow: 'hidden' },
         !hideBorder && {
           borderBottomWidth: 1,
@@ -112,19 +114,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingTop: 8,
-    paddingBottom: 8,
-    width: '100%',
+    paddingHorizontal: 22,
+    paddingTop: 12,
+    paddingBottom: 12,
+    marginHorizontal: -10,
     zIndex: 100,
     marginBottom: theme.spacing.md,
-    borderRadius: theme.borderRadius.sm,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255, 255, 255, 0.4)',
   },
   compactContainer: {
     paddingTop: 6,
     paddingBottom: 2,
+  },
+  noEdgeToEdge: {
+    marginHorizontal: 0,
+    borderRadius: theme.borderRadius.sm,
+    borderBottomWidth: 0,
   },
   side: {
     minWidth: 40,

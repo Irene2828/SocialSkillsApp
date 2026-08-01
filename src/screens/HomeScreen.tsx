@@ -172,6 +172,7 @@ export const HomeScreen = () => {
           hideHome 
           hideTitle 
           hideBorder
+          noEdgeToEdge
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
               <Ionicons name="options-outline" size={24} color="#2A1E5C" />

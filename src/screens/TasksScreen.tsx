@@ -120,6 +120,9 @@ export const TasksScreen = () => {
       >
         <Pressable style={styles.modalOverlay} onPress={() => setIsModalVisible(false)}>
           <Pressable style={styles.modalContent} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+            <Pressable onPress={() => setIsModalVisible(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
+              <Ionicons name="close" size={28} color="#2A1E5C" />
+            </Pressable>
             <Text style={styles.modalTitle}>
               {editingTaskId ? 'Edit Task' : 'New Task'}
             </Text>
