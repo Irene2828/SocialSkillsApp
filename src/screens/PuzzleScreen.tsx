@@ -528,7 +528,7 @@ export const PuzzleScreen = () => {
                     </View>
                     <Text style={[
                       styles.cardName,
-                      isRocket && { color: '#064E3B' },
+                      isRocket && { color: '#0C4A6E' },
                     ]} numberOfLines={2}>{puzzle.name}</Text>
                   </Card>
                 </Pressable>
@@ -567,7 +567,7 @@ export const PuzzleScreen = () => {
           <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
             <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <Pressable onPress={() => setShowAiMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
-                <Ionicons name="close" size={28} color="#064E3B" />
+                <Ionicons name="close" size={28} color="#0C4A6E" />
               </Pressable>
               <Text style={[styles.levelTitle, { marginBottom: theme.spacing.md }]}>Create AI Puzzle</Text>
               <Text style={[styles.questionCaption, { marginBottom: theme.spacing.xl, paddingHorizontal: theme.spacing.md, textAlign: 'center' }]}>
@@ -582,7 +582,7 @@ export const PuzzleScreen = () => {
                     takePhoto();
                   }}
                 >
-                  <Ionicons name="camera-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="camera-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Take Photo</Text>
                 </Pressable>
 
@@ -593,7 +593,7 @@ export const PuzzleScreen = () => {
                     pickImage();
                   }}
                 >
-                  <Ionicons name="image-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="image-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Choose Image</Text>
                 </Pressable>
               </View>
@@ -619,7 +619,7 @@ export const PuzzleScreen = () => {
                     setShowRenameModal(true);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
 
@@ -642,7 +642,7 @@ export const PuzzleScreen = () => {
                     }
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>
@@ -716,8 +716,8 @@ export const PuzzleScreen = () => {
                         start={{ x: 0, y: 0 }}
                         end={{ x: 0, y: 1 }}
                       />
-                      <Ionicons name="extension-puzzle-outline" size={16} color="#064E3B" style={{ marginRight: 4 }} />
-                      <Text style={[styles.screenFolderTabText, { color: '#064E3B' }]} numberOfLines={1}>{selectedPuzzle?.name}</Text>
+                      <Ionicons name="extension-puzzle-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
+                      <Text style={[styles.screenFolderTabText, { color: '#0C4A6E' }]} numberOfLines={1}>{selectedPuzzle?.name}</Text>
                     </View>
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -883,7 +883,7 @@ const styles = StyleSheet.create({
   },
   cardName: {
     ...theme.typography.body,
-    color: '#064E3B',
+    color: '#0C4A6E',
     textAlign: 'center',
     fontWeight: '400',
   },
@@ -1056,7 +1056,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   diffBtnTextSelected: {
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   createAiButtonContainer: {
     width: '100%',
@@ -1082,7 +1082,7 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     ...theme.typography.subheading,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginBottom: theme.spacing.md,
   },
   questionCaption: {
@@ -1140,7 +1140,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   pinInput: {
     width: 120,
@@ -1151,7 +1151,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     ...theme.typography.heading,
     marginBottom: theme.spacing.md,
-    color: '#064E3B',
+    color: '#0C4A6E',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
   },
   editInput: {
@@ -1162,7 +1162,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,
-    color: '#064E3B',
+    color: '#0C4A6E',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
   },
   modalOptionCard: {
@@ -1178,6 +1178,6 @@ const styles = StyleSheet.create({
   },
   modalOptionText: {
     ...theme.typography.body,
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
 });

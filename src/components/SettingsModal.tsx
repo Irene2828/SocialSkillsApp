@@ -47,7 +47,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onClose }
       <View style={styles.modalCard}>
         <View style={[styles.header, { justifyContent: 'flex-end' }]}>
           <Pressable onPress={onClose} style={styles.closeButton}>
-            <Ionicons name="close" size={28} color="#064E3B" />
+            <Ionicons name="close" size={28} color="#0C4A6E" />
           </Pressable>
         </View>
 
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     ...theme.typography.heading,
     fontSize: 24,
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   closeButton: {
     padding: theme.spacing.xs,
@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontWeight: '600',
     fontSize: 18,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginBottom: 4,
   },
   settingDescription: {
@@ -159,6 +159,6 @@ const styles = StyleSheet.create({
     padding: theme.spacing.md,
     ...theme.typography.body,
     fontSize: 16,
-    color: '#064E3B',
+    color: '#0C4A6E',
   }
 });

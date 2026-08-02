@@ -67,15 +67,15 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             isFeatured && styles.featuredIconContainer,
           ]}>
             {iconFamily === 'FontAwesome5' ? (
-              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#064E3B" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#0C4A6E" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             ) : (
-              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#064E3B" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#0C4A6E" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
             )}
           </View>
 
           <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
             <Text 
-              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#064E3B' }]} 
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#0C4A6E' }]} 
               numberOfLines={2}
             >
               {category.title}

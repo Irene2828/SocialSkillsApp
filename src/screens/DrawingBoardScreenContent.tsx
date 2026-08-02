@@ -257,7 +257,7 @@ export const DrawingBoardScreen = () => {
               />
             </View>
             <Pressable style={[styles.closePickerBtn, { backgroundColor: theme.colors.primary }]} onPress={() => setShowColorPicker(false)}>
-              <Text style={[styles.closePickerText, { color: '#064E3B' }]}>Select Color</Text>
+              <Text style={[styles.closePickerText, { color: '#0C4A6E' }]}>Select Color</Text>
             </Pressable>
           </View>
         </View>

@@ -159,7 +159,7 @@ export const HomeScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const titleColor = '#FFFFFF';
-  const subtitleColor = '#064E3B';
+  const subtitleColor = '#0C4A6E';
   const [showSettings, setShowSettings] = useState(false);
 
 
@@ -175,7 +175,7 @@ export const HomeScreen = () => {
           noEdgeToEdge
           rightComponent={
             <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
-              <Ionicons name="options-outline" size={24} color="#064E3B" />
+              <Ionicons name="options-outline" size={24} color="#0C4A6E" />
             </Pressable>
           }
         />

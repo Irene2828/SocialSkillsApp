@@ -1001,13 +1001,13 @@ export const NewQuizScreen = () => {
           <View style={styles.progressSection}>
             <View style={{ height: 26, position: 'relative', width: '100%' }}>
               <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
-                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#064E3B', fontWeight: '600', letterSpacing: 0.5 }]}>
+                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#0C4A6E', fontWeight: '600', letterSpacing: 0.5 }]}>
                   {counterText}
                 </Text>
               </View>
               <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.45)', width: '100%', position: 'absolute', bottom: 0 }}>
                 <View
-                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#064E3B', borderRadius: theme.borderRadius.full }}
+                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#0C4A6E', borderRadius: theme.borderRadius.full }}
                 />
               </View>
             </View>
@@ -1185,12 +1185,12 @@ export const NewQuizScreen = () => {
               {!selectedImageUri ? (
                 <View style={{ width: '100%', marginBottom: theme.spacing.lg }}>
                   <Pressable style={[styles.photoOutlineButton, { marginBottom: theme.spacing.md }]} onPress={handleTakePhoto}>
-                    <Ionicons name="camera-outline" size={24} color="#064E3B" style={{ marginRight: theme.spacing.sm }} />
+                    <Ionicons name="camera-outline" size={24} color="#0C4A6E" style={{ marginRight: theme.spacing.sm }} />
                     <Text style={styles.photoOutlineText}>Take Photo</Text>
                   </Pressable>
                   
                   <Pressable style={styles.photoOutlineButton} onPress={handlePickImage}>
-                    <Ionicons name="images-outline" size={24} color="#064E3B" style={{ marginRight: theme.spacing.sm }} />
+                    <Ionicons name="images-outline" size={24} color="#0C4A6E" style={{ marginRight: theme.spacing.sm }} />
                     <Text style={styles.photoOutlineText}>Upload from Gallery</Text>
                   </Pressable>
                 </View>
@@ -1408,7 +1408,7 @@ export const NewQuizScreen = () => {
           <View style={[styles.modalOverlay, { justifyContent: 'flex-end', padding: 0 }]}>
             <Pressable style={[styles.uploadCard, { width: '100%', maxWidth: '100%', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, paddingBottom: 40 }]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
               <Pressable onPress={() => setShowGenerateMenu(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
-                <Ionicons name="close" size={28} color="#064E3B" />
+                <Ionicons name="close" size={28} color="#0C4A6E" />
               </Pressable>
               <Text style={[styles.levelTitle, { marginBottom: theme.spacing.xl }]}>Generate New Quiz</Text>
               
@@ -1422,7 +1422,7 @@ export const NewQuizScreen = () => {
                     setShowPhotoMenu(true);
                   }}
                 >
-                  <Ionicons name="camera-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="camera-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Generate from Screenshot</Text>
                 </Pressable>
 
@@ -1433,7 +1433,7 @@ export const NewQuizScreen = () => {
                     setShowAiMenu(true);
                   }}
                 >
-                  <Ionicons name="color-wand-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="color-wand-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Generate from Prompt</Text>
                 </Pressable>
               </View>
@@ -1457,7 +1457,7 @@ export const NewQuizScreen = () => {
                     handleOpenRename(actionMenuCategory);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
 
@@ -1468,7 +1468,7 @@ export const NewQuizScreen = () => {
                     setShowMoveFolderMenu(true);
                   }}
                 >
-                  <Ionicons name="folder-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="folder-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Move to Folder</Text>
                 </Pressable>
 
@@ -1481,7 +1481,7 @@ export const NewQuizScreen = () => {
                       setShowActionMenu(false);
                     }}
                   >
-                    <Ionicons name="log-out-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                    <Ionicons name="log-out-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                     <Text style={styles.modalOptionText}>Remove from Folder</Text>
                   </Pressable>
                 )}
@@ -1494,7 +1494,7 @@ export const NewQuizScreen = () => {
                     setShowDeletePin(true);
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>
@@ -1526,7 +1526,7 @@ export const NewQuizScreen = () => {
                     setShowRenameFolderModal(true);
                   }}
                 >
-                  <Ionicons name="pencil-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="pencil-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Rename</Text>
                 </Pressable>
                 
@@ -1537,7 +1537,7 @@ export const NewQuizScreen = () => {
                     setShowMoveFolderMenu2(true);
                   }}
                 >
-                  <Ionicons name="folder-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="folder-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Move to Folder</Text>
                 </Pressable>
 
@@ -1548,7 +1548,7 @@ export const NewQuizScreen = () => {
                     removeFolder(actionMenuFolder?.id);
                   }}
                 >
-                  <Ionicons name="trash-outline" size={24} color="#064E3B" style={{ marginRight: 12 }} />
+                  <Ionicons name="trash-outline" size={24} color="#0C4A6E" style={{ marginRight: 12 }} />
                   <Text style={styles.modalOptionText}>Delete</Text>
                 </Pressable>
               </View>
@@ -2031,7 +2031,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.md,
     textAlign: 'center',
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   pinInput: {
     width: 120,
@@ -2042,7 +2042,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     ...theme.typography.heading,
     marginBottom: theme.spacing.md,
-    color: '#064E3B',
+    color: '#0C4A6E',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
   },
   levelCard: {
@@ -2052,7 +2052,7 @@ const styles = StyleSheet.create({
   },
   levelTitle: {
     ...theme.typography.subheading,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginBottom: theme.spacing.md,
   },
   progressBarContainer: {
@@ -2240,7 +2240,7 @@ const styles = StyleSheet.create({
   },
   photoOutlineText: {
     ...theme.typography.button,
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   modalTitle: {
     ...theme.typography.heading,
@@ -2343,7 +2343,7 @@ const styles = StyleSheet.create({
   },
   modalOptionText: {
     ...theme.typography.body,
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   modalInput: {
     width: '100%',
@@ -2354,7 +2354,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(42, 30, 92, 0.15)',
     ...theme.typography.body,
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   section: {
     marginBottom: theme.spacing.xl,
@@ -2425,7 +2425,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: theme.spacing.xl,
     textAlign: 'center',
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   rewardsModalInput: {
     width: '100%',
@@ -2433,7 +2433,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(42, 30, 92, 0.15)',
     borderRadius: theme.borderRadius.sm,
-    color: '#064E3B',
+    color: '#0C4A6E',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
     paddingHorizontal: theme.spacing.md,
     fontSize: 16,

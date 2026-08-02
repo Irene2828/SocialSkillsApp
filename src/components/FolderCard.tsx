@@ -36,7 +36,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
       <Pressable onPress={onPress} style={styles.pressable}>
         <View style={styles.cardContent}>
           <View style={styles.iconContainer}>
-            <Ionicons name="folder-outline" size={32} color="#064E3B" />
+            <Ionicons name="folder-outline" size={32} color="#0C4A6E" />
           </View>
           <View style={styles.textContainer}>
             <Text style={styles.title} numberOfLines={2}>{name}</Text>
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
   title: {
     ...theme.typography.body,
     fontWeight: '400',
-    color: '#064E3B',
+    color: '#0C4A6E',
     textAlign: 'center',
   },
   actionButtons: {

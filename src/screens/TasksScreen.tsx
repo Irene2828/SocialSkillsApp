@@ -121,7 +121,7 @@ export const TasksScreen = () => {
         <Pressable style={styles.modalOverlay} onPress={() => setIsModalVisible(false)}>
           <Pressable style={styles.modalContent} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
             <Pressable onPress={() => setIsModalVisible(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
-              <Ionicons name="close" size={28} color="#064E3B" />
+              <Ionicons name="close" size={28} color="#0C4A6E" />
             </Pressable>
             <Text style={styles.modalTitle}>
               {editingTaskId ? 'Edit Task' : 'New Task'}
@@ -139,7 +139,7 @@ export const TasksScreen = () => {
 
             <Text style={[styles.inputLabel, { marginTop: theme.spacing.md }]}>Reward (Coins)</Text>
             <View style={styles.coinInputContainer}>
-              <FontAwesome5 name="coins" size={16} color="#064E3B" />
+              <FontAwesome5 name="coins" size={16} color="#0C4A6E" />
               <TextInput
                 style={styles.coinInput}
                 value={newTaskCoins}
@@ -309,14 +309,14 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontFamily: FONTS.semiBold,
     fontSize: 24,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginBottom: theme.spacing.lg,
     textAlign: 'center',
   },
   inputLabel: {
     fontFamily: FONTS.medium,
     fontSize: 14,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginBottom: theme.spacing.xs,
   },
   input: {
@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(42, 30, 92, 0.15)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
-    color: '#064E3B',
+    color: '#0C4A6E',
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
   },
   coinInputContainer: {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
     fontSize: 16,
     padding: theme.spacing.md,
-    color: '#064E3B',
+    color: '#0C4A6E',
     marginLeft: 8,
   },
   modalActions: {

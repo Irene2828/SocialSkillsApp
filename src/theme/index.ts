@@ -83,12 +83,12 @@ export const theme = {
 
     // Button / CTA text — semi-bold for authority
     button: {
-      fontFamily: FONTS.semiBold,
-      fontSize: 14.5,
-      fontWeight: '600' as const,
-      color: '#064E3B',
+      fontFamily: FONTS.medium,
+      fontSize: 16,
+      fontWeight: '500' as const,
+      color: '#0C4A6E',
       lineHeight: 24,
-      letterSpacing: 0.5,
+      letterSpacing: 0,
     },
 
     // Captions and hints

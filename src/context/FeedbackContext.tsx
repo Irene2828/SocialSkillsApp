@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: theme.spacing.sm,
     textAlign: 'center',
-    color: '#064E3B',
+    color: '#0C4A6E',
   },
   modalMessage: {
     ...theme.typography.body,
