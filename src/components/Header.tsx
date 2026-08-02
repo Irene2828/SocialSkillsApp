@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     marginBottom: theme.spacing.md,
   },
   contentContainer: {

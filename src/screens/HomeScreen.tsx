@@ -201,7 +201,7 @@ export const HomeScreen = () => {
           </View>
 
             <Text 
-              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: theme.spacing.lg }]}
+              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: 12 }]}
             >
               Turn your knowledge{'\n'}into cool rewards!
             </Text>

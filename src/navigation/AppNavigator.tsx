@@ -27,7 +27,7 @@ const AppTabs = () => {
   const isTablet = windowWidth >= 768;
   const isSmallScreen = !isTablet && windowHeight < 700;
   // Tablet: taller bar for comfortable touch targets; small phone: compact bar
-  const paddingBottom = Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10)) / 2;
+  const paddingBottom = (Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10)) / 2) * 0.5;
   const height = isTablet
     ? 64 + paddingBottom
     : isSmallScreen
@@ -60,16 +60,7 @@ const AppTabs = () => {
           }
 
           return (
-            <View style={{
-              backgroundColor: focused ? 'rgba(255, 255, 255, 0.24)' : 'transparent',
-              paddingHorizontal: 18,
-              paddingVertical: 3,
-              borderRadius: 16,
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}>
-              <Ionicons name={iconName} size={iconSize} color={color} />
-            </View>
+            <Ionicons name={iconName} size={iconSize} color={color} style={{ marginTop: 2 }} />
           );
         },
         tabBarLabel: ({ focused, color }) => {
@@ -79,17 +70,23 @@ const AppTabs = () => {
           else if (route.name === 'Puzzles') label = 'Puzzles';
           else if (route.name === 'Drawing') label = 'Draw';
           return (
-            <Text style={{
-              fontFamily: focused ? FONTS.semiBold : FONTS.medium,
-              // Slightly larger labels on tablet for legibility
-              fontSize: isTablet ? 14 : 12,
-              lineHeight: isTablet ? 18 : 15,
-              color: color,
-              marginTop: isTablet ? 5 : 2,
-              textAlign: 'center'
+            <View style={{
+              backgroundColor: focused ? 'rgba(255, 255, 255, 0.24)' : 'transparent',
+              paddingHorizontal: 14,
+              paddingVertical: 4,
+              borderRadius: 12,
+              marginBottom: 2,
             }}>
-              {label}
-            </Text>
+              <Text style={{
+                fontFamily: focused ? FONTS.semiBold : FONTS.medium,
+                // Slightly larger labels on tablet for legibility
+                fontSize: isTablet ? 13 : 11,
+                color: color,
+                textAlign: 'center'
+              }}>
+                {label}
+              </Text>
+            </View>
           );
         },
         tabBarActiveTintColor: activeColor,
@@ -113,6 +110,9 @@ const AppTabs = () => {
         },
         tabBarItemStyle: {
           flex: 1,
+          flexDirection: 'column-reverse',
+          alignItems: 'center',
+          justifyContent: 'center',
         },
       })}
     >

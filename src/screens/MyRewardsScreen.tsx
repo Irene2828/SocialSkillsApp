@@ -418,7 +418,7 @@ export const MyRewardsScreen = () => {
         </View>
 
         {/* Bottom Section: Tabs and Lists */}
-        <View style={{ paddingHorizontal: theme.spacing.lg }}>
+        <View style={{ paddingHorizontal: 12 }}>
         <Card style={styles.tabContainer}>
           <Pressable 
             style={styles.tab} 
@@ -761,7 +761,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,
@@ -787,7 +787,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   bentoSection: {
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   helpButton: {
     width: 32,

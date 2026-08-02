@@ -466,7 +466,7 @@ export const PuzzleScreen = () => {
               title="Puzzles"
               showSettingsAndRewards={true}
             />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: theme.spacing.lg }]}>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>
               <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
                 <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('animals')}>
                 <Card style={styles.folderCard}>
@@ -506,7 +506,7 @@ export const PuzzleScreen = () => {
             />
             <FlatList
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={[styles.scrollContent, { paddingHorizontal: theme.spacing.lg }]}
+              contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}
               data={allPuzzles}
             keyExtractor={(item) => item.id}
             key={numColumns}

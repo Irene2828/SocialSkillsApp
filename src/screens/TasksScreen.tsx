@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     paddingBottom: theme.spacing.md,
     zIndex: 10,
   },
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
   },
   section: {
     marginBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   sectionTitle: {
     fontFamily: FONTS.semiBold,
@@ -272,7 +272,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 60,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   emptyTitle: {
     fontFamily: FONTS.semiBold,

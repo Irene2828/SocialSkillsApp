@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: theme.colors.white,
     paddingVertical: theme.spacing.sm,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     borderRadius: theme.borderRadius.full,
     ...theme.shadows.soft,
   },

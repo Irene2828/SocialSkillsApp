@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   earnedText: {
     ...theme.typography.body,

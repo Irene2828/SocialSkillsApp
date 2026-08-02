@@ -287,7 +287,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   costText: {
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
     fontSize: 14,
     color: '#0C4A6E',
   },
@@ -317,6 +318,8 @@ const styles = StyleSheet.create({
   },
   lockedButtonText: {
     ...theme.typography.button,
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
     color: 'rgba(42, 30, 92, 0.6)',
     fontSize: 14,
   },

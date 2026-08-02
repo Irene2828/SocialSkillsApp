@@ -406,7 +406,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: theme.spacing.lg,
     paddingBottom: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   closeButton: {
     alignSelf: 'flex-end',

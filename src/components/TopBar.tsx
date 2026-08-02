@@ -56,11 +56,11 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
 
         <View style={styles.side}>
           {onBack ? (
-            <Pressable onPress={onBack} style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="arrow-back" size={24} color={textColor} />
+            <Pressable onPress={onBack} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+              <Ionicons name="arrow-back" size={24} color={isRocket ? '#FFFFFF' : '#0C4A6E'} />
             </Pressable>
           ) : showSettingsAndRewards ? (
-            <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ alignItems: 'center', justifyContent: 'center' }}>
+            <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
               <Ionicons name="home-outline" size={24} color={isRocket ? '#FFFFFF' : '#0C4A6E'} />
             </Pressable>
           ) : null}
@@ -75,7 +75,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                 alignItems: 'center', 
                 justifyContent: 'center',
                 borderWidth: 1.2,
-                borderColor: 'rgba(255, 255, 255, 0.45)',
+                borderColor: isRocket ? 'rgba(255, 255, 255, 0.45)' : 'rgba(12, 74, 110, 0.45)',
                 borderRadius: 20,
                 paddingHorizontal: 10,
                 paddingVertical: 4,
@@ -83,23 +83,23 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             >
               <View style={styles.coinBadge}>
                 <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: '#FFFFFF', marginRight: 2 }]}>+</Text>
+                  <Text style={[styles.coinText, { color: isRocket ? '#FFFFFF' : '#0C4A6E', marginRight: 2 }]}>+</Text>
                   {String(coinBalance).split('').map((char, index) => {
                     return (
-                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#FFFFFF' }]}>
+                      <Text key={`coin-${index}`} style={[styles.coinText, { color: isRocket ? '#FFFFFF' : '#0C4A6E' }]}>
                         {char}
                       </Text>
                     );
                   })}
                 </View>
-                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <FontAwesome5 name="coins" size={12} color={isRocket ? '#FFFFFF' : '#0C4A6E'} style={[styles.coinIcon, { marginLeft: 4 }]} />
               </View>
               <Text 
                 style={{ 
                   fontFamily: FONTS.medium,
                   fontSize: isTablet ? 14 : 12,
                   lineHeight: isTablet ? 18 : 15,
-                  color: '#FFFFFF',
+                  color: isRocket ? '#FFFFFF' : '#0C4A6E',
                   marginTop: -2,
                   textAlign: 'center'
                 }}
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24, // theme.spacing.lg
+    paddingHorizontal: 12, // theme.spacing.lg
     paddingTop: 12,
     paddingBottom: 12,
     marginHorizontal: 0, // removed hack
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     minWidth: 40,
     alignSelf: 'stretch',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     fontFamily: FONTS.medium,

@@ -129,7 +129,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   costText: {
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
     fontSize: 14,
     color: '#0C4A6E',
   },

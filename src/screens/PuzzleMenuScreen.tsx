@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     justifyContent: 'center',
   },
   cardsContainer: {

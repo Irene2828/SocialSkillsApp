@@ -1816,7 +1816,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   bentoItem: {
     width: '100%',
@@ -1825,7 +1825,7 @@ const styles = StyleSheet.create({
   emptyAiContainer: {
     alignItems: 'center',
     paddingTop: theme.spacing.xl,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
   emptyAiText: {
     ...theme.typography.subheading,
@@ -1934,7 +1934,7 @@ const styles = StyleSheet.create({
     // Gradient logic goes here if implemented, for now solid is fine per v2 design system
   },
   progressSection: {
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     paddingTop: theme.spacing.md,
     paddingBottom: theme.spacing.md,
   },
@@ -2057,7 +2057,7 @@ const styles = StyleSheet.create({
   },
   progressBarContainer: {
     marginVertical: theme.spacing.lg,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
   },
 
   photoIconContainer: {
@@ -2230,7 +2230,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: theme.spacing.md,
-    paddingHorizontal: theme.spacing.lg,
+    paddingHorizontal: 12,
     backgroundColor: 'rgba(42, 30, 92, 0.05)',
     borderRadius: theme.borderRadius.full,
     borderWidth: 1,
