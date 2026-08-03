@@ -989,6 +989,26 @@ export const NewQuizScreen = () => {
       ? `${currentWordProblemStep + 1} / ${totalWordProblemSteps}`
       : `${currentIndex + 1} / ${currentQuestions.length}`;
 
+    let whyQ: Question | null = null;
+    if (!isWordProblem && hasWhyData) {
+      const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
+      const questionText = (baseQuestion.prompt || baseQuestion.scenario).toLowerCase();
+      const isSaying = correctAnswer.includes('"') || questionText.includes('say') || questionText.includes('tell');
+      const actionText = isSaying ? "thing to say" : "thing to do";
+      const rawWhyQuestion = baseQuestion.whyQuestion || `Why is this the right ${actionText}?`;
+      const cleanWhyQuestion = rawWhyQuestion.replace(/^Now tell me:\s*/i, '');
+      
+      whyQ = {
+        ...baseQuestion,
+        id: `${baseQuestion.id}-why`,
+        scenario: cleanWhyQuestion,
+        prompt: undefined,
+        options: baseQuestion.whyOptions!,
+        correctAnswerIndex: baseQuestion.correctWhyIndex!,
+        explanation: baseQuestion.whyConfirmation!,
+      } as Question;
+    }
+
     return (
       <View style={styles.inProgressContainer}>
         <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
@@ -1027,7 +1047,7 @@ export const NewQuizScreen = () => {
             )}
           </View>
 
-          {selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') ? (
+          {isWordProblem ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
               onContinue={handleContinue}
@@ -1040,42 +1060,20 @@ export const NewQuizScreen = () => {
                 }, 50);
               }}
             />
-          ) : (() => {
-            // Build the Part 2 (why) question inline if applicable
-            const whyQ = hasWhyData ? (() => {
-              const correctAnswer = baseQuestion.options[baseQuestion.correctAnswerIndex];
-              const questionText = (baseQuestion.prompt || baseQuestion.scenario).toLowerCase();
-              const isSaying = correctAnswer.includes('"') || questionText.includes('say') || questionText.includes('tell');
-              const actionText = isSaying ? "thing to say" : "thing to do";
-              const rawWhyQuestion = baseQuestion.whyQuestion || `Why is this the right ${actionText}?`;
-              const cleanWhyQuestion = rawWhyQuestion.replace(/^Now tell me:\s*/i, '');
-              
-              return {
-                ...baseQuestion,
-                id: `${baseQuestion.id}-why`,
-                scenario: cleanWhyQuestion,
-                prompt: undefined,
-                options: baseQuestion.whyOptions!,
-                correctAnswerIndex: baseQuestion.correctWhyIndex!,
-                explanation: baseQuestion.whyConfirmation!,
-              } as Question;
-            })() : null;
-
-            return (
-              <QuestionView
-                question={baseQuestion}
-                onContinue={handleContinue}
-                disabled={isProcessing}
-                topicName={allCategories.find(c => c.id === selectedCategory)?.title}
-                showCoinReward={!hasWhyData}
-                showExplanation={!hasWhyData}
-                whyQuestion={whyQ}
-                showPart2={isWhyPhase}
-                onPart1Complete={() => setIsWhyPhase(true)}
-                scrollViewRef={quizScrollRef}
-              />
-            );
-          })()}
+          ) : (
+            <QuestionView
+              question={baseQuestion}
+              onContinue={handleContinue}
+              disabled={isProcessing}
+              topicName={allCategories.find(c => c.id === selectedCategory)?.title}
+              showCoinReward={!hasWhyData}
+              showExplanation={!hasWhyData}
+              whyQuestion={whyQ}
+              showPart2={isWhyPhase}
+              onPart1Complete={() => setIsWhyPhase(true)}
+              scrollViewRef={quizScrollRef}
+            />
+          )}
         </ScrollView>
       </View>
     );
