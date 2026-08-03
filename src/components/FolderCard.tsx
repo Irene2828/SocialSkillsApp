@@ -28,7 +28,7 @@ export const FolderCard: React.FC<FolderCardProps> = ({ name, onPress, onEdit, o
     <LinearGradient
       ref={containerRef as any}
       onLayout={handleLayout}
-      colors={['rgba(255, 241, 242, 0.75)', 'rgba(243, 232, 255, 0.75)', 'rgba(224, 231, 255, 0.6)']}
+      colors={['rgba(224, 251, 252, 0.85)', 'rgba(224, 251, 252, 0.85)']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={[styles.container, isDragTarget && styles.dragTarget]}

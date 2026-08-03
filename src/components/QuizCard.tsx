@@ -54,7 +54,7 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
         onPress={onPressStart} 
         style={{ flex: 1 }}
       >
-        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.4)', backgroundColor: 'rgba(255, 255, 255, 0.65)' }]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.4)' }]}>
         {category.isNew && (
           <View style={styles.newBadge}>
             <Text style={styles.newBadgeText}>NEW</Text>
