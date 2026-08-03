@@ -261,20 +261,23 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const topicType = activeTab === 'general' ? 'social' : 'math';
+      const isMath = generateTopicType === 'math' || activeFolderId === 'math_quiz_folder';
+      const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromImage(base64Image, 7, topicType);
       
+      const targetFolderId = isMath ? 'math_quiz_folder' : (activeFolderId || undefined);
+
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
-        const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
+        const prefix = isMath ? 'math_ai' : 'custom_ai';
         const newCategoryId = `${prefix}_${Date.now()}_${quizIndex}`;
         const newCategory = {
           id: newCategoryId,
           title: quiz.concept,
-          description: 'AI Generated Quiz',
-          icon: 'color-wand',
-          color: '#A78BFA',
+          description: isMath ? 'Math Word Problem Quiz' : 'AI Generated Quiz',
+          icon: isMath ? 'calculator-outline' : 'color-wand',
+          color: isMath ? '#38BDF8' : '#A78BFA',
           isCustom: true,
-          folderId: activeFolderId || undefined
+          folderId: targetFolderId
         };
         
         const questionsWithCategory = quiz.questions.map((q: any, index: number) => {
@@ -303,15 +306,23 @@ export const NewQuizScreen = () => {
         return { category: newCategory, questions: questionsWithCategory };
       });
       
-      setGeneratedQuizzes(newQuizzes);
-      if (responseData.folderName) {
-        setSuggestedFolderName(responseData.folderName);
+      if (isMath) {
+        newQuizzes.forEach((quizSet: any) => {
+          addCustomQuiz(quizSet.category, quizSet.questions);
+        });
+        setAiGenerating(false);
+        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to Math Quiz folder!` });
       } else {
-        setSuggestedFolderName('New Folder');
+        setGeneratedQuizzes(newQuizzes);
+        if (responseData.folderName) {
+          setSuggestedFolderName(responseData.folderName);
+        } else {
+          setSuggestedFolderName('New Folder');
+        }
+        setSelectedExistingFolderId(null);
+        setAiGenerating(false);
+        setShowPhotoConfirmation(true);
       }
-      setSelectedExistingFolderId(null);
-      setAiGenerating(false);
-      setShowPhotoConfirmation(true);
     } catch (error: any) {
       console.error('Failed to generate quiz from image:', error);
       setAiGenerating(false);
@@ -370,20 +381,23 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const topicType = activeTab === 'general' ? 'social' : 'math';
+      const isMath = generateTopicType === 'math' || activeFolderId === 'math_quiz_folder';
+      const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
       
+      const targetFolderId = isMath ? 'math_quiz_folder' : (activeFolderId || undefined);
+
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
-        const prefix = activeTab === 'general' ? 'custom_ai' : 'math_ai';
+        const prefix = isMath ? 'math_ai' : 'custom_ai';
         const newCategoryId = `${prefix}_${Date.now()}_${quizIndex}`;
         const newCategory = {
           id: newCategoryId,
           title: quiz.concept,
-          description: 'AI Generated Quiz',
-          icon: 'color-wand',
-          color: '#A78BFA',
+          description: isMath ? 'Math Word Problem Quiz' : 'AI Generated Quiz',
+          icon: isMath ? 'calculator-outline' : 'color-wand',
+          color: isMath ? '#38BDF8' : '#A78BFA',
           isCustom: true,
-          folderId: activeFolderId || undefined // default, will be overridden if they choose
+          folderId: targetFolderId
         };
         
         const questionsWithCategory = quiz.questions.map((q: any, index: number) => {
@@ -415,9 +429,19 @@ export const NewQuizScreen = () => {
         return { category: newCategory, questions: questionsWithCategory };
       });
       
-      setGeneratedQuizzes(newQuizzes);
-      setAiGenerating(false);
-      setShowFolderSelection(true);
+      if (isMath) {
+        newQuizzes.forEach((quizSet: any) => {
+          addCustomQuiz(quizSet.category, quizSet.questions);
+        });
+        setAiGenerating(false);
+        setAiPromptSituation('');
+        setAiPromptContext('');
+        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to Math Quiz folder!` });
+      } else {
+        setGeneratedQuizzes(newQuizzes);
+        setAiGenerating(false);
+        setShowFolderSelection(true);
+      }
       
     } catch (error: any) {
       setAiGenerating(false);
@@ -981,7 +1005,7 @@ export const NewQuizScreen = () => {
       categoryName = customCat.title;
     }
 
-    const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai');
+    const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') || (currentQuestions.length > 0 && !!(currentQuestions[0] as any).problemText);
     const progressPercent = isWordProblem
       ? ((currentWordProblemStep + 1) / totalWordProblemSteps)
       : ((currentIndex + 1) / currentQuestions.length);
@@ -1031,20 +1055,6 @@ export const NewQuizScreen = () => {
                 />
               </View>
             </View>
-
-            {!isSmallScreen && (
-              <View style={{ marginTop: 2 }}>
-                {isWordProblem ? (
-                  <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
-                    <Text style={{ fontWeight: '600', color: theme.colors.text }}>Step {currentWordProblemStep + 1}</Text> of {totalWordProblemSteps}
-                  </Text>
-                ) : (
-                  <Text style={[styles.questionCaption, { marginTop: 0, marginBottom: 0, color: subTextColor }]}>
-                    <Text style={{ fontWeight: '600', color: theme.colors.text }}>Question {currentIndex + 1}</Text> of {currentQuestions.length}
-                  </Text>
-                )}
-              </View>
-            )}
           </View>
 
           {isWordProblem ? (

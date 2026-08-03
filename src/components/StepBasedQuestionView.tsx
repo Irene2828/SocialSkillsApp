@@ -204,25 +204,31 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               </View>
 
               <View style={styles.problemQuestionStrip}>
-                <Ionicons name="flag-outline" size={16} color={theme.colors.secondaryText} />
+                <Ionicons name="flag-outline" size={16} color="#0C4A6E" />
                 <Text style={styles.problemQuestionText}>
                   {compactProblem.question}
                 </Text>
               </View>
+
+              <Text style={styles.followStepsHint}>
+                (don't answer yet, follow the steps below to solve the problem)
+              </Text>
             </View>
           ) : (
-            <View style={styles.storyCallout}>
-              <Text style={styles.calloutLabel}>
-                Problem
-              </Text>
-              <Text style={styles.storyCalloutText}>
-                {question.problemText}
+            <View style={styles.problemSheet}>
+              <View style={styles.storyCallout}>
+                <Text style={styles.calloutLabel}>
+                  Problem
+                </Text>
+                <Text style={styles.storyCalloutText}>
+                  {question.problemText}
+                </Text>
+              </View>
+              <Text style={styles.followStepsHint}>
+                (don't answer yet, follow the steps below to solve the problem)
               </Text>
             </View>
           )}
-          <Text style={styles.followStepsHint}>
-            (don't answer yet, follow the steps below to solve the problem)
-          </Text>
           <View style={styles.problemToStepsDivider} />
         </View>
 
@@ -445,18 +451,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.sm,
   },
   storyCallout: {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    marginBottom: theme.spacing.md,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 1,
+    marginBottom: theme.spacing.sm,
   },
   calloutLabel: {
     ...theme.typography.label,
@@ -493,7 +488,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     letterSpacing: 0.15,
-    color: theme.colors.secondaryText,
+    color: '#0C4A6E',
     backgroundColor: 'transparent',
     borderWidth: 0,
     borderColor: 'transparent',
@@ -521,26 +516,23 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#FFFFFF',
+    color: '#0C4A6E',
     marginLeft: 6,
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   followStepsHint: {
     fontFamily: FONTS.regular,
     fontSize: 13,
     lineHeight: 18,
     letterSpacing: 0.15,
-    color: theme.colors.secondaryText,
-    marginTop: 0,
-    marginBottom: 8,
+    color: '#0C4A6E',
+    marginTop: 6,
+    marginLeft: 22,
   },
   problemToStepsDivider: {
     width: 112,
     height: 2,
     borderRadius: 999,
-    backgroundColor: 'rgba(147, 197, 253, 0.55)',
+    backgroundColor: '#FFFFFF',
     alignSelf: 'center',
     marginTop: theme.spacing.xl,
     marginBottom: theme.spacing.lg,
@@ -554,12 +546,9 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.18,
     textAlign: 'left',
-    color: '#FFFFFF',
+    color: '#0C4A6E',
     marginLeft: 4,
     marginTop: 0,
-    textShadowColor: 'rgba(0, 0, 0, 0.32)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
   },
   completedPromptText: {
     ...theme.typography.body,
@@ -570,7 +559,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     letterSpacing: 0.18,
     textAlign: 'left',
-    color: 'rgba(255, 255, 255, 0.66)',
+    color: '#0C4A6E',
     marginLeft: 4,
   },
   stepNumberText: {
@@ -579,13 +568,13 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#FFFFFF',
+    color: '#0C4A6E',
     marginLeft: 0,
   },
   completedStepNumberText: {
     fontSize: 15,
     lineHeight: 21,
-    color: 'rgba(255, 255, 255, 0.66)',
+    color: '#0C4A6E',
   },
 
   // Completed step styling

@@ -68,7 +68,7 @@ For uploaded worksheet images, do NOT invent a totally different story world. Ke
 
 For text-only math practice requests, you may create brand-new stories, but you must still preserve the requested math skill.
 
-${isImage ? `Generate exactly 1 quiz with exactly 1 question. That single question is the rewritten version of the uploaded worksheet problem.` : `Generate exactly 3 quizzes with exactly 5 questions each.`}
+${isImage ? `Generate exactly 1 quiz with exactly 1 question. That single question is the rewritten version of the uploaded worksheet problem.` : `Generate exactly 1 quiz with 5 questions.`}
 
 # ABSOLUTE RULE: NEVER OMIT DETAILS
 This is the most important rule. When you read the original problem, identify EVERY piece of information it provides:
@@ -118,73 +118,63 @@ If the original has extra information that should be ignored, include an equival
 The Story section must be complete enough that the child can understand the whole situation without reading the Facts section first. The Facts section repeats the important numbers and conditions in a compact way so the child does not have to scroll back while answering.
 
 # MANDATORY STEP SEQUENCE — FOLLOW EXACTLY
-Every question MUST have exactly 5 steps in exactly this order:
+Every question MUST have exactly 4 steps in exactly this order:
 
-Step 1 — prompt MUST be the exact words: "What do we need to find out in this problem?"
+Step 1 (1st follow-up question): "What do we need to find out in this problem?" or "What are we trying to find?"
   → This asks the child to identify the overall goal/question of the problem
-  → Options: 3 different possible goals (only one is correct, and it must match the actual question being asked)
+  → Options: 3 different possible goals (only one is correct)
 
-Step 2 — prompt MUST be the exact words: "What should our first step be?"
-  → Options: 3 different possible first actions (e.g. "Count all the squares needed", "Add up all prices", "Count the total shapes")
+Step 2 (2nd follow-up question): "Which operation solves this?" or "What should our first step be?"
+  → Options: 3 different possible operations or first actions (e.g. "Addition", "Subtraction", "Multiplication")
 
-Step 3 — prompt MUST be the exact words: "What's the second step?"
-  → Options: 3 different possible second actions
+Step 3 (3rd follow-up question): "Which equation is correct?" or "What's the second step?"
+  → Options: 3 different possible equations or logic steps (e.g. "24 + 18", "24 - 18", "18 - 24")
 
-Step 4 — prompt MUST be the exact words: "What's the third step?"
-  → Options: 3 different possible third actions
-  → If the problem is simple, this step should be a real reasoning step like "write the equation", "combine the totals", "choose the useful facts", or "check what information to ignore" — never skip it
-
-Final Step — prompt MUST start with: "Now calculate"
-  → Options MUST be 3 specific numerical answers (dollar amounts, counts, measurements, etc.), e.g. ["$14", "$18", "$22"] — never vague words like "Find the total"
+Step 4 (Final step - Calculation): Prompt MUST start with "Now calculate" or "So, what is the final answer?"
+  → Options MUST be 3 specific numerical answers (e.g. ["42 flowers", "47 flowers", "39 flowers"] or ["$14", "$18", "$11"])
   → The correct option MUST equal the answer from your rewritten problemText
 
 # CONCRETE EXAMPLE OF A CORRECT OUTPUT
 Here is exactly what one question should look like:
 {
-  "problemText": "Story: Sofia wants to build a toy house for her cat using 2 cubes and 1 triangular prism. Each cube needs 6 square pieces, and each triangular prism needs 3 rectangle pieces and 2 triangle pieces. Sofia must buy packets of pieces: 1 packet of 6 squares costs $4, 1 packet of 3 rectangles costs $2, and 1 packet of 2 triangles costs $3. She also wants to add 3 stars, and each star costs $1.\\n\\nFacts:\\n- Sofia will use 2 cubes.\\n- Sofia will use 1 triangular prism.\\n- Each cube needs 6 squares.\\n- Each triangular prism needs 3 rectangles and 2 triangles.\\n- 1 packet of 6 squares costs $4.\\n- 1 packet of 3 rectangles costs $2.\\n- 1 packet of 2 triangles costs $3.\\n- She wants 3 stars.\\n- Each star costs $1.\\n\\nQuestion: How much will all the flat pieces and stars cost?",
+  "problemText": "Story: Emma picked 24 flowers in the morning and 18 more in the afternoon. How many flowers did she pick in total?\\n\\nFacts:\\n- Emma picked 24 flowers in the morning.\\n- She picked 18 flowers in the afternoon.\\n\\nQuestion: How many flowers did she pick in total?",
   "steps": [
     {
       "prompt": "What do we need to find out in this problem?",
-      "options": ["The total cost of all pieces and stars", "The number of cubes Sofia uses", "Which packet is the most expensive"],
+      "options": ["How many flowers she picked in total", "How many flowers she picked in the morning", "How many flowers are left"],
       "correctIndex": 0,
-      "explanation": "We need to find the total cost. That's the big question we are trying to answer."
+      "explanation": "We need to find the total number of flowers."
     },
     {
-      "prompt": "What should our first step be?",
-      "options": ["Find out which flat pieces we need to buy", "Count the stars", "Add up all the prices"],
+      "prompt": "Which operation solves this?",
+      "options": ["Addition", "Subtraction", "Multiplication"],
       "correctIndex": 0,
-      "explanation": "We start by figuring out which flat pieces each 3D shape needs, so we know what to buy."
+      "explanation": "Addition combines the morning and afternoon flowers."
     },
     {
-      "prompt": "What's the second step?",
-      "options": ["Figure out how many packets of each piece to buy", "Pick the star color", "Count the total shapes"],
+      "prompt": "Which equation is correct?",
+      "options": ["24 + 18", "24 − 18", "18 − 24"],
       "correctIndex": 0,
-      "explanation": "Now that we know what pieces we need, we figure out how many packets to buy and what they cost."
+      "explanation": "We add 24 and 18 together."
     },
     {
-      "prompt": "What's the third step?",
-      "options": ["Add the cost of stars to the total", "Subtract the most expensive item", "Multiply shapes by 10"],
+      "prompt": "So, what is the final answer?",
+      "options": ["42 flowers", "47 flowers", "39 flowers"],
       "correctIndex": 0,
-      "explanation": "Finally, we add the star costs to the shape costs to get the grand total."
-    },
-    {
-      "prompt": "Now calculate the total cost (use paper if needed!) — how much will Sofia spend in total?",
-      "options": ["$14", "$18", "$11"],
-      "correctIndex": 0,
-      "explanation": "2 packets of squares ($4 each) + 1 packet of triangles ($3) + 3 stars ($3) = $14 total."
+      "explanation": "24 + 18 = 42 flowers total!"
     }
   ],
-  "finalAnswer": "Sofia will need $14 to buy all the flat pieces and stars for the toy house."
+  "finalAnswer": "Emma picked 42 flowers in total."
 }
 
 Requirements:
-• "concept" field: strictly 2 words max (e.g. "Cost Calculation").
+• "concept" field: strictly 2 words max (e.g. "Flower Addition").
 • Friendly, encouraging language throughout.
 • Every "explanation" answers WHY this step comes next.
 • Every problem MUST be fully solvable using only the information in "problemText".
 • Your rewritten story MUST contain the same number of facts, data points, and conditions as the original — never fewer.
-• Every math question MUST have exactly 5 steps: goal, first step, second step, third step, final calculation.
-• The final calculation must be the last step, never Step 3 or Step 4.
+• Every math question MUST have exactly 4 steps: 3 step follow-up questions and then final calculation.
+• The final calculation must be the last step.
 
 Return the response STRICTLY as a JSON object:
 {
@@ -196,10 +186,9 @@ ${isImage ? `  "folderName": "Suggested folder name (strictly 1 to 2 words max)"
           "problemText": "Story: ...\\n\\nFacts:\\n- ...\\n- ...\\n\\nQuestion: ...",
           "steps": [
             {"prompt": "What do we need to find out in this problem?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
-            {"prompt": "What should our first step be?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
-            {"prompt": "What's the second step?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
-            {"prompt": "What's the third step?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
-            {"prompt": "Now calculate the total cost (use paper if needed!) — [specific question]", "options": ["$X", "$Y", "$Z"], "correctIndex": 0, "explanation": "..."}
+            {"prompt": "Which operation solves this?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "Which equation is correct?", "options": ["...", "...", "..."], "correctIndex": 0, "explanation": "..."},
+            {"prompt": "So, what is the final answer?", "options": ["42 flowers", "47 flowers", "39 flowers"], "correctIndex": 0, "explanation": "..."}
           ],
           "finalAnswer": "The answer in a complete friendly sentence."
         }
@@ -212,13 +201,6 @@ No markdown, no backticks, just raw JSON.`;
 const getSystemPrompt = (age: number, topicType: 'social' | 'math' = 'social', isImage: boolean = false) => {
   return topicType === 'math' ? getMathSystemPrompt(age, isImage) : getSocialSystemPrompt(age, isImage);
 };
-
-const REQUIRED_MATH_PLANNING_PROMPTS = [
-  'What do we need to find out in this problem?',
-  'What should our first step be?',
-  "What's the second step?",
-  "What's the third step?",
-];
 
 const looksLikeNumericalAnswer = (option: string) => /(?:\d|[$€£¢]|:|\/)/.test(option);
 
@@ -242,7 +224,11 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
       throw new Error(`Expected 1 to 3 quizzes for image generation, got ${data.quizzes.length}`);
     }
   } else {
-    if (data.quizzes.length !== 3) {
+    if (topicType === 'math') {
+      if (data.quizzes.length !== 1) {
+        throw new Error(`Expected exactly 1 math quiz for text generation, got ${data.quizzes.length}`);
+      }
+    } else if (data.quizzes.length !== 3) {
       throw new Error(`Expected exactly 3 quizzes for text generation, got ${data.quizzes.length}`);
     }
   }
@@ -282,7 +268,7 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
         if (!/Story:/i.test(q.problemText) || !/Facts:/i.test(q.problemText) || !/Question:/i.test(q.problemText)) {
           throw new Error(`Quiz ${qIndex} Question ${index} problemText must use compact Story/Facts/Question format`);
         }
-        if (!Array.isArray(q.steps) || q.steps.length !== 5) throw new Error(`Quiz ${qIndex} Question ${index} must have exactly 5 steps`);
+        if (!Array.isArray(q.steps) || (q.steps.length !== 4 && q.steps.length !== 5)) throw new Error(`Quiz ${qIndex} Question ${index} must have 4 steps`);
         for (const [stepIndex, step] of q.steps.entries()) {
           if (typeof step.prompt !== 'string' || !step.prompt.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid prompt`);
           if (!Array.isArray(step.options) || step.options.length !== 3) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} must have exactly 3 options`);
@@ -294,14 +280,7 @@ const validateQuizData = (data: any, topicType: 'social' | 'math' = 'social', is
           }
           if (typeof step.explanation !== 'string' || !step.explanation.trim()) throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has invalid explanation`);
 
-          if (stepIndex < REQUIRED_MATH_PLANNING_PROMPTS.length && step.prompt.trim() !== REQUIRED_MATH_PLANNING_PROMPTS[stepIndex]) {
-            throw new Error(`Quiz ${qIndex} Question ${index} Step ${stepIndex} has wrong prompt order: ${step.prompt}`);
-          }
-
-          if (stepIndex === 4) {
-            if (!step.prompt.trim().startsWith('Now calculate')) {
-              throw new Error(`Quiz ${qIndex} Question ${index} final step must start with "Now calculate"`);
-            }
+          if (stepIndex === q.steps.length - 1) {
             if (!step.options.every(looksLikeNumericalAnswer)) {
               throw new Error(`Quiz ${qIndex} Question ${index} final step options must be numerical answers`);
             }
