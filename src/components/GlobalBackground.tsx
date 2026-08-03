@@ -5,14 +5,14 @@ import { BotanicalBackground } from './BotanicalBackground';
 import { CelestialBackground } from './CelestialBackground';
 import { AstronautBackground } from './AstronautBackground';
 import { RocketBackground } from './RocketBackground';
-import { AnimatedCubesBackground } from './AnimatedCubesBackground';
+import { AnimatedCloudsBackground } from './AnimatedCloudsBackground';
 import { LinearGradient } from 'expo-linear-gradient';
 
 interface GlobalBackgroundProps {
-  showCubes?: boolean;
+  showClouds?: boolean;
 }
 
-export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = false }) => {
+export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = false }) => {
   const { mood } = useMood();
 
   const renderMood = () => {
@@ -44,7 +44,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showCubes = 
         style={styles.pattern}
       />
       {renderMood()}
-      {showCubes && <AnimatedCubesBackground />}
+      {showClouds && <AnimatedCloudsBackground />}
     </View>
   );
 };
