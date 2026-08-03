@@ -9,6 +9,7 @@ import { useMood, getMoodColors } from '../context/MoodContext';
 import { TopBar } from '../components/TopBar';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { SettingsModal } from '../components/SettingsModal';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const useAttentionLoop = () => {
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -163,6 +164,11 @@ export const HomeScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
 
 
+  const insets = useSafeAreaInsets();
+  const footerPaddingBottom = Math.max(insets.bottom, isTablet ? 12 : 8);
+  const footerHeight = isTablet ? 64 + footerPaddingBottom : isSmallScreen ? 60 + footerPaddingBottom : 68 + Math.round(footerPaddingBottom * 1.2);
+  const footerPaddingTop = isTablet ? 5 : (isSmallScreen ? 4 : 5);
+
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground showClouds />
@@ -215,6 +221,26 @@ export const HomeScreen = () => {
             />
         </View>
       </ScreenWrapper>
+
+      <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
+        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
+          <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
+        </Pressable>
+        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
+          <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
+        </Pressable>
+        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
+          <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
+        </Pressable>
+        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
+          <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
+        </Pressable>
+      </View>
+
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>
   );
@@ -225,6 +251,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: theme.spacing.xl,
+    paddingBottom: 40,
   },
   startContent: {
     justifyContent: 'center',
@@ -247,5 +274,29 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 460,
     alignSelf: 'center',
+  },
+  customFooter: {
+    flexDirection: 'row',
+    height: 72,
+    backgroundColor: '#00CED1',
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    width: '100%',
+    paddingBottom: 12,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+  footerTab: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+    paddingTop: 8,
+  },
+  footerTabText: {
+    fontFamily: FONTS.medium,
+    fontSize: 12,
+    color: '#FFFFFF',
+    marginTop: 2,
+    textAlign: 'center',
   },
 });
