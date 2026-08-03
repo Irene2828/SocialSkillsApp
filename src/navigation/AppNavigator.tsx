@@ -82,7 +82,8 @@ const AppTabs = () => {
                 // Slightly larger labels on tablet for legibility
                 fontSize: isTablet ? 13 : 11,
                 color: color,
-                textAlign: 'center'
+                textAlign: 'center',
+                letterSpacing: 0.8
               }}>
                 {label}
               </Text>

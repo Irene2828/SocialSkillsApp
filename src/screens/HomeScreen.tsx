@@ -180,8 +180,21 @@ export const HomeScreen = () => {
           hideBorder
           noEdgeToEdge
           rightComponent={
-            <Pressable onPress={() => setShowSettings(true)} style={{ alignItems: 'center', justifyContent: 'center', padding: 8, marginRight: -8 }}>
-              <Ionicons name="options-outline" size={24} color="#0C4A6E" />
+            <Pressable 
+              onPress={() => setShowSettings(true)} 
+              style={{ 
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                alignItems: 'center', 
+                justifyContent: 'center',
+                marginRight: 4
+              }}
+            >
+              <Ionicons name="options-outline" size={20} color="#FFFFFF" />
             </Pressable>
           }
         />
@@ -300,5 +313,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: 2,
     textAlign: 'center',
+    letterSpacing: 0.8,
   },
 });

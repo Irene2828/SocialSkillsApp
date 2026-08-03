@@ -1064,5 +1064,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     marginTop: 2,
     textAlign: 'center',
+    letterSpacing: 0.8,
   },
 });
