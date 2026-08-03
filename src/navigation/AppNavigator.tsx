@@ -60,7 +60,19 @@ const AppTabs = () => {
           }
 
           return (
-            <Ionicons name={iconName} size={iconSize} color={color} style={{ marginTop: 2 }} />
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
+              {focused && (
+                <View style={{
+                  position: 'absolute',
+                  top: isTablet ? -11 : -10, // sits right on the top stroke border of tab bar
+                  height: 3,
+                  width: 36,
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: 1.5,
+                }} />
+              )}
+              <Ionicons name={iconName} size={iconSize} color={color} style={{ marginTop: 2 }} />
+            </View>
           );
         },
         tabBarLabel: ({ focused, color }) => {
