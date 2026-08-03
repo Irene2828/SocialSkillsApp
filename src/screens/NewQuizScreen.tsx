@@ -57,7 +57,7 @@ export const NewQuizScreen = () => {
   const isTablet = width >= 768;
   const numColumns = 2;
   const contentWidth = Math.min(width, 700);
-  const paddingH = 24; // theme.spacing.lg
+  const paddingH = 12;
   const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = width < 380;
   const { addCoins, coinBalance, isRewardsModeOn } = useRewards();

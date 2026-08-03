@@ -268,7 +268,7 @@ export const PuzzleScreen = () => {
   const isTablet = screenWidth >= 768;
   const numColumns = 2;
   const contentWidth = Math.min(screenWidth, 700);
-  const paddingH = 24; // theme.spacing.lg
+  const paddingH = 12;
   const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
   const isSmallScreen = screenWidth < 380;
   const boardSize = Math.min(screenWidth - 48, 400);
