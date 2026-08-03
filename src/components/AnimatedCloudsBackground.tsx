@@ -62,10 +62,10 @@ export const AnimatedCloudsBackground: React.FC = () => {
   return (
     <View style={styles.container} pointerEvents="none">
       {clouds.map(c => {
-        // Drift vertically from bottom of screen to top (offscreen to offscreen)
+        // Drift vertically from middle of screen to top
         const translateY = c.animValue.interpolate({
           inputRange: [0, 1],
-          outputRange: [height + 60, -60],
+          outputRange: [height / 2, -60],
         });
 
         // Soft horizontal sway for a natural floating effect
