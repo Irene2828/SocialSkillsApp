@@ -172,12 +172,13 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                     styles.redeemButton,
                     styles.redeemButtonActive,
                   ]}
+                  textStyle={{ color: '#0C4A6E' }}
                   variant="secondary"
                   disabled={isProcessing}
                 />
               ) : (
                 <View style={styles.lockedButton}>
-                  <Ionicons name="lock-closed" size={14} color="rgba(42, 30, 92, 0.6)" style={{ marginRight: 4 }} />
+                  <Ionicons name="lock-closed" size={14} color="#0C4A6E" style={{ marginRight: 4 }} />
                   <Text style={styles.lockedButtonText}>Locked</Text>
                 </View>
               )}
@@ -303,7 +304,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.16)',
   },
   redeemButtonActive: {
-    borderColor: theme.colors.primary,
+    borderColor: '#0C4A6E',
   },
   lockedButton: {
     minWidth: 80,
@@ -312,15 +313,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: theme.spacing.md,
     alignSelf: 'center',
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(12, 74, 110, 0.22)',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   lockedButtonText: {
     ...theme.typography.button,
-    fontFamily: FONTS.regular,
-    fontWeight: '400',
-    color: 'rgba(42, 30, 92, 0.6)',
+    fontFamily: FONTS.medium,
+    fontWeight: '500',
+    color: '#0C4A6E',
     fontSize: 14,
   },
 });

@@ -16,12 +16,12 @@ export const AnimatedCloudsBackground: React.FC = () => {
 
   const [clouds] = useState(() => {
     return Array.from({ length: CLOUD_COUNT }).map((_, i) => {
-      // Space vertically across the screen
-      const yFraction = Math.random(); 
+      // Space horizontally across the screen
+      const xFraction = Math.random(); 
       
       return {
         id: i,
-        yFraction,
+        xFraction,
         size: Math.random() * 20 + 24, // 24px to 44px clouds
         color: CLOUD_COLORS[Math.floor(Math.random() * CLOUD_COLORS.length)],
         duration: Math.random() * 20000 + 25000, // Gentle drift: 25s to 45s
@@ -62,16 +62,16 @@ export const AnimatedCloudsBackground: React.FC = () => {
   return (
     <View style={styles.container} pointerEvents="none">
       {clouds.map(c => {
-        // Drift horizontally from right to left (offscreen to offscreen)
-        const translateX = c.animValue.interpolate({
+        // Drift vertically from bottom of screen to top (offscreen to offscreen)
+        const translateY = c.animValue.interpolate({
           inputRange: [0, 1],
-          outputRange: [width + 60, -60],
+          outputRange: [height + 60, -60],
         });
 
-        // Soft vertical sway for a natural floating effect
-        const translateY = c.animValue.interpolate({
+        // Soft horizontal sway for a natural floating effect
+        const translateX = c.animValue.interpolate({
           inputRange: [0, 0.25, 0.5, 0.75, 1],
-          outputRange: [0, -8, 0, 8, 0],
+          outputRange: [0, -12, 0, 12, 0],
         });
         
         const opacity = c.animValue.interpolate({
@@ -85,7 +85,7 @@ export const AnimatedCloudsBackground: React.FC = () => {
             style={[
               styles.cloud,
               {
-                top: c.yFraction * height,
+                left: c.xFraction * width,
                 opacity,
                 transform: [
                   { translateX },
