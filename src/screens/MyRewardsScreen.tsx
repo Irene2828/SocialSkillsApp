@@ -426,9 +426,9 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'available' ? (
-                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.medium, fontWeight: '500', fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>All Rewards</Text>
+                <Text style={[styles.tabText, styles.activeTabText]}>All Rewards</Text>
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>All Rewards</Text>
+                <Text style={styles.tabText}>All Rewards</Text>
               )}
             </View>
           </Pressable>
@@ -441,9 +441,9 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               {activeTab === 'unlocked' ? (
-                <Text style={[styles.tabText, styles.activeTabText, { fontFamily: FONTS.medium, fontWeight: '500', fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>Unlocked</Text>
+                <Text style={[styles.tabText, styles.activeTabText]}>Unlocked</Text>
               ) : (
-                <Text style={[styles.tabText, { color: subTextColor, fontSize: 18, letterSpacing: 0.4, lineHeight: 26 }]}>Unlocked</Text>
+                <Text style={styles.tabText}>Unlocked</Text>
               )}
             </View>
           </Pressable>
@@ -941,10 +941,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   tabText: {
-    ...theme.typography.button,
+    ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: 'rgba(42, 30, 92, 0.6)',
+    color: 'rgba(42, 30, 92, 0.55)',
+    fontSize: 16,
+    letterSpacing: 0,
+    lineHeight: 24,
   },
   activeTabText: {
     color: '#0C4A6E',
