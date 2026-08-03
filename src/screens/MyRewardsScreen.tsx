@@ -499,31 +499,28 @@ export const MyRewardsScreen = () => {
           )}
         </View>
       </ScreenWrapper>
-
-        {navigation && (
-          <>
-            <View style={styles.footerSpacer} />
-            <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
-              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-                <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
-              </Pressable>
-              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-                <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
-              </Pressable>
-              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-                <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
-              </Pressable>
-              <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-                <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-                <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
-              </Pressable>
-            </View>
-          </>
-        )}
       </ScrollView>
+
+      {navigation && (
+        <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
+          <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
+            <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
+          </Pressable>
+          <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
+            <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
+          </Pressable>
+          <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
+            <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
+          </Pressable>
+          <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
+            <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
+          </Pressable>
+        </View>
+      )}
       {renderSuccessModal()}
 
       {/* Reset Balance PIN Modal */}
@@ -757,7 +754,7 @@ export const MyRewardsScreen = () => {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 0,
-    paddingBottom: 0,
+    paddingBottom: 90,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
