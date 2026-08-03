@@ -261,11 +261,13 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const isMath = generateTopicType === 'math' || activeFolderId === 'math_quiz_folder';
+      const currentFolderObj = activeFolderId ? folders.find(f => f.id === activeFolderId) : null;
+      const isMathFolder = activeFolderId === 'math_quiz_folder' || (currentFolderObj ? currentFolderObj.name.toLowerCase().includes('math') : false);
+      const isMath = generateTopicType === 'math' || isMathFolder;
       const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromImage(base64Image, 7, topicType);
       
-      const targetFolderId = isMath ? 'math_quiz_folder' : (activeFolderId || undefined);
+      const targetFolderId = activeFolderId || (isMath ? 'math_quiz_folder' : undefined);
 
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
         const prefix = isMath ? 'math_ai' : 'custom_ai';
@@ -311,7 +313,8 @@ export const NewQuizScreen = () => {
           addCustomQuiz(quizSet.category, quizSet.questions);
         });
         setAiGenerating(false);
-        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to Math Quiz folder!` });
+        const folderLabel = currentFolderObj ? currentFolderObj.name : 'Math Quiz folder';
+        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to ${folderLabel}!` });
       } else {
         setGeneratedQuizzes(newQuizzes);
         if (responseData.folderName) {
@@ -319,7 +322,7 @@ export const NewQuizScreen = () => {
         } else {
           setSuggestedFolderName('New Folder');
         }
-        setSelectedExistingFolderId(null);
+        setSelectedExistingFolderId(activeFolderId || null);
         setAiGenerating(false);
         setShowPhotoConfirmation(true);
       }
@@ -381,11 +384,13 @@ export const NewQuizScreen = () => {
     setAiGenerating(true);
     
     try {
-      const isMath = generateTopicType === 'math' || activeFolderId === 'math_quiz_folder';
+      const currentFolderObj = activeFolderId ? folders.find(f => f.id === activeFolderId) : null;
+      const isMathFolder = activeFolderId === 'math_quiz_folder' || (currentFolderObj ? currentFolderObj.name.toLowerCase().includes('math') : false);
+      const isMath = generateTopicType === 'math' || isMathFolder;
       const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
       
-      const targetFolderId = isMath ? 'math_quiz_folder' : (activeFolderId || undefined);
+      const targetFolderId = activeFolderId || (isMath ? 'math_quiz_folder' : undefined);
 
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
         const prefix = isMath ? 'math_ai' : 'custom_ai';
@@ -436,11 +441,22 @@ export const NewQuizScreen = () => {
         setAiGenerating(false);
         setAiPromptSituation('');
         setAiPromptContext('');
-        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to Math Quiz folder!` });
+        const folderLabel = currentFolderObj ? currentFolderObj.name : 'Math Quiz folder';
+        showToast({ message: `Math quiz '${newQuizzes[0]?.category.title}' saved to ${folderLabel}!` });
       } else {
-        setGeneratedQuizzes(newQuizzes);
-        setAiGenerating(false);
-        setShowFolderSelection(true);
+        if (activeFolderId) {
+          newQuizzes.forEach((quizSet: any) => {
+            addCustomQuiz(quizSet.category, quizSet.questions);
+          });
+          setAiGenerating(false);
+          setAiPromptSituation('');
+          setAiPromptContext('');
+          showToast({ message: 'AI Quizzes generated and saved!' });
+        } else {
+          setGeneratedQuizzes(newQuizzes);
+          setAiGenerating(false);
+          setShowFolderSelection(true);
+        }
       }
       
     } catch (error: any) {
@@ -821,21 +837,20 @@ export const NewQuizScreen = () => {
 
           </View>
 
-          {/* CTA for Math Folder */}
-          {activeFolderId === 'math_quiz_folder' && (
-            <View style={styles.createAiButtonContainer}>
-              <Button
-                title="Generate New Quiz"
-                iconName="color-wand-outline"
-                iconSize={18}
-                style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-                onPress={() => {
-                  setGenerateTopicType('math');
-                  setShowGenerateMenu(true);
-                }}
-              />
-            </View>
-          )}
+          {/* CTA for Folder */}
+          <View style={styles.createAiButtonContainer}>
+            <Button
+              title="Generate New Quiz"
+              iconName="color-wand-outline"
+              iconSize={18}
+              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                const isMathFolder = activeFolderId === 'math_quiz_folder' || (currentFolder ? currentFolder.name.toLowerCase().includes('math') : false);
+                setGenerateTopicType(isMathFolder ? 'math' : 'social');
+                setShowGenerateMenu(true);
+              }}
+            />
+          </View>
         </ScrollView>
       );
     }
