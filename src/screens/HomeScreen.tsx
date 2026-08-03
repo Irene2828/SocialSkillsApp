@@ -261,6 +261,8 @@ const styles = StyleSheet.create({
   },
   startTitle: {
     ...theme.typography.display,
+    fontSize: 55,
+    lineHeight: 66,
     marginBottom: theme.spacing.sm,
     textAlign: 'center',
   },
