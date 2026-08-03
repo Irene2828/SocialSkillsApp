@@ -1,8 +1,8 @@
-# Social Quest
+# Smart Explorer
 
 A calm, Scandinavian-inspired social skills learning app for children (7–10 years old). 
 
-Social Quest focuses on teaching social skills through simple quizzes, rewarding learning cleanly, and establishing daily habits—all while avoiding noisy gamification and maintaining a parent-trusted environment.
+Smart Explorer focuses on teaching social skills through simple quizzes, rewarding learning cleanly, and establishing daily habits—all while avoiding noisy gamification and maintaining a parent-trusted environment.
 
 ## Features
 
