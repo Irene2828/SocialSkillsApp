@@ -56,12 +56,36 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
 
         <View style={styles.side}>
           {onBack ? (
-            <Pressable onPress={onBack} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+            <Pressable 
+              onPress={onBack} 
+              style={{ 
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                alignItems: 'center', 
+                justifyContent: 'center' 
+              }}
+            >
+              <Ionicons name="arrow-back" size={20} color="#FFFFFF" />
             </Pressable>
           ) : showSettingsAndRewards ? (
-            <Pressable onPress={() => navigation.navigate('Home' as never)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-              <Ionicons name="home-outline" size={24} color="#FFFFFF" />
+            <Pressable 
+              onPress={() => navigation.navigate('Home' as never)} 
+              style={{ 
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                alignItems: 'center', 
+                justifyContent: 'center' 
+              }}
+            >
+              <Ionicons name="home-outline" size={20} color="#FFFFFF" />
             </Pressable>
           ) : null}
         </View>
@@ -74,25 +98,19 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               style={{ 
                 alignItems: 'center', 
                 justifyContent: 'center',
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
                 borderWidth: 1.2,
-                borderColor: 'rgba(255, 255, 255, 0.45)',
+                borderColor: 'rgba(255, 255, 255, 0.4)',
                 borderRadius: 20,
-                paddingHorizontal: 10,
+                paddingHorizontal: 12,
                 paddingVertical: 4,
               }}
             >
               <View style={styles.coinBadge}>
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={[styles.coinText, { color: '#FFFFFF', marginRight: 2 }]}>+</Text>
-                  {String(coinBalance).split('').map((char, index) => {
-                    return (
-                      <Text key={`coin-${index}`} style={[styles.coinText, { color: '#FFFFFF' }]}>
-                        {char}
-                      </Text>
-                    );
-                  })}
-                </View>
-                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 4 }]} />
+                <Text style={[styles.coinText, { color: '#FFFFFF', letterSpacing: 0.8 }]}>
+                  +{coinBalance}
+                </Text>
+                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
               <Text 
                 style={{ 
@@ -101,7 +119,8 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                   lineHeight: isTablet ? 18 : 15,
                   color: '#FFFFFF',
                   marginTop: -2,
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  letterSpacing: 0.8,
                 }}
               >
                 Redeem
