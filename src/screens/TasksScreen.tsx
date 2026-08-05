@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Modal, useWindowDimensions, Animated } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Text, StyleSheet, Pressable, ScrollView, TextInput, Modal, useWindowDimensions, Animated, DeviceEventEmitter } from 'react-native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,6 +21,18 @@ type NavigationProp = NativeStackNavigationProp<QuizLibraryStackParamList, 'Task
 export const TasksScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const insets = useSafeAreaInsets();
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const isTablet = SCREEN_WIDTH >= 768;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+        setIsModalVisible(true);
+      });
+      return () => sub.remove();
+    }, [])
+  );
+
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;

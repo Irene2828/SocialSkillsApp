@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, Pressable, ScrollView, Modal, useWindowDimensions, Animated, PanResponder, Alert, TextInput, FlatList, DeviceEventEmitter } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { safeStorage } from '../utils/storage';
 import { ScreenWrapper } from '../components/ScreenWrapper';
@@ -155,7 +156,6 @@ const DraggablePiece = ({
     </Animated.View>
   );
 };
-import { useNavigation } from '@react-navigation/native';
 
 export const PuzzleScreen = () => {
   const navigation = useNavigation();
@@ -173,6 +173,15 @@ export const PuzzleScreen = () => {
   const [showDeletePin, setShowDeletePin] = useState(false);
   const [deletePin, setDeletePin] = useState('');
   const shakeAnim = useRef(new Animated.Value(0)).current;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+        setShowAiMenu(true);
+      });
+      return () => sub.remove();
+    }, [])
+  );
 
   const triggerShake = () => {
     Animated.sequence([

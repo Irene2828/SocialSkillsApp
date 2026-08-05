@@ -10,6 +10,7 @@ import { TasksScreen } from '../screens/TasksScreen';
 import { MyRewardsScreen } from '../screens/MyRewardsScreen';
 import { PuzzleScreen } from '../screens/PuzzleScreen';
 import { DrawingBoardScreen } from '../screens/DrawingBoardScreen';
+import { AppTabBar } from '../components/AppTabBar';
 import { SettingsScreen } from '../screens/SettingsScreen';
 import { HomeScreen } from '../screens/HomeScreen';
 import { CreateQuizFromPhotoScreen } from '../screens/CreateQuizFromPhotoScreen';
@@ -43,111 +44,24 @@ const AppTabs = () => {
 
   return (
     <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          // Use larger icons on tablet for better legibility and touch targets
-          const iconSize = isTablet ? size + 4 : size;
-          let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
-
-          if (route.name === 'NewQuiz') {
-            iconName = 'document-text-outline';
-          } else if (route.name === 'Tasks') {
-            iconName = 'checkmark-done-circle-outline';
-          } else if (route.name === 'Puzzles') {
-            iconName = 'extension-puzzle-outline';
-          } else if (route.name === 'Drawing') {
-            iconName = 'color-palette-outline';
-          }
-
-          return (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  top: isTablet ? -11 : -10, // sits right on the top stroke border of tab bar
-                  height: 3,
-                  width: 36,
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: 1.5,
-                }} />
-              )}
-              <Ionicons name={iconName} size={iconSize} color={color} style={{ marginTop: 2 }} />
-            </View>
-          );
-        },
-        tabBarLabel: ({ focused, color }) => {
-          let label = '';
-          if (route.name === 'NewQuiz') label = 'Quizes';
-          else if (route.name === 'Tasks') label = 'Tasks';
-          else if (route.name === 'Puzzles') label = 'Puzzles';
-          else if (route.name === 'Drawing') label = 'Draw';
-          return (
-            <View style={{
-              backgroundColor: focused ? 'rgba(255, 255, 255, 0.24)' : 'transparent',
-              paddingHorizontal: 14,
-              paddingVertical: 4,
-              borderRadius: 12,
-              marginBottom: 2,
-            }}>
-              <Text style={{
-                fontFamily: focused ? FONTS.semiBold : FONTS.medium,
-                // Slightly larger labels on tablet for legibility
-                fontSize: isTablet ? 13 : 11,
-                color: color,
-                textAlign: 'center',
-                letterSpacing: 0.8
-              }}>
-                {label}
-              </Text>
-            </View>
-          );
-        },
-        tabBarActiveTintColor: activeColor,
-        tabBarInactiveTintColor: inactiveColor,
-        headerShown: false,
-
-        tabBarStyle: {
-          backgroundColor: '#00CED1',
-          borderTopWidth: 1,
-          borderTopColor: 'rgba(255, 255, 255, 0.45)',
-          elevation: 0,
-          shadowOpacity: 0,
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: height,
-          paddingBottom: paddingBottom,
-          paddingTop: isTablet ? 5 : (isSmallScreen ? 4 : 5),
-          width: '100%',
-        },
-        tabBarItemStyle: {
-          flex: 1,
-          flexDirection: 'column-reverse',
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-      })}
+      tabBar={(props) => <AppTabBar activeRoute={props.state.routes[props.state.index].name} isFabActive={true} />}
+      screenOptions={{ headerShown: false }}
     >
       <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
-        options={{ tabBarLabel: 'Quizes' }}
       />
-      <Tab.Screen 
-        name="Tasks" 
-        component={TasksScreen} 
-        options={{ tabBarLabel: 'Tasks' }}
+      <Tab.Screen
+        name="Tasks"
+        component={TasksScreen}
       />
       <Tab.Screen 
         name="Puzzles" 
         component={PuzzleScreen} 
-        options={{ tabBarLabel: 'Puzzles' }}
       />
       <Tab.Screen 
         name="Drawing" 
         component={DrawingBoardScreen} 
-        options={{ tabBarLabel: 'Draw' }}
       />
     </Tab.Navigator>
   );

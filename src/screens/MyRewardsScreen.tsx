@@ -25,6 +25,7 @@ import { theme, FONTS } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
+import { AppTabBar } from '../components/AppTabBar';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
 import { useNavigation } from '@react-navigation/native';
@@ -520,40 +521,7 @@ export const MyRewardsScreen = () => {
       </ScrollView>
 
       {navigation && (
-        <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
-        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column-reverse' }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-          <View style={{ backgroundColor: 'transparent', paddingHorizontal: 14, paddingVertical: 4, borderRadius: 12, marginBottom: 2 }}>
-            <Text style={{ color: '#FFFFFF', fontSize: isTablet ? 12 : 10, fontWeight: '600' }}>Quizes</Text>
-          </View>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-            <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" style={{ marginTop: 2 }} />
-          </View>
-        </Pressable>
-        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column-reverse' }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-          <View style={{ backgroundColor: 'transparent', paddingHorizontal: 14, paddingVertical: 4, borderRadius: 12, marginBottom: 2 }}>
-            <Text style={{ color: '#FFFFFF', fontSize: isTablet ? 12 : 10, fontWeight: '600' }}>Tasks</Text>
-          </View>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-            <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" style={{ marginTop: 2 }} />
-          </View>
-        </Pressable>
-        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column-reverse' }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-          <View style={{ backgroundColor: 'transparent', paddingHorizontal: 14, paddingVertical: 4, borderRadius: 12, marginBottom: 2 }}>
-            <Text style={{ color: '#FFFFFF', fontSize: isTablet ? 12 : 10, fontWeight: '600' }}>Puzzles</Text>
-          </View>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-            <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" style={{ marginTop: 2 }} />
-          </View>
-        </Pressable>
-        <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column-reverse' }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-          <View style={{ backgroundColor: 'transparent', paddingHorizontal: 14, paddingVertical: 4, borderRadius: 12, marginBottom: 2 }}>
-            <Text style={{ color: '#FFFFFF', fontSize: isTablet ? 12 : 10, fontWeight: '600' }}>Draw</Text>
-          </View>
-          <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-            <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" style={{ marginTop: 2 }} />
-          </View>
-        </Pressable>
-      </View>
+        <AppTabBar activeRoute="None" isFabActive={true} onFabPress={handleAddRewardPress} />
       )}
       {renderSuccessModal()}
 
