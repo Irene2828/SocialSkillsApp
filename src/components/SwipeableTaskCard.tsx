@@ -239,11 +239,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.5)',
     height: '100%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 1,
+    ...theme.shadows.soft,
   },
   taskCardCompleted: {
     backgroundColor: 'rgba(224, 251, 252, 0.45)',

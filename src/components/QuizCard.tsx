@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     height: 158,
     position: 'relative',
     borderWidth: 2,
+    ...theme.shadows.soft,
   },
   featuredCard: {
     minHeight: 110,

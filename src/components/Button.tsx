@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     borderRadius: theme.borderRadius.full,
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'hidden',
+    ...theme.shadows.soft,
   },
   primaryButtonContainer: {
     borderRadius: theme.borderRadius.full,

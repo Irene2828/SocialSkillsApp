@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderStyle: 'dashed',
     borderRadius: 24,
+    ...theme.shadows.soft,
   },
   iconContainer: {
     alignItems: 'center',
