@@ -241,19 +241,27 @@ export const HomeScreen = () => {
 
       <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
         <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-          <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <View style={styles.iconCircle}>
+            <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          </View>
           <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
         </Pressable>
         <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-          <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <View style={styles.iconCircle}>
+            <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          </View>
           <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
         </Pressable>
         <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-          <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <View style={styles.iconCircle}>
+            <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          </View>
           <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
         </Pressable>
         <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-          <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <View style={styles.iconCircle}>
+            <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+          </View>
           <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
         </Pressable>
       </View>
@@ -269,6 +277,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: theme.spacing.xl,
     paddingBottom: 40,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
+    paddingTop: 40,
+    paddingBottom: 100, // Increased to clear absolute footer
   },
   startContent: {
     justifyContent: 'center',
@@ -297,13 +310,17 @@ const styles = StyleSheet.create({
   customFooter: {
     flexDirection: 'row',
     height: 72,
-    backgroundColor: '#00CED1',
+    backgroundColor: 'transparent',
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.45)',
     width: '100%',
     paddingBottom: 12,
     alignItems: 'center',
     justifyContent: 'space-around',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   footerTab: {
     alignItems: 'center',
@@ -318,5 +335,15 @@ const styles = StyleSheet.create({
     marginTop: 2,
     textAlign: 'center',
     letterSpacing: 0.8,
+  },
+  iconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

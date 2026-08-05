@@ -71,7 +71,19 @@ const AppTabs = () => {
                   borderRadius: 1.5,
                 }} />
               )}
-              <Ionicons name={iconName} size={iconSize} color={color} style={{ marginTop: 2 }} />
+              <View style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                alignItems: 'center', 
+                justifyContent: 'center',
+                marginTop: 2
+              }}>
+                <Ionicons name={iconName} size={iconSize} color={color} />
+              </View>
             </View>
           );
         },
@@ -107,7 +119,7 @@ const AppTabs = () => {
         headerShown: false,
 
         tabBarStyle: {
-          backgroundColor: '#00CED1',
+          backgroundColor: 'transparent',
           borderTopWidth: 1,
           borderTopColor: 'rgba(255, 255, 255, 0.45)',
           elevation: 0,
