@@ -68,7 +68,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
               ))}
             </View>
           </View>
-          <Text style={styles.subtitleText}>{"Have enough points?\nRedeem them for a chosen reward!"}</Text>
+          <Text style={styles.subtitleText}>{"When you have enough - redeem them\nfor a reward of your choice"}</Text>
         </View>
       </View>
     </View>
