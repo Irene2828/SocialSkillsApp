@@ -94,7 +94,7 @@ const AppTabs = () => {
                         fontWeight: focused ? '600' : '500',
                         transform: [
                           { rotate: `${angle}deg` },
-                          { translateY: -22 },
+                          { translateY: -27 },
                         ],
                       }}
                     >
@@ -113,7 +113,7 @@ const AppTabs = () => {
                 borderColor: 'rgba(255, 255, 255, 0.4)',
                 alignItems: 'center', 
                 justifyContent: 'center',
-                marginTop: 12
+                marginTop: 16
               }}>
                 <Ionicons name={iconName} size={iconSize} color={color} />
               </View>

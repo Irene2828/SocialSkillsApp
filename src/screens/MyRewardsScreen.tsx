@@ -435,7 +435,7 @@ export const MyRewardsScreen = () => {
                 fontWeight: '500',
                 transform: [
                   { rotate: `${angle}deg` },
-                  { translateY: -22 },
+                  { translateY: -27 },
                 ],
               }}
             >
@@ -1154,5 +1154,6 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 6,
   },
 });
