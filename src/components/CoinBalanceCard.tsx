@@ -14,12 +14,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onReset }) => {
   return (
     <View style={styles.cardContainer}>
-      <View 
+      <Card 
         style={[styles.card, {
           borderRadius: theme.borderRadius.md,
           borderWidth: 1.5,
           borderColor: 'rgba(255, 255, 255, 0.45)',
-          backgroundColor: 'transparent',
           ...theme.shadows.soft,
         }]}
       >
@@ -28,7 +27,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
             onPress={onReset}
             style={{ position: 'absolute', top: 12, right: 12, zIndex: 10, padding: 4 }}
           >
-            <Ionicons name="refresh-outline" size={20} color="#FFFFFF" style={{ opacity: 0.8 }} />
+            <Ionicons name="refresh-outline" size={20} color="#0C4A6E" style={{ opacity: 0.8 }} />
           </Pressable>
         )}
         <View style={styles.content}>
@@ -37,7 +36,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
             <FontAwesome5 
               name="coins" 
               size={34} 
-              color="#FFFFFF" 
+              color="#0C4A6E" 
               style={{ marginRight: 12, marginTop: 4 }}
             />
             <View style={{ flexDirection: 'row' }}>
@@ -46,7 +45,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   key={`num-${index}`}
                   style={[
                     styles.balanceNumber, 
-                    { color: '#FFFFFF' }
+                    { color: '#0C4A6E' }
                   ]}
                 >
                   {char}
@@ -60,7 +59,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   style={[
                     styles.balanceLabel, 
                     { marginLeft: 0 },
-                    { color: '#FFFFFF' }
+                    { color: '#0C4A6E' }
                   ]}
                 >
                   {char}
@@ -70,7 +69,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
           </View>
           <Text style={styles.subtitleText}>{"When you have enough - redeem them\nfor a reward of your choice"}</Text>
         </View>
-      </View>
+      </Card>
     </View>
   );
 };
