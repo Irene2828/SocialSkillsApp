@@ -121,6 +121,7 @@ const AppTabs = () => {
           );
         },
         tabBarLabel: () => null,
+        tabBarShowLabel: false,
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
