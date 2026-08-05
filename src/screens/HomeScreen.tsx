@@ -165,8 +165,12 @@ export const HomeScreen = () => {
 
 
   const insets = useSafeAreaInsets();
-  const footerPaddingBottom = Math.max(insets.bottom, isTablet ? 12 : 8);
-  const footerHeight = isTablet ? 64 + footerPaddingBottom : isSmallScreen ? 60 + footerPaddingBottom : 68 + Math.round(footerPaddingBottom * 1.2);
+  const footerPaddingBottom = (Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10)) / 2) * 0.5;
+  const footerHeight = isTablet
+    ? 64 + footerPaddingBottom
+    : isSmallScreen
+    ? 60 + footerPaddingBottom
+    : 68 + Math.round(footerPaddingBottom * 1.2);
   const footerPaddingTop = isTablet ? 5 : (isSmallScreen ? 4 : 5);
 
   return (
