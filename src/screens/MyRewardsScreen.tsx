@@ -521,7 +521,7 @@ export const MyRewardsScreen = () => {
       </ScrollView>
 
       {navigation && (
-        <AppTabBar activeRoute="None" isFabActive={true} onFabPress={handleAddRewardPress} />
+        <AppTabBar activeRoute="None" isFabActive={true} />
       )}
       {renderSuccessModal()}
 

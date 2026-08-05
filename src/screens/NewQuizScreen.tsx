@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions, DeviceEventEmitter } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
@@ -28,7 +28,7 @@ import { useMood, getMoodColors } from '../context/MoodContext';
 import { useProgress } from '../context/ProgressContext';
 import { useQuizContext } from '../context/QuizContext';
 import { useFeedback } from '../context/FeedbackContext';
-import { useNavigation, useRoute, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { QuickStartButton } from '../components/QuickStartButton';
 import { SimpleLockScreen } from '../components/SimpleLockScreen';
@@ -792,25 +792,6 @@ export const NewQuizScreen = () => {
     setFolderHistory(prev => prev.slice(0, -1));
   };
 
-  const renderEmptyState = () => (
-    <View style={styles.emptyState}>
-      <Ionicons name="folder-open-outline" size={64} color="rgba(255, 255, 255, 0.2)" />
-      <Text style={styles.emptyStateTitle}>No Quizzes Yet</Text>
-      <Text style={styles.emptyStateText}>
-        Quizzes you create or save will appear here. Tap the + button in the tab bar below to get started!
-      </Text>
-    </View>
-  );
-
-  useFocusEffect(
-    React.useCallback(() => {
-      const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
-        setShowGenerateMenu(true);
-      });
-      return () => sub.remove();
-    }, [])
-  );
-
   const renderSelection = () => {
     // If we're inside a folder, render the folder contents view
     if (activeFolderId) {
@@ -867,6 +848,18 @@ export const NewQuizScreen = () => {
             ))}
 
           </View>
+
+          {/* CTA for Folder */}
+          <View style={styles.createAiButtonContainer}>
+            <Button
+              title="Generate New Quiz"
+              iconName="color-wand-outline"
+              iconSize={18}
+              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
+              onPress={() => {
+                const isMathFolder = activeFolderId === 'math_quiz_folder' || (currentFolder ? currentFolder.name.toLowerCase().includes('math') : false);
+                setGenerateTopicType(isMathFolder ? 'math' : 'social');
+                setShowGenerateMenu(true);
               }}
             />
           </View>
