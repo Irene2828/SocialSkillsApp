@@ -408,6 +408,45 @@ export const MyRewardsScreen = () => {
     );
   };
 
+  const renderCurvedLabel = (label: string) => {
+    const chars = label.split('');
+    const arcAngle = 100;
+    const startAngle = -arcAngle / 2;
+    const step = chars.length > 1 ? arcAngle / (chars.length - 1) : 0;
+    return (
+      <View style={{
+        position: 'absolute',
+        width: 70,
+        height: 70,
+        alignItems: 'center',
+        justifyContent: 'center',
+        top: 2,
+      }}>
+        {chars.map((char, index) => {
+          const angle = startAngle + index * step;
+          return (
+            <Text
+              key={index}
+              style={{
+                position: 'absolute',
+                color: '#FFFFFF',
+                fontSize: 9,
+                fontFamily: FONTS.medium,
+                fontWeight: '500',
+                transform: [
+                  { rotate: `${angle}deg` },
+                  { translateY: -22 },
+                ],
+              }}
+            >
+              {char}
+            </Text>
+          );
+        })}
+      </View>
+    );
+  };
+
     return (
       <View style={{ flex: 1, backgroundColor: 'transparent' }}>
         <GlobalBackground />
@@ -522,27 +561,35 @@ export const MyRewardsScreen = () => {
       {navigation && (
         <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-            <View style={styles.tabPill}>
-              <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
+            <View style={{ width: 70, height: 70, alignItems: 'center', justifyContent: 'center' }}>
+              {renderCurvedLabel('Quizes')}
+              <View style={styles.iconCircle}>
+                <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              </View>
             </View>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-            <View style={styles.tabPill}>
-              <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
+            <View style={{ width: 70, height: 70, alignItems: 'center', justifyContent: 'center' }}>
+              {renderCurvedLabel('Tasks')}
+              <View style={styles.iconCircle}>
+                <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              </View>
             </View>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-            <View style={styles.tabPill}>
-              <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
+            <View style={{ width: 70, height: 70, alignItems: 'center', justifyContent: 'center' }}>
+              {renderCurvedLabel('Puzzles')}
+              <View style={styles.iconCircle}>
+                <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              </View>
             </View>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-            <View style={styles.tabPill}>
-              <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
-              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
+            <View style={{ width: 70, height: 70, alignItems: 'center', justifyContent: 'center' }}>
+              {renderCurvedLabel('Draw')}
+              <View style={styles.iconCircle}>
+                <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              </View>
             </View>
           </Pressable>
         </View>
@@ -1073,9 +1120,8 @@ const styles = StyleSheet.create({
   customFooter: {
     flexDirection: 'row',
     height: 72,
-    backgroundColor: '#14D2A4',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
     width: '100%',
     paddingBottom: 12,
     alignItems: 'center',
@@ -1099,15 +1145,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.8,
   },
-  tabPill: {
-    borderRadius: 20,
+  iconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
-    paddingHorizontal: 16,
-    minWidth: 64,
   },
 });

@@ -44,7 +44,6 @@ const AppTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           // Use larger icons on tablet for better legibility and touch targets
           const iconSize = isTablet ? size + 4 : size;
@@ -65,41 +64,69 @@ const AppTabs = () => {
             label = 'Draw';
           }
 
+          // Curved text rendering logic
+          const chars = label.split('');
+          const arcAngle = 100;
+          const startAngle = -arcAngle / 2;
+          const step = chars.length > 1 ? arcAngle / (chars.length - 1) : 0;
+
           return (
-            <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
+            <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', overflow: 'visible', paddingTop: 10 }}>
               {focused && (
                 <View style={{
                   position: 'absolute',
-                  top: isTablet ? -11 : -10, // sits right on the top stroke border of tab bar
+                  top: 0,
                   height: 3,
                   width: 36,
                   backgroundColor: '#FFFFFF',
                   borderRadius: 1.5,
                 }} />
               )}
+              
+              {/* Curved label over the top of the icon */}
               <View style={{
-                borderRadius: 20,
+                position: 'absolute',
+                width: 70,
+                height: 70,
+                alignItems: 'center',
+                justifyContent: 'center',
+                top: 4,
+              }}>
+                {chars.map((char, index) => {
+                  const angle = startAngle + index * step;
+                  return (
+                    <Text
+                      key={index}
+                      style={{
+                        position: 'absolute',
+                        color: color,
+                        fontSize: 9,
+                        fontFamily: focused ? FONTS.semiBold : FONTS.medium,
+                        fontWeight: focused ? '600' : '500',
+                        transform: [
+                          { rotate: `${angle}deg` },
+                          { translateY: -22 },
+                        ],
+                      }}
+                    >
+                      {char}
+                    </Text>
+                  );
+                })}
+              </View>
+
+              <View style={{
+                width: 36,
+                height: 36,
+                borderRadius: 18,
                 backgroundColor: 'rgba(255, 255, 255, 0.18)',
                 borderWidth: 1.2,
                 borderColor: 'rgba(255, 255, 255, 0.4)',
                 alignItems: 'center', 
                 justifyContent: 'center',
-                paddingVertical: 6,
-                paddingHorizontal: 16,
-                minWidth: 64,
-                marginTop: 2
+                marginTop: 12
               }}>
                 <Ionicons name={iconName} size={iconSize} color={color} />
-                <Text style={{
-                  fontFamily: focused ? FONTS.semiBold : FONTS.medium,
-                  fontSize: isTablet ? 13 : 11,
-                  color: color,
-                  textAlign: 'center',
-                  letterSpacing: 0.8,
-                  marginTop: 2
-                }}>
-                  {label}
-                </Text>
               </View>
             </View>
           );
@@ -110,9 +137,8 @@ const AppTabs = () => {
         headerShown: false,
 
         tabBarStyle: {
-          backgroundColor: '#14D2A4', // Matching header top color
-          borderTopWidth: 1,
-          borderTopColor: 'rgba(255, 255, 255, 0.45)',
+          backgroundColor: 'transparent',
+          borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
           position: 'absolute',
