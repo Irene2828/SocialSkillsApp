@@ -439,6 +439,8 @@ export const MyRewardsScreen = () => {
             </View>
           </Pressable>
 
+          <View style={styles.dividerVertical} />
+
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
@@ -952,6 +954,12 @@ const styles = StyleSheet.create({
   },
   activeTabText: {
     color: '#FFFFFF',
+  },
+  dividerVertical: {
+    width: 1.5,
+    height: '60%',
+    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    alignSelf: 'center',
   },
   emptyText: {
     ...theme.typography.body,
