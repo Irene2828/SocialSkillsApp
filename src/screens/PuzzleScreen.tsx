@@ -828,7 +828,7 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
-    paddingTop: 20,
+    paddingTop: 0,
     paddingBottom: 80,
   },
   grid: {
@@ -836,6 +836,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingHorizontal: theme.spacing.xs,
+    marginTop: 20,
   },
   card: {
     width: '100%',

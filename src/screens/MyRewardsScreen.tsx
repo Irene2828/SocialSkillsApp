@@ -757,12 +757,13 @@ export const MyRewardsScreen = () => {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingTop: 20,
+    paddingTop: 0,
     paddingBottom: 45,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)
     paddingHorizontal: 12,
+    marginTop: 20,
   },
   bannerContainer: {
     backgroundColor: theme.colors.primarySoft,

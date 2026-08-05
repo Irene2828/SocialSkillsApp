@@ -1835,7 +1835,7 @@ const styles = StyleSheet.create({
   },
   // Start styles moved to HomeScreen
   scrollContent: {
-    paddingTop: 20,
+    paddingTop: 0,
     paddingBottom: 80,
   },
   quickStartButton: {
@@ -1852,6 +1852,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     paddingHorizontal: 12,
+    marginTop: 20,
   },
   bentoItem: {
     width: '100%',
