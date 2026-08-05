@@ -19,7 +19,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
           borderRadius: theme.borderRadius.md,
           borderWidth: 1.5,
           borderColor: 'rgba(255, 255, 255, 0.45)',
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          backgroundColor: 'transparent',
           ...theme.shadows.soft,
         }]}
       >

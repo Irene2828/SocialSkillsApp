@@ -938,19 +938,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTab: {
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: 'transparent',
   },
   tabText: {
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: 'rgba(255, 255, 255, 0.92)',
+    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 16,
     letterSpacing: 0.5,
     lineHeight: 24,
   },
   activeTabText: {
-    color: '#0C4A6E',
+    color: '#FFFFFF',
   },
   emptyText: {
     ...theme.typography.body,
