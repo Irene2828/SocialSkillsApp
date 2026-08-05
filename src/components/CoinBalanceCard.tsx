@@ -122,8 +122,8 @@ const styles = StyleSheet.create({
     marginLeft: theme.spacing.sm,
   },
   subtitleText: {
-    fontFamily: FONTS.medium,
-    fontWeight: '500',
+    fontFamily: FONTS.regular,
+    fontWeight: '400',
     fontSize: 14,
     color: '#0C4A6E',
     marginTop: 12,
