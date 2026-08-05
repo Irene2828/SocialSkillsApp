@@ -44,19 +44,25 @@ const AppTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
           // Use larger icons on tablet for better legibility and touch targets
           const iconSize = isTablet ? size + 4 : size;
           let iconName: keyof typeof Ionicons.glyphMap = 'help-circle-outline';
+          let label = '';
 
           if (route.name === 'NewQuiz') {
             iconName = 'document-text-outline';
+            label = 'Quizes';
           } else if (route.name === 'Tasks') {
             iconName = 'checkmark-done-circle-outline';
+            label = 'Tasks';
           } else if (route.name === 'Puzzles') {
             iconName = 'extension-puzzle-outline';
+            label = 'Puzzles';
           } else if (route.name === 'Drawing') {
             iconName = 'color-palette-outline';
+            label = 'Draw';
           }
 
           return (
@@ -72,54 +78,39 @@ const AppTabs = () => {
                 }} />
               )}
               <View style={{
-                width: 36,
-                height: 36,
-                borderRadius: 18,
+                borderRadius: 20,
                 backgroundColor: 'rgba(255, 255, 255, 0.18)',
                 borderWidth: 1.2,
                 borderColor: 'rgba(255, 255, 255, 0.4)',
                 alignItems: 'center', 
                 justifyContent: 'center',
+                paddingVertical: 6,
+                paddingHorizontal: 16,
+                minWidth: 64,
                 marginTop: 2
               }}>
                 <Ionicons name={iconName} size={iconSize} color={color} />
+                <Text style={{
+                  fontFamily: focused ? FONTS.semiBold : FONTS.medium,
+                  fontSize: isTablet ? 13 : 11,
+                  color: color,
+                  textAlign: 'center',
+                  letterSpacing: 0.8,
+                  marginTop: 2
+                }}>
+                  {label}
+                </Text>
               </View>
             </View>
           );
         },
-        tabBarLabel: ({ focused, color }) => {
-          let label = '';
-          if (route.name === 'NewQuiz') label = 'Quizes';
-          else if (route.name === 'Tasks') label = 'Tasks';
-          else if (route.name === 'Puzzles') label = 'Puzzles';
-          else if (route.name === 'Drawing') label = 'Draw';
-          return (
-            <View style={{
-              backgroundColor: focused ? 'rgba(255, 255, 255, 0.24)' : 'transparent',
-              paddingHorizontal: 14,
-              paddingVertical: 4,
-              borderRadius: 12,
-              marginBottom: 2,
-            }}>
-              <Text style={{
-                fontFamily: focused ? FONTS.semiBold : FONTS.medium,
-                // Slightly larger labels on tablet for legibility
-                fontSize: isTablet ? 13 : 11,
-                color: color,
-                textAlign: 'center',
-                letterSpacing: 0.8
-              }}>
-                {label}
-              </Text>
-            </View>
-          );
-        },
+        tabBarLabel: () => null,
         tabBarActiveTintColor: activeColor,
         tabBarInactiveTintColor: inactiveColor,
         headerShown: false,
 
         tabBarStyle: {
-          backgroundColor: 'transparent',
+          backgroundColor: '#14D2A4', // Matching header top color
           borderTopWidth: 1,
           borderTopColor: 'rgba(255, 255, 255, 0.45)',
           elevation: 0,

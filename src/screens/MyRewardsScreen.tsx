@@ -522,28 +522,28 @@ export const MyRewardsScreen = () => {
       {navigation && (
         <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'NewQuiz' })}>
-            <View style={styles.iconCircle}>
+            <View style={styles.tabPill}>
               <Ionicons name="document-text-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
             </View>
-            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Quizes</Text>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Tasks' })}>
-            <View style={styles.iconCircle}>
+            <View style={styles.tabPill}>
               <Ionicons name="checkmark-done-circle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
             </View>
-            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Tasks</Text>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Puzzles' })}>
-            <View style={styles.iconCircle}>
+            <View style={styles.tabPill}>
               <Ionicons name="extension-puzzle-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
             </View>
-            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Puzzles</Text>
           </Pressable>
           <Pressable style={[styles.footerTab, { paddingTop: footerPaddingTop }]} onPress={() => navigation.navigate('AppTabs', { screen: 'Drawing' })}>
-            <View style={styles.iconCircle}>
+            <View style={styles.tabPill}>
               <Ionicons name="color-palette-outline" size={isTablet ? 28 : 24} color="#FFFFFF" />
+              <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
             </View>
-            <Text style={[styles.footerTabText, { fontSize: isTablet ? 14 : 12, lineHeight: isTablet ? 18 : 15, marginTop: isTablet ? 5 : 2 }]}>Draw</Text>
           </Pressable>
         </View>
       )}
@@ -1073,7 +1073,7 @@ const styles = StyleSheet.create({
   customFooter: {
     flexDirection: 'row',
     height: 72,
-    backgroundColor: 'transparent',
+    backgroundColor: '#14D2A4',
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.45)',
     width: '100%',
@@ -1099,14 +1099,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.8,
   },
-  iconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+  tabPill: {
+    borderRadius: 20,
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 6,
+    paddingHorizontal: 16,
+    minWidth: 64,
   },
 });
