@@ -828,8 +828,8 @@ const styles = StyleSheet.create({
     color: theme.colors.secondaryText,
   },
   scrollContent: {
-    paddingTop: 0,
-    paddingBottom: 160,
+    paddingTop: 20,
+    paddingBottom: 80,
   },
   grid: {
     flexDirection: 'row',

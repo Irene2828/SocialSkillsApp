@@ -202,8 +202,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingTop: 0,
-    paddingBottom: 160, // Match spacing on other screens of the app
+    paddingTop: 20,
+    paddingBottom: 80, // Match spacing on other screens of the app
   },
   section: {
     marginBottom: theme.spacing.xl,

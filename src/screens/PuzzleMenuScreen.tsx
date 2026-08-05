@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 12,
     justifyContent: 'center',
+    paddingTop: 20,
   },
   cardsContainer: {
     justifyContent: 'center',

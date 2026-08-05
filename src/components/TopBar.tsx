@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
     marginHorizontal: 0, // removed hack
     zIndex: 100,
-    marginBottom: 20,
+    marginBottom: 0,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.45)',
   },
