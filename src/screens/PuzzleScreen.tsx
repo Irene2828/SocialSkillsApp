@@ -495,16 +495,7 @@ export const PuzzleScreen = () => {
                 </Card>
               </Pressable>
             </View>
-            
-            <View style={styles.createAiButtonContainer}>
-              <Button
-                title="Generate New Puzzle"
-                iconName="extension-puzzle-outline"
-                style={[styles.createAiButton, { width: '100%', maxWidth: '100%' }]}
-                onPress={() => setShowAiMenu(true)}
-              />
-            </View>
-            </ScrollView>
+                        </ScrollView>
           </>
         ) : (
           <>

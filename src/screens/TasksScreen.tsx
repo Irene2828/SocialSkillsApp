@@ -105,22 +105,15 @@ export const TasksScreen = () => {
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No tasks yet</Text>
+              <Text style={{ textAlign: 'center', color: theme.colors.text, opacity: 0.7, marginTop: 8 }}>
+                Tap the + button in the tab bar below to add your first task!
+              </Text>
             </View>
           ) : (
             <View style={styles.section}>
               {sortedTasks.map(renderTask)}
             </View>
           )}
-
-          <View style={{ width: '100%', marginTop: 24, paddingHorizontal: theme.spacing.xl, alignItems: 'center' }}>
-            <Button 
-              title="Add a New Task" 
-              iconName="add"
-              onPress={() => setIsModalVisible(true)}
-              style={styles.addButton}
-              variant="primary"
-            />
-          </View>
         </ScrollView>
       </ScreenWrapper>
 

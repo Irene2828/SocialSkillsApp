@@ -848,21 +848,6 @@ export const NewQuizScreen = () => {
             ))}
 
           </View>
-
-          {/* CTA for Folder */}
-          <View style={styles.createAiButtonContainer}>
-            <Button
-              title="Generate New Quiz"
-              iconName="color-wand-outline"
-              iconSize={18}
-              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-              onPress={() => {
-                const isMathFolder = activeFolderId === 'math_quiz_folder' || (currentFolder ? currentFolder.name.toLowerCase().includes('math') : false);
-                setGenerateTopicType(isMathFolder ? 'math' : 'social');
-                setShowGenerateMenu(true);
-              }}
-            />
-          </View>
         </ScrollView>
       );
     }
@@ -941,18 +926,6 @@ export const NewQuizScreen = () => {
             
           </View>
 
-          <View style={styles.createAiButtonContainer}>
-            <Button
-              title="Generate New Quiz"
-              iconName="color-wand-outline"
-              iconSize={18}
-              style={[styles.createAiButton, { marginBottom: 12, backgroundColor: theme.colors.primary }]}
-              onPress={() => {
-                setGenerateTopicType(activeTab === 'general' ? 'social' : 'math');
-                setShowGenerateMenu(true);
-              }}
-            />
-          </View>
       </ScrollView>
     );
   };
