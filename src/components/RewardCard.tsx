@@ -34,7 +34,7 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
             <FontAwesome5 
               name="coins" 
               size={14} 
-              color="#0C4A6E" 
+              color={gradientColors[0]} 
             />
             <View style={{ flexDirection: 'row', marginLeft: 4 }}>
               {reward.cost.toString().split('').map((char, index) => (
@@ -42,12 +42,15 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
                   key={`cost-${index}`} 
                   style={[
                     styles.costText, 
-                    { marginLeft: 0 }
+                    { marginLeft: 0, color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
                   ]}
                 >
                   {char}
                 </Text>
               ))}
+              <Text style={[styles.costText, { marginLeft: 0, color: gradientColors[Math.min(reward.cost.toString().length + 2, gradientColors.length - 1)] || gradientColors[gradientColors.length - 1] }]}>
+                {isProcessing ? '...' : ''}
+              </Text>
             </View>
           </View>
 

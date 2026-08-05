@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, useWindowDimensions, Image, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { theme, FONTS } from '../theme';
 import { SettingsModal } from './SettingsModal';
 import { GradientIcon } from './GradientIcon';
@@ -23,11 +23,15 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact, noEdgeToEdge }) => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NavigationProp<any>>();
   const { coinBalance } = useRewards();
   const [showSettings, setShowSettings] = useState(false);
   const { mood } = useMood();
-  const moodColors = getMoodColors(mood);
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
   const isRocket = mood === 'rocket';
   const textColor = '#FFFFFF';
   const { width } = useWindowDimensions();
@@ -107,10 +111,20 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               }}
             >
               <View style={styles.coinBadge}>
-                <Text style={[styles.coinText, { color: '#FFFFFF', letterSpacing: 0.8 }]}>
-                  +{coinBalance}
-                </Text>
-                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 6 }]} />
+                <View style={{ flexDirection: 'row' }}>
+                  {('+' + coinBalance).split('').map((char, index) => (
+                    <Text 
+                      key={`top-${index}`}
+                      style={[
+                        styles.coinText, 
+                        { letterSpacing: 0.8, color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
+                      ]}
+                    >
+                      {char}
+                    </Text>
+                  ))}
+                </View>
+                <FontAwesome5 name="coins" size={12} color={gradientColors[0]} style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
               <Text 
                 style={{ 

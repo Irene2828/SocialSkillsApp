@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { theme, FONTS } from '../theme';
 import { Card } from './Card';
 import { FontAwesome5, Ionicons } from '@expo/vector-icons';
+import { useMood, getMoodColors } from '../context/MoodContext';
 
 interface CoinBalanceCardProps {
   balance: number;
@@ -12,6 +13,11 @@ interface CoinBalanceCardProps {
 import { LinearGradient } from 'expo-linear-gradient';
 
 export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onReset }) => {
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
   return (
     <View style={styles.cardContainer}>
       <Card 
@@ -35,8 +41,8 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
           <View style={styles.balanceRow}>
             <FontAwesome5 
               name="coins" 
-              size={34} 
-              color="#0C4A6E" 
+              size={42} 
+              color={gradientColors[0]} 
               style={{ marginRight: 12, marginTop: 4 }}
             />
             <View style={{ flexDirection: 'row' }}>
@@ -45,7 +51,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   key={`num-${index}`}
                   style={[
                     styles.balanceNumber, 
-                    { color: '#0C4A6E' }
+                    { color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
                   ]}
                 >
                   {char}
@@ -59,7 +65,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
                   style={[
                     styles.balanceLabel, 
                     { marginLeft: 0 },
-                    { color: '#0C4A6E' }
+                    { color: gradientColors[Math.min(balance.toString().length + 2 + index, gradientColors.length - 1)] || gradientColors[gradientColors.length - 1] }
                   ]}
                 >
                   {char}

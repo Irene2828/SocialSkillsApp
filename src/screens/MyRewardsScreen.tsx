@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated, Dimensions } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated, Dimensions, DeviceEventEmitter, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 
 if (Platform.OS === 'android') {
@@ -28,7 +28,7 @@ import { TopBar } from '../components/TopBar';
 import { AppTabBar } from '../components/AppTabBar';
 import { useMood, getMoodColors } from '../context/MoodContext';
 
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 
 export const MyRewardsScreen = () => {
   let navigation: any = null;
@@ -46,9 +46,19 @@ export const MyRewardsScreen = () => {
   const subTextColor = 'rgba(42, 30, 92, 0.55)';
   
   const insets = useSafeAreaInsets();
-  const { width } = Dimensions.get('window');
+  const { width } = useWindowDimensions();
   const isTablet = width >= 768;
   const isSmallScreen = width < 380;
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const subscription = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+        setShowAddPin(true);
+      });
+      return () => subscription.remove();
+    }, [])
+  );
+
   const footerPaddingBottom = (Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10)) / 2) * 0.5;
   const footerHeight = isTablet
     ? 64 + footerPaddingBottom
