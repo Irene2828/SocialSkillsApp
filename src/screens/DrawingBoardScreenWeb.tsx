@@ -174,26 +174,26 @@ export const DrawingBoardScreenWeb = () => {
           { 
             paddingTop: insets.top + 16, 
             paddingBottom: insets.bottom + 16, 
-            backgroundColor: 'rgba(0, 206, 209, 0.8)' 
+            backgroundColor: 'rgba(255, 255, 255, 0.85)' 
           },
           isMobile && { width: 56 }
         ]}>
           <Pressable style={styles.toolBtn} onPress={() => setIsToolbarVisible(false)}>
-            <Ionicons name="chevron-forward" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
+            <Ionicons name="chevron-forward" size={26} color="#7E8C9F" />
           </Pressable>
           <View style={styles.dividerHorizontal} />
           
           <ScrollView contentContainerStyle={[styles.toolbarContent, isMobile && { paddingHorizontal: 4 }]} showsVerticalScrollIndicator={false}>
           <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
-            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
+            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? 'rgba(0,0,0,0.15)' : '#7E8C9F'} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
-            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? theme.colors.neutralGrey : (isDark ? '#FFFFFF' : '#374151')} />
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? 'rgba(0,0,0,0.15)' : '#7E8C9F'} />
           </Pressable>
           
           <Pressable style={styles.toolBtn} onPress={clearCanvas}>
-            <Ionicons name="trash-outline" size={26} color={isDark ? '#FFFFFF' : '#374151'} />
+            <Ionicons name="trash-outline" size={26} color="#7E8C9F" />
           </Pressable>
 
           <View style={styles.dividerHorizontal} />
@@ -208,7 +208,11 @@ export const DrawingBoardScreenWeb = () => {
               ]}
               onPress={() => setActiveStrokeWidth(sw.value)}
             >
-              <Ionicons name={sw.icon} size={sw.size} color={isDark ? '#FFFFFF' : '#374151'} />
+              <Ionicons 
+                name={sw.icon} 
+                size={sw.size} 
+                color={activeStrokeWidth === sw.value ? '#00CED1' : '#7E8C9F'} 
+              />
             </Pressable>
           ))}
 

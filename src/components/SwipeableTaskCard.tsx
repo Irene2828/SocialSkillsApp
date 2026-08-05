@@ -259,13 +259,13 @@ const styles = StyleSheet.create({
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: theme.colors.primary,
+    borderColor: '#38BDF8',
     alignItems: 'center',
     justifyContent: 'center',
   },
   checkboxChecked: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
+    backgroundColor: '#38BDF8',
+    borderColor: '#38BDF8',
   },
   taskInfo: {
     flex: 1,

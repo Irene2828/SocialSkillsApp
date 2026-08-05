@@ -19,6 +19,7 @@ import { theme, FONTS } from '../theme';
 import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types';
 import { questions as allQuestions } from '../data/questions';
 import { wordProblems } from '../data/wordProblems';
+import { mathWordProblems } from '../data/mathWordProblems';
 import { useRewards } from '../context/RewardsContext';
 import { useTasks, Task } from '../context/TasksContext';
 import { SwipeableTaskCard } from '../components/SwipeableTaskCard';
@@ -78,7 +79,9 @@ export const NewQuizScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
 
-  const IQ_CATEGORIES: QuizCategory[] = [];
+  const IQ_CATEGORIES: QuizCategory[] = [
+    { id: 'iq_math_word_problems', title: 'Math Word Problems', description: 'Multi-step logic', icon: 'calculator-outline' }
+  ];
 
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
@@ -688,6 +691,8 @@ export const NewQuizScreen = () => {
       pool = customQuestions;
     } else if (categoryId === 'iq_word_problems') {
       pool = wordProblems;
+    } else if (categoryId === 'iq_math_word_problems') {
+      pool = mathWordProblems;
     } else {
       // Individual AI-generated quiz category — pull its questions from customQuestions
       pool = customQuestions.filter(q => q.category === categoryId);
@@ -699,16 +704,23 @@ export const NewQuizScreen = () => {
     }
 
     const currentOffset = quizOffsets[categoryId] || 0;
-    const limit = categoryId === 'iq_word_problems' ? 1 : Math.min(5, pool.length);
+    const limit = (categoryId === 'iq_word_problems' || categoryId === 'iq_math_word_problems') ? 1 : Math.min(5, pool.length);
     let selected: any[] = [];
 
     // Slice questions, wrapping around if necessary
     for (let i = 0; i < limit; i++) {
       const idx = (currentOffset + i) % pool.length;
-      selected.push(shuffleQuestionOptions(injectFallbackWhy({
-        ...pool[idx],
-        id: `${pool[idx].id}-${currentOffset}-${i}`,
-      })));
+      if (categoryId === 'iq_math_word_problems') {
+        selected.push({
+          ...pool[idx],
+          id: `${pool[idx].id}-${currentOffset}-${i}`,
+        });
+      } else {
+        selected.push(shuffleQuestionOptions(injectFallbackWhy({
+          ...pool[idx],
+          id: `${pool[idx].id}-${currentOffset}-${i}`,
+        })));
+      }
     }
 
     const newOffset = (currentOffset + limit) % pool.length;
@@ -857,7 +869,7 @@ export const NewQuizScreen = () => {
 
     // Root library view (no folder open)
     let builtInCategories = allCategories.filter(
-      c => c.id === 'general_quiz' || c.id === 'iq_word_problems'
+      c => c.id === 'general_quiz' || c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems'
     ).map(c => ({
       ...c,
       title: renamedCategories[c.id] || c.title
@@ -1020,7 +1032,7 @@ export const NewQuizScreen = () => {
       categoryName = customCat.title;
     }
 
-    const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory?.startsWith('math_ai') || (currentQuestions.length > 0 && !!(currentQuestions[0] as any).problemText);
+    const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory === 'iq_math_word_problems' || selectedCategory?.startsWith('math_ai') || (currentQuestions.length > 0 && !!(currentQuestions[0] as any).problemText);
     const progressPercent = isWordProblem
       ? ((currentWordProblemStep + 1) / totalWordProblemSteps)
       : ((currentIndex + 1) / currentQuestions.length);

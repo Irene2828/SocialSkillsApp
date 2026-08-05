@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Modal, Pressable, TextInput, LayoutAnimation, Platform, UIManager, Animated, Dimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useSafeAreaInsets, SafeAreaView } from 'react-native-safe-area-context';
 
 if (Platform.OS === 'android') {
   if (UIManager.setLayoutAnimationEnabledExperimental) {
@@ -404,12 +404,18 @@ export const MyRewardsScreen = () => {
     );
   };
 
-  return (
-    <View style={{ flex: 1, backgroundColor: isDark ? moodColors.bg : theme.colors.background }}>
-      <GlobalBackground />
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-        <ScreenWrapper transparent>
-          <TopBar title="Rewards" showSettingsAndRewards={true} />
+    return (
+      <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        <GlobalBackground />
+
+        <SafeAreaView style={{ backgroundColor: 'transparent', zIndex: 10 }} edges={['top', 'left', 'right']}>
+          <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center' }}>
+            <TopBar title="Rewards" showSettingsAndRewards={true} />
+          </View>
+        </SafeAreaView>
+
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <ScreenWrapper transparent disableSafeAreaTop>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
@@ -419,9 +425,9 @@ export const MyRewardsScreen = () => {
 
         {/* Bottom Section: Tabs and Lists */}
         <View style={{ paddingHorizontal: 12 }}>
-        <Card style={styles.tabContainer}>
+        <View style={styles.tabContainer}>
           <Pressable 
-            style={styles.tab} 
+            style={[styles.tab, activeTab === 'available' && styles.activeTab]} 
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -433,10 +439,8 @@ export const MyRewardsScreen = () => {
             </View>
           </Pressable>
 
-          <View style={{ width: 1.5, height: '45%', backgroundColor: 'rgba(42, 30, 92, 0.16)', alignSelf: 'center' }} />
-
           <Pressable 
-            style={styles.tab} 
+            style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -447,7 +451,7 @@ export const MyRewardsScreen = () => {
               )}
             </View>
           </Pressable>
-        </Card>
+        </View>
         </View>
 
         <View style={styles.bentoSection}>
@@ -915,15 +919,16 @@ const styles = StyleSheet.create({
     fontSize: 32,
     textAlign: 'center',
     letterSpacing: 8,
-    backgroundColor: 'rgba(42, 30, 92, 0.05)',
-    borderColor: 'rgba(42, 30, 92, 0.15)',
-    color: '#0C4A6E',
   },
   tabContainer: {
     flexDirection: 'row',
     marginBottom: 20,
     padding: 0,
     marginHorizontal: 0,
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.45)',
+    backgroundColor: 'transparent',
     overflow: 'hidden',
   },
   tab: {
@@ -933,17 +938,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTab: {
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-    borderColor: 'rgba(255, 255, 255, 0.5)',
-    borderWidth: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.85)',
   },
   tabText: {
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: 'rgba(42, 30, 92, 0.55)',
+    color: 'rgba(255, 255, 255, 0.92)',
     fontSize: 16,
-    letterSpacing: 0,
+    letterSpacing: 0.5,
     lineHeight: 24,
   },
   activeTabText: {

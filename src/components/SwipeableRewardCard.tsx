@@ -144,19 +144,12 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
             
             <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
               <View style={styles.costContainer}>
-                <FontAwesome5
-                  name="coins"
-                  size={14}
-                  color="#0C4A6E"
-                />
-                <View style={{ flexDirection: 'row', marginLeft: 4 }}>
+                <FontAwesome5 name="coins" size={12} color={gradientColors[0]} style={{ marginRight: 4 }} />
+                <View style={{ flexDirection: 'row' }}>
                   {reward.cost.toString().split('').map((char, index) => (
                     <Text 
                       key={`cost-${index}`} 
-                      style={[
-                        styles.costText, 
-                        { marginLeft: 0 }
-                      ]}
+                      style={styles.costText}
                     >
                       {char}
                     </Text>
@@ -239,6 +232,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: '100%',
+    ...theme.shadows.soft,
   },
   inner: {
     flexDirection: 'row',
@@ -259,8 +253,10 @@ const styles = StyleSheet.create({
     marginRight: theme.spacing.md,
     width: 48,
     height: 48,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: 'rgba(42, 30, 92, 0.08)',
+    borderRadius: 24,
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: 'rgba(42, 30, 92, 0.15)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -279,17 +275,17 @@ const styles = StyleSheet.create({
   costContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.65)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: 'rgba(42, 30, 92, 0.15)',
     paddingHorizontal: theme.spacing.sm,
-    paddingVertical: theme.spacing.xs,
+    paddingVertical: 4,
     borderRadius: theme.borderRadius.sm,
     alignSelf: 'flex-start',
+    marginTop: 4,
   },
   costText: {
-    fontFamily: FONTS.medium,
-    fontWeight: '500',
+    fontFamily: FONTS.semiBold,
     fontSize: 14,
     color: '#0C4A6E',
   },

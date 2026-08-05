@@ -26,38 +26,40 @@ interface CompletedStep {
 }
 
 const parseCompactProblemText = (problemText: string) => {
-  const storyMatch = problemText.match(/Story:\s*([\s\S]*?)(?=\n\s*Facts:|$)/i);
-  const factsMatch = problemText.match(/Facts:\s*([\s\S]*?)(?=\n\s*Question:|$)/i);
+  const storyMatch = problemText.match(/Story:\s*([\s\S]*?)(?=\n\s*Facts:|\n\s*Details:|$)/i);
+  const factsMatch = problemText.match(/Facts:\s*([\s\S]*?)(?=\n\s*Details:|\n\s*Question:|$)/i);
+  const detailsMatch = problemText.match(/Details:\s*([\s\S]*?)(?=\n\s*Question:|$)/i);
   const questionMatch = problemText.match(/Question:\s*([\s\S]*)$/i);
 
-  if (!storyMatch || !factsMatch || !questionMatch) {
+  if (!storyMatch || !questionMatch) {
     return null;
   }
 
-  const facts = factsMatch[1]
-    .split('\n')
-    .map(line => line.replace(/^\s*[-•]\s*/, '').trim())
-    .filter(Boolean);
-
-  if (!facts.length) {
-    return null;
-  }
+  const facts = factsMatch ? factsMatch[1].trim() : '';
 
   const story = storyMatch[1].trim();
-  const storySentences = story.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map(sentence => sentence.trim()).filter(Boolean) || [story];
-  const detailStartIndex = storySentences.findIndex(sentence =>
-    /\b(will use|needs to|prices?|costs?|packet|decides|choose|between|how much|how many)\b/i.test(sentence)
-  );
-  const introSentences = detailStartIndex > 0
-    ? storySentences.slice(0, detailStartIndex)
-    : storySentences.slice(0, Math.min(2, storySentences.length));
-  const detailsSentences = detailStartIndex > 0
-    ? storySentences.slice(detailStartIndex)
-    : storySentences.slice(introSentences.length);
+  let details = detailsMatch ? detailsMatch[1].trim() : '';
+  let finalStory = story;
+
+  if (!detailsMatch) {
+    const storySentences = story.match(/[^.!?]+[.!?]+|[^.!?]+$/g)?.map(sentence => sentence.trim()).filter(Boolean) || [story];
+    const detailStartIndex = storySentences.findIndex(sentence =>
+      /\b(will use|needs to|prices?|costs?|packet|decides|choose|between|how much|how many)\b/i.test(sentence)
+    );
+    const introSentences = detailStartIndex > 0
+      ? storySentences.slice(0, detailStartIndex)
+      : storySentences.slice(0, Math.min(2, storySentences.length));
+    const detailsSentences = detailStartIndex > 0
+      ? storySentences.slice(detailStartIndex)
+      : storySentences.slice(introSentences.length);
+
+    finalStory = introSentences.join(' ').trim() || story;
+    details = detailsSentences.join(' ').trim();
+  }
 
   return {
-    story: introSentences.join(' ').trim() || story,
-    details: detailsSentences.join(' ').trim(),
+    story: finalStory,
+    details,
     facts,
     question: questionMatch[1].trim(),
   };
@@ -190,18 +192,26 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 </Text>
               </View>
 
-              <Text style={styles.problemSheetLabel}>
-                Details
-              </Text>
-              <View style={styles.factGrid}>
-                {compactProblem.facts.map((fact, index) => (
-                  <View key={`${fact}-${index}`} style={styles.factChip}>
-                    <Text style={styles.factText}>
-                      {`\u2022 ${fact}`}
+              {compactProblem.facts ? (
+                <>
+                  <Text style={styles.problemSheetLabel}>
+                    Details
+                  </Text>
+                  <View style={[styles.storyCallout, { marginTop: 0, backgroundColor: 'transparent', borderWidth: 0, padding: 0 }]}>
+                    <Text style={[styles.factText, { color: '#334155' }]}>
+                      {compactProblem.facts}
                     </Text>
                   </View>
-                ))}
-              </View>
+                </>
+              ) : null}
+
+              {compactProblem.details ? (
+                <View style={[styles.storyCallout, { marginTop: 8, backgroundColor: 'transparent', borderWidth: 0, padding: 0 }]}>
+                  <Text style={[styles.factText, { color: '#334155' }]}>
+                    {compactProblem.details}
+                  </Text>
+                </View>
+              ) : null}
 
               <View style={styles.problemQuestionStrip}>
                 <Ionicons name="flag-outline" size={16} color="#0C4A6E" />
@@ -229,7 +239,6 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               </Text>
             </View>
           )}
-          <View style={styles.problemToStepsDivider} />
         </View>
 
       {/* ===== Completed Steps (stacked, read-only) ===== */}
@@ -242,9 +251,16 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               <Text style={[styles.stepNumberText, styles.completedStepNumberText, isRocket && glassTextShadow]}>
                 {cs.stepIndex + 1}.
               </Text>
-              <Text style={[styles.completedPromptText, isRocket && glassTextShadow]}>
-                {step.prompt}
-              </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.completedPromptText, isRocket && glassTextShadow]}>
+                  {step.prompt.split('\n\n')[0]}
+                </Text>
+                {step.prompt.includes('\n\n') && (
+                  <Text style={[styles.followStepsHint, { marginTop: 8, textAlign: 'left', marginLeft: 0, color: 'rgba(255,255,255,0.6)' }]}>
+                    {step.prompt.split('\n\n')[1]}
+                  </Text>
+                )}
+              </View>
             </View>
 
             {/* Show only the correct answer (locked) */}
@@ -274,9 +290,16 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
               <Text style={[styles.stepNumberText, isRocket && glassTextShadow]}>
                 {currentStepIndex + 1}.
               </Text>
-              <Text style={[styles.promptText, isRocket && glassTextShadow]}>
-              {currentStep.prompt}
-            </Text>
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.promptText, isRocket && glassTextShadow]}>
+                  {currentStep.prompt.split('\n\n')[0]}
+                </Text>
+                {currentStep.prompt.includes('\n\n') && (
+                  <Text style={[styles.followStepsHint, { marginTop: 12, textAlign: 'left', marginLeft: 0 }]}>
+                    {currentStep.prompt.split('\n\n')[1]}
+                  </Text>
+                )}
+              </View>
           </View>
 
           {/* Current step options */}
