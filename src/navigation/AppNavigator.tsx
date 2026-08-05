@@ -72,17 +72,6 @@ const AppTabs = () => {
 
           return (
             <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%', overflow: 'visible', paddingTop: 10 }}>
-              {focused && (
-                <View style={{
-                  position: 'absolute',
-                  top: 0,
-                  height: 3,
-                  width: 36,
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: 1.5,
-                }} />
-              )}
-              
               {/* Curved label over the top of the icon */}
               <View style={{
                 position: 'absolute',
