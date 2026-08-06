@@ -87,9 +87,9 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
 const styles = StyleSheet.create({
   customFooter: {
     flexDirection: 'row',
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(12, 74, 110, 0.95)',
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderTopColor: 'rgba(255, 255, 255, 0.15)',
     position: 'absolute',
     bottom: 0,
     left: 0,

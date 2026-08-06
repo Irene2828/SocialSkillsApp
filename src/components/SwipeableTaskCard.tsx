@@ -135,14 +135,14 @@ export const SwipeableTaskCard: React.FC<SwipeableTaskCardProps> = ({
               {task.title}
             </Text>
             <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}>
-              <FontAwesome5 name="coins" size={12} color={gradientColors[0]} style={{ marginRight: 4 }} />
+              <FontAwesome5 name="coins" size={12} color="#0C4A6E" style={{ marginRight: 4 }} />
               <View style={{ flexDirection: 'row', flex: 1 }}>
                 {('+' + task.coinValue).split('').map((char, index) => (
                   <Text 
                     key={`cost-${index}`} 
                     style={[
                       { fontFamily: FONTS.semiBold, fontSize: 14 },
-                      { color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
+                      { color: '#0C4A6E' }
                     ]}
                   >
                     {char}

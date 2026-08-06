@@ -171,7 +171,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
                 />
               ) : (
                 <View style={styles.lockedButton}>
-                  <Ionicons name="lock-closed" size={14} color="#0C4A6E" style={{ marginRight: 4 }} />
+                  <Ionicons name="lock-closed" size={14} color="rgba(12, 74, 110, 0.4)" style={{ marginRight: 4 }} />
                   <Text style={styles.lockedButtonText}>Locked</Text>
                 </View>
               )}
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
     ...theme.typography.button,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: '#0C4A6E',
+    color: 'rgba(12, 74, 110, 0.4)',
     fontSize: 14,
   },
 });

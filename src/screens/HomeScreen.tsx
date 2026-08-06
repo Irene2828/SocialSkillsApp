@@ -160,7 +160,7 @@ export const HomeScreen = () => {
   const { mood } = useMood();
   const moodColors = getMoodColors(mood);
   const titleColor = '#FFFFFF';
-  const subtitleColor = '#0C4A6E';
+  const subtitleColor = '#FFFFFF';
   const [showSettings, setShowSettings] = useState(false);
 
 

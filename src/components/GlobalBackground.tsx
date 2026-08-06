@@ -33,7 +33,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
         source={getBgSource()}
         style={styles.pattern}
       />
-      {showClouds && <AnimatedCloudsBackground />}
+      <AnimatedCloudsBackground />
     </View>
   );
 };
