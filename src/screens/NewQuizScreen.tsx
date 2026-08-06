@@ -20,6 +20,9 @@ import { QUIZ_CATEGORIES, Category, Question, QuizCategory } from '../data/types
 import { questions as allQuestions } from '../data/questions';
 import { wordProblems } from '../data/wordProblems';
 import { mathWordProblems } from '../data/mathWordProblems';
+import { socialPracticeQuizzes } from '../data/socialPracticeQuizzes';
+import { SocialPracticeQuiz } from '../data/types';
+import { SocialPracticeQuestionView } from '../components/SocialPracticeQuestionView';
 import { useRewards } from '../context/RewardsContext';
 import { useTasks, Task } from '../context/TasksContext';
 import { SwipeableTaskCard } from '../components/SwipeableTaskCard';
@@ -78,17 +81,32 @@ export const NewQuizScreen = () => {
   const [quizState, setQuizState] = useState<QuizState>('selection');
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
+  const [activeSocialQuiz, setActiveSocialQuiz] = useState<SocialPracticeQuiz | null>(null);
 
   const IQ_CATEGORIES: QuizCategory[] = [
     { id: 'iq_math_word_problems', title: 'Math Word Problems', description: 'Multi-step logic', icon: 'calculator-outline' }
   ];
 
+  const socialPracticeCategories = useMemo(() => {
+    const uniqueFamilies = Array.from(new Set(socialPracticeQuizzes.map(q => q.familyId)));
+    return uniqueFamilies.map(familyId => {
+      const quiz = socialPracticeQuizzes.find(q => q.familyId === familyId)!;
+      return {
+        id: `sp_${familyId}`,
+        title: quiz.skillName,
+        description: 'Social Practice',
+        icon: 'people-circle-outline' as any
+      };
+    });
+  }, []);
+
   const allCategories = useMemo(() => [
     ...QUIZ_CATEGORIES, 
     ...IQ_CATEGORIES,
+    ...socialPracticeCategories,
     { id: 'new_folder_1', title: 'New Folder', description: '0 quizzes', icon: 'folder-outline', isCustom: false },
     { id: 'new_folder_2', title: 'New Quiz', description: '0 quizzes', icon: 'folder-outline', isCustom: false }
-  ], []);
+  ], [socialPracticeCategories]);
 
   const { folders, addFolder, removeFolder, renameFolder, moveQuizToFolder, moveFolderToFolder } = useQuizContext();
   const [folderHistory, setFolderHistory] = useState<string[]>([]);
@@ -685,6 +703,28 @@ export const NewQuizScreen = () => {
 
   const handleStartQuiz = async (categoryId: string) => {
     let pool: any[] = [];
+    if (categoryId.startsWith('sp_')) {
+      const familyId = categoryId.replace('sp_', '');
+      const familyQuizzes = socialPracticeQuizzes.filter(q => q.familyId === familyId);
+      
+      const currentOffset = quizOffsets[categoryId] || 0;
+      const idx = currentOffset % familyQuizzes.length;
+      const quiz = familyQuizzes[idx];
+      
+      const newOffset = (currentOffset + 1) % familyQuizzes.length;
+      await setQuizOffset(categoryId, newOffset);
+      
+      setSelectedCategory(categoryId as any);
+      setActiveSocialQuiz(quiz);
+      setCurrentQuestions(quiz.questions);
+      setCurrentIndex(0);
+      setScore(0);
+      setIsProcessing(false);
+      setIsWhyPhase(false);
+      setQuizState('in-progress');
+      return;
+    }
+
     if (categoryId === 'general_quiz') {
       pool = allQuestions.filter(q => !q.category.toString().startsWith('iq_'));
     } else if (categoryId === 'custom_quiz') {
@@ -727,6 +767,7 @@ export const NewQuizScreen = () => {
     await setQuizOffset(categoryId, newOffset);
 
     setSelectedCategory(categoryId as any);
+    setActiveSocialQuiz(null);
     setCurrentQuestions(selected);
     setCurrentIndex(0);
     setScore(0);
@@ -779,6 +820,7 @@ export const NewQuizScreen = () => {
   const handleBackToHome = () => {
     setQuizState('selection');
     setSelectedCategory(null);
+    setActiveSocialQuiz(null);
     setCurrentQuestions([]);
     setCurrentIndex(0);
     setScore(0);
@@ -1061,7 +1103,14 @@ export const NewQuizScreen = () => {
             </View>
           </View>
 
-          {isWordProblem ? (
+          {activeSocialQuiz ? (
+            <SocialPracticeQuestionView
+              quiz={activeSocialQuiz}
+              question={baseQuestion as any}
+              onContinue={handleContinue}
+              disabled={isProcessing}
+            />
+          ) : isWordProblem ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
               onContinue={handleContinue}
@@ -1098,6 +1147,11 @@ export const NewQuizScreen = () => {
     const total = currentQuestions.length;
     
     let message = "Awesome!";
+    let subMessage = "";
+    if (activeSocialQuiz) {
+      message = "Great job!";
+      subMessage = activeSocialQuiz.completion.skillSummary + "\n\n" + activeSocialQuiz.completion.realLifePractice;
+    }
 
     let coinsEarned = isRewardsModeOn ? total : 0;
     if (isRewardsModeOn && selectedCategory?.startsWith('math_ai')) {
@@ -1119,11 +1173,16 @@ export const NewQuizScreen = () => {
         <SilverDust />
         <Pressable style={styles.completedCard} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
           <Animated.View style={{ opacity: completionFadeAnim, transform: [{ translateY: completionSlideAnim }], alignItems: 'center', width: '100%' }}>
-            <View style={[styles.titleContainer, { position: 'relative', marginBottom: theme.spacing.xl }]}>
-
+            <View style={[styles.titleContainer, { position: 'relative', marginBottom: subMessage ? theme.spacing.md : theme.spacing.xl }]}>
               <Text style={styles.completedTitle}>{message}</Text>
               {message === "Awesome!" && <View style={styles.brushUnderline} />}
             </View>
+            
+            {subMessage ? (
+              <Text style={[styles.completedCoinText, { fontFamily: FONTS.medium, fontSize: 16, color: '#FFFFFF', textAlign: 'center', marginBottom: theme.spacing.xl }]}>
+                {subMessage}
+              </Text>
+            ) : null}
 
             {isRewardsModeOn && (
               <>
