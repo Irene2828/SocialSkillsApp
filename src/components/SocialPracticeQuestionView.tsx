@@ -93,6 +93,9 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   }
   const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
 
+  const questionIndex = quiz.questions.findIndex(q => q.id === question.id);
+  const questionNum = questionIndex !== -1 ? questionIndex + 1 : 1;
+
   return (
     <View style={styles.container}>
       <View style={styles.unifiedCard}>
@@ -108,8 +111,10 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
               </Text>
             </View>
 
-            <View style={styles.problemQuestionStrip}>
-              <Ionicons name="chatbubbles-outline" size={16} color="#0C4A6E" />
+            <View style={{ marginTop: theme.spacing.md }}>
+              <Text style={styles.calloutLabel}>
+                Question {questionNum}
+              </Text>
               <Text style={styles.problemQuestionText}>
                 {question.prompt}
               </Text>
@@ -259,21 +264,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.18,
     color: '#0C4A6E',
   },
-  problemQuestionStrip: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginTop: theme.spacing.md,
-  },
   problemQuestionText: {
     ...theme.typography.body,
-    flex: 1,
     fontFamily: FONTS.medium,
     fontSize: 16,
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
     color: '#0C4A6E',
-    marginLeft: 8,
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
