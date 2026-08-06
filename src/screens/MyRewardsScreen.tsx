@@ -422,15 +422,9 @@ export const MyRewardsScreen = () => {
     return (
       <View style={{ flex: 1, backgroundColor: 'transparent' }}>
         <GlobalBackground />
-
-        <SafeAreaView style={{ backgroundColor: 'transparent', zIndex: 10 }} edges={['top', 'left', 'right']}>
-          <View style={{ width: '100%', maxWidth: 700, alignSelf: 'center' }}>
-            <TopBar title="Rewards" showSettingsAndRewards={true} />
-          </View>
-        </SafeAreaView>
-
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-          <ScreenWrapper transparent disableSafeAreaTop>
+        <ScreenWrapper transparent>
+          <TopBar title="Rewards" showSettingsAndRewards={true} />
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
         
         {/* Top Section: Stack Layout (Focus on balance and adding) */}
         {/* Results Header Removed */}
@@ -519,8 +513,8 @@ export const MyRewardsScreen = () => {
             </View>
           )}
         </View>
-      </ScreenWrapper>
-      </ScrollView>
+          </ScrollView>
+        </ScreenWrapper>
 
       {navigation && (
         <AppTabBar activeRoute="None" isFabActive={true} />
@@ -758,7 +752,7 @@ export const MyRewardsScreen = () => {
 const styles = StyleSheet.create({
   scrollContent: {
     paddingTop: 0,
-    paddingBottom: 45,
+    paddingBottom: 95,
   },
   topSection: {
     marginBottom: 20, // Doubled from theme.spacing.sm (10)

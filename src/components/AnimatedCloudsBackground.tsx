@@ -2,99 +2,70 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, View, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-const CLOUD_COUNT = 15;
-const CLOUD_COLORS = [
-  'rgba(255, 255, 255, 0.55)',
-  'rgba(224, 242, 254, 0.45)', // very light blue-white
-  'rgba(240, 249, 255, 0.5)',  // sky white
-  'rgba(186, 230, 253, 0.35)', // soft pastel blue-grey cloud
-  'rgba(255, 255, 255, 0.4)',
+const STAR_COUNT = 30;
+const STAR_COLORS = [
+  'rgba(255, 255, 255, 0.95)',
+  'rgba(186, 230, 253, 0.9)', // light cyan-blue star
+  'rgba(254, 240, 138, 0.95)', // pale yellow star
+  'rgba(255, 255, 255, 0.8)',
 ];
 
 export const AnimatedCloudsBackground: React.FC = () => {
   const { width, height } = useWindowDimensions();
 
-  const [clouds] = useState(() => {
-    return Array.from({ length: CLOUD_COUNT }).map((_, i) => {
-      // Space horizontally across the screen
+  const [stars] = useState(() => {
+    return Array.from({ length: STAR_COUNT }).map((_, i) => {
       const xFraction = Math.random(); 
+      const yFraction = Math.random(); 
       
       return {
         id: i,
         xFraction,
-        size: Math.random() * 20 + 24, // 24px to 44px clouds
-        color: CLOUD_COLORS[Math.floor(Math.random() * CLOUD_COLORS.length)],
-        duration: Math.random() * 20000 + 25000, // Gentle drift: 25s to 45s
-        randomOffset: Math.random(), // 0 to 1 start offset
-        animValue: new Animated.Value(0),
+        yFraction,
+        size: Math.random() * 8 + 6, // 6px to 14px stars
+        color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+        twinkleDuration: Math.random() * 2000 + 1500, // Twinkle speed: 1.5s to 3.5s
+        animValue: new Animated.Value(Math.random()), // Random initial opacity phase
       };
     });
   });
 
   useEffect(() => {
-    const animations = clouds.map(c => {
-      c.animValue.setValue(c.randomOffset);
-      return Animated.sequence([
-        Animated.timing(c.animValue, {
-          toValue: 1,
-          duration: c.duration * (1 - c.randomOffset),
-          useNativeDriver: true,
-        }),
-        Animated.loop(
-          Animated.sequence([
-            Animated.timing(c.animValue, {
-              toValue: 0,
-              duration: 0,
-              useNativeDriver: true,
-            }),
-            Animated.timing(c.animValue, {
-              toValue: 1,
-              duration: c.duration,
-              useNativeDriver: true,
-            })
-          ])
-        )
-      ]);
+    const animations = stars.map(s => {
+      return Animated.loop(
+        Animated.sequence([
+          Animated.timing(s.animValue, {
+            toValue: 0.15,
+            duration: s.twinkleDuration,
+            useNativeDriver: true,
+          }),
+          Animated.timing(s.animValue, {
+            toValue: 1.0,
+            duration: s.twinkleDuration,
+            useNativeDriver: true,
+          })
+        ])
+      );
     });
     Animated.parallel(animations).start();
-  }, [clouds]);
+  }, [stars]);
 
   return (
     <View style={styles.container} pointerEvents="none">
-      {clouds.map(c => {
-        // Drift vertically from middle of screen to top
-        const translateY = c.animValue.interpolate({
-          inputRange: [0, 1],
-          outputRange: [height / 2, -60],
-        });
-
-        // Soft horizontal sway for a natural floating effect
-        const translateX = c.animValue.interpolate({
-          inputRange: [0, 0.25, 0.5, 0.75, 1],
-          outputRange: [0, -12, 0, 12, 0],
-        });
-        
-        const opacity = c.animValue.interpolate({
-          inputRange: [0, 0.1, 0.9, 1],
-          outputRange: [0, 0.8, 0.8, 0], // Fade in/out at screen bounds
-        });
-
+      {stars.map(s => {
         return (
           <Animated.View
-            key={c.id}
+            key={s.id}
             style={[
-              styles.cloud,
+              styles.star,
               {
-                left: c.xFraction * width,
-                opacity,
-                transform: [
-                  { translateX },
-                  { translateY }
-                ]
+                left: s.xFraction * width,
+                top: s.yFraction * height,
+                opacity: s.animValue,
               }
             ]}
           >
-            <Ionicons name="cloud" size={c.size} color={c.color} />
+            <Ionicons name="star" size={s.size} color={s.color} />
           </Animated.View>
         );
       })}
@@ -104,14 +75,10 @@ export const AnimatedCloudsBackground: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
+    ...StyleSheet.absoluteFill,
     overflow: 'hidden',
   },
-  cloud: {
+  star: {
     position: 'absolute',
   },
 });
