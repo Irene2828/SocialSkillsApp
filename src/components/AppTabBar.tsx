@@ -68,6 +68,19 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
     );
   };
 
+  let fabLabel: string | undefined = undefined;
+  if (isFabActive) {
+    if (activeRoute === 'NewQuiz') {
+      fabLabel = 'Add Quiz';
+    } else if (activeRoute === 'Tasks') {
+      fabLabel = 'Add Task';
+    } else if (activeRoute === 'Puzzles') {
+      fabLabel = 'Add Puzzle';
+    } else if (activeRoute === 'Rewards') {
+      fabLabel = 'Add Reward';
+    }
+  }
+
   return (
     <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
       {renderTab('NewQuiz', 'Quizes', 'document-text-outline', activeRoute === 'NewQuiz')}
@@ -79,6 +92,7 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
           isActive={isFabActive} 
           onPress={onFabPress} 
           iconName={activeRoute === 'Drawing' ? 'download-outline' : 'add'} 
+          label={fabLabel}
         />
       </View>
 

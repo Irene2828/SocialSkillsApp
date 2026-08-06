@@ -393,7 +393,7 @@ export const MyRewardsScreen = () => {
                   
                   <View style={styles.successRewardRow}>
                     <View style={styles.successIconWrapper}>
-                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#0C4A6E" />
+                      <Ionicons name={redeemedReward.icon || 'gift-outline'} size={24} color="#FFFFFF" />
                     </View>
                     <Text style={styles.successRewardLabel} numberOfLines={1} adjustsFontSizeToFit>{redeemedReward.title}</Text>
                   </View>
@@ -517,7 +517,7 @@ export const MyRewardsScreen = () => {
         </ScreenWrapper>
 
       {navigation && (
-        <AppTabBar activeRoute="None" isFabActive={true} />
+        <AppTabBar activeRoute="Rewards" isFabActive={true} />
       )}
       {renderSuccessModal()}
 
@@ -796,7 +796,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(2, 8, 18, 0.72)',
+    backgroundColor: 'rgba(15, 23, 42, 0.92)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -807,12 +807,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: theme.spacing.xl,
     paddingTop: theme.spacing.xxl,
-    borderRadius: theme.borderRadius.md,
+    borderRadius: 24,
     overflow: 'hidden',
     zIndex: 1000,
-    backgroundColor: 'rgba(224, 251, 252, 0.95)',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: 'rgba(255, 255, 255, 0.22)',
     shadowOpacity: 0,
     elevation: 0,
   },
@@ -823,7 +823,7 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.lg,
   },
   successIconWrapper: {
-    backgroundColor: theme.colors.successGreenSoft,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     width: 40,
     height: 40,
     justifyContent: 'center',
@@ -836,17 +836,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#0C4A6E',
+    color: '#FFFFFF',
     marginLeft: 12,
     textTransform: 'capitalize',
   },
   successTitleNormal: {
     ...theme.typography.subheading,
-    color: '#0C4A6E',
+    color: '#FFFFFF',
   },
   successTitleHighlighted: {
     ...theme.typography.subheading,
-    color: '#0C4A6E',
+    color: '#FFFFFF',
   },
   underlinedWordContainer: {
     position: 'relative',
@@ -874,7 +874,7 @@ const styles = StyleSheet.create({
   successCopyBox: {
     borderWidth: 1.5,
     borderStyle: 'dashed',
-    borderColor: 'rgba(42, 30, 92, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.3)',
     borderRadius: theme.borderRadius.sm,
     padding: theme.spacing.md,
     width: '100%',
@@ -887,7 +887,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 26,
     letterSpacing: 0,
-    color: '#0C4A6E',
+    color: 'rgba(255, 255, 255, 0.95)',
     textAlign: 'center',
   },
   approveButton: {

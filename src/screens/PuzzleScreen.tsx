@@ -170,6 +170,11 @@ export const PuzzleScreen = () => {
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleConfig | null>(null);
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
+
+  useEffect(() => {
+    (navigation as any).setParams({ isPuzzleActive: selectedPuzzle !== null });
+  }, [selectedPuzzle, navigation]);
+
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [actionMenuPuzzle, setActionMenuPuzzle] = useState<PuzzleConfig | null>(null);
   const [showRenameModal, setShowRenameModal] = useState(false);

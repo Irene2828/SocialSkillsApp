@@ -36,8 +36,8 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
   }
 
   const glassButton = state === 'default' ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+    borderColor: 'rgba(255, 255, 255, 0.35)',
     borderWidth: 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
@@ -47,7 +47,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
   } : {};
 
   const glassText = state === 'default' ? {
-    color: '#0C4A6E',
+    color: '#F8FAFC',
   } : {};
 
   return (
@@ -75,11 +75,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.sm,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: 'rgba(255, 255, 255, 0.35)',
   },
   text: {
     ...theme.typography.body,
@@ -92,10 +92,10 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   defaultButton: {
-    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    backgroundColor: 'rgba(255, 255, 255, 0.16)',
   },
   defaultText: {
-    color: '#0C4A6E',
+    color: '#F8FAFC',
   },
   correctButton: {
     backgroundColor: 'transparent',
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 2,
-    borderColor: 'rgba(42, 30, 92, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.6)',
     backgroundColor: 'transparent',
   },
 });
