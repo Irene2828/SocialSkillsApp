@@ -10,7 +10,6 @@ import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { RootAppBackground } from './src/components/RootAppBackground';
 import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
@@ -42,14 +41,6 @@ import { View, ActivityIndicator } from 'react-native';
 
 const RootNavigator = () => {
   return <AppNavigator />;
-};
-
-const TransparentTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'transparent',
-  },
 };
 
 import { Asset } from 'expo-asset';
@@ -108,8 +99,7 @@ export default function App() {
             <RewardsProvider>
               <TasksProvider>
                 <QuizProvider>
-                  <RootAppBackground />
-                  <NavigationContainer theme={TransparentTheme}>
+                  <NavigationContainer>
                     <RootNavigator />
                     <StatusBar style="auto" />
                   </NavigationContainer>

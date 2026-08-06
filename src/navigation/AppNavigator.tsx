@@ -44,7 +44,7 @@ const AppTabs = () => {
   return (
     <Tab.Navigator
       tabBar={(props) => <AppTabBar activeRoute={props.state.routes[props.state.index].name} isFabActive={true} />}
-      screenOptions={{ headerShown: false, sceneStyle: { backgroundColor: 'transparent' } }}
+      screenOptions={{ headerShown: false }}
     >
       <Tab.Screen 
         name="NewQuiz" 
@@ -75,7 +75,7 @@ export const AppNavigator = () => {
     <Stack.Navigator 
       screenOptions={{ 
         headerShown: false,
-        contentStyle: { backgroundColor: 'transparent' }
+        contentStyle: { backgroundColor: defaultBg }
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
