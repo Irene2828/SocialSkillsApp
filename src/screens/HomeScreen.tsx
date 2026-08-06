@@ -175,7 +175,7 @@ export const HomeScreen = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <GlobalBackground showClouds />
+      <GlobalBackground showClouds dimmed={false} />
       <ScreenWrapper transparent>
         <TopBar 
           title="" 

@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet, ViewProps, View, ImageBackground } from 'react-native';
+import { StyleSheet, ViewProps, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../theme';
 
 interface ScreenWrapperProps extends ViewProps {
@@ -11,10 +10,7 @@ interface ScreenWrapperProps extends ViewProps {
 
 export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, transparent, disableSafeAreaTop, ...props }) => {
   return (
-    <LinearGradient
-      colors={transparent ? ['transparent', 'transparent', 'transparent'] : ['#14D2A4', '#00CED1', '#0EA5E9']}
-      style={{ flex: 1 }}
-    >
+    <View style={{ flex: 1 }}>
       <SafeAreaView 
         style={[styles.safeArea, { backgroundColor: 'transparent' }]}
         edges={disableSafeAreaTop ? ['bottom', 'left', 'right'] : undefined}
@@ -23,7 +19,7 @@ export const ScreenWrapper: React.FC<ScreenWrapperProps> = ({ children, style, t
           {children}
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

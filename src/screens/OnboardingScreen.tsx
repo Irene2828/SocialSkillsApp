@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, ScrollView, Animated } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
+import { GlobalBackground } from '../components/GlobalBackground';
 import { Card } from '../components/Card';
 import { useProgress } from '../context/ProgressContext';
 import { theme } from '../theme';
@@ -141,16 +142,18 @@ export const OnboardingScreen = () => {
       <Button title="Start First Quiz" onPress={handleFinish} style={styles.button} />
     </View>
   );
-
   return (
-    <ScreenWrapper>
-      <View style={styles.container}>
-        {step === 1 && renderStep1()}
-        {step === 2 && renderStep2()}
-        {step === 3 && renderStep3()}
-        {step === 4 && renderStep4()}
-      </View>
-    </ScreenWrapper>
+    <View style={{ flex: 1 }}>
+      <GlobalBackground />
+      <ScreenWrapper transparent>
+        <View style={styles.container}>
+          {step === 1 && renderStep1()}
+          {step === 2 && renderStep2()}
+          {step === 3 && renderStep3()}
+          {step === 4 && renderStep4()}
+        </View>
+      </ScreenWrapper>
+    </View>
   );
 };
 

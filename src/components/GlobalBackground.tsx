@@ -5,9 +5,10 @@ import { AnimatedCloudsBackground } from './AnimatedCloudsBackground';
 
 interface GlobalBackgroundProps {
   showClouds?: boolean;
+  dimmed?: boolean;
 }
 
-export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = false }) => {
+export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = false, dimmed = true }) => {
   const { mood } = useMood();
   const { width } = useWindowDimensions();
   
@@ -28,12 +29,13 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
   };
 
   return (
-    <View style={styles.container} pointerEvents="none">
+    <View style={[styles.container, { backgroundColor: isDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
       <Image
         source={getBgSource()}
         style={styles.pattern}
       />
       <AnimatedCloudsBackground />
+      {dimmed && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(15, 23, 42, 0.45)' }]} />}
     </View>
   );
 };
@@ -48,7 +50,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     minHeight: '100%',
-    backgroundColor: '#00CED1',
   },
   pattern: {
     position: 'absolute',

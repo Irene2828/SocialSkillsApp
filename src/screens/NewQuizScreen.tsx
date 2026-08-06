@@ -1038,7 +1038,6 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
-        <View style={{ ...StyleSheet.absoluteFill, backgroundColor: 'rgba(15, 23, 42, 0.45)' }} />
         <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
           <TopBar
             title={categoryName || ''}

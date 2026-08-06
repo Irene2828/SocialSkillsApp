@@ -4,6 +4,7 @@ import { theme } from '../theme';
 import { useRewards } from '../context/RewardsContext';
 import { Button } from '../components/Button';
 import { ScreenWrapper } from '../components/ScreenWrapper';
+import { GlobalBackground } from '../components/GlobalBackground';
 
 export const SettingsScreen = () => {
   const { isRewardsModeOn, setIsRewardsModeOn, parentsPin, setParentsPin } = useRewards();
@@ -14,7 +15,9 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <ScreenWrapper>
+    <View style={{ flex: 1 }}>
+      <GlobalBackground />
+      <ScreenWrapper transparent>
       {/* Header removed as requested */}
 
       <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
@@ -57,7 +60,8 @@ export const SettingsScreen = () => {
         </View>
 
       </ScrollView>
-    </ScreenWrapper>
+      </ScreenWrapper>
+    </View>
   );
 };
 
