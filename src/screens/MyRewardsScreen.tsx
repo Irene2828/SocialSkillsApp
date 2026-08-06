@@ -446,7 +446,11 @@ export const MyRewardsScreen = () => {
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.tabText, activeTab === 'available' && styles.activeTabText, { marginRight: 6 }]}>
+              <Text style={[
+                styles.tabText, 
+                activeTab === 'available' ? styles.activeTabText : { fontFamily: FONTS.regular }, 
+                { marginRight: 6 }
+              ]}>
                 All Rewards
               </Text>
               <Ionicons 
@@ -464,7 +468,10 @@ export const MyRewardsScreen = () => {
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>
+              <Text style={[
+                styles.tabText, 
+                activeTab === 'unlocked' ? styles.activeTabText : { fontFamily: FONTS.regular }
+              ]}>
                 Redeemed ({unlockedRewards.length})
               </Text>
             </View>

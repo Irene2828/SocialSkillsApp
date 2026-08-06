@@ -46,31 +46,14 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
               style={{ marginRight: 12, marginTop: 4 }}
             />
             <View style={{ flexDirection: 'row' }}>
-              {balance.toString().split('').map((char, index) => (
-                <Text 
-                  key={`num-${index}`}
-                  style={[
-                    styles.balanceNumber, 
-                    { color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
-                  ]}
-                >
-                  {char}
-                </Text>
-              ))}
+              <Text style={[styles.balanceNumber, { color: '#0C4A6E' }]}>
+                {balance}
+              </Text>
             </View>
             <View style={{ flexDirection: 'row', marginLeft: theme.spacing.sm }}>
-              {"Coins".split('').map((char, index) => (
-                <Text 
-                  key={`coin-${index}`}
-                  style={[
-                    styles.balanceLabel, 
-                    { marginLeft: 0 },
-                    { color: gradientColors[Math.min(balance.toString().length + 2 + index, gradientColors.length - 1)] || gradientColors[gradientColors.length - 1] }
-                  ]}
-                >
-                  {char}
-                </Text>
-              ))}
+              <Text style={[styles.balanceLabel, { marginLeft: 0, color: '#0C4A6E' }]}>
+                Coins
+              </Text>
             </View>
           </View>
           <Text style={styles.subtitleText}>{"When you have enough - redeem them\nfor a reward of your choice"}</Text>
