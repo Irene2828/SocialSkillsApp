@@ -126,7 +126,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
             >
               <View style={styles.coinBadge}>
                 <Text style={[styles.coinText, { color: '#0C4A6E', letterSpacing: 0.8 }]}>
-                  +{coinBalance}
+                  {coinBalance}
                 </Text>
                 <FontAwesome5 name="coins" size={12} color="#0C4A6E" style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
