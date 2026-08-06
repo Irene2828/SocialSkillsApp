@@ -446,15 +446,14 @@ export const MyRewardsScreen = () => {
             onPress={() => setActiveTab('available')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.tabText, activeTab === 'available' && styles.activeTabText, { marginRight: 6 }]}>
+                All Rewards
+              </Text>
               <Ionicons 
                 name="gift-outline" 
                 size={18} 
                 color={activeTab === 'available' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'} 
-                style={{ marginRight: 6 }} 
               />
-              <Text style={[styles.tabText, activeTab === 'available' && styles.activeTabText]}>
-                All Rewards
-              </Text>
             </View>
           </Pressable>
 
@@ -465,15 +464,14 @@ export const MyRewardsScreen = () => {
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText, { marginRight: 6 }]}>
+                Redeemed ({unlockedRewards.length})
+              </Text>
               <Ionicons 
                 name="checkmark-circle-outline" 
                 size={18} 
                 color={activeTab === 'unlocked' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'} 
-                style={{ marginRight: 6 }} 
               />
-              <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>
-                Redeemed
-              </Text>
             </View>
           </Pressable>
         </View>

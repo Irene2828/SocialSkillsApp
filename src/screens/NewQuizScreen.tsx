@@ -1130,28 +1130,15 @@ export const NewQuizScreen = () => {
                   <FontAwesome5 
                     name="coins" 
                     size={22} 
-                    color={isRocket ? '#FFFFFF' : gradientColors[0]} 
+                    color="#FFFFFF" 
                     style={{ marginRight: 8 }}
                   />
-                  <View style={{ flexDirection: 'row' }}>
-                    {('+' + coinsEarned).split('').map((char, index) => (
-                      <Text 
-                        key={`earn-${index}`} 
-                        style={[
-                          styles.completedCoinText, 
-                          { fontFamily: FONTS.semiBold, fontSize: 22, marginLeft: 0 },
-                          isRocket && { color: '#FFFFFF' },
-                          { color: isRocket ? '#FFFFFF' : gradientColors[Math.min(2 + index, gradientColors.length - 1)] }
-                        ]}
-                      >
-                        {char}
-                      </Text>
-                    ))}
-                    <Text style={[
-                      styles.completedCoinText, 
-                      { fontFamily: FONTS.semiBold, fontSize: 22, color: isRocket ? '#FFFFFF' : gradientColors[Math.min(5, gradientColors.length - 1)] }
-                    ]}> Coins Earned!</Text>
-                  </View>
+                  <Text style={[
+                    styles.completedCoinText, 
+                    { fontFamily: FONTS.medium, fontSize: 22, color: '#FFFFFF' }
+                  ]}>
+                    +{coinsEarned} Coins Earned!
+                  </Text>
                 </View>
 
                 <Button
