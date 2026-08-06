@@ -855,25 +855,27 @@ export const NewQuizScreen = () => {
         folderCategories = folderCategories.filter(c => !hiddenCategories.includes(c.id));
 
         return (
-          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+          <View style={{ flex: 1 }}>
             <TopBar
               title={folderTitle}
               showSettingsAndRewards={true}
               onBack={navigateBackFromFolder}
             />
-            <View style={styles.bentoGrid}>
-              {folderCategories.map((category: any) => (
-                <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                  <QuizCard 
-                    category={category} 
-                    isFeatured={false}
-                    onPressStart={() => handleSelectQuizCategory(category.id)} 
-                    onOptionsPress={() => handleOpenActionMenu(category)}
-                  />
-                </View>
-              ))}
-            </View>
-          </ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+              <View style={styles.bentoGrid}>
+                {folderCategories.map((category: any) => (
+                  <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                    <QuizCard 
+                      category={category} 
+                      isFeatured={false}
+                      onPressStart={() => handleSelectQuizCategory(category.id)} 
+                      onOptionsPress={() => handleOpenActionMenu(category)}
+                    />
+                  </View>
+                ))}
+              </View>
+            </ScrollView>
+          </View>
         );
       }
 
@@ -885,12 +887,13 @@ export const NewQuizScreen = () => {
       const subFolders = folders.filter(f => f.parentId === activeFolderId);
 
       return (
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+        <View style={{ flex: 1 }}>
           <TopBar
             title={currentFolder?.name || "Quizes"}
             showSettingsAndRewards={true}
             onBack={navigateBackFromFolder}
           />
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
           {quizzesInFolder.length === 0 && subFolders.length === 0 && (
             <View style={{ alignItems: 'center', paddingVertical: theme.spacing.xxl }}>
@@ -929,8 +932,9 @@ export const NewQuizScreen = () => {
               </View>
             ))}
 
-          </View>
-        </ScrollView>
+            </View>
+          </ScrollView>
+        </View>
       );
     }
 
@@ -944,11 +948,12 @@ export const NewQuizScreen = () => {
     const tabFolders = folders.filter(f => !f.parentId);
 
     return (
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+      <View style={{ flex: 1 }}>
         <TopBar
           title="Quizes"
           showSettingsAndRewards={true}
         />
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
 
         <View ref={bentoGridRef} style={styles.bentoGrid}>
             {/* Master Folders */}
@@ -974,8 +979,9 @@ export const NewQuizScreen = () => {
                 />
               </View>
             ))}
-        </View>
-      </ScrollView>
+          </View>
+        </ScrollView>
+      </View>
     );
   };
 
@@ -1157,7 +1163,6 @@ export const NewQuizScreen = () => {
     let subMessage = "";
     if (activeSocialQuiz) {
       message = "Great job!";
-      subMessage = activeSocialQuiz.completion.skillSummary + "\n\n" + activeSocialQuiz.completion.realLifePractice;
     }
 
     let coinsEarned = isRewardsModeOn ? total : 0;
