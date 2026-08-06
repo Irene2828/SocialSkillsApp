@@ -36,7 +36,7 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
   }
 
   const glassButton = state === 'default' ? {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     borderColor: 'rgba(255, 255, 255, 0.5)',
     borderWidth: 1,
     shadowColor: '#000',
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
     borderRadius: theme.borderRadius.sm,
     paddingHorizontal: theme.spacing.sm,
     borderWidth: 1,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   defaultButton: {
-    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
   },
   defaultText: {
     color: '#0C4A6E',
