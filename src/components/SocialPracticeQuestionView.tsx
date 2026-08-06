@@ -110,8 +110,12 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
                 {quiz.situation.introduction}
               </Text>
             </View>
+          </View>
 
-            <View style={{ marginTop: theme.spacing.md }}>
+          <View style={styles.divider} />
+
+          <View style={styles.problemSheet}>
+            <View style={styles.storyCallout}>
               <Text style={styles.calloutLabel}>
                 Question {questionNum}
               </Text>
@@ -272,6 +276,14 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     letterSpacing: 0.18,
     color: '#0C4A6E',
+  },
+  divider: {
+    width: '75%',
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'center',
+    marginBottom: theme.spacing.lg,
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,

@@ -43,7 +43,19 @@ const AppTabs = () => {
 
   return (
     <Tab.Navigator
-      tabBar={(props) => <AppTabBar activeRoute={props.state.routes[props.state.index].name} isFabActive={true} />}
+      tabBar={(props) => {
+        const activeRoute = props.state.routes[props.state.index];
+        // Safely extract the param from NewQuiz route if it exists
+        const newQuizRoute = props.state.routes.find(r => r.name === 'NewQuiz');
+        const isQuizInProgress = (newQuizRoute?.params as any)?.isQuizInProgress === true;
+        
+        return (
+          <AppTabBar 
+            activeRoute={activeRoute.name} 
+            isFabActive={!isQuizInProgress} 
+          />
+        );
+      }}
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen 

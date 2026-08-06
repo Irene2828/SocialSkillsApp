@@ -83,6 +83,11 @@ export const NewQuizScreen = () => {
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
   const [activeSocialQuiz, setActiveSocialQuiz] = useState<SocialPracticeQuiz | null>(null);
 
+  useEffect(() => {
+    const isQuizInProgress = quizState === 'in-progress' || quizState === 'completed';
+    navigation.setParams({ isQuizInProgress });
+  }, [quizState, navigation]);
+
   const IQ_CATEGORIES: QuizCategory[] = [
     { id: 'iq_math_word_problems', title: 'Math Word Problems', description: 'Multi-step logic', icon: 'calculator-outline' }
   ];
@@ -944,9 +949,6 @@ export const NewQuizScreen = () => {
       { id: 'built_in_math', name: 'Math Skills' }
     ];
 
-    // Optional: Include any custom root-level folders the user created
-    const tabFolders = folders.filter(f => !f.parentId);
-
     return (
       <View style={{ flex: 1 }}>
         <TopBar
@@ -954,31 +956,16 @@ export const NewQuizScreen = () => {
           showSettingsAndRewards={true}
         />
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
-
-        <View ref={bentoGridRef} style={styles.bentoGrid}>
-            {/* Master Folders */}
-            {rootFolders.map(folder => (
-              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                <FolderCard 
-                  name={folder.name}
-                  onPress={() => navigateIntoFolder(folder.id)}
-                />
-              </View>
-            ))}
-
-            {/* Custom User Folders */}
-            {tabFolders.map(folder => (
-              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                <FolderCard 
-                  name={folder.name}
-                  onPress={() => navigateIntoFolder(folder.id)}
-                  onEdit={() => {
-                    setActionMenuFolder(folder);
-                    setShowFolderActionMenu(true);
-                  }}
-                />
-              </View>
-            ))}
+          <View ref={bentoGridRef} style={styles.bentoGrid}>
+              {/* Master Folders */}
+              {rootFolders.map(folder => (
+                <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                  <FolderCard 
+                    name={folder.name}
+                    onPress={() => navigateIntoFolder(folder.id)}
+                  />
+                </View>
+              ))}
           </View>
         </ScrollView>
       </View>
