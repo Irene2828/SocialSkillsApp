@@ -56,7 +56,7 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
           <Text style={{ 
             color: '#FFFFFF', 
             fontSize: isTablet ? 13 : 11, 
-            fontFamily: isActive ? FONTS.semiBold : FONTS.medium,
+            fontFamily: FONTS.medium,
             textAlign: 'center',
             letterSpacing: 0.2,
             marginTop: 2

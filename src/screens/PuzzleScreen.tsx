@@ -106,17 +106,21 @@ const DraggablePiece = ({
         const targetCol = Math.floor(dropX / cw);
         const targetRow = Math.floor(dropY / rh);
         
+        let swapped = false;
         if (targetCol >= 0 && targetCol < cols && targetRow >= 0 && targetRow < rows) {
           const targetIndex = targetRow * cols + targetCol;
           if (targetIndex !== currentIndex) {
             swap(currentIndex, targetIndex);
+            swapped = true;
           }
         }
         
-        Animated.spring(pan, {
-          toValue: { x: 0, y: 0 },
-          useNativeDriver: false,
-        }).start();
+        if (!swapped) {
+          Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: false,
+          }).start();
+        }
       },
     })
   ).current;
