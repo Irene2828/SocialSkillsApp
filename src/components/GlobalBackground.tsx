@@ -8,9 +8,7 @@ interface GlobalBackgroundProps {
   dimmed?: boolean;
 }
 
-import { SilverDust } from './SilverDust';
-
-export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = false, dimmed = true }) => {
+export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = true, dimmed = true }) => {
   const { mood } = useMood();
   const { width } = useWindowDimensions();
   
@@ -36,9 +34,8 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
         source={getBgSource()}
         style={styles.pattern}
       />
-      {showClouds && <AnimatedCloudsBackground />}
       {dimmed && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(15, 23, 42, 0.45)' }]} />}
-      <SilverDust />
+      {showClouds && <AnimatedCloudsBackground />}
     </View>
   );
 };
