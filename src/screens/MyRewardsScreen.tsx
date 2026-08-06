@@ -452,7 +452,7 @@ export const MyRewardsScreen = () => {
               <Ionicons 
                 name="gift-outline" 
                 size={18} 
-                color={activeTab === 'available' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'} 
+                color={activeTab === 'available' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)'} 
               />
             </View>
           </Pressable>
@@ -464,14 +464,9 @@ export const MyRewardsScreen = () => {
             onPress={() => setActiveTab('unlocked')}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText, { marginRight: 6 }]}>
+              <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>
                 Redeemed ({unlockedRewards.length})
               </Text>
-              <Ionicons 
-                name="checkmark-circle-outline" 
-                size={18} 
-                color={activeTab === 'unlocked' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'} 
-              />
             </View>
           </Pressable>
         </View>
@@ -943,7 +938,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: 'rgba(255, 255, 255, 0.85)',
     fontSize: 16,
     letterSpacing: 0.5,
     lineHeight: 24,

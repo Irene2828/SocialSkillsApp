@@ -122,7 +122,7 @@ export const SwipeableRewardCard: React.FC<SwipeableRewardCardProps> = ({
           style={[styles.actionBtn, styles.deleteBtn]}
           onPress={() => { close(); onDelete(reward); }}
         >
-          <Ionicons name="trash-outline" size={22} color={theme.colors.white} />
+          <Ionicons name="trash-outline" size={22} color="#FFFFFF" />
           <Text style={[styles.actionText, styles.deleteActionText]}>Delete</Text>
         </Pressable>
       </Animated.View>
