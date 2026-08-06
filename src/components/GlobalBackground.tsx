@@ -1,12 +1,7 @@
 import React from 'react';
-import { Image, View, StyleSheet } from 'react-native';
-import { useMood } from '../context/MoodContext';
-import { BotanicalBackground } from './BotanicalBackground';
-import { CelestialBackground } from './CelestialBackground';
-import { AstronautBackground } from './AstronautBackground';
-import { RocketBackground } from './RocketBackground';
+import { Image, View, StyleSheet, useWindowDimensions } from 'react-native';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { AnimatedCloudsBackground } from './AnimatedCloudsBackground';
-import { LinearGradient } from 'expo-linear-gradient';
 
 interface GlobalBackgroundProps {
   showClouds?: boolean;
@@ -14,36 +9,30 @@ interface GlobalBackgroundProps {
 
 export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds = false }) => {
   const { mood } = useMood();
+  const { width } = useWindowDimensions();
+  
+  const moodColors = getMoodColors(mood);
+  const isDark = moodColors.isDark;
+  const isTablet = width > 768;
 
-  const renderMood = () => {
-    switch (mood) {
-      case 'celestial':
-        return <CelestialBackground />;
-      case 'astronaut':
-        return <AstronautBackground />;
-      case 'rocket':
-        return <RocketBackground />;
-      case 'none':
-        return null;
-      case 'botanical':
-      default:
-        return <BotanicalBackground />;
+  const getBgSource = () => {
+    if (isDark) {
+      return isTablet 
+        ? require('../../assets/home_bg_dark_tablet.png') 
+        : require('../../assets/home_bg_dark_mobile.png');
+    } else {
+      return isTablet 
+        ? require('../../assets/home_bg_light_tablet.png') 
+        : require('../../assets/home_bg_light_mobile.png');
     }
   };
 
   return (
     <View style={styles.container} pointerEvents="none">
-      <LinearGradient
-        colors={['#0EA5E9', '#00CED1', '#14D2A4']}
-        style={StyleSheet.absoluteFill}
-        start={{ x: 0.1, y: 0 }}
-        end={{ x: 0.9, y: 1 }}
-      />
       <Image
-        source={require('../../assets/space_bg.png')}
+        source={getBgSource()}
         style={styles.pattern}
       />
-      {renderMood()}
       {showClouds && <AnimatedCloudsBackground />}
     </View>
   );
@@ -69,7 +58,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: '100%',
     height: '100%',
-    opacity: 0.12,
+    opacity: 1,
     resizeMode: 'cover',
   },
 });
