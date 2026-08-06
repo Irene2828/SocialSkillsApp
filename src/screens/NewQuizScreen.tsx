@@ -837,6 +837,46 @@ export const NewQuizScreen = () => {
   const renderSelection = () => {
     // If we're inside a folder, render the folder contents view
     if (activeFolderId) {
+      if (activeFolderId === 'built_in_social' || activeFolderId === 'built_in_math') {
+        const isSocial = activeFolderId === 'built_in_social';
+        const folderTitle = isSocial ? 'Social Skills' : 'Math Skills';
+        
+        let folderCategories = allCategories.filter(c => {
+          if (isSocial) {
+            return c.id === 'general_quiz' || c.id.startsWith('sp_') || c.id.startsWith('custom_ai');
+          } else {
+            return c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems' || c.id.startsWith('math_ai');
+          }
+        }).map(c => ({
+          ...c,
+          title: renamedCategories[c.id] || c.title
+        }));
+        
+        folderCategories = folderCategories.filter(c => !hiddenCategories.includes(c.id));
+
+        return (
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+            <TopBar
+              title={folderTitle}
+              showSettingsAndRewards={true}
+              onBack={navigateBackFromFolder}
+            />
+            <View style={styles.bentoGrid}>
+              {folderCategories.map((category: any) => (
+                <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                  <QuizCard 
+                    category={category} 
+                    isFeatured={false}
+                    onPressStart={() => handleSelectQuizCategory(category.id)} 
+                    onOptionsPress={() => handleOpenActionMenu(category)}
+                  />
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        );
+      }
+
       const currentFolder = folders.find(f => f.id === activeFolderId);
       const quizzesInFolder = customCategories.filter(c => c.folderId === activeFolderId).map(c => ({
         ...c,
@@ -895,26 +935,13 @@ export const NewQuizScreen = () => {
     }
 
     // Root library view (no folder open)
-    let builtInCategories = allCategories.filter(
-      c => c.id === 'general_quiz' || c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems' || c.id.startsWith('sp_')
-    ).map(c => ({
-      ...c,
-      title: renamedCategories[c.id] || c.title
-    }));
-    builtInCategories = builtInCategories.filter(c => !hiddenCategories.includes(c.id));
+    const rootFolders = [
+      { id: 'built_in_social', name: 'Social Skills' },
+      { id: 'built_in_math', name: 'Math Skills' }
+    ];
 
-    // Folders (root level only)
+    // Optional: Include any custom root-level folders the user created
     const tabFolders = folders.filter(f => !f.parentId);
-
-    // Loose AI-generated quizzes (both social/custom and math)
-    const looseCategoryCards = customCategories.filter(
-      c => (c.id.startsWith('custom_ai') || c.id.startsWith('math_ai')) && !c.folderId
-    ).map(c => ({
-      ...c,
-      title: renamedCategories[c.id] || c.title
-    }));
-
-
 
     return (
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
@@ -924,50 +951,30 @@ export const NewQuizScreen = () => {
         />
 
         <View ref={bentoGridRef} style={styles.bentoGrid}>
-            {/* Built-in categories */}
-            {builtInCategories.map((category: any) => (
-              <View key={category.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                <QuizCard 
-                  category={category} 
-                  isFeatured={false}
-                  onPressStart={() => handleSelectQuizCategory(category.id)} 
-                  onOptionsPress={() => handleOpenActionMenu(category)}
+            {/* Master Folders */}
+            {rootFolders.map(folder => (
+              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                <FolderCard 
+                  name={folder.name}
+                  onPress={() => navigateIntoFolder(folder.id)}
                 />
               </View>
             ))}
 
-            {/* Folders */}
-            {tabFolders.map(folder => {
-              const quizCount = customCategories.filter(c => c.folderId === folder.id).length;
-              return (
-                <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                  <FolderCard 
-                    name={folder.name}
-                    onPress={() => navigateIntoFolder(folder.id)}
-                    onEdit={() => {
-                      setActionMenuFolder(folder);
-                      setShowFolderActionMenu(true);
-                    }}
-                    isDragTarget={hoveredFolderId === folder.id}
-                  />
-                </View>
-              );
-            })}
-
-            {/* Loose AI quizzes (not in any folder) */}
-            {looseCategoryCards.map(quiz => (
-              <View key={quiz.id} style={[styles.bentoItem, { width: cardWidth }]}>
-                <QuizCard 
-                  category={{ ...quiz, description: `${customQuestions.filter(q => q.category === quiz.id).length} questions` }} 
-                  isFeatured={false}
-                  onPressStart={() => handleStartQuiz(quiz.id)} 
-                  onOptionsPress={() => handleOpenActionMenu(quiz)}
+            {/* Custom User Folders */}
+            {tabFolders.map(folder => (
+              <View key={folder.id} style={[styles.bentoItem, { width: cardWidth }]}>
+                <FolderCard 
+                  name={folder.name}
+                  onPress={() => navigateIntoFolder(folder.id)}
+                  onEdit={() => {
+                    setActionMenuFolder(folder);
+                    setShowFolderActionMenu(true);
+                  }}
                 />
               </View>
             ))}
-            
-          </View>
-
+        </View>
       </ScrollView>
     );
   };
