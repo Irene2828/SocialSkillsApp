@@ -101,7 +101,7 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
           <View style={styles.problemSheet}>
             <View style={styles.storyCallout}>
               <Text style={styles.calloutLabel}>
-                Situation: {quiz.title}
+                Situation
               </Text>
               <Text style={styles.storyCalloutText}>
                 {quiz.situation.introduction}
@@ -114,12 +114,6 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
                 {question.prompt}
               </Text>
             </View>
-            
-            {question.hint && (
-              <Text style={styles.followStepsHint}>
-                Hint: {question.hint}
-              </Text>
-            )}
           </View>
 
           <View style={styles.optionsContainer}>
@@ -254,7 +248,7 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     letterSpacing: 0.8,
     color: 'rgba(42, 30, 92, 0.72)',
-    marginBottom: 4,
+    marginBottom: 3,
   },
   storyCalloutText: {
     ...theme.typography.body,
@@ -273,21 +267,13 @@ const styles = StyleSheet.create({
   problemQuestionText: {
     ...theme.typography.body,
     flex: 1,
-    fontFamily: FONTS.semiBold,
-    fontSize: 18,
-    fontWeight: '600',
-    lineHeight: 24,
+    fontFamily: FONTS.medium,
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 22,
+    letterSpacing: 0.18,
     color: '#0C4A6E',
     marginLeft: 8,
-  },
-  followStepsHint: {
-    fontFamily: FONTS.medium,
-    fontSize: 13,
-    lineHeight: 18,
-    color: 'rgba(12, 74, 110, 0.7)',
-    marginTop: 8,
-    marginLeft: 24,
-    fontStyle: 'italic',
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,
