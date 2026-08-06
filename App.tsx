@@ -1,14 +1,16 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import React from 'react';
 import 'intersection-observer';
 import ResizeObserver from 'resize-observer-polyfill';
 if (typeof window !== 'undefined' && !window.ResizeObserver) {
   window.ResizeObserver = ResizeObserver;
 }
 import { StatusBar } from 'expo-status-bar';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
+import { RootAppBackground } from './src/components/RootAppBackground';
 import { RewardsProvider } from './src/context/RewardsContext';
 import { ProgressProvider } from './src/context/ProgressContext';
 import { QuizProvider } from './src/context/QuizContext';
@@ -42,6 +44,16 @@ const RootNavigator = () => {
   return <AppNavigator />;
 };
 
+const TransparentTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'transparent',
+  },
+};
+
+import { Asset } from 'expo-asset';
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     DMSans_400Regular,
@@ -60,7 +72,27 @@ export default function App() {
     Nunito_700Bold,
   });
 
-  if (!fontsLoaded) {
+  const [assetsLoaded, setAssetsLoaded] = React.useState(false);
+
+  React.useEffect(() => {
+    async function loadAssets() {
+      try {
+        await Asset.loadAsync([
+          require('./assets/home_bg_dark_mobile.png'),
+          require('./assets/home_bg_dark_tablet.png'),
+          require('./assets/home_bg_light_mobile.png'),
+          require('./assets/home_bg_light_tablet.png'),
+        ]);
+      } catch (e) {
+        console.warn('Failed to load assets', e);
+      } finally {
+        setAssetsLoaded(true);
+      }
+    }
+    loadAssets();
+  }, []);
+
+  if (!fontsLoaded || !assetsLoaded) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#F0F1F3' }}>
         <ActivityIndicator size="large" color="#BEF264" />
@@ -76,7 +108,8 @@ export default function App() {
             <RewardsProvider>
               <TasksProvider>
                 <QuizProvider>
-                  <NavigationContainer>
+                  <RootAppBackground />
+                  <NavigationContainer theme={TransparentTheme}>
                     <RootNavigator />
                     <StatusBar style="auto" />
                   </NavigationContainer>
