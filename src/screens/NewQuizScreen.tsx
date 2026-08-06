@@ -84,8 +84,8 @@ export const NewQuizScreen = () => {
   const [activeSocialQuiz, setActiveSocialQuiz] = useState<SocialPracticeQuiz | null>(null);
 
   useEffect(() => {
-    const isQuizInProgress = quizState === 'in-progress' || quizState === 'completed';
-    navigation.setParams({ isQuizInProgress });
+    const isFabActive = quizState === 'selection';
+    navigation.setParams({ isFabActive });
   }, [quizState, navigation]);
 
   const IQ_CATEGORIES: QuizCategory[] = [
@@ -840,6 +840,7 @@ export const NewQuizScreen = () => {
   };
 
   const renderSelection = () => {
+
     // If we're inside a folder, render the folder contents view
     if (activeFolderId) {
       if (activeFolderId === 'built_in_social' || activeFolderId === 'built_in_math') {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Pressable, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Defs, Path, Text as SvgText, TextPath } from 'react-native-svg';
 import { theme, FONTS } from '../theme';
 
 interface FloatingActionButtonProps {
@@ -30,7 +31,16 @@ export const FloatingActionButton = ({
     <View style={styles.container}>
       {isActive && label && (
         <View style={styles.labelContainer}>
-          <Text style={styles.labelText}>{label}</Text>
+          <Svg width={90} height={45} viewBox="0 0 90 45" style={{ overflow: 'visible' }}>
+            <Defs>
+              <Path id="curve" d="M 6,42 A 39,39 0 0,1 84,42" />
+            </Defs>
+            <SvgText fill="#FFFFFF" fontSize="9" fontWeight="800" letterSpacing="0.8">
+              <TextPath href="#curve" startOffset="50%" textAnchor="middle">
+                {label.toUpperCase()}
+              </TextPath>
+            </SvgText>
+          </Svg>
         </View>
       )}
       <Pressable
@@ -88,26 +98,12 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     position: 'absolute',
-    top: -55,
-    backgroundColor: 'rgba(0, 206, 209, 0.95)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3,
-    zIndex: 1000,
-  },
-  labelText: {
-    color: '#FFFFFF',
-    fontFamily: FONTS.medium,
-    fontSize: 9,
-    fontWeight: '600',
-    letterSpacing: 0.5,
-    textTransform: 'uppercase',
+    top: -46, // sits right over the top curve of the FAB circle
+    width: 90,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+    overflow: 'visible',
   },
 });
