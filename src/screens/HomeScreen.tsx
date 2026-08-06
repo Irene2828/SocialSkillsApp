@@ -4,7 +4,6 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
 import { useNavigation } from '@react-navigation/native';
-import { AppTabBar } from '../components/AppTabBar';
 import { Ionicons } from '@expo/vector-icons';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { TopBar } from '../components/TopBar';
@@ -239,8 +238,6 @@ export const HomeScreen = () => {
             />
         </View>
       </ScreenWrapper>
-
-      <AppTabBar activeRoute="None" isFabActive={false} />
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
     </View>

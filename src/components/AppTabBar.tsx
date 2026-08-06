@@ -36,20 +36,9 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
   ) => {
     return (
       <Pressable 
-        style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column-reverse' }]} 
+        style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column' }]} 
         onPress={() => navigateTo(screen)}
       >
-        <View style={{ backgroundColor: 'transparent', marginTop: 2 }}>
-          <Text style={{ 
-            color: '#FFFFFF', 
-            fontSize: isTablet ? 12 : 10, 
-            fontFamily: isActive ? FONTS.semiBold : FONTS.medium,
-            textAlign: 'center',
-            letterSpacing: 0.2
-          }}>
-            {label}
-          </Text>
-        </View>
         <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
           {isActive && (
             <View style={{
@@ -61,7 +50,19 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
               borderRadius: 1.5,
             }} />
           )}
-          <Ionicons name={iconName} size={isTablet ? 28 : 24} color="#FFFFFF" style={{ marginBottom: 2 }} />
+          <Ionicons name={iconName} size={isTablet ? 28 : 24} color="#FFFFFF" />
+        </View>
+        <View style={{ backgroundColor: 'transparent' }}>
+          <Text style={{ 
+            color: '#FFFFFF', 
+            fontSize: isTablet ? 13 : 11, 
+            fontFamily: isActive ? FONTS.semiBold : FONTS.medium,
+            textAlign: 'center',
+            letterSpacing: 0.2,
+            marginTop: 2
+          }}>
+            {label}
+          </Text>
         </View>
       </Pressable>
     );
