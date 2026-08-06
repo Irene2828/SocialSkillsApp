@@ -77,3 +77,39 @@ export interface StepBasedQuestion {
   finalAnswer?: string;
 }
 
+export type SocialQuestionType = "understand" | "choose-response" | "notice-signal" | "repair" | "transfer";
+
+export interface SocialAnswerOption {
+  id: string;
+  text: string;
+  isAccepted: boolean;
+  isBestFit?: boolean;
+  feedback: string;
+}
+
+export interface SocialQuestion {
+  id: string;
+  type: SocialQuestionType;
+  prompt: string;
+  options: SocialAnswerOption[];
+  hint: string;
+  highlightedContext?: string;
+}
+
+export interface SocialPracticeQuiz {
+  id: string;
+  familyId: string;
+  title: string;
+  ageRange: "7-8";
+  skillName: string;
+  situation: {
+    setting: string;
+    characters: { name: string; description?: string }[];
+    introduction: string;
+  };
+  questions: SocialQuestion[];
+  completion: {
+    skillSummary: string;
+    realLifePractice: string;
+  };
+}
