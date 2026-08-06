@@ -466,13 +466,13 @@ export const MyRewardsScreen = () => {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Ionicons 
-                name="lock-open-outline" 
+                name="checkmark-circle-outline" 
                 size={18} 
                 color={activeTab === 'unlocked' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)'} 
                 style={{ marginRight: 6 }} 
               />
               <Text style={[styles.tabText, activeTab === 'unlocked' && styles.activeTabText]}>
-                Unlocked
+                Redeemed
               </Text>
             </View>
           </Pressable>

@@ -137,7 +137,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                   letterSpacing: 0.8,
                 }}
               >
-                Redeem
+                Rewards
               </Text>
             </Pressable>
           ) : null}
