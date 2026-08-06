@@ -62,9 +62,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               >
                 {title}
               </Text>
-              <Svg width="50%" height={5} viewBox="0 0 100 6" preserveAspectRatio="none" style={{ marginTop: 2 }}>
+              <Svg width="50%" height={8} viewBox="0 0 100 8" preserveAspectRatio="none" style={{ marginTop: 2 }}>
                 <Path
-                  d="M2,3 Q25,1 50,3 T98,2 Q50,4 2,3"
+                  d="M2,3.5 Q25,0.5 50,4 T98,2.5 Q50,7.5 2,3.5"
                   fill="#0C4A6E"
                 />
               </Svg>
