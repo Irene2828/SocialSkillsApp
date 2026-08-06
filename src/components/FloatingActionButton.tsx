@@ -7,12 +7,14 @@ interface FloatingActionButtonProps {
   isActive?: boolean;
   onPress?: () => void;
   accessibilityLabel?: string;
+  iconName?: keyof typeof Ionicons.glyphMap;
 }
 
 export const FloatingActionButton = ({
   isActive = false,
   onPress,
   accessibilityLabel = "Add New",
+  iconName = "add",
 }: FloatingActionButtonProps) => {
   const handlePress = () => {
     if (onPress) {
@@ -34,10 +36,9 @@ export const FloatingActionButton = ({
         accessibilityLabel={accessibilityLabel}
       >
         <Ionicons
-          name="add"
-          size={32}
+          name={iconName}
+          size={28}
           color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.4)'}
-          style={{ marginLeft: 2 }}
         />
       </Pressable>
     </View>

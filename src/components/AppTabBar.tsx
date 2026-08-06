@@ -75,7 +75,11 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
       
       {/* Center Floating Action Button */}
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <FloatingActionButton isActive={isFabActive} onPress={onFabPress} />
+        <FloatingActionButton 
+          isActive={isFabActive} 
+          onPress={onFabPress} 
+          iconName={activeRoute === 'Drawing' ? 'download-outline' : 'add'} 
+        />
       </View>
 
       {renderTab('Puzzles', 'Puzzles', 'extension-puzzle-outline', activeRoute === 'Puzzles')}
