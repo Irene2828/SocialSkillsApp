@@ -111,20 +111,10 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               }}
             >
               <View style={styles.coinBadge}>
-                <View style={{ flexDirection: 'row' }}>
-                  {('+' + coinBalance).split('').map((char, index) => (
-                    <Text 
-                      key={`top-${index}`}
-                      style={[
-                        styles.coinText, 
-                        { letterSpacing: 0.8, color: index === 0 ? gradientColors[0] : gradientColors[Math.min(2 + index, gradientColors.length - 1)] || gradientColors[1] }
-                      ]}
-                    >
-                      {char}
-                    </Text>
-                  ))}
-                </View>
-                <FontAwesome5 name="coins" size={12} color={gradientColors[0]} style={[styles.coinIcon, { marginLeft: 6 }]} />
+                <Text style={[styles.coinText, { color: '#0C4A6E', letterSpacing: 0.8 }]}>
+                  +{coinBalance}
+                </Text>
+                <FontAwesome5 name="coins" size={12} color="#0C4A6E" style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
               <Text 
                 style={{ 
