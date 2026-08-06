@@ -896,7 +896,7 @@ export const NewQuizScreen = () => {
 
     // Root library view (no folder open)
     let builtInCategories = allCategories.filter(
-      c => c.id === 'general_quiz' || c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems'
+      c => c.id === 'general_quiz' || c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems' || c.id.startsWith('sp_')
     ).map(c => ({
       ...c,
       title: renamedCategories[c.id] || c.title
