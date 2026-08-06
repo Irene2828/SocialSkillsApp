@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Pressable, useWindowDimensions, Image, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import Svg, { Path } from 'react-native-svg';
 import { theme, FONTS } from '../theme';
 import { SettingsModal } from './SettingsModal';
 import { GradientIcon } from './GradientIcon';
@@ -52,9 +53,17 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         {/* Center: Title (absolutely positioned for perfect centering) */}
         <View style={styles.titleContainer} pointerEvents="none">
           {!hideTitle && (
-            <Text style={[styles.title, isRocket && { color: '#FFFFFF' }]} numberOfLines={1}>
-              {title}
-            </Text>
+            <View style={{ alignItems: 'center', width: '100%' }}>
+              <Text style={[styles.title, isRocket && { color: '#FFFFFF' }]} numberOfLines={1}>
+                {title}
+              </Text>
+              <Svg width="50%" height={5} viewBox="0 0 100 6" preserveAspectRatio="none" style={{ marginTop: 2 }}>
+                <Path
+                  d="M2,3 Q25,1 50,3 T98,2 Q50,4 2,3"
+                  fill="#0C4A6E"
+                />
+              </Svg>
+            </View>
           )}
         </View>
 
