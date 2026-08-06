@@ -54,7 +54,12 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         <View style={styles.titleContainer} pointerEvents="none">
           {!hideTitle && (
             <View style={{ alignItems: 'center', width: '100%' }}>
-              <Text style={[styles.title, isRocket && { color: '#FFFFFF' }]} numberOfLines={1}>
+              <Text 
+                style={[styles.title, isRocket && { color: '#FFFFFF' }]} 
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.75}
+              >
                 {title}
               </Text>
               <Svg width="50%" height={5} viewBox="0 0 100 6" preserveAspectRatio="none" style={{ marginTop: 2 }}>

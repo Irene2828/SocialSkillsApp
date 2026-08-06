@@ -999,10 +999,13 @@ export const NewQuizScreen = () => {
     if (currentQuestions.length === 0) return null;
     const baseQuestion = currentQuestions[currentIndex] as Question;
     const hasWhyData = false; // baseQuestion.whyOptions && baseQuestion.whyOptions.length > 0;
-    let categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
-    const customCat = customCategories.find(c => c.id === selectedCategory);
-    if (customCat) {
-      categoryName = customCat.title;
+    let categoryName = '';
+    if (selectedCategory) {
+      categoryName = renamedCategories[selectedCategory] || allCategories.find((c: any) => c.id === selectedCategory)?.title || selectedCategory;
+      const customCat = customCategories.find(c => c.id === selectedCategory);
+      if (customCat) {
+        categoryName = renamedCategories[selectedCategory] || customCat.title;
+      }
     }
 
     const isWordProblem = selectedCategory === 'iq_word_problems' || selectedCategory === 'iq_math_word_problems' || selectedCategory?.startsWith('math_ai') || (currentQuestions.length > 0 && !!(currentQuestions[0] as any).problemText);
@@ -1090,7 +1093,7 @@ export const NewQuizScreen = () => {
   };
 
   const renderCompleted = () => {
-    const categoryName = allCategories.find((c: any) => c.id === selectedCategory)?.title || '';
+    const categoryName = selectedCategory ? (renamedCategories[selectedCategory] || allCategories.find((c: any) => c.id === selectedCategory)?.title || '') : '';
     const total = currentQuestions.length;
     
     let message = "Awesome!";
