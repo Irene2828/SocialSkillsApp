@@ -39,7 +39,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
 
-  const headerFontSize = isTablet ? 32 : (isSmallScreen ? 18 : 22);
+  const headerFontSize = isTablet ? 26 : (isSmallScreen ? 14 : 16);
 
 
 
@@ -55,7 +55,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
           {!hideTitle && (
             <View style={{ alignItems: 'center', width: '100%' }}>
               <Text 
-                style={[styles.title, isRocket && { color: '#FFFFFF' }]} 
+                style={[styles.title, { fontSize: headerFontSize }, isRocket && { color: '#FFFFFF' }]} 
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
