@@ -101,15 +101,18 @@ export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOp
             }} 
             style={({ pressed }) => [
               {
-                padding: 6,
-                borderRadius: 20,
-                backgroundColor: pressed ? 'rgba(42, 30, 92,0.1)' : 'rgba(42, 30, 92,0.05)',
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: pressed ? 'rgba(255, 255, 255, 0.28)' : 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: '#FFFFFF',
                 alignItems: 'center',
                 justifyContent: 'center',
               }
             ]}
           >
-            <Ionicons name="ellipsis-vertical" size={20} color="rgba(42, 30, 92, 0.7)" />
+            <Ionicons name="ellipsis-vertical" size={20} color="#FFFFFF" />
           </Pressable>
         </View>
       )}
