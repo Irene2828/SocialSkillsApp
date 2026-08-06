@@ -22,10 +22,10 @@ export const RewardCard: React.FC<RewardCardProps> = ({ reward, onRedeem, canAff
   return (
     <View style={[styles.card, !canAfford && styles.cardDimmed]}>
       <View style={styles.iconContainer}>
-        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color="#0C4A6E" />
+        <Ionicons name={reward.icon as any || 'gift-outline'} size={32} color={canAfford ? "#0C4A6E" : "rgba(12, 74, 110, 0.5)"} />
       </View>
       <View style={styles.textContainer}>
-        <Text style={styles.title} numberOfLines={2} adjustsFontSizeToFit>
+        <Text style={[styles.title, !canAfford && { color: 'rgba(12, 74, 110, 0.5)' }]} numberOfLines={2} adjustsFontSizeToFit>
           {reward.title}
         </Text>
         
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   cardDimmed: {
-    opacity: 0.5,
+    backgroundColor: 'rgba(224, 251, 252, 0.5)',
   },
   leftContent: {
     flexDirection: 'row',
