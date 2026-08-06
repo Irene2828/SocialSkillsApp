@@ -65,7 +65,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               <Svg width="50%" height={8} viewBox="0 0 100 8" preserveAspectRatio="none" style={{ marginTop: 2 }}>
                 <Path
                   d="M2,3.5 Q25,0.5 50,4 T98,2.5 Q50,7.5 2,3.5"
-                  fill="#0C4A6E"
+                  fill="#FFFFFF"
                 />
               </Svg>
             </View>
@@ -125,10 +125,10 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
               }}
             >
               <View style={styles.coinBadge}>
-                <Text style={[styles.coinText, { color: '#0C4A6E', letterSpacing: 0.8 }]}>
+                <Text style={[styles.coinText, { color: '#FFFFFF', letterSpacing: 0.8 }]}>
                   {coinBalance}
                 </Text>
-                <FontAwesome5 name="coins" size={12} color="#0C4A6E" style={[styles.coinIcon, { marginLeft: 6 }]} />
+                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
               <Text 
                 style={{ 
