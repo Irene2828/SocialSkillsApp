@@ -162,8 +162,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 0, // removed hack
     zIndex: 100,
     marginBottom: 0,
+    backgroundColor: 'rgba(12, 74, 110, 0.95)',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.45)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.15)',
   },
   compactContainer: {
     paddingTop: 6,
@@ -173,6 +174,7 @@ const styles = StyleSheet.create({
   noEdgeToEdge: {
     marginHorizontal: 0,
     borderBottomWidth: 0,
+    backgroundColor: 'transparent',
   },
   side: {
     minWidth: 40,

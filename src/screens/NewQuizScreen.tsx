@@ -1038,12 +1038,13 @@ export const NewQuizScreen = () => {
 
     return (
       <View style={styles.inProgressContainer}>
+        <TopBar
+          title={categoryName || ''}
+          onBack={handleBackToHome}
+          showSettingsAndRewards={true}
+        />
         <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
-          <TopBar
-            title={categoryName || ''}
-            onBack={handleBackToHome}
-            showSettingsAndRewards={true}
-          />
+
 
           <View style={styles.progressSection}>
             <View style={{ height: 26, position: 'relative', width: '100%' }}>

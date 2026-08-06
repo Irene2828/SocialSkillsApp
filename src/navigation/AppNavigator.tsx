@@ -39,8 +39,7 @@ const AppTabs = () => {
   const moodColors = getMoodColors(mood);
   const isRocket = mood === 'rocket';
 
-  const activeColor = '#FFFFFF';
-  const inactiveColor = '#FFFFFF';
+  const defaultBg = moodColors.isDark ? '#0b0f19' : '#e0f2fe';
 
   return (
     <Tab.Navigator
@@ -68,8 +67,17 @@ const AppTabs = () => {
 };
 
 export const AppNavigator = () => {
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const defaultBg = moodColors.isDark ? '#0b0f19' : '#e0f2fe';
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator 
+      screenOptions={{ 
+        headerShown: false,
+        contentStyle: { backgroundColor: defaultBg }
+      }}
+    >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="AppTabs" component={AppTabs} />
       <Stack.Screen name="CreateQuizFromPhoto" component={CreateQuizFromPhotoScreen} />
