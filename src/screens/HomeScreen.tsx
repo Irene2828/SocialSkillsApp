@@ -13,7 +13,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { ScalePressable } from '../components/ScalePressable';
-import { ShatterText3D } from '../components/ShatterText3D';
+// ShatterText3D is lazy-loaded on web only to prevent Three.js crashing on native
+const ShatterText3D = Platform.OS === 'web'
+  ? require('../components/ShatterText3D').ShatterText3D
+  : null;
 
 // Kept AstronautHero
 
@@ -566,22 +569,25 @@ export const HomeScreen = () => {
         <View style={styles.startContainer} pointerEvents="box-none">
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]} pointerEvents="box-none">
             <AstronautHero reduceMotion={reduceMotion} touchDisplacement={touchDisplacement} />
-            <Pressable 
-              onPress={() => {
-                if (Platform.OS === 'web') {
-                  setIsShattered(prev => !prev);
-                }
-              }}
-              style={{ width: '100%', alignItems: 'center', position: 'relative' }}
-            >
-              <View style={{ opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1, alignItems: 'center' }}>
-                <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
-                <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
-              </View>
-              {Platform.OS === 'web' && (
+            {/* Title - always visible, shatter only on web */}
+            <View style={{ width: '100%', alignItems: 'center', position: 'relative' }}>
+              <Pressable
+                onPress={() => {
+                  if (Platform.OS === 'web') {
+                    setIsShattered(prev => !prev);
+                  }
+                }}
+                style={{ alignItems: 'center' }}
+              >
+                <View style={{ opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1, alignItems: 'center' }}>
+                  <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
+                  <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
+                </View>
+              </Pressable>
+              {Platform.OS === 'web' && ShatterText3D && (
                 <ShatterText3D isShattered={isShattered} onError={() => setWebGLFailed(true)} />
               )}
-            </Pressable>
+            </View>
           </View>
 
           <View style={{ transform: [{ translateY: isTablet ? 70 : 50 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
