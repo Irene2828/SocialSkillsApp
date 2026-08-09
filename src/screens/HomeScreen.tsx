@@ -537,7 +537,7 @@ export const HomeScreen = () => {
             </View>
           </View>
 
-          <View style={{ transform: [{ translateY: isTablet ? -20 : -15 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
+          <View style={{ transform: [{ translateY: isTablet ? 30 : 20 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
             <Text 
               style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: 12 }]}
             >
