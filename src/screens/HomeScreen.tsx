@@ -132,8 +132,6 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
           { translateY: floatY },
           { translateX: touchDisplacement.x },
           { translateY: touchDisplacement.y },
-          { translateX: dragXY.x },
-          { translateY: dragXY.y },
           { rotate: rotateDeg }
         ],
         alignItems: 'center',
@@ -142,12 +140,21 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
         touchAction: 'none'
       }}
     >
-      <Image 
-        source={require('../../assets/mascot_v2_transparent.png')} 
-        style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
-        pointerEvents="none"
-        draggable={false}
-      />
+      <Animated.View style={{
+        transform: [
+          { translateX: dragXY.x },
+          { translateY: dragXY.y }
+        ],
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}>
+        <Image 
+          source={require('../../assets/mascot_v2_transparent.png')} 
+          style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
+          pointerEvents="none"
+          draggable={false}
+        />
+      </Animated.View>
     </Animated.View>
   );
 };
