@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, PanResponder } from 'react-native';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, PanResponder, Platform } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
@@ -512,7 +512,6 @@ export const HomeScreen = () => {
     <View 
       style={{ flex: 1, overflow: 'hidden', backgroundColor: '#0b0f19' }}
       onStartShouldSetResponder={() => true}
-      onMoveShouldSetResponder={() => true}
       onResponderGrant={handlePointerDown}
       onResponderMove={handlePointerMove}
       onResponderRelease={handlePointerUp}
@@ -555,14 +554,20 @@ export const HomeScreen = () => {
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]} pointerEvents="box-none">
             <AstronautHero reduceMotion={reduceMotion} touchDisplacement={touchDisplacement} />
             <Pressable 
-              onPress={() => setIsShattered(prev => !prev)}
+              onPress={() => {
+                if (Platform.OS === 'web') {
+                  setIsShattered(prev => !prev);
+                }
+              }}
               style={{ width: '100%', alignItems: 'center', position: 'relative' }}
             >
-              <View style={{ opacity: (isShattered && !webGLFailed) ? 0 : 1, alignItems: 'center' }}>
+              <View style={{ opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1, alignItems: 'center' }}>
                 <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
                 <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
               </View>
-              <ShatterText3D isShattered={isShattered} onError={() => setWebGLFailed(true)} />
+              {Platform.OS === 'web' && (
+                <ShatterText3D isShattered={isShattered} onError={() => setWebGLFailed(true)} />
+              )}
             </Pressable>
           </View>
 
