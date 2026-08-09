@@ -591,10 +591,6 @@ export const HomeScreen = () => {
       onResponderTerminate={handlePointerUp}
     >
       <GlobalBackground showClouds dimmed={false} />
-      
-      <View style={StyleSheet.absoluteFill} pointerEvents="none">
-        <CosmicCanvas ref={cosmicRef} reduceMotion={reduceMotion} />
-      </View>
 
       <ScreenWrapper transparent>
         <TopBar 
@@ -681,7 +677,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.xxl,
-    marginTop: '-10%',
+    marginTop: '-30%',
   },
   startTitle: {
     ...theme.typography.display,
