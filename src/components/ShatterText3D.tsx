@@ -1,7 +1,7 @@
 import React, { useRef, useMemo, useEffect, useState, ReactNode } from 'react';
 import { View, StyleSheet, LogBox } from 'react-native';
 
-LogBox.ignoreLogs(['THREE.WebGLRenderer: Error creating WebGL context', 'Promise Rejection: THREE.WebGLRenderer: Error creating WebGL context']);
+LogBox.ignoreLogs(['THREE.WebGLRenderer', 'Error creating WebGL context']);
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, RenderTexture, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
