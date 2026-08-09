@@ -13,7 +13,7 @@ export const FloatingActionButton = ({
   isActive = false,
   onPress,
   accessibilityLabel = "Add New",
-  label = "Add New",
+  label = "Add\nNew",
 }: FloatingActionButtonProps) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const isTablet = SCREEN_WIDTH >= 768;

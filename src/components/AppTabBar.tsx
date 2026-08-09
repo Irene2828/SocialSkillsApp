@@ -69,7 +69,7 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
     );
   };
 
-  const fabLabel = activeRoute === 'Drawing' ? 'Save' : 'Add New';
+  const fabLabel = activeRoute === 'Drawing' ? 'Save' : 'Add\nNew';
 
   return (
     <View style={[styles.customFooter, { height: footerHeight, paddingBottom: footerPaddingBottom }]}>
