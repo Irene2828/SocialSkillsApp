@@ -564,7 +564,6 @@ export const HomeScreen = () => {
   const handleResponderMove = (evt: any) => {
     handlePointerMove(evt);
   };
-  };
 
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
