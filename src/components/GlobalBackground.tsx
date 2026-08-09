@@ -33,7 +33,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
     <View style={[styles.container, { backgroundColor: isDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
       <Image
         source={getBgSource()}
-        style={StyleSheet.absoluteFillObject}
+        style={StyleSheet.absoluteFill}
         resizeMode="cover"
       />
       {dimmed && (
@@ -41,11 +41,11 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
           <BlurView 
             intensity={20} 
             tint={isDark ? "dark" : "light"}
-            style={StyleSheet.absoluteFillObject} 
+            style={StyleSheet.absoluteFill} 
           />
           <View 
             style={[
-              StyleSheet.absoluteFillObject, 
+              StyleSheet.absoluteFill, 
               { backgroundColor: isDark ? 'rgba(11, 15, 25, 0.40)' : 'rgba(224, 242, 254, 0.40)' }
             ]} 
           />
@@ -58,7 +58,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     width: '100%',
     height: '100%',
   },
