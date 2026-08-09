@@ -43,13 +43,15 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
   const floatX = useRef(new Animated.Value(0)).current;
   const floatY = useRef(new Animated.Value(0)).current;
   const rotate = useRef(new Animated.Value(0)).current;
-  const dragXY = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+  const dragOffsetX = useRef(0);
+  const dragOffsetY = useRef(0);
+  const dragTranslateX = useRef(new Animated.Value(0)).current;
+  const dragTranslateY = useRef(new Animated.Value(0)).current;
   const isDragging = useRef(false);
 
   const animateRandomly = () => {
     if (reduceMotion || isDragging.current) return;
     
-    // Pick random target covering most of the screen
     const targetX = (Math.random() - 0.5) * (width * 0.7);
     const targetY = (Math.random() - 0.5) * (height * 0.6);
     const durationX = 7000 + Math.random() * 5000;
@@ -61,7 +63,6 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
       easing: Easing.inOut(Easing.quad),
       useNativeDriver: true,
     }).start(({ finished }) => {
-      // Loop recursively when X finishes, provided we aren't dragging
       if (finished && !isDragging.current) animateRandomly();
     });
 
@@ -81,15 +82,16 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
         isDragging.current = true;
         floatX.stopAnimation();
         floatY.stopAnimation();
-        dragXY.extractOffset();
+        dragOffsetX.current = (dragTranslateX as any)._value || 0;
+        dragOffsetY.current = (dragTranslateY as any)._value || 0;
       },
-      onPanResponderMove: Animated.event(
-        [null, { dx: dragXY.x, dy: dragXY.y }],
-        { useNativeDriver: false }
-      ),
+      onPanResponderMove: (_evt, gestureState) => {
+        // Direct setValue — no Animated.event, no JS bridge traffic
+        dragTranslateX.setValue(dragOffsetX.current + gestureState.dx);
+        dragTranslateY.setValue(dragOffsetY.current + gestureState.dy);
+      },
       onPanResponderRelease: () => {
         isDragging.current = false;
-        dragXY.flattenOffset();
         animateRandomly();
       }
     })
@@ -132,6 +134,8 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
           { translateY: floatY },
           { translateX: touchDisplacement.x },
           { translateY: touchDisplacement.y },
+          { translateX: dragTranslateX },
+          { translateY: dragTranslateY },
           { rotate: rotateDeg }
         ],
         alignItems: 'center',
@@ -140,28 +144,19 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
         touchAction: 'none'
       }}
     >
-      <Animated.View style={{
-        transform: [
-          { translateX: dragXY.x },
-          { translateY: dragXY.y }
-        ],
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-        <Image 
-          source={require('../../assets/mascot_v2_transparent.png')} 
-          style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
-          pointerEvents="none"
-          draggable={false}
-        />
-      </Animated.View>
+      <Image 
+        source={require('../../assets/mascot_v2_transparent.png')} 
+        style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
+        pointerEvents="none"
+        draggable={false}
+      />
     </Animated.View>
   );
 };
 
 // Physics System & Cosmic Canvas (Native Animated implementation)
-const PARTICLE_COUNT = 60;
-const SHOCKWAVE_COUNT = 5;
+const PARTICLE_COUNT = 30;
+const SHOCKWAVE_COUNT = 3;
 const PARTICLE_COLORS = ['#00f2fe', '#4facfe', '#ffd166', '#ffffff', '#c084fc', '#38bdf8'];
 
 export interface CosmicPhysicsRef {
@@ -256,8 +251,8 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
         ]).start(() => { sw.active = false; });
       }
 
-      // Burst 18 particles blowing outward
-      for (let i = 0; i < 18; i++) {
+      // Burst particles blowing outward
+      for (let i = 0; i < 10; i++) {
         spawnParticle(cx, cy, false);
       }
     },
@@ -488,6 +483,7 @@ export const HomeScreen = () => {
   const cosmicRef = useRef<CosmicPhysicsRef>(null);
 
   const lastPushTime = useRef(0);
+  const isTouching = useRef(false);
 
   const extractCoords = (evt: any) => {
     const ne = evt?.nativeEvent || {};
@@ -499,28 +495,53 @@ export const HomeScreen = () => {
     return { x, y };
   };
 
+  // Use direct setValue during active touch — ZERO native animation nodes created
+  const applyElasticPushDirect = (tx: number, ty: number) => {
+    if (reduceMotion) return;
+    const astronautCenterX = width / 2;
+    const astronautCenterY = 150;
+    
+    const dx = astronautCenterX - tx;
+    const dy = astronautCenterY - ty;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    
+    const maxRadius = 150;
+    if (dist < maxRadius && dist > 0) {
+      const force = (1 - dist / maxRadius) * 15;
+      const pushX = (dx / dist) * force;
+      const pushY = (dy / dist) * force;
+      touchDisplacement.setValue({ x: pushX, y: pushY });
+    } else {
+      touchDisplacement.setValue({ x: 0, y: 0 });
+    }
+  };
+
   const handlePointerDown = (evt: any) => {
     const coords = extractCoords(evt);
     if (!coords) return;
+    isTouching.current = true;
+    touchDisplacement.stopAnimation(); // kill any running spring from prior release
     cosmicRef.current?.triggerTouchDown(coords.x, coords.y);
-    applyElasticPush(coords.x, coords.y);
+    applyElasticPushDirect(coords.x, coords.y);
     lastPushTime.current = Date.now();
   };
 
   const handlePointerMove = (evt: any) => {
+    if (!isTouching.current) return;
     const coords = extractCoords(evt);
     if (!coords) return;
-    cosmicRef.current?.triggerTouchMove(coords.x, coords.y);
     
     const now = Date.now();
-    if (now - lastPushTime.current > 40) { // throttle spring updates
-      applyElasticPush(coords.x, coords.y);
+    if (now - lastPushTime.current > 50) {
+      cosmicRef.current?.triggerTouchMove(coords.x, coords.y);
+      applyElasticPushDirect(coords.x, coords.y);
       lastPushTime.current = now;
     }
   };
 
+  // Animated.spring is ONLY used here — once per touch session
   const handlePointerUp = () => {
-    touchDisplacement.stopAnimation();
+    isTouching.current = false;
     Animated.spring(touchDisplacement, {
       toValue: { x: 0, y: 0 },
       friction: 4,
@@ -536,38 +557,6 @@ export const HomeScreen = () => {
   const handleResponderMove = (evt: any) => {
     handlePointerMove(evt);
   };
-
-  const applyElasticPush = (tx: number, ty: number) => {
-    if (reduceMotion) return;
-    const astronautCenterX = width / 2;
-    const astronautCenterY = 150; // Approx based on top:-110 and layout
-    
-    const dx = astronautCenterX - tx;
-    const dy = astronautCenterY - ty;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    
-    const maxRadius = 150;
-    if (dist < maxRadius) {
-      const force = (1 - dist / maxRadius) * 15; // Max 15px push
-      const pushX = (dx / dist) * force;
-      const pushY = (dy / dist) * force;
-      
-      touchDisplacement.stopAnimation();
-      Animated.spring(touchDisplacement, {
-        toValue: { x: pushX, y: pushY },
-        friction: 6,
-        tension: 80,
-        useNativeDriver: true,
-      }).start();
-    } else {
-      touchDisplacement.stopAnimation();
-      Animated.spring(touchDisplacement, {
-        toValue: { x: 0, y: 0 },
-        friction: 4,
-        tension: 40,
-        useNativeDriver: true,
-      }).start();
-    }
   };
 
   useEffect(() => {
