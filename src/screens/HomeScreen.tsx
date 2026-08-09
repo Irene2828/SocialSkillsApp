@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, Platform } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, PanResponder, Platform } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
