@@ -230,6 +230,8 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
     });
   };
 
+  const lastMoveTime = useRef(0);
+
   React.useImperativeHandle(ref, () => ({
     triggerTouchDown: (cx: number, cy: number) => {
       if (reduceMotion) return;
@@ -261,8 +263,13 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
     },
     triggerTouchMove: (cx: number, cy: number) => {
       if (reduceMotion) return;
-      for (let i = 0; i < 4; i++) {
+      
+      const now = Date.now();
+      // Throttle particle spawning heavily on native to prevent bridge OOM crashes (max ~20fps)
+      if (now - lastMoveTime.current > 45) {
         spawnParticle(cx, cy, true);
+        spawnParticle(cx, cy, true);
+        lastMoveTime.current = now;
       }
     }
   }));
