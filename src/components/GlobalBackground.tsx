@@ -33,14 +33,23 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
     <View style={[styles.container, { backgroundColor: isDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
       <Image
         source={getBgSource()}
-        style={styles.pattern}
+        style={StyleSheet.absoluteFillObject}
+        resizeMode="cover"
       />
       {dimmed && (
-        <BlurView 
-          intensity={20} 
-          tint={isDark ? "dark" : "light"}
-          style={[StyleSheet.absoluteFill, { backgroundColor: isDark ? 'rgba(15, 23, 42, 0.35)' : 'rgba(240, 249, 255, 0.35)' }]} 
-        />
+        <>
+          <BlurView 
+            intensity={20} 
+            tint={isDark ? "dark" : "light"}
+            style={StyleSheet.absoluteFillObject} 
+          />
+          <View 
+            style={[
+              StyleSheet.absoluteFillObject, 
+              { backgroundColor: isDark ? 'rgba(11, 15, 25, 0.40)' : 'rgba(224, 242, 254, 0.40)' }
+            ]} 
+          />
+        </>
       )}
       {showClouds && <AnimatedCloudsBackground />}
     </View>
@@ -49,24 +58,9 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
+    ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
-    minHeight: '100%',
-  },
-  pattern: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    opacity: 1,
-    resizeMode: 'cover',
   },
 });
+

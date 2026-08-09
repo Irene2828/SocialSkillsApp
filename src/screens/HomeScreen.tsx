@@ -149,9 +149,9 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
 };
 
 // Physics System & Cosmic Canvas (Native Animated implementation)
-const PARTICLE_COUNT = 50;
+const PARTICLE_COUNT = 60;
 const SHOCKWAVE_COUNT = 5;
-const PARTICLE_COLORS = ['#00f2fe', '#4facfe', '#ffd166'];
+const PARTICLE_COLORS = ['#00f2fe', '#4facfe', '#ffd166', '#ffffff', '#c084fc', '#38bdf8'];
 
 export interface CosmicPhysicsRef {
   triggerTouchDown: (x: number, y: number) => void;
@@ -161,8 +161,8 @@ export interface CosmicPhysicsRef {
 const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean }>(({ reduceMotion }, ref) => {
   const particles = useRef(
     Array.from({ length: PARTICLE_COUNT }, () => ({
-      tx: new Animated.Value(0),
-      ty: new Animated.Value(0),
+      animX: new Animated.Value(0),
+      animY: new Animated.Value(0),
       opacity: new Animated.Value(0),
       scale: new Animated.Value(1),
       active: false,
@@ -173,14 +173,51 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
 
   const shockwaves = useRef(
     Array.from({ length: SHOCKWAVE_COUNT }, () => ({
-      tx: new Animated.Value(0),
-      ty: new Animated.Value(0),
+      animX: new Animated.Value(0),
+      animY: new Animated.Value(0),
       opacity: new Animated.Value(0),
       scale: new Animated.Value(0.1),
       active: false,
-      maxRadius: Math.random() * 50 + 100,
+      maxRadius: 100,
     }))
   ).current;
+
+  const spawnParticle = (cx: number, cy: number, isMove = false) => {
+    const p = particles.find(pt => !pt.active);
+    if (!p) return;
+
+    p.active = true;
+    p.animX.stopAnimation();
+    p.animY.stopAnimation();
+    p.opacity.stopAnimation();
+    p.scale.stopAnimation();
+
+    const startX = cx - p.baseRadius;
+    const startY = cy - p.baseRadius;
+
+    const angle = Math.random() * Math.PI * 2;
+    const distance = isMove ? (Math.random() * 45 + 15) : (Math.random() * 90 + 30);
+    const duration = isMove ? (Math.random() * 500 + 700) : (Math.random() * 800 + 900);
+    const startScale = isMove ? (Math.random() * 0.6 + 0.6) : (Math.random() * 0.8 + 0.8);
+
+    const endX = startX + Math.cos(angle) * distance;
+    const endY = startY + Math.sin(angle) * distance;
+
+    p.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
+    p.animX.setValue(startX);
+    p.animY.setValue(startY);
+    p.opacity.setValue(0.9);
+    p.scale.setValue(startScale);
+
+    Animated.parallel([
+      Animated.timing(p.animX, { toValue: endX, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+      Animated.timing(p.animY, { toValue: endY, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+      Animated.timing(p.opacity, { toValue: 0, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+      Animated.timing(p.scale, { toValue: 0.1, duration, easing: Easing.out(Easing.quad), useNativeDriver: true }),
+    ]).start(() => {
+      p.active = false;
+    });
+  };
 
   React.useImperativeHandle(ref, () => ({
     triggerTouchDown: (cx: number, cy: number) => {
@@ -190,69 +227,31 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
       const sw = shockwaves.find(s => !s.active);
       if (sw) {
         sw.active = true;
-        sw.tx.setValue(cx);
-        sw.ty.setValue(cy);
+        sw.animX.stopAnimation();
+        sw.animY.stopAnimation();
+        sw.opacity.stopAnimation();
+        sw.scale.stopAnimation();
+
+        sw.animX.setValue(cx - sw.maxRadius);
+        sw.animY.setValue(cy - sw.maxRadius);
         sw.scale.setValue(0.1);
-        sw.opacity.setValue(0.6);
+        sw.opacity.setValue(0.7);
 
         Animated.parallel([
-          Animated.timing(sw.scale, { toValue: 1, duration: 1200, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-          Animated.timing(sw.opacity, { toValue: 0, duration: 1200, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+          Animated.timing(sw.scale, { toValue: 1.2, duration: 1000, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+          Animated.timing(sw.opacity, { toValue: 0, duration: 1000, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
         ]).start(() => { sw.active = false; });
       }
 
-      // Spawn Particles
-      let spawned = 0;
-      for (let i = 0; i < particles.length && spawned < 20; i++) {
-        const p = particles[i];
-        if (!p.active) {
-          p.active = true;
-          spawned++;
-
-          p.tx.setValue(cx);
-          p.ty.setValue(cy);
-          p.opacity.setValue(1);
-          p.scale.setValue(1);
-
-          const angle = Math.random() * Math.PI * 2;
-          const distance = Math.random() * 80 + 40; // 40-120px explosion
-          const duration = Math.random() * 800 + 1000; // 1000-1800ms
-
-          Animated.parallel([
-            Animated.timing(p.tx, { toValue: cx + Math.cos(angle) * distance, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.ty, { toValue: cy + Math.sin(angle) * distance, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.opacity, { toValue: 0, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.scale, { toValue: 0, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-          ]).start(() => { p.active = false; });
-        }
+      // Burst 18 particles blowing outward
+      for (let i = 0; i < 18; i++) {
+        spawnParticle(cx, cy, false);
       }
     },
     triggerTouchMove: (cx: number, cy: number) => {
-      if (reduceMotion || Math.random() > 0.3) return;
-
-      let spawned = 0;
-      for (let i = 0; i < particles.length && spawned < 2; i++) {
-        const p = particles[i];
-        if (!p.active) {
-          p.active = true;
-          spawned++;
-
-          p.tx.setValue(cx);
-          p.ty.setValue(cy);
-          p.opacity.setValue(0.8);
-          p.scale.setValue(0.8);
-
-          const angle = Math.random() * Math.PI * 2;
-          const distance = Math.random() * 30 + 10;
-          const duration = Math.random() * 600 + 800; // 800-1400ms
-
-          Animated.parallel([
-            Animated.timing(p.tx, { toValue: cx + Math.cos(angle) * distance, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.ty, { toValue: cy + Math.sin(angle) * distance, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.opacity, { toValue: 0, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-            Animated.timing(p.scale, { toValue: 0, duration, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
-          ]).start(() => { p.active = false; });
-        }
+      if (reduceMotion) return;
+      for (let i = 0; i < 4; i++) {
+        spawnParticle(cx, cy, true);
       }
     }
   }));
@@ -264,14 +263,20 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
           key={`sw-${i}`}
           style={{
             position: 'absolute',
+            left: 0,
+            top: 0,
             width: sw.maxRadius * 2,
             height: sw.maxRadius * 2,
             borderRadius: sw.maxRadius,
             borderWidth: 2,
-            borderColor: '#4facfe',
+            borderColor: '#38bdf8',
+            shadowColor: '#38bdf8',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.8,
+            shadowRadius: 8,
             transform: [
-              { translateX: Animated.subtract(sw.tx, sw.maxRadius) },
-              { translateY: Animated.subtract(sw.ty, sw.maxRadius) },
+              { translateX: sw.animX },
+              { translateY: sw.animY },
               { scale: sw.scale }
             ],
             opacity: sw.opacity,
@@ -283,17 +288,19 @@ const CosmicCanvas = React.forwardRef<CosmicPhysicsRef, { reduceMotion: boolean 
           key={`p-${i}`}
           style={{
             position: 'absolute',
+            left: 0,
+            top: 0,
             width: p.baseRadius * 2,
             height: p.baseRadius * 2,
             borderRadius: p.baseRadius,
             backgroundColor: p.color,
             shadowColor: p.color,
             shadowOffset: { width: 0, height: 0 },
-            shadowOpacity: 0.8,
-            shadowRadius: 4,
+            shadowOpacity: 0.9,
+            shadowRadius: 5,
             transform: [
-              { translateX: Animated.subtract(p.tx, p.baseRadius) },
-              { translateY: Animated.subtract(p.ty, p.baseRadius) },
+              { translateX: p.animX },
+              { translateY: p.animY },
               { scale: p.scale }
             ],
             opacity: p.opacity,
@@ -462,16 +469,28 @@ export const HomeScreen = () => {
   const touchDisplacement = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const cosmicRef = useRef<CosmicPhysicsRef>(null);
 
+  const extractCoords = (evt: any) => {
+    const ne = evt?.nativeEvent || {};
+    const x = ne.locationX ?? ne.pageX;
+    const y = ne.locationY ?? ne.pageY;
+    if (typeof x !== 'number' || typeof y !== 'number' || !isFinite(x) || !isFinite(y)) {
+      return null;
+    }
+    return { x, y };
+  };
+
   const handlePointerDown = (evt: any) => {
-    const { locationX, locationY } = evt.nativeEvent;
-    cosmicRef.current?.triggerTouchDown(locationX, locationY);
-    applyElasticPush(locationX, locationY);
+    const coords = extractCoords(evt);
+    if (!coords) return;
+    cosmicRef.current?.triggerTouchDown(coords.x, coords.y);
+    applyElasticPush(coords.x, coords.y);
   };
 
   const handlePointerMove = (evt: any) => {
-    const { locationX, locationY } = evt.nativeEvent;
-    cosmicRef.current?.triggerTouchMove(locationX, locationY);
-    applyElasticPush(locationX, locationY);
+    const coords = extractCoords(evt);
+    if (!coords) return;
+    cosmicRef.current?.triggerTouchMove(coords.x, coords.y);
+    applyElasticPush(coords.x, coords.y);
   };
 
   const handlePointerUp = () => {
