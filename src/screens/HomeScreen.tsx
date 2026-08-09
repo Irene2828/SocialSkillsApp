@@ -473,6 +473,8 @@ export const HomeScreen = () => {
   const touchDisplacement = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
   const cosmicRef = useRef<CosmicPhysicsRef>(null);
 
+  const lastPushTime = useRef(0);
+
   const extractCoords = (evt: any) => {
     const ne = evt?.nativeEvent || {};
     const x = ne.locationX ?? ne.pageX;
@@ -488,16 +490,23 @@ export const HomeScreen = () => {
     if (!coords) return;
     cosmicRef.current?.triggerTouchDown(coords.x, coords.y);
     applyElasticPush(coords.x, coords.y);
+    lastPushTime.current = Date.now();
   };
 
   const handlePointerMove = (evt: any) => {
     const coords = extractCoords(evt);
     if (!coords) return;
     cosmicRef.current?.triggerTouchMove(coords.x, coords.y);
-    applyElasticPush(coords.x, coords.y);
+    
+    const now = Date.now();
+    if (now - lastPushTime.current > 40) { // throttle spring updates
+      applyElasticPush(coords.x, coords.y);
+      lastPushTime.current = now;
+    }
   };
 
   const handlePointerUp = () => {
+    touchDisplacement.stopAnimation();
     Animated.spring(touchDisplacement, {
       toValue: { x: 0, y: 0 },
       friction: 4,
@@ -529,6 +538,7 @@ export const HomeScreen = () => {
       const pushX = (dx / dist) * force;
       const pushY = (dy / dist) * force;
       
+      touchDisplacement.stopAnimation();
       Animated.spring(touchDisplacement, {
         toValue: { x: pushX, y: pushY },
         friction: 6,
@@ -536,6 +546,7 @@ export const HomeScreen = () => {
         useNativeDriver: true,
       }).start();
     } else {
+      touchDisplacement.stopAnimation();
       Animated.spring(touchDisplacement, {
         toValue: { x: 0, y: 0 },
         friction: 4,
