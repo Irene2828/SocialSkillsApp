@@ -128,8 +128,12 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
       style={{
         width: 90, height: 90, zIndex: 10, marginBottom: 20,
         transform: [
-          { translateX: Animated.add(Animated.add(floatX, touchDisplacement.x), dragXY.x) }, 
-          { translateY: Animated.add(Animated.add(floatY, touchDisplacement.y), dragXY.y) }, 
+          { translateX: floatX },
+          { translateY: floatY },
+          { translateX: touchDisplacement.x },
+          { translateY: touchDisplacement.y },
+          { translateX: dragXY.x },
+          { translateY: dragXY.y },
           { rotate: rotateDeg }
         ],
         alignItems: 'center',
