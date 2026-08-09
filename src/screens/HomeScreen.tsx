@@ -13,10 +13,28 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { ScalePressable } from '../components/ScalePressable';
+import { LogBox } from 'react-native';
+
+// Suppress WebGL warnings globally (LogBox for native, window handler for web)
+LogBox.ignoreLogs(['THREE.WebGLRenderer', 'Error creating WebGL context', 'Promise Rejection']);
+if (Platform.OS === 'web' && typeof window !== 'undefined') {
+  const origOnError = window.onerror;
+  window.addEventListener('unhandledrejection', (event) => {
+    if (event.reason?.message?.includes?.('WebGL') || String(event.reason).includes('WebGL')) {
+      event.preventDefault();
+    }
+  });
+}
+
 // ShatterText3D is lazy-loaded on web only to prevent Three.js crashing on native
-const ShatterText3D = Platform.OS === 'web'
-  ? require('../components/ShatterText3D').ShatterText3D
-  : null;
+let ShatterText3D: any = null;
+if (Platform.OS === 'web') {
+  try {
+    ShatterText3D = require('../components/ShatterText3D').ShatterText3D;
+  } catch (e) {
+    console.log('ShatterText3D failed to load:', e);
+  }
+}
 
 // Kept AstronautHero
 
