@@ -55,10 +55,11 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
         <View style={{ backgroundColor: 'transparent' }}>
           <Text style={{ 
             color: '#FFFFFF', 
-            fontSize: isTablet ? 13 : 11, 
+            fontSize: isTablet ? 14 : 12, 
             fontFamily: FONTS.medium,
+            lineHeight: isTablet ? 18 : 15,
             textAlign: 'center',
-            letterSpacing: 0.2,
+            letterSpacing: 0.8,
             marginTop: 2
           }}>
             {label}
@@ -78,6 +79,8 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
       fabLabel = 'Add Puzzle';
     } else if (activeRoute === 'Rewards') {
       fabLabel = 'Add Reward';
+    } else if (activeRoute === 'Drawing') {
+      fabLabel = 'Save It';
     }
   }
 

@@ -17,6 +17,8 @@ interface StepBasedQuestionViewProps {
   onContinue: (isCorrect: boolean) => void;
   disabled?: boolean;
   onStepChange?: (currentIndex: number, totalSteps: number) => void;
+  questionNum?: number;
+  totalQuestions?: number;
 }
 
 interface CompletedStep {
@@ -65,7 +67,7 @@ const parseCompactProblemText = (problemText: string) => {
   };
 };
 
-export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange }) => {
+export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ question, onContinue, disabled, onStepChange, questionNum, totalQuestions }) => {
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
@@ -213,11 +215,13 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                 </View>
               ) : null}
 
-              <View style={styles.problemQuestionStrip}>
-                <Ionicons name="flag-outline" size={16} color="#0C4A6E" />
-                <Text style={styles.problemQuestionText}>
-                  {compactProblem.question}
-                </Text>
+              <View style={{ marginTop: theme.spacing.md }}>
+                <View style={styles.problemQuestionStrip}>
+                  <Ionicons name="flag-outline" size={16} color="#0C4A6E" />
+                  <Text style={styles.problemQuestionText}>
+                    {compactProblem.question}
+                  </Text>
+                </View>
               </View>
 
               <Text style={styles.followStepsHint}>
@@ -285,21 +289,40 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
       {/* ===== Current Active Step ===== */}
       {currentStep && (
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
+          {question.steps.length > 0 && (
+            <>
+              <View style={styles.progressBarContainer}>
+                <View 
+                  style={[
+                    styles.progressBarFill, 
+                    { width: `${((currentStepIndex + 1) / question.steps.length) * 100}%` }
+                  ]} 
+                />
+              </View>
+              <Text style={styles.floatingQuestionLabel}>
+                QUESTION {currentStepIndex + 1}/{question.steps.length}
+              </Text>
+            </>
+          )}
           {/* Current step prompt */}
           <View style={styles.activePromptCard}>
-              <Text style={[styles.stepNumberText, isRocket && glassTextShadow]}>
-                {currentStepIndex + 1}.
-              </Text>
-              <View style={{ flex: 1 }}>
-                <Text style={[styles.promptText, isRocket && glassTextShadow]}>
-                  {currentStep.prompt.split('\n\n')[0]}
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: 'row', alignItems: 'flex-start' }}>
+                <Text style={[styles.stepNumberText, isRocket && glassTextShadow]}>
+                  {currentStepIndex + 1}.
                 </Text>
-                {currentStep.prompt.includes('\n\n') && (
-                  <Text style={[styles.followStepsHint, { marginTop: 12, textAlign: 'left', marginLeft: 0 }]}>
-                    {currentStep.prompt.split('\n\n')[1]}
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.promptText, isRocket && glassTextShadow]}>
+                    {currentStep.prompt.split('\n\n')[0]}
                   </Text>
-                )}
+                  {currentStep.prompt.includes('\n\n') && (
+                    <Text style={[styles.followStepsHint, { marginTop: 12, textAlign: 'left', marginLeft: 0 }]}>
+                      {currentStep.prompt.split('\n\n')[1]}
+                    </Text>
+                  )}
+                </View>
               </View>
+            </View>
           </View>
 
           {/* Current step options */}
@@ -359,9 +382,9 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
                   <FontAwesome5 
                     name="coins" 
                     size={24} 
-                    color="#0C4A6E" 
+                    color="#FFFFFF" 
                   />
-                  <Text style={[styles.coinRewardText, isRocket && { color: '#0C4A6E' }]}>+1 Coin Earned!</Text>
+                  <Text style={[styles.coinRewardText, { color: '#FFFFFF' }]}>+1 Coin Earned!</Text>
                 </View>
               )}
 
@@ -416,6 +439,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
     borderBottomColor: 'transparent',
     marginBottom: 0,
+  },
+  divider: {
+    width: '75%',
+    height: 2,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'center',
+    marginVertical: 16,
   },
   situationalLabel: {
     ...theme.typography.body,
@@ -731,5 +762,30 @@ const styles = StyleSheet.create({
   continueButton: {
     marginTop: theme.spacing.sm,
     width: '100%',
-  }
+  },
+  progressBarContainer: {
+    width: '75%',
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignSelf: 'center',
+    marginBottom: 0,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#00CED1',
+    borderRadius: 999,
+  },
+  floatingQuestionLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0.8,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 16,
+  },
 });

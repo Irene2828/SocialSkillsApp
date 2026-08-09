@@ -45,14 +45,21 @@ const AppTabs = () => {
     <Tab.Navigator
       tabBar={(props) => {
         const activeRoute = props.state.routes[props.state.index];
-        // Safely extract the param from NewQuiz route if it exists
         const newQuizRoute = props.state.routes.find(r => r.name === 'NewQuiz');
-        const isQuizInProgress = (newQuizRoute?.params as any)?.isQuizInProgress === true;
+        const puzzlesRoute = props.state.routes.find(r => r.name === 'Puzzles');
+        
+        let isFabActive = true;
+        if (activeRoute.name === 'NewQuiz') {
+          isFabActive = (newQuizRoute?.params as any)?.isFabActive !== false;
+        } else if (activeRoute.name === 'Puzzles') {
+          const isPuzzleActive = (puzzlesRoute?.params as any)?.isPuzzleActive === true;
+          isFabActive = !isPuzzleActive;
+        }
         
         return (
           <AppTabBar 
             activeRoute={activeRoute.name} 
-            isFabActive={!isQuizInProgress} 
+            isFabActive={isFabActive} 
           />
         );
       }}

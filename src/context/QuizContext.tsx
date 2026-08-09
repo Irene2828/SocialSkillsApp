@@ -157,12 +157,7 @@ export const QuizProvider = ({ children }: { children: ReactNode }) => {
         setCustomQuestions([...initialQuestions, ...storedQuestions.filter(q => q.category !== 'c_listening_ai' && q.category !== 'math_ai_quiz1')]);
         setRenamedCategories(storedRenamed);
 
-        // Default folder Math Quiz
-        let mergedFolders = [...storedFolders];
-        if (!mergedFolders.some(f => f.id === 'math_quiz_folder')) {
-          mergedFolders.push({ id: 'math_quiz_folder', name: 'Math Quiz', tab: 'ai' });
-        }
-        setFolders(mergedFolders);
+        setFolders(storedFolders);
       } catch (e) {
         console.error('Failed to load custom quizzes', e);
       } finally {

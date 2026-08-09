@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, ScrollView, Animated } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TextInput, ScrollView, Animated, Easing, AccessibilityInfo, Dimensions } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { GlobalBackground } from '../components/GlobalBackground';
@@ -9,9 +11,271 @@ import { theme } from '../theme';
 import { Ionicons } from '@expo/vector-icons';
 import { ScalePressable } from '../components/ScalePressable';
 
+const { width, height } = Dimensions.get('window');
+
+const Star = ({ index, reduceMotion }: { index: number, reduceMotion: boolean }) => {
+  const opacity = useRef(new Animated.Value(Math.random() * 0.5 + 0.2)).current;
+  const size = Math.random() * 2 + 1;
+  const left = Math.random() * width;
+  const top = Math.random() * (height * 0.8);
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const duration = Math.random() * 2000 + 1000;
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(opacity, {
+          toValue: Math.random() * 0.6 + 0.4,
+          duration,
+          useNativeDriver: true,
+          easing: Easing.inOut(Easing.ease),
+        }),
+        Animated.timing(opacity, {
+          toValue: Math.random() * 0.3 + 0.1,
+          duration,
+          useNativeDriver: true,
+          easing: Easing.inOut(Easing.ease),
+        }),
+      ])
+    ).start();
+  }, [reduceMotion]);
+
+  return (
+    <Animated.View style={{
+      position: 'absolute',
+      left,
+      top,
+      width: size,
+      height: size,
+      borderRadius: size / 2,
+      backgroundColor: '#fff',
+      opacity,
+    }} />
+  );
+};
+
+const Starfield = ({ reduceMotion }: { reduceMotion: boolean }) => {
+  const stars = Array.from({ length: 50 }).map((_, i) => <Star key={i} index={i} reduceMotion={reduceMotion} />);
+  return (
+    <View style={StyleSheet.absoluteFill} shouldRasterizeIOS={true}>
+      {stars}
+    </View>
+  );
+};
+
+const AstronautHero = ({ reduceMotion }: { reduceMotion: boolean }) => {
+  const floatX = useRef(new Animated.Value(0)).current;
+  const floatY = useRef(new Animated.Value(0)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (reduceMotion) return;
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatY, {
+          toValue: 1,
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatY, {
+          toValue: 0,
+          duration: 4000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatX, {
+          toValue: 1,
+          duration: 5000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatX, {
+          toValue: 0,
+          duration: 5000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(rotate, {
+          toValue: 1,
+          duration: 6000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(rotate, {
+          toValue: 0,
+          duration: 6000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+
+  }, [reduceMotion]);
+
+  const translateY = floatY.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-10, 10]
+  });
+
+  const translateX = floatX.interpolate({
+    inputRange: [0, 1],
+    outputRange: [-8, 8]
+  });
+
+  const rotateDeg = rotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-3deg', '3deg']
+  });
+
+  return (
+    <Animated.View style={{
+      transform: [{ translateX }, { translateY }, { rotate: rotateDeg }],
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginBottom: 40,
+      marginTop: 20
+    }}>
+      <LinearGradient
+        colors={['rgba(65, 105, 225, 0.6)', 'rgba(138, 43, 226, 0.2)']}
+        style={{
+          width: 140,
+          height: 140,
+          borderRadius: 70,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderWidth: 1,
+          borderColor: 'rgba(255,255,255,0.2)'
+        }}
+      >
+         <Ionicons name="rocket" size={70} color="#fff" style={{ transform: [{ rotate: '45deg' }, { translateX: -5 }, { translateY: -5 }] }} />
+      </LinearGradient>
+    </Animated.View>
+  );
+};
+
+const GradientText = ({ text, style }: { text: string, style: any }) => {
+  return (
+    <MaskedView maskElement={<Text style={[style, { backgroundColor: 'transparent' }]}>{text}</Text>}>
+      <LinearGradient colors={['#ffffff', '#a8c0ff']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}>
+        <Text style={[style, { opacity: 0 }]}>{text}</Text>
+      </LinearGradient>
+    </MaskedView>
+  );
+};
+
+const GlassCTA = ({ onPress, reduceMotion }: { onPress: () => void, reduceMotion: boolean }) => {
+  const pulse = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulse, {
+          toValue: 1,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(pulse, {
+          toValue: 0,
+          duration: 2000,
+          easing: Easing.inOut(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
+  }, [reduceMotion]);
+
+  const glowOpacity = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.3, 0.7]
+  });
+
+  const glowScale = pulse.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 1.05]
+  });
+
+  return (
+    <View style={{ width: '100%', marginTop: 30, alignItems: 'center' }}>
+      <Animated.View style={{
+        position: 'absolute',
+        top: 0, bottom: 0, left: 0, right: 0,
+        backgroundColor: '#4169E1',
+        borderRadius: theme.borderRadius.full,
+        opacity: glowOpacity,
+        transform: [{ scale: glowScale }],
+      }} />
+      <ScalePressable onPress={onPress} style={{
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        borderWidth: 1,
+        borderColor: 'rgba(255, 255, 255, 0.4)',
+        borderRadius: theme.borderRadius.full,
+        paddingVertical: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
+        overflow: 'hidden'
+      }}>
+        <LinearGradient
+           colors={['rgba(255,255,255,0.1)', 'rgba(255,255,255,0.0)']}
+           style={StyleSheet.absoluteFill}
+        />
+        <Text style={{ ...theme.typography.heading, fontSize: 18, color: '#fff', letterSpacing: 0.5 }}>
+          Get Started
+        </Text>
+      </ScalePressable>
+    </View>
+  );
+};
+
 export const OnboardingScreen = () => {
   const { setChildProfile, setOnboarded } = useProgress();
   const [step, setStep] = useState(1);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const backgroundDrift = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
+
+  useEffect(() => {
+    AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
+      setReduceMotion(enabled);
+      if (!enabled) {
+        Animated.loop(
+          Animated.sequence([
+            Animated.timing(backgroundDrift, {
+              toValue: { x: 8, y: -8 },
+              duration: 8000,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+            Animated.timing(backgroundDrift, {
+              toValue: { x: -8, y: 8 },
+              duration: 8000,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+            Animated.timing(backgroundDrift, {
+              toValue: { x: 0, y: 0 },
+              duration: 8000,
+              easing: Easing.inOut(Easing.ease),
+              useNativeDriver: true,
+            }),
+          ])
+        ).start();
+      }
+    });
+  }, []);
 
   // Form State
   const [name, setName] = useState('');
@@ -37,9 +301,27 @@ export const OnboardingScreen = () => {
 
   const renderStep1 = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.title}>Welcome to Smart Explorer</Text>
-      <Text style={styles.subtitle}>Helping kids build strong social skills through simple daily practice.</Text>
-      <Button title="Get Started" onPress={handleNext} style={styles.button} />
+      {/* Layer 2: Starfield */}
+      <Starfield reduceMotion={reduceMotion} />
+      
+      {/* Layers 1 & 3: Background Drift & Hero Content */}
+      <Animated.View style={{ 
+        flex: 1, 
+        width: '100%',
+        alignItems: 'center', 
+        justifyContent: 'center',
+        transform: [{ translateX: backgroundDrift.x }, { translateY: backgroundDrift.y }] 
+      }}>
+        <AstronautHero reduceMotion={reduceMotion} />
+        
+        <View style={{ marginBottom: theme.spacing.md }}>
+          <GradientText text="Smart Explorer" style={{ ...theme.typography.heading, fontSize: 36, textAlign: 'center', letterSpacing: 0.5, textShadowColor: 'rgba(0,0,0,0.3)', textShadowOffset: { width: 0, height: 2 }, textShadowRadius: 10 }} />
+        </View>
+        
+        <Text style={styles.subtitle}>Helping kids build strong social skills through simple daily practice.</Text>
+        
+        <GlassCTA onPress={handleNext} reduceMotion={reduceMotion} />
+      </Animated.View>
     </View>
   );
 

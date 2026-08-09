@@ -23,32 +23,36 @@ export const AnswerButton: React.FC<AnswerButtonProps> = ({ text, onPress, state
       buttonStyle = styles.correctButton;
       textStyle = styles.correctText;
       iconName = 'checkmark-circle-outline';
-      iconColor = theme.colors.success;
+      iconColor = '#0C4A6E';
       break;
     case 'selected-incorrect':
       buttonStyle = styles.incorrectButton;
       textStyle = styles.incorrectText;
       iconName = 'close-circle-outline';
-      iconColor = theme.colors.error;
+      iconColor = theme.colors.danger; // nice rose/red color
       break;
     default:
       break;
   }
 
-  const glassButton = state === 'default' ? {
-    backgroundColor: 'rgba(255, 255, 255, 0.16)',
-    borderColor: 'rgba(255, 255, 255, 0.35)',
-    borderWidth: 1,
+  const glassButton = {
+    backgroundColor: 'rgba(255, 255, 255, 0.93)',
+    borderColor: state === 'selected-correct' || state === 'unselected-correct'
+      ? '#BEF264'
+      : state === 'selected-incorrect'
+        ? '#EF8B8B'
+        : 'rgba(255, 255, 255, 0.45)',
+    borderWidth: state !== 'default' ? 2 : 1,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 1,
-  } : {};
+    shadowOpacity: 0.05,
+    shadowRadius: 12,
+    elevation: 2,
+  };
 
-  const glassText = state === 'default' ? {
-    color: '#F8FAFC',
-  } : {};
+  const glassText = {
+    color: '#0C4A6E', // highly readable dark blue
+  };
 
   return (
     <ScalePressable
@@ -115,7 +119,7 @@ const styles = StyleSheet.create({
     height: 22,
     borderRadius: 11,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.6)',
+    borderColor: 'rgba(12, 74, 110, 0.5)',
     backgroundColor: 'transparent',
   },
 });

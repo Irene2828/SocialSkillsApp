@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Pressable, Text, ScrollView, Modal, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Pressable, Text, ScrollView, Modal, Image, Dimensions, DeviceEventEmitter } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -63,6 +63,38 @@ export const DrawingBoardScreenWeb = () => {
       };
     }
   }, []);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+      const svgEl = document.querySelector('svg');
+      if (!svgEl) return;
+      const svgString = new XMLSerializer().serializeToString(svgEl);
+      const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+      const URL = window.URL || window.webkitURL || window;
+      const blobURL = URL.createObjectURL(svgBlob);
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = svgEl.clientWidth || 800;
+        canvas.height = svgEl.clientHeight || 600;
+        const context = canvas.getContext('2d');
+        if (context) {
+          context.fillStyle = isDark ? '#0b0f19' : '#FFFFFF';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(img, 0, 0);
+          const png = canvas.toDataURL('image/png');
+          const downloadLink = document.createElement('a');
+          downloadLink.href = png;
+          downloadLink.download = `drawing-${Date.now()}.png`;
+          document.body.appendChild(downloadLink);
+          downloadLink.click();
+          document.body.removeChild(downloadLink);
+        }
+      };
+      img.src = blobURL;
+    });
+    return () => sub.remove();
+  }, [paths, isDark]);
 
   const getCoordinates = (e: any) => {
     let x = e.nativeEvent.locationX;

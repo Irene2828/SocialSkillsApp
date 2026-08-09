@@ -41,7 +41,7 @@ export const CoinBalanceCard: React.FC<CoinBalanceCardProps> = ({ balance, onRes
           <View style={styles.balanceRow}>
             <FontAwesome5 
               name="coins" 
-              size={42} 
+              size={41} 
               color={gradientColors[0]} 
               style={{ marginRight: 12, marginTop: 4 }}
             />

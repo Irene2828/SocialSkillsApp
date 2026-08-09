@@ -293,7 +293,7 @@ export const NewQuizScreen = () => {
       const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromImage(base64Image, 7, topicType);
       
-      const targetFolderId = activeFolderId || (isMath ? 'math_quiz_folder' : undefined);
+      const targetFolderId = activeFolderId;
 
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
         const prefix = isMath ? 'math_ai' : 'custom_ai';
@@ -416,7 +416,7 @@ export const NewQuizScreen = () => {
       const topicType = isMath ? 'math' : 'social';
       const responseData = await generateQuizFromText(assembledPrompt, 7, topicType);
       
-      const targetFolderId = activeFolderId || (isMath ? 'math_quiz_folder' : undefined);
+      const targetFolderId = activeFolderId;
 
       const newQuizzes = responseData.quizzes.map((quiz: any, quizIndex: number) => {
         const prefix = isMath ? 'math_ai' : 'custom_ai';
@@ -847,13 +847,22 @@ export const NewQuizScreen = () => {
         const isSocial = activeFolderId === 'built_in_social';
         const folderTitle = isSocial ? 'Social Skills' : 'Math Skills';
         
-        let folderCategories = allCategories.filter(c => {
-          if (isSocial) {
-            return c.id === 'general_quiz' || c.id.startsWith('sp_') || c.id.startsWith('custom_ai');
-          } else {
-            return c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems' || c.id.startsWith('math_ai');
-          }
-        }).map(c => ({
+        let folderCategories = [
+          ...allCategories.filter(c => {
+            if (isSocial) {
+              return c.id === 'general_quiz' || c.id.startsWith('sp_');
+            } else {
+              return c.id === 'iq_word_problems' || c.id === 'iq_math_word_problems';
+            }
+          }),
+          ...customCategories.filter(c => {
+            if (isSocial) {
+              return c.id.startsWith('custom_ai') || (!c.id.startsWith('math_ai') && c.isCustom);
+            } else {
+              return c.id.startsWith('math_ai');
+            }
+          })
+        ].map(c => ({
           ...c,
           title: renamedCategories[c.id] || c.title
         }));
@@ -1086,23 +1095,9 @@ export const NewQuizScreen = () => {
           onBack={handleBackToHome}
           showSettingsAndRewards={true}
         />
-        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 0, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
+        <ScrollView ref={quizScrollRef} style={{ flex: 1 }} showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingTop: 20, paddingHorizontal: 0, paddingBottom: 170, flexGrow: 1 }]}>
 
 
-          <View style={styles.progressSection}>
-            <View style={{ height: 26, position: 'relative', width: '100%' }}>
-              <View style={{ position: 'absolute', bottom: 18, left: 0, width: `${progressPercent * 100}%`, alignItems: 'center' }}>
-                <Text style={[styles.progressCounter, { textAlign: 'center', marginBottom: 0, color: '#FFFFFF', fontWeight: '600', letterSpacing: 0.5 }]}>
-                  {counterText}
-                </Text>
-              </View>
-              <View style={{ height: 10, backgroundColor: 'rgba(255, 255, 255, 0.25)', borderRadius: theme.borderRadius.full, overflow: 'hidden', borderWidth: 1, borderColor: 'rgba(255, 255, 255, 0.45)', width: '100%', position: 'absolute', bottom: 0 }}>
-                <View
-                  style={{ height: '100%', width: `${progressPercent * 100}%`, backgroundColor: '#FFFFFF', borderRadius: theme.borderRadius.full }}
-                />
-              </View>
-            </View>
-          </View>
 
           {activeSocialQuiz ? (
             <SocialPracticeQuestionView
@@ -1123,6 +1118,8 @@ export const NewQuizScreen = () => {
                   quizScrollRef.current?.scrollTo({ y: 0, animated: true });
                 }, 50);
               }}
+              questionNum={currentIndex + 1}
+              totalQuestions={currentQuestions.length}
             />
           ) : (
             <QuestionView
@@ -1136,6 +1133,8 @@ export const NewQuizScreen = () => {
               showPart2={isWhyPhase}
               onPart1Complete={() => setIsWhyPhase(true)}
               scrollViewRef={quizScrollRef}
+              questionNum={currentIndex + 1}
+              totalQuestions={currentQuestions.length}
             />
           )}
         </ScrollView>

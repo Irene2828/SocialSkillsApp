@@ -27,6 +27,8 @@ interface QuestionViewProps {
   onPart1Complete?: () => void;
   /** Ref to parent ScrollView for auto-scrolling to Part 2 */
   scrollViewRef?: React.RefObject<ScrollView | null>;
+  questionNum?: number;
+  totalQuestions?: number;
 }
 
 export const QuestionView: React.FC<QuestionViewProps> = ({
@@ -41,6 +43,8 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   showPart2 = false,
   onPart1Complete,
   scrollViewRef,
+  questionNum,
+  totalQuestions,
 }) => {
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
@@ -192,12 +196,29 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.unifiedCard}>
+        {questionNum && totalQuestions && (
+          <>
+            <View style={styles.progressBarContainer}>
+              <View 
+                style={[
+                  styles.progressBarFill, 
+                  { width: `${(questionNum / totalQuestions) * 100}%` }
+                ]} 
+              />
+            </View>
+            <Text style={styles.floatingQuestionLabel}>
+              QUESTION {questionNum}/{totalQuestions}
+            </Text>
+          </>
+        )}
         {/* ===== PART 1 ===== */}
       <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         <View style={styles.cardWrapper}>
           <View style={styles.scenarioCallout}>
             {whyQuestion && null}
-            <Text style={styles.calloutLabel}>Situation</Text>
+            <Text style={styles.calloutLabel}>
+              Social Situation:
+            </Text>
             <Text style={styles.scenarioText}>{question.scenario}</Text>
           {question.prompt && (
             <Text style={styles.promptText}>{question.prompt}</Text>
@@ -264,7 +285,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                     <FontAwesome5 
                       name="coins" 
                       size={20} 
-                      color="#0C4A6E" 
+                      color="#FFFFFF" 
                       style={{ marginRight: 8 }}
                     />
                     <View style={{ flexDirection: 'row' }}>
@@ -274,7 +295,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                           style={[
                             styles.coinRewardText,
                             { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                            { color: '#0C4A6E' }
+                            { color: '#FFFFFF' }
                           ]}
                         >
                           {char}
@@ -282,7 +303,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       ))}
                       <Text style={[
                         styles.coinRewardText,
-                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#0C4A6E' }
+                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#FFFFFF' }
                       ]}> Coin Earned!</Text>
                     </View>
                   </View>
@@ -388,7 +409,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                       <FontAwesome5 
                         name="coins" 
                         size={20} 
-                        color="#0C4A6E" 
+                        color="#FFFFFF" 
                         style={{ marginRight: 8 }}
                       />
                       <View style={{ flexDirection: 'row' }}>
@@ -398,7 +419,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                             style={[
                               styles.coinRewardText,
                               { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
-                              { color: '#0C4A6E' }
+                              { color: '#FFFFFF' }
                             ]}
                           >
                             {char}
@@ -406,7 +427,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
                         ))}
                         <Text style={[
                           styles.coinRewardText,
-                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#0C4A6E' }
+                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#FFFFFF' }
                         ]}> Coin Earned!</Text>
                       </View>
                     </View>
@@ -525,13 +546,11 @@ const styles = StyleSheet.create({
   },
   scenarioText: {
     ...theme.typography.body,
-    fontFamily: FONTS.medium,
-    fontSize: 16,
-    fontWeight: '500',
-    lineHeight: 22,
-    letterSpacing: 0.12,
-    textAlign: 'left',
-    color: '#0C4A6E',
+    fontFamily: FONTS.regular,
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: 0.15,
+    color: '#334155',
   },
   promptText: {
     ...theme.typography.body,
@@ -639,5 +658,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: 'rgba(42, 30, 92, 0.7)',
     paddingHorizontal: theme.spacing.md,
+  },
+  progressBarContainer: {
+    width: '75%',
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignSelf: 'center',
+    marginBottom: 0,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#00CED1',
+    borderRadius: 999,
+  },
+  floatingQuestionLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0.8,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 16,
   },
 });

@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView, Image } from 'react-native';
-import { Canvas, Path } from '@shopify/react-native-skia';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView, Image, DeviceEventEmitter, Alert } from 'react-native';
+import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -44,6 +46,39 @@ export const DrawingBoardScreen = () => {
   const [activeColor, setActiveColor] = useState(COLORS[5]);
   const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
   const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  
+  const canvasRef = useCanvasRef();
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('FAB_PRESSED', async () => {
+      try {
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status !== 'granted') {
+          Alert.alert('Permission Denied', 'We need access to your camera roll to save your drawing.');
+          return;
+        }
+
+        const image = canvasRef.current?.makeImageSnapshot();
+        if (!image) {
+          Alert.alert('Error', 'Could not capture the drawing.');
+          return;
+        }
+
+        const base64 = image.encodeToBase64();
+        const filename = `${FileSystem.documentDirectory}drawing-${Date.now()}.png`;
+        await FileSystem.writeAsStringAsync(filename, base64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        await MediaLibrary.saveToLibraryAsync(filename);
+        Alert.alert('Saved!', 'Your drawing has been saved to your camera roll!');
+      } catch (error: any) {
+        console.error('Failed to save image:', error);
+        Alert.alert('Error', error.message || 'Failed to save drawing.');
+      }
+    });
+    return () => sub.remove();
+  }, [paths]);
   
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [currentPath, setCurrentPath] = useState<string>('');
@@ -123,7 +158,7 @@ export const DrawingBoardScreen = () => {
           onResponderRelease={handleTouchEnd}
           onResponderTerminate={handleTouchEnd}
         >
-          <Canvas style={StyleSheet.absoluteFill} pointerEvents="none">
+          <Canvas ref={canvasRef} style={StyleSheet.absoluteFill} pointerEvents="none">
             {paths.map((stroke, index) => (
               <Path
                 key={index}

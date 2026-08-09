@@ -2,6 +2,7 @@ import React from 'react';
 import { Image, View, StyleSheet, useWindowDimensions } from 'react-native';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { AnimatedCloudsBackground } from './AnimatedCloudsBackground';
+import { BlurView } from 'expo-blur';
 
 interface GlobalBackgroundProps {
   showClouds?: boolean;
@@ -34,7 +35,13 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
         source={getBgSource()}
         style={styles.pattern}
       />
-      {dimmed && <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(15, 23, 42, 0.45)' }]} />}
+      {dimmed && (
+        <BlurView 
+          intensity={40} 
+          tint={isDark ? "dark" : "light"}
+          style={[StyleSheet.absoluteFill, { backgroundColor: isDark ? 'rgba(15, 23, 42, 0.65)' : 'rgba(240, 249, 255, 0.65)' }]} 
+        />
+      )}
       {showClouds && <AnimatedCloudsBackground />}
     </View>
   );

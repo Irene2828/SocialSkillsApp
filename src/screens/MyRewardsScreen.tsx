@@ -921,9 +921,9 @@ const styles = StyleSheet.create({
     padding: 0,
     marginHorizontal: 0,
     borderRadius: theme.borderRadius.md,
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.45)',
-    backgroundColor: 'transparent',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
     overflow: 'hidden',
   },
   tab: {
@@ -933,7 +933,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeTab: {
-    backgroundColor: 'transparent',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
   tabText: {
     ...theme.typography.body,
@@ -948,9 +948,9 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   dividerVertical: {
-    width: 1.5,
+    width: 1.2,
     height: '60%',
-    backgroundColor: 'rgba(255, 255, 255, 0.45)',
+    backgroundColor: 'rgba(255, 255, 255, 0.4)',
     alignSelf: 'center',
   },
   emptyText: {

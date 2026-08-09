@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Pressable, Text, StyleSheet, DeviceEventEmitter } from 'react-native';
+import { View, Pressable, Text, StyleSheet, DeviceEventEmitter, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Defs, Path, Text as SvgText, TextPath } from 'react-native-svg';
 import { theme, FONTS } from '../theme';
@@ -19,6 +19,9 @@ export const FloatingActionButton = ({
   iconName = "add",
   label,
 }: FloatingActionButtonProps) => {
+  const { width: SCREEN_WIDTH } = useWindowDimensions();
+  const isTablet = SCREEN_WIDTH >= 768;
+
   const handlePress = () => {
     if (onPress) {
       onPress();
@@ -33,11 +36,11 @@ export const FloatingActionButton = ({
         <View style={styles.labelContainer}>
           <Svg width={90} height={45} viewBox="0 0 90 45" style={{ overflow: 'visible' }}>
             <Defs>
-              <Path id="curve" d="M 6,42 A 39,39 0 0,1 84,42" />
+              <Path id="curve" d="M 6,3 A 39,39 0 0,0 84,3" />
             </Defs>
-            <SvgText fill="#FFFFFF" fontSize="9" fontWeight="800" letterSpacing="0.8">
+            <SvgText fill="#FFFFFF" fontSize={isTablet ? 14 : 12} fontFamily={FONTS.medium} letterSpacing={2.5} style={{ letterSpacing: 2.5 }}>
               <TextPath href="#curve" startOffset="50%" textAnchor="middle">
-                {label.toUpperCase()}
+                {label}
               </TextPath>
             </SvgText>
           </Svg>
@@ -98,11 +101,11 @@ const styles = StyleSheet.create({
   },
   labelContainer: {
     position: 'absolute',
-    top: -46, // sits right over the top curve of the FAB circle
+    top: 8, // sits below the FAB circle 50% closer (5px spacing)
     width: 90,
     height: 45,
     alignItems: 'center',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     overflow: 'visible',
   },

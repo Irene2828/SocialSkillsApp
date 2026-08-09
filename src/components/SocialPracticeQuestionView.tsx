@@ -104,21 +104,29 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
           <View style={styles.problemSheet}>
             <View style={styles.storyCallout}>
               <Text style={styles.calloutLabel}>
-                Situation
+                Social Situation:
               </Text>
-              <Text style={styles.storyCalloutText}>
+              <Text style={styles.storyText}>
                 {quiz.situation.introduction}
               </Text>
             </View>
           </View>
 
-          <View style={styles.divider} />
+          <View style={styles.progressBarContainer}>
+            <View 
+              style={[
+                styles.progressBarFill, 
+                { width: `${(questionNum / quiz.questions.length) * 100}%` }
+              ]} 
+            />
+          </View>
+
+          <Text style={styles.floatingQuestionLabel}>
+            QUESTION {questionNum}/{quiz.questions.length}
+          </Text>
 
           <View style={styles.problemSheet}>
             <View style={styles.storyCallout}>
-              <Text style={styles.calloutLabel}>
-                Question {questionNum}
-              </Text>
               <Text style={styles.problemQuestionText}>
                 {question.prompt}
               </Text>
@@ -170,9 +178,9 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
                 
                 {displayIsCorrect && isRewardsModeOn && !hasFailed && (
                   <View style={styles.coinRewardContainer}>
-                    <FontAwesome5 name="coins" size={20} color="#0C4A6E" style={{ marginRight: 8 }} />
+                    <FontAwesome5 name="coins" size={20} color="#FFFFFF" style={{ marginRight: 8 }} />
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={[styles.coinRewardText, { fontFamily: FONTS.semiBold, fontSize: 20, color: '#0C4A6E' }]}>
+                      <Text style={[styles.coinRewardText, { fontFamily: FONTS.semiBold, fontSize: 20, color: '#FFFFFF' }]}>
                         +1 Coin Earned!
                       </Text>
                     </View>
@@ -268,6 +276,14 @@ const styles = StyleSheet.create({
     letterSpacing: 0.18,
     color: '#0C4A6E',
   },
+  storyText: {
+    ...theme.typography.body,
+    fontFamily: FONTS.regular,
+    fontSize: 13,
+    lineHeight: 18,
+    letterSpacing: 0.15,
+    color: '#334155',
+  },
   problemQuestionText: {
     ...theme.typography.body,
     fontFamily: FONTS.medium,
@@ -277,13 +293,30 @@ const styles = StyleSheet.create({
     letterSpacing: 0.18,
     color: '#0C4A6E',
   },
-  divider: {
+  progressBarContainer: {
     width: '75%',
-    height: 2,
+    height: 6,
     borderRadius: 999,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignSelf: 'center',
-    marginBottom: theme.spacing.lg,
+    marginBottom: 0,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#00CED1',
+    borderRadius: 999,
+  },
+  floatingQuestionLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 10,
+    lineHeight: 14,
+    letterSpacing: 0.8,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 8,
+    marginBottom: 16,
   },
   optionsContainer: {
     marginBottom: theme.spacing.lg,

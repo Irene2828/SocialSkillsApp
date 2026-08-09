@@ -124,11 +124,18 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
                 paddingVertical: 4,
               }}
             >
-              <View style={styles.coinBadge}>
-                <Text style={[styles.coinText, { color: '#FFFFFF', letterSpacing: 0.8 }]}>
-                  {coinBalance}
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
+                <Ionicons name="gift-outline" size={isTablet ? 14 : 12} color="#FFFFFF" style={{ marginRight: 4 }} />
+                <Text 
+                  style={{ 
+                    fontFamily: FONTS.medium,
+                    fontSize: isTablet ? 14 : 12,
+                    color: '#FFFFFF',
+                    letterSpacing: 0.8,
+                  }}
+                >
+                  My
                 </Text>
-                <FontAwesome5 name="coins" size={12} color="#FFFFFF" style={[styles.coinIcon, { marginLeft: 6 }]} />
               </View>
               <Text 
                 style={{ 
