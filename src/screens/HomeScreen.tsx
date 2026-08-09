@@ -625,7 +625,7 @@ export const HomeScreen = () => {
 
         <View style={styles.startContainer} pointerEvents="box-none">
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]} pointerEvents="box-none">
-            <AstronautHero reduceMotion={reduceMotion} touchDisplacement={touchDisplacement} />
+            {/* <AstronautHero reduceMotion={reduceMotion} touchDisplacement={touchDisplacement} /> */}
             {/* Title - always visible, shatter only on web */}
             <View style={{ width: '100%', alignItems: 'center', position: 'relative' }}>
               <Pressable
