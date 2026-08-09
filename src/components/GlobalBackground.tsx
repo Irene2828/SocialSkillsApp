@@ -37,9 +37,9 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
       />
       {dimmed && (
         <BlurView 
-          intensity={40} 
+          intensity={20} 
           tint={isDark ? "dark" : "light"}
-          style={[StyleSheet.absoluteFill, { backgroundColor: isDark ? 'rgba(15, 23, 42, 0.65)' : 'rgba(240, 249, 255, 0.65)' }]} 
+          style={[StyleSheet.absoluteFill, { backgroundColor: isDark ? 'rgba(15, 23, 42, 0.35)' : 'rgba(240, 249, 255, 0.35)' }]} 
         />
       )}
       {showClouds && <AnimatedCloudsBackground />}

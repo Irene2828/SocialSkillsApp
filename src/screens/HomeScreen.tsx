@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, PanResponder, Platform } from 'react-native';
+import { View, Text, StyleSheet, Animated, Easing, useWindowDimensions, Pressable, Image, AccessibilityInfo, Dimensions, Platform } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { Button } from '../components/Button';
 import { theme, FONTS } from '../theme';
@@ -483,22 +483,13 @@ export const HomeScreen = () => {
     }).start();
   };
 
-  const globalPanResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onStartShouldSetPanResponderCapture: () => false,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
-      },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
-        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
-      },
-      onPanResponderGrant: (evt) => handlePointerDown(evt),
-      onPanResponderMove: (evt) => handlePointerMove(evt),
-      onPanResponderRelease: () => handlePointerUp(),
-      onPanResponderTerminate: () => handlePointerUp(),
-    })
-  ).current;
+  // Simple responder - only reacts to direct touches, doesn't steal from children
+  const handleResponderGrant = (evt: any) => {
+    handlePointerDown(evt);
+  };
+  const handleResponderMove = (evt: any) => {
+    handlePointerMove(evt);
+  };
 
   const applyElasticPush = (tx: number, ty: number) => {
     if (reduceMotion) return;
@@ -549,7 +540,12 @@ export const HomeScreen = () => {
   return (
     <View 
       style={{ flex: 1, overflow: 'hidden', backgroundColor: '#0b0f19' }}
-      {...globalPanResponder.panHandlers}
+      onStartShouldSetResponder={() => true}
+      onMoveShouldSetResponder={() => true}
+      onResponderGrant={handleResponderGrant}
+      onResponderMove={handleResponderMove}
+      onResponderRelease={handlePointerUp}
+      onResponderTerminate={handlePointerUp}
     >
       <GlobalBackground showClouds dimmed={false} />
       
