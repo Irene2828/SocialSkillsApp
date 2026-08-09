@@ -26,16 +26,7 @@ if (Platform.OS === 'web' && typeof window !== 'undefined') {
   });
 }
 
-// ShatterText3D is lazy-loaded on web only to prevent Three.js crashing on native
-let ShatterText3D: any = null;
-if (Platform.OS === 'web') {
-  try {
-    ShatterText3D = require('../components/ShatterText3D').ShatterText3D;
-  } catch (e) {
-    console.log('ShatterText3D failed to load:', e);
-  }
-}
-
+// WebGL 3D text removed to improve stability
 // Kept AstronautHero
 
 const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: boolean, touchDisplacement: Animated.ValueXY }) => {
@@ -150,12 +141,12 @@ const AstronautHero = ({ reduceMotion, touchDisplacement }: { reduceMotion: bool
         alignItems: 'center',
         justifyContent: 'center',
       }}>
-        <Image 
-          source={require('../../assets/mascot_v2_transparent.png')} 
-          style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
-          pointerEvents="none"
-          draggable={false}
-        />
+        <View pointerEvents="none">
+          <Image 
+            source={require('../../assets/mascot_v2_transparent.png')} 
+            style={{ width: 110, height: 110, resizeMode: 'contain', zIndex: 10 }} 
+          />
+        </View>
       </Animated.View>
     </Animated.View>
   );
@@ -483,93 +474,8 @@ export const HomeScreen = () => {
   const subtitleColor = '#FFFFFF';
   const [showSettings, setShowSettings] = useState(false);
 
-  const [reduceMotion, setReduceMotion] = useState(false);
   const [isShattered, setIsShattered] = useState(false);
   const [webGLFailed, setWebGLFailed] = useState(false);
-  const touchDisplacement = useRef(new Animated.ValueXY({ x: 0, y: 0 })).current;
-  const cosmicRef = useRef<CosmicPhysicsRef>(null);
-
-  const lastPushTime = useRef(0);
-  const isTouching = useRef(false);
-
-  const extractCoords = (evt: any) => {
-    const ne = evt?.nativeEvent || {};
-    const x = ne.locationX ?? ne.pageX;
-    const y = ne.locationY ?? ne.pageY;
-    if (typeof x !== 'number' || typeof y !== 'number' || !isFinite(x) || !isFinite(y)) {
-      return null;
-    }
-    return { x, y };
-  };
-
-  // Use direct setValue during active touch — ZERO native animation nodes created
-  const applyElasticPushDirect = (tx: number, ty: number) => {
-    if (reduceMotion) return;
-    const astronautCenterX = width / 2;
-    const astronautCenterY = 150;
-    
-    const dx = astronautCenterX - tx;
-    const dy = astronautCenterY - ty;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    
-    const maxRadius = 150;
-    if (dist < maxRadius && dist > 0) {
-      const force = (1 - dist / maxRadius) * 15;
-      const pushX = (dx / dist) * force;
-      const pushY = (dy / dist) * force;
-      touchDisplacement.setValue({ x: pushX, y: pushY });
-    } else {
-      touchDisplacement.setValue({ x: 0, y: 0 });
-    }
-  };
-
-  const handlePointerDown = (evt: any) => {
-    const coords = extractCoords(evt);
-    if (!coords) return;
-    isTouching.current = true;
-    touchDisplacement.stopAnimation(); // kill any running spring from prior release
-    cosmicRef.current?.triggerTouchDown(coords.x, coords.y);
-    applyElasticPushDirect(coords.x, coords.y);
-    lastPushTime.current = Date.now();
-  };
-
-  const handlePointerMove = (evt: any) => {
-    if (!isTouching.current) return;
-    const coords = extractCoords(evt);
-    if (!coords) return;
-    
-    const now = Date.now();
-    if (now - lastPushTime.current > 50) {
-      cosmicRef.current?.triggerTouchMove(coords.x, coords.y);
-      applyElasticPushDirect(coords.x, coords.y);
-      lastPushTime.current = now;
-    }
-  };
-
-  // Animated.spring is ONLY used here — once per touch session
-  const handlePointerUp = () => {
-    isTouching.current = false;
-    Animated.spring(touchDisplacement, {
-      toValue: { x: 0, y: 0 },
-      friction: 4,
-      tension: 40,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  // Simple responder - only reacts to direct touches, doesn't steal from children
-  const handleResponderGrant = (evt: any) => {
-    handlePointerDown(evt);
-  };
-  const handleResponderMove = (evt: any) => {
-    handlePointerMove(evt);
-  };
-
-  useEffect(() => {
-    AccessibilityInfo.isReduceMotionEnabled().then((enabled) => {
-      setReduceMotion(enabled);
-    });
-  }, []);
 
   const insets = useSafeAreaInsets();
   const footerPaddingBottom = (Math.max(insets.bottom, isTablet ? 20 : (isSmallScreen ? 8 : 10)) / 2) * 0.5;
@@ -579,17 +485,8 @@ export const HomeScreen = () => {
     ? 60 + footerPaddingBottom
     : 68 + Math.round(footerPaddingBottom * 1.2);
   const footerPaddingTop = isTablet ? 5 : (isSmallScreen ? 4 : 5);
-
   return (
-    <View 
-      style={{ flex: 1, overflow: 'hidden', backgroundColor: '#0b0f19' }}
-      onStartShouldSetResponder={() => true}
-      onMoveShouldSetResponder={() => true}
-      onResponderGrant={handleResponderGrant}
-      onResponderMove={handleResponderMove}
-      onResponderRelease={handlePointerUp}
-      onResponderTerminate={handlePointerUp}
-    >
+    <View style={{ flex: 1, overflow: 'hidden', backgroundColor: '#0b0f19' }}>
       <GlobalBackground showClouds dimmed={false} />
 
       <ScreenWrapper transparent>
@@ -637,9 +534,6 @@ export const HomeScreen = () => {
                   <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
                 </View>
               </Pressable>
-              {Platform.OS === 'web' && ShatterText3D && (
-                <ShatterText3D isShattered={isShattered} onError={() => setWebGLFailed(true)} />
-              )}
             </View>
           </View>
 

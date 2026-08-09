@@ -65,7 +65,7 @@ export const DrawingBoardScreen = () => {
         }
 
         const base64 = image.encodeToBase64();
-        const filename = `${FileSystem.documentDirectory}drawing-${Date.now()}.png`;
+        const filename = `${(FileSystem as any).documentDirectory || ''}drawing-${Date.now()}.png`;
         await FileSystem.writeAsStringAsync(filename, base64, {
           encoding: FileSystem.EncodingType.Base64,
         });

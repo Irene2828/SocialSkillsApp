@@ -7,7 +7,7 @@ import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 
 import { SilverDust } from './SilverDust';
-import { useMood } from '../context/MoodContext';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
 import { useRewards } from '../context/RewardsContext';
@@ -71,6 +71,10 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
+  const moodColors = getMoodColors(mood);
+  const hour = new Date().getHours();
+  const isDaytime = hour >= 6 && hour < 18;
+  const shouldUseDark = moodColors.isDark && !isDaytime;
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
@@ -291,16 +295,17 @@ export const StepBasedQuestionView: React.FC<StepBasedQuestionViewProps> = ({ qu
         <Animated.View style={[styles.animatedContainer, { opacity: stepFadeAnim }]}>
           {question.steps.length > 0 && (
             <>
-              <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
                 <View 
                   style={[
                     styles.progressBarFill, 
-                    { width: `${((currentStepIndex + 1) / question.steps.length) * 100}%` }
+                    { width: `${((currentStepIndex + 1) / question.steps.length) * 100}%` },
+                    !shouldUseDark && { backgroundColor: '#0C4A6E' }
                   ]} 
                 />
               </View>
-              <Text style={styles.floatingQuestionLabel}>
-                QUESTION {currentStepIndex + 1}/{question.steps.length}
+              <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
+                Question {currentStepIndex + 1}/{question.steps.length}
               </Text>
             </>
           )}

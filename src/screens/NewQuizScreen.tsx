@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions, InteractionManager } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
@@ -82,6 +82,22 @@ export const NewQuizScreen = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
   const [activeTab, setActiveTab] = useState<'general' | 'ai'>('general');
   const [activeSocialQuiz, setActiveSocialQuiz] = useState<SocialPracticeQuiz | null>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const interaction = UIManager.setLayoutAnimationEnabledExperimental
+      ? requestAnimationFrame(() => setIsReady(true)) // Use requestAnimationFrame as fallback for Interactions on some environments
+      : setTimeout(() => setIsReady(true), 50);
+
+    const task = InteractionManager.runAfterInteractions(() => {
+      setIsReady(true);
+    });
+    return () => {
+      if (typeof interaction === 'number') clearTimeout(interaction);
+      if (typeof interaction === 'number') cancelAnimationFrame(interaction);
+      task.cancel();
+    };
+  }, []);
 
   useEffect(() => {
     const isFabActive = quizState === 'selection';

@@ -6,7 +6,7 @@ import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
-import { useMood } from '../context/MoodContext';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { useRewards } from '../context/RewardsContext';
 
 interface SocialPracticeQuestionViewProps {
@@ -25,6 +25,10 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
+  const moodColors = getMoodColors(mood);
+  const hour = new Date().getHours();
+  const isDaytime = hour >= 6 && hour < 18;
+  const shouldUseDark = moodColors.isDark && !isDaytime;
   
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
@@ -112,17 +116,18 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
             </View>
           </View>
 
-          <View style={styles.progressBarContainer}>
+          <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
             <View 
               style={[
                 styles.progressBarFill, 
-                { width: `${(questionNum / quiz.questions.length) * 100}%` }
+                { width: `${(questionNum / quiz.questions.length) * 100}%` },
+                !shouldUseDark && { backgroundColor: '#0C4A6E' }
               ]} 
             />
           </View>
 
-          <Text style={styles.floatingQuestionLabel}>
-            QUESTION {questionNum}/{quiz.questions.length}
+          <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
+            Question {questionNum}/{quiz.questions.length}
           </Text>
 
           <View style={styles.problemSheet}>

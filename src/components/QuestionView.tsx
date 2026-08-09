@@ -6,7 +6,7 @@ import { Button } from './Button';
 import { theme, FONTS } from '../theme';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { SilverDust } from './SilverDust';
-import { useMood } from '../context/MoodContext';
+import { useMood, getMoodColors } from '../context/MoodContext';
 import { WrongAnswerSpaceman } from './WrongAnswerSpaceman';
 import { CorrectAnswerSpaceman } from './CorrectAnswerSpaceman';
 import { useRewards } from '../context/RewardsContext';
@@ -49,6 +49,10 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
+  const moodColors = getMoodColors(mood);
+  const hour = new Date().getHours();
+  const isDaytime = hour >= 6 && hour < 18;
+  const shouldUseDark = moodColors.isDark && !isDaytime;
   const gradientColors = [
     '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
     '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
@@ -198,16 +202,17 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
       <View style={styles.unifiedCard}>
         {questionNum && totalQuestions && (
           <>
-            <View style={styles.progressBarContainer}>
+            <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
               <View 
                 style={[
                   styles.progressBarFill, 
-                  { width: `${(questionNum / totalQuestions) * 100}%` }
+                  { width: `${(questionNum / totalQuestions) * 100}%` },
+                  !shouldUseDark && { backgroundColor: '#0C4A6E' }
                 ]} 
               />
             </View>
-            <Text style={styles.floatingQuestionLabel}>
-              QUESTION {questionNum}/{totalQuestions}
+            <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
+              Question {questionNum}/{totalQuestions}
             </Text>
           </>
         )}

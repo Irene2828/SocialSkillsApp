@@ -38,7 +38,7 @@ export const FloatingActionButton = ({
             <Defs>
               <Path id="curve" d="M 6,3 A 39,39 0 0,0 84,3" />
             </Defs>
-            <SvgText fill="#FFFFFF" fontSize={isTablet ? 14 : 12} fontFamily={FONTS.medium} letterSpacing={2.5} style={{ letterSpacing: 2.5 }}>
+            <SvgText fill="#FFFFFF" fontSize={isTablet ? 14 : 12} fontFamily={FONTS.medium} letterSpacing="2.5">
               <TextPath href="#curve" startOffset="50%" textAnchor="middle">
                 {label}
               </TextPath>

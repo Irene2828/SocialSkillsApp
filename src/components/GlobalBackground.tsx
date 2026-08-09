@@ -15,10 +15,14 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
   
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
+  const hour = new Date().getHours();
+  const isDaytime = hour >= 6 && hour < 18;
+  const shouldUseDark = isDark && !isDaytime;
+
   const isTablet = width > 768;
 
   const getBgSource = () => {
-    if (isDark) {
+    if (shouldUseDark) {
       return isTablet 
         ? require('../../assets/home_bg_dark_tablet.png') 
         : require('../../assets/home_bg_dark_mobile.png');
@@ -30,7 +34,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
+    <View style={[styles.container, { backgroundColor: shouldUseDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
       <Image
         source={getBgSource()}
         style={StyleSheet.absoluteFill}
@@ -40,13 +44,13 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
         <>
           <BlurView 
             intensity={20} 
-            tint={isDark ? "dark" : "light"}
+            tint={shouldUseDark ? "dark" : "light"}
             style={StyleSheet.absoluteFill} 
           />
           <View 
             style={[
               StyleSheet.absoluteFill, 
-              { backgroundColor: isDark ? 'rgba(11, 15, 25, 0.40)' : 'rgba(224, 242, 254, 0.40)' }
+              { backgroundColor: shouldUseDark ? 'rgba(11, 15, 25, 0.40)' : 'rgba(224, 242, 254, 0.40)' }
             ]} 
           />
         </>
