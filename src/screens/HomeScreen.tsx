@@ -462,6 +462,23 @@ export const HomeScreen = () => {
     }).start();
   };
 
+  const globalPanResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onStartShouldSetPanResponderCapture: () => false,
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
+      },
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > 5 || Math.abs(gestureState.dy) > 5;
+      },
+      onPanResponderGrant: (evt) => handlePointerDown(evt),
+      onPanResponderMove: (evt) => handlePointerMove(evt),
+      onPanResponderRelease: () => handlePointerUp(),
+      onPanResponderTerminate: () => handlePointerUp(),
+    })
+  ).current;
+
   const applyElasticPush = (tx: number, ty: number) => {
     if (reduceMotion) return;
     const astronautCenterX = width / 2;
@@ -511,11 +528,7 @@ export const HomeScreen = () => {
   return (
     <View 
       style={{ flex: 1, overflow: 'hidden', backgroundColor: '#0b0f19' }}
-      onStartShouldSetResponder={() => true}
-      onResponderGrant={handlePointerDown}
-      onResponderMove={handlePointerMove}
-      onResponderRelease={handlePointerUp}
-      onResponderTerminate={handlePointerUp}
+      {...globalPanResponder.panHandlers}
     >
       <GlobalBackground showClouds dimmed={false} />
       
