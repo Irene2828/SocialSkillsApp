@@ -590,7 +590,7 @@ export const HomeScreen = () => {
             </View>
           </View>
 
-          <View style={{ transform: [{ translateY: isTablet ? 70 : 50 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
+          <View style={{ transform: [{ translateY: isTablet ? -20 : -15 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
             <Text 
               style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: 12 }]}
             >
@@ -643,8 +643,10 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 510,
     alignSelf: 'center',
-    paddingHorizontal: 80, // Force button to be significantly wider
+    paddingHorizontal: 80,
     minWidth: 260,
+    paddingVertical: 13, // 20% shorter than default 16
+    minHeight: 0,        // allow paddingVertical to control height
   },
   customFooter: {
     flexDirection: 'row',
