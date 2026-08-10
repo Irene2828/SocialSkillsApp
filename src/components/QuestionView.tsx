@@ -686,6 +686,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.8,
     color: '#FFFFFF',
     textAlign: 'center',
+    textTransform: 'none',
     marginTop: 8,
     marginBottom: 16,
   },
