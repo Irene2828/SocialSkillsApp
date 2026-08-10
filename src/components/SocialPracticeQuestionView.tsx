@@ -28,9 +28,7 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
   const moodColors = getMoodColors(mood);
-  const hour = new Date().getHours();
-  const isDaytime = hour >= 6 && hour < 18;
-  const shouldUseDark = moodColors.isDark && !isDaytime;
+  const shouldUseDark = moodColors.isDark;
   
   const [localSelectedIndex, setLocalSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);

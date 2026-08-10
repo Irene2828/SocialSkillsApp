@@ -50,9 +50,7 @@ export const QuestionView: React.FC<QuestionViewProps> = ({
   const { isRewardsModeOn } = useRewards();
   const isRocket = mood === 'rocket';
   const moodColors = getMoodColors(mood);
-  const hour = new Date().getHours();
-  const isDaytime = hour >= 6 && hour < 18;
-  const shouldUseDark = moodColors.isDark && !isDaytime;
+  const shouldUseDark = moodColors.isDark;
   const gradientColors = [
     '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
     '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',

@@ -15,9 +15,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
   
   const moodColors = getMoodColors(mood);
   const isDark = moodColors.isDark;
-  const hour = new Date().getHours();
-  const isDaytime = hour >= 6 && hour < 18;
-  const shouldUseDark = isDark && !isDaytime;
+  const shouldUseDark = isDark;
 
   const isTablet = width > 768;
 
