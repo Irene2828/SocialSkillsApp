@@ -231,7 +231,13 @@ export const HomeScreen = () => {
           <View style={[styles.startContent, isSmallScreen && { marginBottom: theme.spacing.xl }]} pointerEvents="box-none">
 
             {/* Title - always visible, shatter only on web */}
-            <View style={{ width: '100%', alignItems: 'center', position: 'relative' }}>
+            <View style={{
+              width: '100%',
+              alignItems: 'center',
+              position: 'relative',
+              // @ts-ignore — force own compositing layer to prevent WebKit canvas flicker
+              willChange: 'transform',
+            }}>
               <Pressable
                 onPress={() => {
                   if (Platform.OS === 'web') {
@@ -247,7 +253,14 @@ export const HomeScreen = () => {
                   touchAction: 'manipulation',
                 }}
               >
-                <View style={{ opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1, alignItems: 'center' }}>
+                <View style={{
+                  opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1,
+                  alignItems: 'center',
+                  transform: [{ translateX: 0 }],  // triggers GPU layer promotion on RN web
+                  // @ts-ignore — web-only: force compositing layer to prevent canvas z-fighting flicker
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
+                }}>
                   <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
                   <ElectrifiedText text="Explorer" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor }]} startIndex={5} totalLetters={13} />
                 </View>
