@@ -13,8 +13,8 @@ interface FloatingActionButtonProps {
 export const FloatingActionButton = ({
   isActive = false,
   onPress,
-  accessibilityLabel = "Add New",
-  label = "Add\nNew",
+  accessibilityLabel = "Add",
+  label = "Add",
 }: FloatingActionButtonProps) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const isTablet = SCREEN_WIDTH >= 768;
