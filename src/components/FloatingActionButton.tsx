@@ -51,9 +51,9 @@ export const FloatingActionButton = ({
         )}
         <Text style={{ 
           color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)',
-          fontSize: isTablet ? 14 : 12,
-          fontFamily: FONTS.medium,
-          lineHeight: isTablet ? 18 : 15,
+          fontSize: isTablet ? 16 : 14,
+          fontFamily: FONTS.semiBold,
+          lineHeight: isTablet ? 20 : 17,
           textAlign: 'center',
           letterSpacing: 0.8,
         }}>
