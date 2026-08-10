@@ -14,13 +14,15 @@ interface SocialPracticeQuestionViewProps {
   question: SocialQuestion;
   onContinue: (isCorrect: boolean) => void;
   disabled?: boolean;
+  isCompleted?: boolean;
 }
 
 export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProps> = ({
   quiz,
   question,
   onContinue,
-  disabled
+  disabled,
+  isCompleted = false,
 }) => {
   const { mood } = useMood();
   const { isRewardsModeOn } = useRewards();
@@ -30,10 +32,14 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   const isDaytime = hour >= 6 && hour < 18;
   const shouldUseDark = moodColors.isDark && !isDaytime;
   
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [localSelectedIndex, setLocalSelectedIndex] = useState<number | null>(null);
   const [hasFailed, setHasFailed] = useState(false);
   const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
   const { width } = useWindowDimensions();
+
+  const selectedIndex = isCompleted 
+    ? question.options.findIndex(opt => opt.isAccepted)
+    : localSelectedIndex;
 
   const glassTextShadow = isRocket ? {
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
@@ -42,15 +48,16 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   } : {};
 
   if (question.id !== currentQuestionId) {
-    setSelectedIndex(null);
+    setLocalSelectedIndex(null);
     setHasFailed(false);
     setCurrentQuestionId(question.id);
   }
   
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(10)).current;
+  const fadeAnim = useRef(new Animated.Value(isCompleted ? 1 : 0)).current;
+  const slideAnim = useRef(new Animated.Value(isCompleted ? 0 : 10)).current;
 
   useEffect(() => {
+    if (isCompleted) return;
     fadeAnim.setValue(0);
     slideAnim.setValue(10);
     
@@ -66,11 +73,12 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
         useNativeDriver: true,
       })
     ]).start();
-  }, [question.id]);
+  }, [question.id, isCompleted]);
 
   const handleSelect = (index: number) => {
-    if (selectedIndex === null) {
-      setSelectedIndex(index);
+    if (isCompleted) return;
+    if (localSelectedIndex === null) {
+      setLocalSelectedIndex(index);
       if (!question.options[index].isAccepted) {
         setHasFailed(true);
       }
@@ -78,57 +86,66 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
   };
 
   const handleCloseModal = () => {
+    if (isCompleted) return;
     if (displayIsCorrect) {
-      setSelectedIndex(null);
+      setLocalSelectedIndex(null);
       setHasFailed(false);
       onContinue(!hasFailed);
     } else {
-      setSelectedIndex(null);
+      setLocalSelectedIndex(null);
     }
   };
 
   const isIdChanged = question.id !== currentQuestionId;
-  const isAnswered = selectedIndex !== null && !isIdChanged;
-  const isCorrect = isAnswered && question.options[selectedIndex].isAccepted;
+  const isAnswered = isCompleted || (localSelectedIndex !== null && !isIdChanged);
+  const isCorrect = isCompleted || (isAnswered && localSelectedIndex !== null && question.options[localSelectedIndex].isAccepted);
 
   const displayIsCorrectRef = useRef(isCorrect);
-  if (isAnswered) {
+  if (isAnswered && !isCompleted) {
     displayIsCorrectRef.current = isCorrect;
   }
-  const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
+  const displayIsCorrect = isCompleted || (isAnswered ? isCorrect : displayIsCorrectRef.current);
 
   const questionIndex = quiz.questions.findIndex(q => q.id === question.id);
   const questionNum = questionIndex !== -1 ? questionIndex + 1 : 1;
+
+  const showIntro = questionNum === 1;
 
   return (
     <View style={styles.container}>
       <View style={styles.unifiedCard}>
         <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
           
-          <View style={styles.problemSheet}>
-            <View style={styles.storyCallout}>
-              <Text style={styles.calloutLabel}>
-                Social Situation:
-              </Text>
-              <Text style={styles.storyText}>
-                {quiz.situation.introduction}
-              </Text>
+          {showIntro && (
+            <View style={styles.problemSheet}>
+              <View style={styles.storyCallout}>
+                <Text style={styles.calloutLabel}>
+                  Social Situation:
+                </Text>
+                <Text style={styles.storyText}>
+                  {quiz.situation.introduction}
+                </Text>
+              </View>
             </View>
-          </View>
+          )}
 
-          <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
-            <View 
-              style={[
-                styles.progressBarFill, 
-                { width: `${(questionNum / quiz.questions.length) * 100}%` },
-                !shouldUseDark && { backgroundColor: '#0C4A6E' }
-              ]} 
-            />
-          </View>
+          {!isCompleted && (
+            <>
+              <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
+                <View 
+                  style={[
+                    styles.progressBarFill, 
+                    { width: `${(questionNum / quiz.questions.length) * 100}%` },
+                    !shouldUseDark && { backgroundColor: '#0C4A6E' }
+                  ]} 
+                />
+              </View>
 
-          <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
-            Question {questionNum}/{quiz.questions.length}
-          </Text>
+              <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
+                Question {questionNum}/{quiz.questions.length}
+              </Text>
+            </>
+          )}
 
           <View style={styles.problemSheet}>
             <View style={styles.storyCallout}>
@@ -158,17 +175,18 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
                   text={option.text}
                   onPress={() => handleSelect(index)}
                   state={state}
-                  disabled={isAnswered}
+                  disabled={isAnswered || isCompleted}
                 />
               );
             })}
           </View>
         </Animated.View>
 
-        <Modal
-          visible={isAnswered}
-          transparent={true}
-          animationType="fade"
+        {!isCompleted && (
+          <Modal
+            visible={isAnswered}
+            transparent={true}
+            animationType="fade"
         >
           <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleCloseModal}>
             {displayIsCorrect && isRewardsModeOn && <SilverDust />}
@@ -212,7 +230,7 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
                 ) : (
                   <Button
                     title="Try Again"
-                    onPress={() => setSelectedIndex(null)}
+                    onPress={() => setLocalSelectedIndex(null)}
                     style={styles.continueButton}
                   />
                 )}
@@ -220,6 +238,7 @@ export const SocialPracticeQuestionView: React.FC<SocialPracticeQuestionViewProp
             </Pressable>
           </Pressable>
         </Modal>
+        )}
 
       </View>
     </View>

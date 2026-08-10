@@ -822,8 +822,12 @@ export const NewQuizScreen = () => {
     if (currentIndex + 1 < currentQuestions.length) {
       setCurrentIndex(prev => prev + 1);
       setTimeout(() => {
-        quizScrollRef.current?.scrollTo({ y: 0, animated: true });
-      }, 50);
+        if (activeSocialQuiz) {
+          quizScrollRef.current?.scrollToEnd({ animated: true });
+        } else {
+          quizScrollRef.current?.scrollTo({ y: 0, animated: true });
+        }
+      }, 100);
     } else {
       setIsProcessing(true);
       const finalScore = isCorrect ? score + 1 : score;
@@ -1116,12 +1120,28 @@ export const NewQuizScreen = () => {
 
 
           {activeSocialQuiz ? (
-            <SocialPracticeQuestionView
-              quiz={activeSocialQuiz}
-              question={baseQuestion as any}
-              onContinue={handleContinue}
-              disabled={isProcessing}
-            />
+            <View style={{ width: '100%' }}>
+              {/* Stacked completed questions */}
+              {Array.from({ length: currentIndex }).map((_, idx) => (
+                <View key={`completed-social-${idx}`} style={{ marginBottom: 16 }}>
+                  <SocialPracticeQuestionView
+                    quiz={activeSocialQuiz}
+                    question={currentQuestions[idx]}
+                    onContinue={() => {}}
+                    isCompleted={true}
+                  />
+                </View>
+              ))}
+              {/* Active question */}
+              {currentIndex < currentQuestions.length ? (
+                <SocialPracticeQuestionView
+                  quiz={activeSocialQuiz}
+                  question={baseQuestion as any}
+                  onContinue={handleContinue}
+                  disabled={isProcessing}
+                />
+              ) : null}
+            </View>
           ) : isWordProblem ? (
             <StepBasedQuestionView
               question={baseQuestion as any}
