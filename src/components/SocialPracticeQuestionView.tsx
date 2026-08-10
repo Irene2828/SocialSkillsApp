@@ -285,11 +285,12 @@ const styles = StyleSheet.create({
   calloutLabel: {
     ...theme.typography.label,
     fontFamily: FONTS.semiBold,
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 10,
+    lineHeight: 14,
     letterSpacing: 0.8,
     color: 'rgba(42, 30, 92, 0.72)',
     marginBottom: 3,
+    textTransform: 'uppercase',
   },
   storyCalloutText: {
     ...theme.typography.body,
@@ -302,10 +303,11 @@ const styles = StyleSheet.create({
   },
   storyText: {
     ...theme.typography.body,
-    fontFamily: FONTS.regular,
+    fontFamily: FONTS.medium,
     fontSize: 16,
+    fontWeight: '500',
     lineHeight: 22,
-    letterSpacing: 0.15,
+    letterSpacing: 0.18,
     color: '#334155',
   },
   problemQuestionText: {
@@ -333,7 +335,7 @@ const styles = StyleSheet.create({
   },
   floatingQuestionLabel: {
     ...theme.typography.label,
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
     fontSize: 14,
     lineHeight: 18,
     letterSpacing: 0.8,

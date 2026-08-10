@@ -15,6 +15,7 @@ interface TopBarProps {
   title: string;
   onBack?: () => void;
   rightComponent?: React.ReactNode;
+  leftComponent?: React.ReactNode;
   hideHome?: boolean;
   hideTitle?: boolean;
   showSettingsAndRewards?: boolean;
@@ -23,7 +24,7 @@ interface TopBarProps {
   noEdgeToEdge?: boolean;
 }
 
-export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact, noEdgeToEdge }) => {
+export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, leftComponent, hideHome, hideTitle, showSettingsAndRewards, hideBorder, compact, noEdgeToEdge }) => {
   const navigation = useNavigation<NavigationProp<any>>();
   const { coinBalance } = useRewards();
   const [showSettings, setShowSettings] = useState(false);
@@ -73,7 +74,9 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, h
         </View>
 
         <View style={styles.side}>
-          {onBack ? (
+          {leftComponent ? (
+            leftComponent
+          ) : onBack ? (
             <Pressable 
               onPress={onBack} 
               style={{ 

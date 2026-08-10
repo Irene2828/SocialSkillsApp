@@ -680,7 +680,7 @@ const styles = StyleSheet.create({
   },
   floatingQuestionLabel: {
     ...theme.typography.label,
-    fontFamily: FONTS.semiBold,
+    fontFamily: FONTS.medium,
     fontSize: 14,
     lineHeight: 18,
     letterSpacing: 0.8,
