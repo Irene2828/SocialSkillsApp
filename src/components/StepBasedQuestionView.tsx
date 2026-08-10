@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 22,
     letterSpacing: 0.18,
-    color: '#0C4A6E',
+    color: '#334155',
   },
   factGrid: {
     flexDirection: 'row',
@@ -544,10 +544,10 @@ const styles = StyleSheet.create({
   factText: {
     ...theme.typography.body,
     fontFamily: FONTS.regular,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: 16,
+    lineHeight: 22,
     letterSpacing: 0.15,
-    color: '#0C4A6E',
+    color: '#334155',
     backgroundColor: 'transparent',
     borderWidth: 0,
     borderColor: 'transparent',
