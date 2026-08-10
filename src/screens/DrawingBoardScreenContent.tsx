@@ -28,9 +28,9 @@ const COLORS = [
 ];
 
 const STROKE_WIDTHS = [
-  { id: 'thin', value: 4, icon: 'ellipse' as const, size: 8 },
-  { id: 'medium', value: 8, icon: 'ellipse' as const, size: 14 },
-  { id: 'thick', value: 16, icon: 'ellipse' as const, size: 22 },
+  { id: 'thin', value: 4, icon: 'ellipse-outline' as const, size: 8 },
+  { id: 'medium', value: 8, icon: 'ellipse-outline' as const, size: 14 },
+  { id: 'thick', value: 16, icon: 'ellipse-outline' as const, size: 22 },
 ];
 
 export const DrawingBoardScreen = () => {
@@ -263,6 +263,8 @@ export const DrawingBoardScreen = () => {
               left: 'auto', 
               right: 16,
               shadowOpacity: 0,
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: 0,
               elevation: 0,
               borderWidth: 0.8,
               borderColor: '#00CED1',
@@ -271,7 +273,7 @@ export const DrawingBoardScreen = () => {
           ]} 
           onPress={() => setIsToolbarVisible(true)}
         >
-          <Ionicons name="eye-outline" size={24} color="#00CED1" />
+          <Ionicons name="brush-outline" size={24} color="#00CED1" />
         </Pressable>
       )}
       </GestureHandlerRootView>
