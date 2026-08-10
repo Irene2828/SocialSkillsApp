@@ -37,6 +37,7 @@ export const FloatingActionButton = ({
         style={[
           styles.button,
           isActive ? styles.activeButton : styles.inactiveButton,
+          { flexDirection: 'row' }
         ]}
         accessibilityLabel={accessibilityLabel}
       >
@@ -44,7 +45,7 @@ export const FloatingActionButton = ({
           name={isSave ? 'save-outline' : 'add'} 
           size={isTablet ? 18 : 16} 
           color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
-          style={{ position: 'absolute', left: isTablet ? 12 : 8 }}
+          style={{ marginRight: 4 }}
         />
         <Text style={[
           styles.buttonText,
