@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Pressable, Text, StyleSheet, DeviceEventEmitter, useWindowDimensions } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { theme, FONTS } from '../theme';
 
 interface FloatingActionButtonProps {
@@ -26,6 +27,8 @@ export const FloatingActionButton = ({
     }
   };
 
+  const isSave = label.toLowerCase().includes('save');
+
   return (
     <View style={styles.container}>
       <Pressable
@@ -37,6 +40,12 @@ export const FloatingActionButton = ({
         ]}
         accessibilityLabel={accessibilityLabel}
       >
+        <Ionicons 
+          name={isSave ? 'save-outline' : 'add'} 
+          size={isTablet ? 18 : 16} 
+          color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
+          style={{ position: 'absolute', left: isTablet ? 12 : 8 }}
+        />
         <Text style={[
           styles.buttonText,
           { 
