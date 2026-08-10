@@ -37,28 +37,14 @@ export const FloatingActionButton = ({
         style={[
           styles.button,
           isActive ? styles.activeButton : styles.inactiveButton,
-          { flexDirection: 'row' }
         ]}
         accessibilityLabel={accessibilityLabel}
       >
-        {isSave && (
-          <Ionicons 
-            name="save-outline" 
-            size={isTablet ? 18 : 16} 
-            color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
-            style={{ marginRight: 4 }}
-          />
-        )}
-        <Text style={{ 
-          color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)',
-          fontSize: isTablet ? 16 : 14,
-          fontFamily: FONTS.semiBold,
-          lineHeight: isTablet ? 20 : 17,
-          textAlign: 'center',
-          letterSpacing: 0.8,
-        }}>
-          {label}
-        </Text>
+        <Ionicons 
+          name={isSave ? 'save-outline' : 'add'} 
+          size={isTablet ? 42 : 36} 
+          color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
+        />
       </Pressable>
     </View>
   );
