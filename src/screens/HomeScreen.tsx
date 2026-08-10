@@ -238,7 +238,14 @@ export const HomeScreen = () => {
                     setIsShattered(prev => !prev);
                   }
                 }}
-                style={{ alignItems: 'center' }}
+                style={{
+                  alignItems: 'center',
+                  // @ts-ignore — web-only CSS interaction lock
+                  userSelect: 'none',
+                  WebkitUserSelect: 'none',
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation',
+                }}
               >
                 <View style={{ opacity: (isShattered && !webGLFailed && Platform.OS === 'web') ? 0 : 1, alignItems: 'center' }}>
                   <ElectrifiedText text="Smart" style={[styles.startTitle, { fontFamily: FONTS.medium, fontWeight: '500', color: titleColor, marginBottom: -2 }]} startIndex={0} totalLetters={13} />
