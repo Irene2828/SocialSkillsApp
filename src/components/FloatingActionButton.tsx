@@ -39,7 +39,11 @@ export const FloatingActionButton = ({
       >
         <Text style={[
           styles.buttonText,
-          { color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)' }
+          { 
+            color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)',
+            fontSize: isTablet ? 14 : 12,
+            lineHeight: isTablet ? 16 : 14,
+          }
         ]}>
           {label}
         </Text>
