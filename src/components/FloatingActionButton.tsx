@@ -42,7 +42,7 @@ export const FloatingActionButton = ({
       >
         <Ionicons 
           name={isSave ? 'save-outline' : 'add'} 
-          size={isTablet ? 42 : 36} 
+          size={isSave ? (isTablet ? 32 : 26) : (isTablet ? 42 : 36)} 
           color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
         />
       </Pressable>
