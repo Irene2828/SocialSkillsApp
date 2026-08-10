@@ -266,8 +266,8 @@ const styles = StyleSheet.create({
   calloutLabel: {
     ...theme.typography.label,
     fontFamily: FONTS.semiBold,
-    fontSize: 10,
-    lineHeight: 14,
+    fontSize: 16,
+    lineHeight: 22,
     letterSpacing: 0.8,
     color: 'rgba(42, 30, 92, 0.72)',
     marginBottom: 3,
@@ -284,8 +284,8 @@ const styles = StyleSheet.create({
   storyText: {
     ...theme.typography.body,
     fontFamily: FONTS.regular,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: 16,
+    lineHeight: 22,
     letterSpacing: 0.15,
     color: '#334155',
   },
