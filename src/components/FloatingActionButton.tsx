@@ -13,8 +13,8 @@ interface FloatingActionButtonProps {
 export const FloatingActionButton = ({
   isActive = false,
   onPress,
-  accessibilityLabel = "Add",
-  label = "Add",
+  accessibilityLabel = "+ Add",
+  label = "+ Add",
 }: FloatingActionButtonProps) => {
   const { width: SCREEN_WIDTH } = useWindowDimensions();
   const isTablet = SCREEN_WIDTH >= 768;
@@ -41,12 +41,14 @@ export const FloatingActionButton = ({
         ]}
         accessibilityLabel={accessibilityLabel}
       >
-        <Ionicons 
-          name={isSave ? 'save-outline' : 'add'} 
-          size={isTablet ? 18 : 16} 
-          color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
-          style={{ marginRight: 4 }}
-        />
+        {isSave && (
+          <Ionicons 
+            name="save-outline" 
+            size={isTablet ? 18 : 16} 
+            color={isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)'} 
+            style={{ marginRight: 4 }}
+          />
+        )}
         <Text style={[
           styles.buttonText,
           { 
