@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, useWindowDimensions } from 'react-native';
+import { Text, View, useWindowDimensions, DeviceEventEmitter } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -60,6 +60,9 @@ const AppTabs = () => {
           <AppTabBar 
             activeRoute={activeRoute.name} 
             isFabActive={isFabActive} 
+            onFabPress={() => {
+              DeviceEventEmitter.emit('FAB_PRESSED');
+            }}
           />
         );
       }}

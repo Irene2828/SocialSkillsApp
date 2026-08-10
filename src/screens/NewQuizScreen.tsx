@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions, InteractionManager } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Animated, Pressable, Alert, TextInput, Modal, ActivityIndicator, Platform, UIManager, Image, useWindowDimensions, InteractionManager, DeviceEventEmitter } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import { generateQuizFromImage } from '../utils/aiQuizGenerator';
@@ -103,6 +103,17 @@ export const NewQuizScreen = () => {
     const isFabActive = quizState === 'selection';
     navigation.setParams({ isFabActive });
   }, [quizState, navigation]);
+
+  useEffect(() => {
+    const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+      if (quizState === 'selection') {
+        setShowGenerateMenu(true);
+      }
+    });
+    return () => {
+      sub.remove();
+    };
+  }, [quizState]);
 
   const IQ_CATEGORIES: QuizCategory[] = [
     { id: 'iq_math_word_problems', title: 'Math Word Problems', description: 'Multi-step logic', icon: 'calculator-outline' }
