@@ -49,14 +49,14 @@ export const FloatingActionButton = ({
             style={{ marginRight: 4 }}
           />
         )}
-        <Text style={[
-          styles.buttonText,
-          { 
-            color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)',
-            fontSize: isTablet ? 14 : 12,
-            lineHeight: isTablet ? 16 : 14,
-          }
-        ]}>
+        <Text style={{ 
+          color: isActive ? '#0C4A6E' : 'rgba(255, 255, 255, 0.3)',
+          fontSize: isTablet ? 14 : 12,
+          fontFamily: FONTS.medium,
+          lineHeight: isTablet ? 18 : 15,
+          textAlign: 'center',
+          letterSpacing: 0.8,
+        }}>
           {label}
         </Text>
       </Pressable>
