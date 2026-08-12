@@ -5,7 +5,8 @@ import Svg, { Path } from 'react-native-svg';
 import { GlobalBackground } from './GlobalBackground';
 import { SpaceTouchCanvas } from './SpaceTouchCanvas';
 import { AppTabBar } from './AppTabBar';
-import { FONTS } from '../theme';
+import { TopBar } from './TopBar';
+import { theme, FONTS } from '../theme';
 
 const isWeb = Platform.OS === 'web';
 
@@ -496,9 +497,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         onPointerUp={handlePointerUp as any}
         onPointerCancel={handlePointerUp as any}
       />
-      <Pressable style={styles.closeButton} onPress={onClose}>
-        <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
-      </Pressable>
+      <TopBar
+        title={mode === 'constellations' ? 'Constellations' : mode === 'abc' ? 'ABC Letters' : 'Digits 1 to 10'}
+        showSettingsAndRewards={true}
+        onBack={onClose}
+      />
 
       {/* Subtle, semi-transparent extra wide SVG arrows right close under the letter */}
       <View style={styles.navControls}>
