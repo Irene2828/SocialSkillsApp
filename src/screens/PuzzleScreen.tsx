@@ -19,6 +19,7 @@ import { SilverDust } from '../components/SilverDust';
 import { useMood, getMoodColors } from '../context/MoodContext';
 import { ConstellationTracerOverlay } from '../components/ConstellationTracerOverlay';
 import { DrawingBoardScreenWeb } from './DrawingBoardScreenWeb';
+import { TracingMenuScreen } from './TracingMenuScreen';
 
 interface PuzzleConfig {
   id: string;
@@ -463,7 +464,7 @@ export const PuzzleScreen = () => {
   };
 
   if (activeTab === 'tracing') {
-    return <ConstellationTracerOverlay onClose={() => setActiveTab('none')} />;
+    return <TracingMenuScreen onBackToGames={() => setActiveTab('none')} />;
   }
 
   if (activeTab === 'drawing') {

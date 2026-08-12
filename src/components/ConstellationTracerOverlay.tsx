@@ -630,9 +630,61 @@ class Particle {
 
 interface Props {
   onClose: () => void;
+  mode?: 'constellations' | 'abc' | 'digits';
+  letterMode?: 'print' | 'cursive';
+  letterLang?: 'eng' | 'ukr';
 }
 
-export const ConstellationTracerOverlay = ({ onClose }: Props) => {
+const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const ABC_UKR = ['А','Б','В','Г','Ґ','Д','Е','Є','Ж','З','И','І','Ї','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'];
+const DIGITS_DATA = ['1','2','3','4','5','6','7','8','9','10'];
+
+const getLetterPoints = (char: string, isCursive: boolean) => {
+  // Return recognizable stroke points for tracing
+  if (char === '1') {
+    return [{ x: 0.35, y: 0.40 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }];
+  } else if (char === '2') {
+    return [{ x: 0.30, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.70, y: 0.35 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }];
+  } else if (char === '3') {
+    return [{ x: 0.30, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.45, y: 0.48 }, { x: 0.65, y: 0.60 }, { x: 0.30, y: 0.75 }];
+  } else if (char === '4') {
+    return [{ x: 0.60, y: 0.25 }, { x: 0.30, y: 0.55 }, { x: 0.75, y: 0.55 }, { x: 0.60, y: 0.55 }, { x: 0.60, y: 0.75 }];
+  } else if (char === '5') {
+    return [{ x: 0.68, y: 0.25 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.45 }, { x: 0.68, y: 0.55 }, { x: 0.35, y: 0.75 }];
+  } else if (char === '6') {
+    return [{ x: 0.65, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.35, y: 0.50 }];
+  } else if (char === '7') {
+    return [{ x: 0.30, y: 0.25 }, { x: 0.70, y: 0.25 }, { x: 0.40, y: 0.75 }];
+  } else if (char === '8') {
+    return [{ x: 0.50, y: 0.25 }, { x: 0.70, y: 0.38 }, { x: 0.50, y: 0.50 }, { x: 0.30, y: 0.63 }, { x: 0.50, y: 0.75 }, { x: 0.70, y: 0.63 }, { x: 0.50, y: 0.50 }, { x: 0.30, y: 0.38 }, { x: 0.50, y: 0.25 }];
+  } else if (char === '9') {
+    return [{ x: 0.65, y: 0.45 }, { x: 0.35, y: 0.45 }, { x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.65, y: 0.75 }];
+  } else if (char === '10') {
+    return [{ x: 0.22, y: 0.40 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.75 }, { x: 0.55, y: 0.25 }, { x: 0.78, y: 0.25 }, { x: 0.78, y: 0.75 }, { x: 0.55, y: 0.75 }, { x: 0.55, y: 0.25 }];
+  } else if (char === 'A' || char === 'А') {
+    return [{ x: 0.25, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.75, y: 0.75 }, { x: 0.37, y: 0.52 }, { x: 0.63, y: 0.52 }];
+  } else if (char === 'B' || char === 'Б') {
+    return [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }, { x: 0.65, y: 0.35 }, { x: 0.30, y: 0.48 }, { x: 0.70, y: 0.62 }, { x: 0.30, y: 0.75 }];
+  } else if (char === 'C' || char === 'С') {
+    return [{ x: 0.70, y: 0.33 }, { x: 0.40, y: 0.25 }, { x: 0.30, y: 0.50 }, { x: 0.40, y: 0.75 }, { x: 0.70, y: 0.67 }];
+  }
+
+  // Generic letter star points
+  return isCursive ? [
+    { x: 0.25, y: 0.65 },
+    { x: 0.40, y: 0.30 },
+    { x: 0.60, y: 0.70 },
+    { x: 0.75, y: 0.35 },
+  ] : [
+    { x: 0.30, y: 0.30 },
+    { x: 0.70, y: 0.30 },
+    { x: 0.50, y: 0.50 },
+    { x: 0.30, y: 0.70 },
+    { x: 0.70, y: 0.70 },
+  ];
+};
+
+export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', letterMode = 'print', letterLang = 'eng' }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   
   // Game state refs (to avoid re-renders in animation loop)
@@ -689,18 +741,38 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
       // Clear background
       ctx.clearRect(0, 0, width | 0, height | 0);
 
-      const constellation = CONSTELLATIONS[constellationIndex];
-      const normalizedPoints = constellation.points;
+      // Determine dataset and active target item
+      let nameText = '';
+      let normalizedPoints: Point[] = [];
+      let totalCount = CONSTELLATIONS.length;
+
+      if (mode === 'abc') {
+        const list = letterLang === 'ukr' ? ABC_UKR : ABC_ENG;
+        totalCount = list.length;
+        const char = list[constellationIndex % list.length];
+        nameText = `Letter ${char} (${letterMode === 'cursive' ? 'Cursive' : 'Print'})`;
+        normalizedPoints = getLetterPoints(char, letterMode === 'cursive');
+      } else if (mode === 'digits') {
+        totalCount = DIGITS_DATA.length;
+        const char = DIGITS_DATA[constellationIndex % DIGITS_DATA.length];
+        nameText = `Number ${char}`;
+        normalizedPoints = getLetterPoints(char, false);
+      } else {
+        const constellation = CONSTELLATIONS[constellationIndex % CONSTELLATIONS.length];
+        nameText = constellation.name;
+        normalizedPoints = constellation.points;
+      }
+
       const points = normalizedPoints.map(p => ({
         x: (p.x * width) | 0,
         y: (p.y * height) | 0
       }));
 
-      // Draw constellation name at bottom
+      // Draw target name / character at bottom
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+      ctx.font = '500 22px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(constellation.name, width / 2, height - 40);
+      ctx.fillText(nameText, width / 2, height - 40);
 
       // Draw dashed guide lines
       ctx.lineWidth = 2;
