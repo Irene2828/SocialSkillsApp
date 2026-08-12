@@ -9,6 +9,10 @@ import { FONTS } from '../theme';
 
 const isWeb = Platform.OS === 'web';
 
+const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const ABC_UKR = ['А','Б','В','Г','Ґ','Д','Е','Є','Ж','З','И','І','Ї','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'];
+const DIGITS_DATA = ['1','2','3','4','5','6','7','8','9','10'];
+
 interface Props {
   onClose: () => void;
   mode?: 'constellations' | 'abc' | 'digits';
