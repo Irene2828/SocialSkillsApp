@@ -40,7 +40,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, l
   const isTablet = width >= 768;
   const isSmallScreen = width < 375;
 
-  const headerFontSize = isTablet ? 26 : (isSmallScreen ? 14 : 16);
+  const headerFontSize = isTablet ? 26 : 16;
 
 
 

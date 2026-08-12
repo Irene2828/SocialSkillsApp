@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
     ...theme.typography.body,
     fontFamily: FONTS.medium,
     fontWeight: '500',
+    fontSize: 16,
     color: '#0C4A6E',
     letterSpacing: 0.8,
     marginBottom: theme.spacing.xs,
