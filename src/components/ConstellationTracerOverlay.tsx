@@ -472,7 +472,7 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
     <View style={styles.container}>
       <canvas
         ref={canvasRef}
-        style={[styles.canvas, { touchAction: 'none' } as any]}
+        style={{ ...styles.canvas, touchAction: 'none' } as any}
         onPointerDown={handlePointerDown as any}
         onPointerMove={handlePointerMove as any}
         onPointerUp={handlePointerUp as any}
