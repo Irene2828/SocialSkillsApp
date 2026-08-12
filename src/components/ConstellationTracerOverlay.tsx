@@ -1,633 +1,12 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, Text, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from './GlobalBackground';
 import { SpaceTouchCanvas } from './SpaceTouchCanvas';
+import { AppTabBar } from './AppTabBar';
 import { FONTS } from '../theme';
 
 const isWeb = Platform.OS === 'web';
-
-interface Point {
-  x: number;
-  y: number;
-}
-
-const SPACE_COLORS = ['#F6C774', '#5C9EAD', '#F4F4F4', '#E8D5B7'];
-
-interface Constellation {
-  name: string;
-  points: Point[];
-}
-
-// Normalized constellations (0.0 to 1.0) to scale with screen size
-const CONSTELLATIONS: Constellation[] = [
-  // 1. Ursa Major (Big Dipper)
-  {
-    name: 'Ursa Major (Big Dipper)',
-    points: [
-      { x: 0.18, y: 0.32 },
-      { x: 0.35, y: 0.40 },
-      { x: 0.48, y: 0.48 },
-      { x: 0.65, y: 0.45 },
-      { x: 0.78, y: 0.60 },
-      { x: 0.55, y: 0.68 },
-    ]
-  },
-  // 2. Cassiopeia (The Queen's Crown)
-  {
-    name: 'Cassiopeia (Queen Crown)',
-    points: [
-      { x: 0.18, y: 0.58 },
-      { x: 0.32, y: 0.35 },
-      { x: 0.50, y: 0.52 },
-      { x: 0.68, y: 0.33 },
-      { x: 0.82, y: 0.55 },
-    ]
-  },
-  // 3. Cygnus (The Celestial Swan)
-  {
-    name: 'Cygnus (The Swan)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.50, y: 0.45 },
-      { x: 0.22, y: 0.48 },
-      { x: 0.78, y: 0.48 },
-      { x: 0.50, y: 0.75 },
-    ]
-  },
-  // 4. Orion's Belt
-  {
-    name: "Orion's Belt",
-    points: [
-      { x: 0.28, y: 0.30 },
-      { x: 0.35, y: 0.50 },
-      { x: 0.50, y: 0.50 },
-      { x: 0.65, y: 0.50 },
-      { x: 0.72, y: 0.70 },
-    ]
-  },
-  // 5. Delphinus (The Playful Dolphin)
-  {
-    name: 'Delphinus (Dolphin)',
-    points: [
-      { x: 0.50, y: 0.30 },
-      { x: 0.32, y: 0.45 },
-      { x: 0.50, y: 0.60 },
-      { x: 0.68, y: 0.45 },
-      { x: 0.62, y: 0.78 },
-    ]
-  },
-  // 6. Leo (The Majestic Lion)
-  {
-    name: 'Leo (The Lion)',
-    points: [
-      { x: 0.20, y: 0.62 },
-      { x: 0.42, y: 0.62 },
-      { x: 0.55, y: 0.45 },
-      { x: 0.72, y: 0.32 },
-      { x: 0.82, y: 0.48 },
-    ]
-  },
-  // 7. Pegasus (Winged Horse)
-  {
-    name: 'Pegasus (Winged Horse)',
-    points: [
-      { x: 0.25, y: 0.32 },
-      { x: 0.75, y: 0.32 },
-      { x: 0.75, y: 0.65 },
-      { x: 0.25, y: 0.65 },
-      { x: 0.15, y: 0.78 },
-    ]
-  },
-  // 8. Taurus (The Mighty Bull)
-  {
-    name: 'Taurus (The Bull)',
-    points: [
-      { x: 0.20, y: 0.30 },
-      { x: 0.42, y: 0.48 },
-      { x: 0.50, y: 0.62 },
-      { x: 0.68, y: 0.48 },
-      { x: 0.80, y: 0.28 },
-    ]
-  },
-  // 9. Phoenix (Firebird)
-  {
-    name: 'Phoenix (Firebird)',
-    points: [
-      { x: 0.50, y: 0.72 },
-      { x: 0.50, y: 0.48 },
-      { x: 0.18, y: 0.35 },
-      { x: 0.50, y: 0.28 },
-      { x: 0.82, y: 0.35 },
-    ]
-  },
-  // 10. Lyra (Magic Diamond)
-  {
-    name: 'Lyra (Magic Diamond)',
-    points: [
-      { x: 0.50, y: 0.28 },
-      { x: 0.75, y: 0.48 },
-      { x: 0.50, y: 0.68 },
-      { x: 0.25, y: 0.48 },
-      { x: 0.50, y: 0.28 },
-    ]
-  },
-  // 11. Crux (Southern Cross)
-  {
-    name: 'Crux (Southern Cross)',
-    points: [
-      { x: 0.50, y: 0.28 },
-      { x: 0.50, y: 0.72 },
-      { x: 0.22, y: 0.48 },
-      { x: 0.78, y: 0.48 },
-    ]
-  },
-  // 12. Corona Australis (Star Arc)
-  {
-    name: 'Corona Australis (Star Arc)',
-    points: [
-      { x: 0.18, y: 0.40 },
-      { x: 0.32, y: 0.58 },
-      { x: 0.50, y: 0.65 },
-      { x: 0.68, y: 0.58 },
-      { x: 0.82, y: 0.40 },
-    ]
-  },
-  // 13. Triangulum (Star Triangle)
-  {
-    name: 'Triangulum (Star Triangle)',
-    points: [
-      { x: 0.50, y: 0.28 },
-      { x: 0.80, y: 0.65 },
-      { x: 0.20, y: 0.65 },
-      { x: 0.50, y: 0.28 },
-    ]
-  },
-  // 14. Aquila (The Eagle)
-  {
-    name: 'Aquila (The Eagle)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.20, y: 0.45 },
-      { x: 0.50, y: 0.55 },
-      { x: 0.80, y: 0.45 },
-      { x: 0.50, y: 0.75 },
-    ]
-  },
-  // 15. Scorpius (Star Hook)
-  {
-    name: 'Scorpius (Star Hook)',
-    points: [
-      { x: 0.25, y: 0.30 },
-      { x: 0.45, y: 0.38 },
-      { x: 0.55, y: 0.52 },
-      { x: 0.55, y: 0.68 },
-      { x: 0.72, y: 0.72 },
-      { x: 0.78, y: 0.60 },
-    ]
-  },
-  // 16. Andromeda (Chained Maiden)
-  {
-    name: 'Andromeda (Chained Maiden)',
-    points: [
-      { x: 0.20, y: 0.30 },
-      { x: 0.40, y: 0.42 },
-      { x: 0.60, y: 0.48 },
-      { x: 0.80, y: 0.65 },
-    ]
-  },
-  // 17. Aries (The Ram)
-  {
-    name: 'Aries (The Ram)',
-    points: [
-      { x: 0.25, y: 0.50 },
-      { x: 0.50, y: 0.40 },
-      { x: 0.75, y: 0.45 },
-    ]
-  },
-  // 18. Auriga (The Charioteer)
-  {
-    name: 'Auriga (The Charioteer)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.75, y: 0.40 },
-      { x: 0.65, y: 0.70 },
-      { x: 0.35, y: 0.70 },
-      { x: 0.25, y: 0.40 },
-      { x: 0.50, y: 0.25 },
-    ]
-  },
-  // 19. Boötes (The Kite)
-  {
-    name: 'Boötes (The Kite)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.70, y: 0.45 },
-      { x: 0.50, y: 0.75 },
-      { x: 0.30, y: 0.45 },
-      { x: 0.50, y: 0.25 },
-    ]
-  },
-  // 20. Cancer (The Crab)
-  {
-    name: 'Cancer (The Crab)',
-    points: [
-      { x: 0.25, y: 0.35 },
-      { x: 0.50, y: 0.50 },
-      { x: 0.75, y: 0.35 },
-      { x: 0.50, y: 0.50 },
-      { x: 0.50, y: 0.72 },
-    ]
-  },
-  // 21. Canis Major (Great Dog)
-  {
-    name: 'Canis Major (Great Dog)',
-    points: [
-      { x: 0.30, y: 0.30 },
-      { x: 0.50, y: 0.45 },
-      { x: 0.70, y: 0.60 },
-      { x: 0.60, y: 0.75 },
-      { x: 0.40, y: 0.65 },
-    ]
-  },
-  // 22. Canis Minor (Little Dog)
-  {
-    name: 'Canis Minor (Little Dog)',
-    points: [
-      { x: 0.35, y: 0.50 },
-      { x: 0.65, y: 0.50 },
-    ]
-  },
-  // 23. Capricornus (Sea Goat)
-  {
-    name: 'Capricornus (Sea Goat)',
-    points: [
-      { x: 0.20, y: 0.40 },
-      { x: 0.40, y: 0.65 },
-      { x: 0.65, y: 0.65 },
-      { x: 0.80, y: 0.35 },
-      { x: 0.50, y: 0.45 },
-    ]
-  },
-  // 24. Centaurus (The Centaur)
-  {
-    name: 'Centaurus (The Centaur)',
-    points: [
-      { x: 0.25, y: 0.70 },
-      { x: 0.45, y: 0.50 },
-      { x: 0.55, y: 0.30 },
-      { x: 0.75, y: 0.45 },
-      { x: 0.60, y: 0.65 },
-    ]
-  },
-  // 25. Cepheus (King House)
-  {
-    name: 'Cepheus (King House)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.75, y: 0.48 },
-      { x: 0.75, y: 0.75 },
-      { x: 0.25, y: 0.75 },
-      { x: 0.25, y: 0.48 },
-      { x: 0.50, y: 0.25 },
-    ]
-  },
-  // 26. Cetus (Sea Monster)
-  {
-    name: 'Cetus (Sea Monster)',
-    points: [
-      { x: 0.20, y: 0.40 },
-      { x: 0.35, y: 0.30 },
-      { x: 0.55, y: 0.50 },
-      { x: 0.75, y: 0.40 },
-      { x: 0.85, y: 0.60 },
-      { x: 0.65, y: 0.70 },
-    ]
-  },
-  // 27. Columba (Celestial Dove)
-  {
-    name: 'Columba (Celestial Dove)',
-    points: [
-      { x: 0.30, y: 0.40 },
-      { x: 0.50, y: 0.30 },
-      { x: 0.70, y: 0.45 },
-      { x: 0.50, y: 0.65 },
-    ]
-  },
-  // 28. Corvus (The Crow)
-  {
-    name: 'Corvus (The Crow)',
-    points: [
-      { x: 0.30, y: 0.35 },
-      { x: 0.70, y: 0.35 },
-      { x: 0.60, y: 0.68 },
-      { x: 0.25, y: 0.60 },
-      { x: 0.30, y: 0.35 },
-    ]
-  },
-  // 29. Crater (Star Goblet)
-  {
-    name: 'Crater (Star Goblet)',
-    points: [
-      { x: 0.30, y: 0.30 },
-      { x: 0.70, y: 0.30 },
-      { x: 0.60, y: 0.55 },
-      { x: 0.50, y: 0.75 },
-      { x: 0.40, y: 0.55 },
-      { x: 0.30, y: 0.30 },
-    ]
-  },
-  // 30. Draco (The Dragon)
-  {
-    name: 'Draco (The Dragon)',
-    points: [
-      { x: 0.20, y: 0.30 },
-      { x: 0.40, y: 0.25 },
-      { x: 0.65, y: 0.40 },
-      { x: 0.50, y: 0.60 },
-      { x: 0.75, y: 0.70 },
-      { x: 0.85, y: 0.55 },
-    ]
-  },
-  // 31. Gemini (The Twins)
-  {
-    name: 'Gemini (The Twins)',
-    points: [
-      { x: 0.30, y: 0.25 },
-      { x: 0.30, y: 0.75 },
-      { x: 0.70, y: 0.75 },
-      { x: 0.70, y: 0.25 },
-    ]
-  },
-  // 32. Hercules (Hero Shield)
-  {
-    name: 'Hercules (Hero Shield)',
-    points: [
-      { x: 0.35, y: 0.30 },
-      { x: 0.65, y: 0.30 },
-      { x: 0.75, y: 0.55 },
-      { x: 0.50, y: 0.75 },
-      { x: 0.25, y: 0.55 },
-      { x: 0.35, y: 0.30 },
-    ]
-  },
-  // 33. Hydra (Water Snake)
-  {
-    name: 'Hydra (Water Snake)',
-    points: [
-      { x: 0.15, y: 0.45 },
-      { x: 0.32, y: 0.35 },
-      { x: 0.50, y: 0.55 },
-      { x: 0.70, y: 0.40 },
-      { x: 0.88, y: 0.60 },
-    ]
-  },
-  // 34. Hydra Minor (Little Serpent)
-  {
-    name: 'Hydra Minor (Little Serpent)',
-    points: [
-      { x: 0.25, y: 0.55 },
-      { x: 0.45, y: 0.38 },
-      { x: 0.75, y: 0.55 },
-    ]
-  },
-  // 35. Libra (The Scales)
-  {
-    name: 'Libra (The Scales)',
-    points: [
-      { x: 0.50, y: 0.30 },
-      { x: 0.25, y: 0.50 },
-      { x: 0.75, y: 0.50 },
-      { x: 0.50, y: 0.72 },
-      { x: 0.50, y: 0.30 },
-    ]
-  },
-  // 36. Lupus (Star Wolf)
-  {
-    name: 'Lupus (Star Wolf)',
-    points: [
-      { x: 0.25, y: 0.40 },
-      { x: 0.45, y: 0.30 },
-      { x: 0.65, y: 0.50 },
-      { x: 0.55, y: 0.75 },
-      { x: 0.35, y: 0.65 },
-    ]
-  },
-  // 37. Lynx (The Lynx)
-  {
-    name: 'Lynx (The Lynx)',
-    points: [
-      { x: 0.18, y: 0.65 },
-      { x: 0.40, y: 0.50 },
-      { x: 0.62, y: 0.40 },
-      { x: 0.82, y: 0.30 },
-    ]
-  },
-  // 38. Monoceros (The Unicorn)
-  {
-    name: 'Monoceros (The Unicorn)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.35, y: 0.50 },
-      { x: 0.65, y: 0.65 },
-      { x: 0.75, y: 0.45 },
-    ]
-  },
-  // 39. Ophiuchus (Serpent Bearer)
-  {
-    name: 'Ophiuchus (Serpent Bearer)',
-    points: [
-      { x: 0.50, y: 0.25 },
-      { x: 0.25, y: 0.45 },
-      { x: 0.35, y: 0.75 },
-      { x: 0.65, y: 0.75 },
-      { x: 0.75, y: 0.45 },
-      { x: 0.50, y: 0.25 },
-    ]
-  },
-  // 40. Orion (Great Hunter)
-  {
-    name: 'Orion (Great Hunter)',
-    points: [
-      { x: 0.30, y: 0.25 },
-      { x: 0.70, y: 0.25 },
-      { x: 0.50, y: 0.50 },
-      { x: 0.25, y: 0.75 },
-      { x: 0.75, y: 0.75 },
-    ]
-  },
-  // 41. Pisces (The Fishes)
-  {
-    name: 'Pisces (The Fishes)',
-    points: [
-      { x: 0.20, y: 0.30 },
-      { x: 0.40, y: 0.65 },
-      { x: 0.60, y: 0.65 },
-      { x: 0.80, y: 0.30 },
-    ]
-  },
-  // 42. Piscis Austrinus (Fish)
-  {
-    name: 'Piscis Austrinus (Fish)',
-    points: [
-      { x: 0.25, y: 0.50 },
-      { x: 0.50, y: 0.32 },
-      { x: 0.75, y: 0.50 },
-      { x: 0.50, y: 0.68 },
-      { x: 0.25, y: 0.50 },
-    ]
-  },
-  // 43. Sagitta (The Arrow)
-  {
-    name: 'Sagitta (The Arrow)',
-    points: [
-      { x: 0.20, y: 0.50 },
-      { x: 0.70, y: 0.50 },
-      { x: 0.85, y: 0.35 },
-      { x: 0.70, y: 0.50 },
-      { x: 0.85, y: 0.65 },
-    ]
-  },
-  // 44. Sagittarius (The Archer)
-  {
-    name: 'Sagittarius (The Archer)',
-    points: [
-      { x: 0.25, y: 0.60 },
-      { x: 0.45, y: 0.40 },
-      { x: 0.70, y: 0.30 },
-      { x: 0.75, y: 0.55 },
-      { x: 0.55, y: 0.70 },
-      { x: 0.45, y: 0.40 },
-    ]
-  },
-  // 45. Serpens (The Snake)
-  {
-    name: 'Serpens (The Snake)',
-    points: [
-      { x: 0.20, y: 0.65 },
-      { x: 0.35, y: 0.40 },
-      { x: 0.55, y: 0.60 },
-      { x: 0.75, y: 0.35 },
-    ]
-  },
-  // 46. Ursa Minor (Little Dipper)
-  {
-    name: 'Ursa Minor (Little Dipper)',
-    points: [
-      { x: 0.80, y: 0.25 },
-      { x: 0.65, y: 0.35 },
-      { x: 0.50, y: 0.42 },
-      { x: 0.35, y: 0.50 },
-      { x: 0.20, y: 0.65 },
-      { x: 0.40, y: 0.75 },
-    ]
-  },
-  // 47. Vela (The Sails)
-  {
-    name: 'Vela (The Sails)',
-    points: [
-      { x: 0.30, y: 0.70 },
-      { x: 0.50, y: 0.25 },
-      { x: 0.75, y: 0.60 },
-      { x: 0.30, y: 0.70 },
-    ]
-  },
-  // 48. Virgo (The Maiden)
-  {
-    name: 'Virgo (The Maiden)',
-    points: [
-      { x: 0.25, y: 0.30 },
-      { x: 0.45, y: 0.45 },
-      { x: 0.65, y: 0.35 },
-      { x: 0.75, y: 0.65 },
-      { x: 0.50, y: 0.70 },
-    ]
-  },
-  // 49. Volans (Flying Fish)
-  {
-    name: 'Volans (Flying Fish)',
-    points: [
-      { x: 0.50, y: 0.30 },
-      { x: 0.25, y: 0.55 },
-      { x: 0.50, y: 0.75 },
-      { x: 0.75, y: 0.55 },
-      { x: 0.50, y: 0.30 },
-    ]
-  },
-  // 50. Vulpecula (The Fox)
-  {
-    name: 'Vulpecula (The Fox)',
-    points: [
-      { x: 0.20, y: 0.45 },
-      { x: 0.50, y: 0.45 },
-      { x: 0.80, y: 0.55 },
-    ]
-  }
-];
-
-const COLORS = {
-  bg: '#0F172A',
-  star: '#F6C774',
-  guide: 'rgba(255, 255, 255, 0.2)',
-  trace: '#5C9EAD',
-  burst: '#FFD700',
-};
-
-const SNAP_RADIUS = 50;
-
-class Particle {
-  active = false;
-  x = 0;
-  y = 0;
-  vx = 0;
-  vy = 0;
-  life = 0;
-  maxLife = 0;
-  color = COLORS.trace;
-  size = 2;
-
-  spawn(x: number, y: number, isBurst = false) {
-    this.active = true;
-    this.x = x;
-    this.y = y;
-    this.color = SPACE_COLORS[Math.floor(Math.random() * SPACE_COLORS.length)];
-    if (isBurst) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = Math.random() * 5 + 2;
-      this.vx = Math.cos(angle) * speed;
-      this.vy = Math.sin(angle) * speed;
-      this.maxLife = Math.random() * 30 + 30; // 30-60 frames
-      this.size = Math.random() * 3 + 2;
-    } else {
-      this.vx = (Math.random() - 0.5) * 2;
-      this.vy = (Math.random() - 0.5) * 2;
-      this.maxLife = Math.random() * 15 + 15; // 15-30 frames
-      this.size = Math.random() * 2 + 1;
-    }
-    this.life = this.maxLife;
-  }
-
-  update() {
-    if (!this.active) return;
-    this.x += this.vx;
-    this.y += this.vy;
-    this.life--;
-    if (this.life <= 0) {
-      this.active = false;
-    }
-  }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    if (!this.active) return;
-    const alpha = this.life / this.maxLife;
-    ctx.globalAlpha = alpha;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x | 0, this.y | 0, this.size | 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.globalAlpha = 1.0;
-  }
-}
 
 interface Props {
   onClose: () => void;
@@ -642,67 +21,101 @@ const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P'
 const ABC_UKR = ['А','Б','В','Г','Ґ','Д','Е','Є','Ж','З','И','І','Ї','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'];
 const DIGITS_DATA = ['1','2','3','4','5','6','7','8','9','10'];
 
-const getLetterPoints = (char: string, isCursive: boolean) => {
-  // Return recognizable stroke points for tracing
+// Comprehensive stroke guides for smooth handwriting flow
+const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
   if (char === '1') {
-    return [{ x: 0.35, y: 0.40 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }];
+    return [
+      [{ x: 0.38, y: 0.38 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
+      [{ x: 0.38, y: 0.75 }, { x: 0.62, y: 0.75 }],
+    ];
   } else if (char === '2') {
-    return [{ x: 0.30, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.70, y: 0.35 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }];
+    return [
+      [{ x: 0.32, y: 0.35 }, { x: 0.50, y: 0.24 }, { x: 0.68, y: 0.35 }, { x: 0.32, y: 0.75 }, { x: 0.68, y: 0.75 }]
+    ];
   } else if (char === '3') {
-    return [{ x: 0.30, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.45, y: 0.48 }, { x: 0.65, y: 0.60 }, { x: 0.30, y: 0.75 }];
+    return [
+      [{ x: 0.32, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.46, y: 0.48 }, { x: 0.65, y: 0.60 }, { x: 0.32, y: 0.75 }]
+    ];
   } else if (char === '4') {
-    return [{ x: 0.60, y: 0.25 }, { x: 0.30, y: 0.55 }, { x: 0.75, y: 0.55 }, { x: 0.60, y: 0.55 }, { x: 0.60, y: 0.75 }];
+    return [
+      [{ x: 0.58, y: 0.25 }, { x: 0.30, y: 0.55 }, { x: 0.72, y: 0.55 }],
+      [{ x: 0.58, y: 0.45 }, { x: 0.58, y: 0.75 }],
+    ];
   } else if (char === '5') {
-    return [{ x: 0.68, y: 0.25 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.45 }, { x: 0.68, y: 0.55 }, { x: 0.35, y: 0.75 }];
+    return [
+      [{ x: 0.65, y: 0.25 }, { x: 0.38, y: 0.25 }],
+      [{ x: 0.38, y: 0.25 }, { x: 0.38, y: 0.48 }, { x: 0.65, y: 0.58 }, { x: 0.35, y: 0.75 }],
+    ];
   } else if (char === '6') {
-    return [{ x: 0.65, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.35, y: 0.50 }];
+    return [
+      [{ x: 0.62, y: 0.25 }, { x: 0.35, y: 0.48 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.35, y: 0.50 }]
+    ];
   } else if (char === '7') {
-    return [{ x: 0.30, y: 0.25 }, { x: 0.70, y: 0.25 }, { x: 0.40, y: 0.75 }];
+    return [
+      [{ x: 0.32, y: 0.25 }, { x: 0.68, y: 0.25 }, { x: 0.42, y: 0.75 }]
+    ];
   } else if (char === '8') {
-    return [{ x: 0.50, y: 0.25 }, { x: 0.70, y: 0.38 }, { x: 0.50, y: 0.50 }, { x: 0.30, y: 0.63 }, { x: 0.50, y: 0.75 }, { x: 0.70, y: 0.63 }, { x: 0.50, y: 0.50 }, { x: 0.30, y: 0.38 }, { x: 0.50, y: 0.25 }];
+    return [
+      [{ x: 0.50, y: 0.25 }, { x: 0.68, y: 0.37 }, { x: 0.50, y: 0.50 }, { x: 0.32, y: 0.63 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.63 }, { x: 0.50, y: 0.50 }, { x: 0.32, y: 0.37 }, { x: 0.50, y: 0.25 }]
+    ];
   } else if (char === '9') {
-    return [{ x: 0.65, y: 0.45 }, { x: 0.35, y: 0.45 }, { x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.65, y: 0.75 }];
+    return [
+      [{ x: 0.65, y: 0.48 }, { x: 0.35, y: 0.48 }, { x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.65, y: 0.75 }]
+    ];
   } else if (char === '10') {
-    return [{ x: 0.22, y: 0.40 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.75 }, { x: 0.55, y: 0.25 }, { x: 0.78, y: 0.25 }, { x: 0.78, y: 0.75 }, { x: 0.55, y: 0.75 }, { x: 0.55, y: 0.25 }];
+    return [
+      [{ x: 0.22, y: 0.40 }, { x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }],
+      [{ x: 0.55, y: 0.25 }, { x: 0.78, y: 0.25 }, { x: 0.78, y: 0.75 }, { x: 0.55, y: 0.75 }, { x: 0.55, y: 0.25 }],
+    ];
   } else if (char === 'A' || char === 'А') {
-    return [{ x: 0.25, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.75, y: 0.75 }, { x: 0.37, y: 0.52 }, { x: 0.63, y: 0.52 }];
+    return [
+      [{ x: 0.25, y: 0.75 }, { x: 0.50, y: 0.25 }],
+      [{ x: 0.50, y: 0.25 }, { x: 0.75, y: 0.75 }],
+      [{ x: 0.36, y: 0.52 }, { x: 0.64, y: 0.52 }],
+    ];
   } else if (char === 'B' || char === 'Б') {
-    return [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }, { x: 0.65, y: 0.35 }, { x: 0.30, y: 0.48 }, { x: 0.70, y: 0.62 }, { x: 0.30, y: 0.75 }];
+    return [
+      [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }],
+      [{ x: 0.30, y: 0.25 }, { x: 0.65, y: 0.36 }, { x: 0.30, y: 0.48 }],
+      [{ x: 0.30, y: 0.48 }, { x: 0.70, y: 0.62 }, { x: 0.30, y: 0.75 }],
+    ];
   } else if (char === 'C' || char === 'С') {
-    return [{ x: 0.70, y: 0.33 }, { x: 0.40, y: 0.25 }, { x: 0.30, y: 0.50 }, { x: 0.40, y: 0.75 }, { x: 0.70, y: 0.67 }];
+    return [
+      [{ x: 0.70, y: 0.33 }, { x: 0.42, y: 0.25 }, { x: 0.30, y: 0.50 }, { x: 0.42, y: 0.75 }, { x: 0.70, y: 0.67 }]
+    ];
   }
 
-  // Generic letter star points
-  return isCursive ? [
-    { x: 0.25, y: 0.65 },
-    { x: 0.40, y: 0.30 },
-    { x: 0.60, y: 0.70 },
-    { x: 0.75, y: 0.35 },
-  ] : [
-    { x: 0.30, y: 0.30 },
-    { x: 0.70, y: 0.30 },
-    { x: 0.50, y: 0.50 },
-    { x: 0.30, y: 0.70 },
-    { x: 0.70, y: 0.70 },
+  // Generic natural multi-stroke preschool handwriting pattern
+  if (isCursive) {
+    return [
+      [{ x: 0.22, y: 0.68 }, { x: 0.38, y: 0.28 }, { x: 0.62, y: 0.72 }, { x: 0.78, y: 0.32 }]
+    ];
+  }
+  return [
+    [{ x: 0.28, y: 0.25 }, { x: 0.72, y: 0.25 }],
+    [{ x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
+    [{ x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }],
   ];
 };
 
-export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', letterMode = 'print', letterLang = 'eng' }: Props) => {
+export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', letterMode = 'print', letterLang = 'eng', onModeChange, onLangChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  
-  // Game state refs (to avoid re-renders in animation loop)
+  const [itemIndex, setItemIndex] = useState(0);
+
   const stateRef = useRef({
     width: 0,
     height: 0,
-    constellationIndex: 0,
-    connectedStars: [0], // always start at first star
     pointerActive: false,
-    pointerX: -100,
-    pointerY: -100,
-    successState: false,
-    successTimer: 0,
-    particles: Array.from({ length: 200 }, () => new Particle()),
+    userDrawnStrokes: [] as { x: number; y: number }[][],
+    currentStroke: [] as { x: number; y: number }[],
+    completed: false,
   });
+
+  useEffect(() => {
+    stateRef.current.userDrawnStrokes = [];
+    stateRef.current.currentStroke = [];
+    stateRef.current.completed = false;
+  }, [itemIndex, mode, letterMode, letterLang]);
 
   useEffect(() => {
     if (!isWeb || !canvasRef.current) return;
@@ -726,185 +139,101 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
     resize();
     window.addEventListener('resize', resize);
 
-    const spawnParticles = (x: number, y: number, count: number, isBurst = false) => {
-      let spawned = 0;
-      for (const p of stateRef.current.particles) {
-        if (!p.active) {
-          p.spawn(x, y, isBurst);
-          spawned++;
-          if (spawned >= count) break;
-        }
-      }
-    };
-
     const draw = () => {
       const state = stateRef.current;
-      const { width, height, constellationIndex, connectedStars, pointerActive, pointerX, pointerY, successState } = state;
+      const { width, height, userDrawnStrokes, currentStroke } = state;
       
-      // Clear background
       ctx.clearRect(0, 0, width | 0, height | 0);
 
-      // Determine dataset and active target item
       let nameText = '';
-      let normalizedPoints: Point[] = [];
-      let totalCount = CONSTELLATIONS.length;
+      let charToDraw = '';
 
       if (mode === 'abc') {
         const list = letterLang === 'ukr' ? ABC_UKR : ABC_ENG;
-        totalCount = list.length;
-        const char = list[constellationIndex % list.length];
-        nameText = `Letter ${char} (${letterMode === 'cursive' ? 'Cursive' : 'Print'})`;
-        normalizedPoints = getLetterPoints(char, letterMode === 'cursive');
+        charToDraw = list[itemIndex % list.length];
+        nameText = `Letter ${charToDraw} (${letterMode === 'cursive' ? 'Cursive 𝓐a' : 'Print Aa'})`;
       } else if (mode === 'digits') {
-        totalCount = DIGITS_DATA.length;
-        const char = DIGITS_DATA[constellationIndex % DIGITS_DATA.length];
-        nameText = `Number ${char}`;
-        normalizedPoints = getLetterPoints(char, false);
+        charToDraw = DIGITS_DATA[itemIndex % DIGITS_DATA.length];
+        nameText = `Number ${charToDraw}`;
       } else {
-        const constellation = CONSTELLATIONS[constellationIndex % CONSTELLATIONS.length];
-        nameText = constellation.name;
-        normalizedPoints = constellation.points;
+        nameText = `Constellation ${itemIndex + 1}`;
       }
 
-      const points = normalizedPoints.map(p => ({
-        x: (p.x * width) | 0,
-        y: (p.y * height) | 0
-      }));
-
-      // Draw target name / character at bottom
+      // Title at bottom above footer
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '500 22px system-ui, -apple-system, sans-serif';
+      ctx.font = '500 20px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(nameText, width / 2, height - 40);
+      ctx.fillText(nameText, width / 2, height - 90);
 
-      // Render clear real letter/digit font watermark in the center for preschool tracing
+      // Render REAL preschool letter watermark with handwriting stroke direction guides
       if (mode === 'abc' || mode === 'digits') {
-        const char = mode === 'abc' 
-          ? (letterLang === 'ukr' ? ABC_UKR : ABC_ENG)[constellationIndex % (letterLang === 'ukr' ? ABC_UKR : ABC_ENG).length]
-          : DIGITS_DATA[constellationIndex % DIGITS_DATA.length];
-        
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-        ctx.lineWidth = 3;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+        ctx.lineWidth = 4;
         ctx.font = letterMode === 'cursive' 
-          ? 'italic bold 200px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
-          : 'bold 220px system-ui, -apple-system, "Nunito", sans-serif';
+          ? 'italic bold 210px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
+          : 'bold 230px system-ui, -apple-system, "Nunito", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(char, width / 2, height / 2);
-        ctx.strokeText(char, width / 2, height / 2);
+        ctx.fillText(charToDraw, width / 2, height / 2 - 20);
+        ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
+        ctx.restore();
+
+        // Draw dotted stroke guidelines with arrow direction dots
+        const strokes = GET_HANDWRITING_STROKES(charToDraw, letterMode === 'cursive');
+        ctx.save();
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = 'rgba(190, 242, 100, 0.45)';
+        ctx.setLineDash([8, 12]);
+        for (const stroke of strokes) {
+          if (stroke.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(stroke[0].x * width, stroke[0].y * height - 20);
+            for (let i = 1; i < stroke.length; i++) {
+              ctx.lineTo(stroke[i].x * width, stroke[i].y * height - 20);
+            }
+            ctx.stroke();
+
+            // Draw start direction dot
+            ctx.fillStyle = '#BEF264';
+            ctx.beginPath();
+            ctx.arc(stroke[0].x * width, stroke[0].y * height - 20, 8, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
         ctx.restore();
       }
 
-      // Draw dashed guide lines
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = COLORS.guide;
-      ctx.setLineDash([10, 12]);
-      ctx.beginPath();
-      for (let i = 0; i < points.length - 1; i++) {
-        ctx.moveTo(points[i].x, points[i].y);
-        ctx.lineTo(points[i+1].x, points[i+1].y);
-      }
-      ctx.stroke();
-      ctx.setLineDash([]);
+      // Render user's smooth handwriting ink strokes
+      ctx.save();
+      ctx.lineWidth = 10;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#5C9EAD';
+      ctx.shadowColor = '#5C9EAD';
+      ctx.shadowBlur = 10;
 
-      // Draw solid lines for connected stars
-      if (connectedStars.length > 1) {
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = successState ? COLORS.burst : COLORS.trace;
-        ctx.beginPath();
-        ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
-        for (let i = 1; i < connectedStars.length; i++) {
-          ctx.lineTo(points[connectedStars[i]].x, points[connectedStars[i]].y);
-        }
-        ctx.stroke();
-      }
-
-      // Draw current trace line to pointer
-      if (pointerActive && !successState && connectedStars.length > 0) {
-        const lastConnectedIndex = connectedStars[connectedStars.length - 1];
-        const startPoint = points[lastConnectedIndex];
-        
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = COLORS.trace;
-        ctx.beginPath();
-        ctx.moveTo(startPoint.x, startPoint.y);
-        ctx.lineTo(pointerX | 0, pointerY | 0);
-        ctx.stroke();
-
-        // Emit dust trail
-        if (Math.random() > 0.5) {
-          spawnParticles(pointerX, pointerY, 1, false);
-        }
-      }
-
-      // Draw star nodes
-      for (let i = 0; i < points.length; i++) {
-        const p = points[i];
-        const isConnected = connectedStars.includes(i);
-        const isNext = !successState && i === connectedStars.length;
-
-        // Glow
-        const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 20 : 15);
-        gradient.addColorStop(0, isConnected || successState ? COLORS.star : 'rgba(246, 199, 116, 0.5)');
-        gradient.addColorStop(1, 'transparent');
-        
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 20, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Core
-        ctx.fillStyle = '#FFF';
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, isNext ? 4 : 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Update and draw particles
-      for (const p of state.particles) {
-        if (p.active) {
-          p.update();
-          p.draw(ctx);
-        }
-      }
-
-      // Handle success state transition
-      if (successState) {
-        state.successTimer -= 16; // approx 16ms per frame
-        if (state.successTimer <= 0) {
-          // Next constellation
-          state.constellationIndex = (state.constellationIndex + 1) % CONSTELLATIONS.length;
-          state.connectedStars = [0];
-          state.successState = false;
-        }
-      } else if (pointerActive) {
-        // Proximity snapping check for the next star
-        const nextIndex = connectedStars.length;
-        if (nextIndex < points.length) {
-          const nextTarget = points[nextIndex];
-          const dx = pointerX - nextTarget.x;
-          const dy = pointerY - nextTarget.y;
-          const distSq = dx * dx + dy * dy;
-          
-          if (distSq < SNAP_RADIUS * SNAP_RADIUS) {
-            // Snapped!
-            state.connectedStars.push(nextIndex);
-            
-            // Check for completion
-            if (state.connectedStars.length === points.length) {
-              state.successState = true;
-              state.successTimer = 1500; // 1.5 seconds pause
-              
-              // Celebrate burst
-              for (let i = 0; i < points.length; i++) {
-                spawnParticles(points[i].x, points[i].y, 15, true);
-              }
-            }
+      for (const stroke of userDrawnStrokes) {
+        if (stroke.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(stroke[0].x, stroke[0].y);
+          for (let i = 1; i < stroke.length; i++) {
+            ctx.lineTo(stroke[i].x, stroke[i].y);
           }
+          ctx.stroke();
         }
       }
+
+      if (currentStroke.length > 1) {
+        ctx.beginPath();
+        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+        for (let i = 1; i < currentStroke.length; i++) {
+          ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
 
       animationFrameId = requestAnimationFrame(draw);
     };
@@ -915,29 +244,45 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       window.removeEventListener('resize', resize);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [itemIndex, mode, letterMode, letterLang]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
     stateRef.current.pointerActive = true;
-    stateRef.current.pointerX = e.nativeEvent.offsetX;
-    stateRef.current.pointerY = e.nativeEvent.offsetY;
+    const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
+    stateRef.current.currentStroke = [pt];
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (stateRef.current.pointerActive) {
-      stateRef.current.pointerX = e.nativeEvent.offsetX;
-      stateRef.current.pointerY = e.nativeEvent.offsetY;
+      const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
+      stateRef.current.currentStroke.push(pt);
     }
   };
 
   const handlePointerUp = () => {
-    stateRef.current.pointerActive = false;
+    if (stateRef.current.pointerActive) {
+      stateRef.current.pointerActive = false;
+      if (stateRef.current.currentStroke.length > 0) {
+        stateRef.current.userDrawnStrokes.push([...stateRef.current.currentStroke]);
+        stateRef.current.currentStroke = [];
+      }
+    }
+  };
+
+  const handleNextItem = () => {
+    const list = mode === 'abc' ? (letterLang === 'ukr' ? ABC_UKR : ABC_ENG) : mode === 'digits' ? DIGITS_DATA : Array.from({ length: 50 });
+    setItemIndex(prev => (prev + 1) % list.length);
+  };
+
+  const handlePrevItem = () => {
+    const list = mode === 'abc' ? (letterLang === 'ukr' ? ABC_UKR : ABC_ENG) : mode === 'digits' ? DIGITS_DATA : Array.from({ length: 50 });
+    setItemIndex(prev => (prev - 1 + list.length) % list.length);
   };
 
   if (!isWeb) {
     return (
       <View style={styles.container}>
-        <Text style={{color: 'white'}}>Constellation Tracer requires Web Environment</Text>
+        <Text style={{color: 'white'}}>Tracing requires Web Environment</Text>
       </View>
     );
   }
@@ -958,7 +303,17 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </Pressable>
 
-      {/* Top-Right Toggles strictly for ABC Letters tracing screen */}
+      {/* Navigation Arrows for next/prev letter */}
+      <View style={styles.navControls}>
+        <Pressable style={styles.navChip} onPress={handlePrevItem}>
+          <Ionicons name="chevron-back" size={20} color="#FFFFFF" />
+        </Pressable>
+        <Pressable style={styles.navChip} onPress={handleNextItem}>
+          <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
+        </Pressable>
+      </View>
+
+      {/* Top-Right Toggles strictly for ABC Letters screen */}
       {mode === 'abc' && (
         <View style={styles.topRightControls}>
           <Pressable 
@@ -980,6 +335,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           </Pressable>
         </View>
       )}
+
+      {/* Footer bar present on folder opening */}
+      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Default" />
     </View>
   );
 };
@@ -1006,7 +364,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
-    zIndex: 20,
+    zIndex: 30,
+  },
+  navControls: {
+    position: 'absolute',
+    top: 16,
+    left: 74,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    zIndex: 30,
+  },
+  navChip: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   topRightControls: {
     position: 'absolute',

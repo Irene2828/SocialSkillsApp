@@ -6,6 +6,7 @@ import { TopBar } from '../components/TopBar';
 import { Card } from '../components/Card';
 import { theme, FONTS } from '../theme';
 import { ConstellationTracerOverlay } from '../components/ConstellationTracerOverlay';
+import { AppTabBar } from '../components/AppTabBar';
 import { Ionicons } from '@expo/vector-icons';
 
 interface TracingScreenProps {
@@ -84,6 +85,7 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
           </View>
         </ScrollView>
       </ScreenWrapper>
+      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Default" />
     </View>
   );
 };
@@ -94,30 +96,28 @@ const styles = StyleSheet.create({
     paddingBottom: 95,
   },
   folderCard: {
+    width: '100%',
+    height: 158,
+    paddingHorizontal: theme.spacing.md,
+    paddingTop: theme.spacing.md / 2,
+    paddingBottom: theme.spacing.md / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing.md,
-    borderRadius: theme.borderRadius.md,
-    backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    borderWidth: 1.2,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    height: 140,
   },
   cardIconContainer: {
+    marginBottom: 4,
     width: 60,
     height: 60,
     borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: theme.spacing.sm,
+    overflow: 'hidden',
   },
   cardName: {
     ...theme.typography.body,
-    fontFamily: FONTS.medium,
-    fontWeight: '500',
-    color: '#FFFFFF',
-    fontSize: 16,
+    color: '#0C4A6E',
     textAlign: 'center',
+    fontWeight: '400',
   },
   topRightToggles: {
     flexDirection: 'row',
