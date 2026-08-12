@@ -129,7 +129,7 @@ export const AppTabBar = ({
       pointerEvents={isImmersive ? 'none' : 'auto'}
     >
       {renderTab('NewQuiz', 'Learn', 'document-text-outline', activeRoute === 'NewQuiz')}
-      {renderTab('Tasks', 'Do', 'list-outline', activeRoute === 'Tasks')}
+      {renderTab('Tasks', 'Tasks', 'list-outline', activeRoute === 'Tasks')}
       
       {/* Center Floating Action Button Container with fluid auto-balancing grid movement */}
       <Animated.View style={{ flex: centerFlex, alignItems: 'center', justifyContent: 'center', overflow: 'visible', zIndex: 10 }}>

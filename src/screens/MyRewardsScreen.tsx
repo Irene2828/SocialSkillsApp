@@ -445,7 +445,7 @@ export const MyRewardsScreen = () => {
                 { fontFamily: activeTab === 'available' ? FONTS.medium : FONTS.regular, fontWeight: activeTab === 'available' ? '600' : '400' }, 
                 { marginRight: 6 }
               ]}>
-                All Rewards
+                All
               </Text>
               <Ionicons 
                 name="gift-outline" 
@@ -511,6 +511,7 @@ export const MyRewardsScreen = () => {
             </View>
           )}
         </View>
+        <View style={{ alignItems: 'center', marginTop: theme.spacing.xl, marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.xl }}>
           <Text style={{
             ...theme.typography.body,
             fontFamily: FONTS.medium,
@@ -518,17 +519,33 @@ export const MyRewardsScreen = () => {
             color: theme.colors.secondaryText,
             textAlign: 'center',
             letterSpacing: 0,
-            marginTop: theme.spacing.xl,
-            marginBottom: theme.spacing.lg,
-            paddingHorizontal: theme.spacing.xl,
+            marginBottom: theme.spacing.md,
           }}>
-            Add a new reward to the list by clicking "+" icon below.
+            Add a new reward to the list by clicking button below.
           </Text>
-          </ScrollView>
-        </ScreenWrapper>
+
+          <Button
+            title="Add New Reward"
+            iconName="add-circle-outline"
+            onPress={() => setShowAddPin(true)}
+            style={{
+              paddingHorizontal: 36,
+              paddingVertical: 12,
+              minHeight: 0,
+            }}
+            textStyle={{
+              fontFamily: FONTS.medium,
+              fontWeight: '500',
+              fontSize: 16,
+              letterSpacing: 0.4,
+            }}
+          />
+        </View>
+        </ScrollView>
+      </ScreenWrapper>
 
       {navigation && (
-        <AppTabBar activeRoute="Rewards" isFabActive={true} />
+        <AppTabBar activeRoute="MyRewards" isFabActive={false} navContext="Passive" />
       )}
       {renderSuccessModal()}
 

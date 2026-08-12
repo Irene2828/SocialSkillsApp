@@ -586,19 +586,36 @@ export const PuzzleScreen = () => {
               </View>
             )}
             ListFooterComponent={
-              <Text style={{
-                ...theme.typography.body,
-                fontFamily: FONTS.medium,
-                fontWeight: '500',
-                color: theme.colors.secondaryText,
-                textAlign: 'center',
-                letterSpacing: 0,
-                marginTop: theme.spacing.xl,
-                marginBottom: theme.spacing.lg,
-                paddingHorizontal: theme.spacing.xl,
-              }}>
-                Add a new puzzle by clicking "+" icon below.
-              </Text>
+              <View style={{ alignItems: 'center', marginTop: theme.spacing.xl, marginBottom: theme.spacing.lg, paddingHorizontal: theme.spacing.xl }}>
+                <Text style={{
+                  ...theme.typography.body,
+                  fontFamily: FONTS.medium,
+                  fontWeight: '500',
+                  color: theme.colors.secondaryText,
+                  textAlign: 'center',
+                  letterSpacing: 0,
+                  marginBottom: theme.spacing.md,
+                }}>
+                  Add a new puzzle by clicking button below.
+                </Text>
+
+                <Button
+                  title="Add New Puzzle"
+                  iconName="add-circle-outline"
+                  onPress={() => setShowAiMenu(true)}
+                  style={{
+                    paddingHorizontal: 36,
+                    paddingVertical: 12,
+                    minHeight: 0,
+                  }}
+                  textStyle={{
+                    fontFamily: FONTS.medium,
+                    fontWeight: '500',
+                    fontSize: 16,
+                    letterSpacing: 0.4,
+                  }}
+                />
+              </View>
             }
           />
           </>

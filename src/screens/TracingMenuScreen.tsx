@@ -85,7 +85,7 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
           </View>
         </ScrollView>
       </ScreenWrapper>
-      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Default" />
+      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Passive" />
     </View>
   );
 };
