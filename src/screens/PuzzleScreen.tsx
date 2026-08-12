@@ -584,6 +584,20 @@ export const PuzzleScreen = () => {
                 </View>
               </View>
             )}
+            ListFooterComponent={
+              <Text style={{
+                ...theme.typography.body,
+                color: 'rgba(255, 255, 255, 0.75)',
+                textAlign: 'center',
+                fontSize: 14,
+                lineHeight: 20,
+                marginTop: theme.spacing.xl,
+                marginBottom: theme.spacing.lg,
+                paddingHorizontal: theme.spacing.xl,
+              }}>
+                Add a new puzzle by clicking "+" icon below.
+              </Text>
+            }
           />
           </>
         )}

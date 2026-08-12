@@ -1008,6 +1008,18 @@ export const NewQuizScreen = () => {
                 </View>
               ))}
           </View>
+          <Text style={{
+            ...theme.typography.body,
+            color: 'rgba(255, 255, 255, 0.75)',
+            textAlign: 'center',
+            fontSize: 14,
+            lineHeight: 20,
+            marginTop: theme.spacing.xl,
+            marginBottom: theme.spacing.lg,
+            paddingHorizontal: theme.spacing.xl,
+          }}>
+            Add a new quiz to the list by clicking "+" icon below.
+          </Text>
         </ScrollView>
       </View>
     );

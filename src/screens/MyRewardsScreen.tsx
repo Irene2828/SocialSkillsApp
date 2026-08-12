@@ -442,7 +442,7 @@ export const MyRewardsScreen = () => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[
                 styles.tabText, 
-                activeTab === 'available' ? styles.activeTabText : { fontFamily: FONTS.regular }, 
+                { fontFamily: activeTab === 'available' ? FONTS.medium : FONTS.regular, fontWeight: activeTab === 'available' ? '600' : '400' }, 
                 { marginRight: 6 }
               ]}>
                 All Rewards
@@ -450,12 +450,10 @@ export const MyRewardsScreen = () => {
               <Ionicons 
                 name="gift-outline" 
                 size={18} 
-                color={activeTab === 'available' ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)'} 
+                color="#FFFFFF" 
               />
             </View>
           </Pressable>
-
-          <View style={styles.dividerVertical} />
 
           <Pressable 
             style={[styles.tab, activeTab === 'unlocked' && styles.activeTab]} 
@@ -464,7 +462,7 @@ export const MyRewardsScreen = () => {
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={[
                 styles.tabText, 
-                activeTab === 'unlocked' ? styles.activeTabText : { fontFamily: FONTS.regular }
+                { fontFamily: activeTab === 'unlocked' ? FONTS.medium : FONTS.regular, fontWeight: activeTab === 'unlocked' ? '600' : '400' }
               ]}>
                 Redeemed ({unlockedRewards.length})
               </Text>
@@ -513,6 +511,18 @@ export const MyRewardsScreen = () => {
             </View>
           )}
         </View>
+          <Text style={{
+            ...theme.typography.body,
+            color: 'rgba(255, 255, 255, 0.75)',
+            textAlign: 'center',
+            fontSize: 14,
+            lineHeight: 20,
+            marginTop: theme.spacing.xl,
+            marginBottom: theme.spacing.lg,
+            paddingHorizontal: theme.spacing.xl,
+          }}>
+            Add a new reward to the list by clicking "+" icon below.
+          </Text>
           </ScrollView>
         </ScreenWrapper>
 
