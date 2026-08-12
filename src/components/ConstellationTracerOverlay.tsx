@@ -555,8 +555,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         </View>
       )}
 
-      {/* Footer bar present on folder opening */}
-      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Passive" />
+      {/* Full screen immersive tracing without footer */}
     </View>
   );
 };
