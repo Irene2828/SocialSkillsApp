@@ -273,11 +273,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // Draw constellation title at top of screen
+        // Draw constellation title centered under TopBar header
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = '500 22px system-ui, -apple-system, sans-serif';
+        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(nameText, width / 2, 80);
+        ctx.fillText(nameText, width / 2, 110);
 
         // 1. Dashed guide lines
         ctx.lineWidth = 2;
@@ -532,9 +532,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         </Pressable>
       </View>
 
-      {/* Top-Right Toggles strictly for ABC Letters screen */}
+      {/* Centered Toggles strictly for ABC Letters screen */}
       {mode === 'abc' && (
-        <View style={styles.topRightControls}>
+        <View style={styles.centeredControls}>
           <Pressable 
             onPress={() => onLangChange && onLangChange(letterLang === 'eng' ? 'ukr' : 'eng')}
             style={styles.controlChip}
@@ -604,13 +604,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  topRightControls: {
+  centeredControls: {
     position: 'absolute',
-    top: 16,
-    right: 16,
+    top: 90,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    gap: 12,
     zIndex: 30,
   },
   controlChip: {
@@ -618,7 +620,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.2,
     borderColor: 'rgba(255, 255, 255, 0.4)',
     borderRadius: 16,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     paddingVertical: 6,
   },
   controlChipActive: {
