@@ -64,7 +64,7 @@ export const SettingsScreen = () => {
 
       </ScrollView>
       </ScreenWrapper>
-      <AppTabBar activeRoute="Settings" isFabActive={false} navContext="Default" />
+      <AppTabBar activeRoute="Settings" isFabActive={false} navContext="Passive" />
     </View>
   );
 };
