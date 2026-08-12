@@ -72,10 +72,6 @@ const CONSTELLATIONS = [
   { name: 'Vulpecula (The Fox)', points: [{ x: 0.20, y: 0.45 }, { x: 0.50, y: 0.45 }, { x: 0.80, y: 0.55 }] }
 ];
 
-const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-const ABC_UKR = ['А','Б','В','Г','Ґ','Д','Е','Є','Ж','З','И','І','Ї','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'];
-const DIGITS_DATA = ['1','2','3','4','5','6','7','8','9','10'];
-
 // Comprehensive stroke guides for smooth handwriting flow
 const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
   if (char === '1') {
@@ -270,11 +266,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // Draw constellation title at bottom above footer
+        // Draw constellation title at top of screen
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '500 22px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(nameText, width / 2, height - 85);
+        ctx.fillText(nameText, width / 2, 80);
 
         // Draw dashed guide lines between constellation stars
         ctx.lineWidth = 2;
@@ -526,7 +522,7 @@ const styles = StyleSheet.create({
   },
   navControls: {
     position: 'absolute',
-    bottom: 200,
+    bottom: 95,
     left: 0,
     right: 0,
     flexDirection: 'row',
