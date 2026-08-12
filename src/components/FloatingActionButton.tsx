@@ -34,6 +34,7 @@ export const FloatingActionButton = ({
       <Pressable
         onPress={handlePress}
         disabled={!isActive}
+        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         style={[
           styles.button,
           isActive ? styles.activeButton : styles.inactiveButton,

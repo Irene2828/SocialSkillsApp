@@ -77,7 +77,7 @@ export const AppTabBar = ({ activeRoute = 'None', onFabPress, isFabActive = true
       {renderTab('Tasks', 'Tasks', 'list-outline', activeRoute === 'Tasks')}
       
       {/* Center Floating Action Button */}
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', overflow: 'visible', zIndex: 10 }}>
         <FloatingActionButton 
           isActive={isFabActive} 
           onPress={onFabPress} 
@@ -101,6 +101,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    overflow: 'visible',
+    zIndex: 99,
   },
   footerTab: {
     flex: 1,

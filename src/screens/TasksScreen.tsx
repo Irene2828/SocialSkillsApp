@@ -27,6 +27,9 @@ export const TasksScreen = () => {
   useFocusEffect(
     React.useCallback(() => {
       const sub = DeviceEventEmitter.addListener('FAB_PRESSED', () => {
+        setEditingTaskId(null);
+        setNewTaskTitle('');
+        setNewTaskCoins('10');
         setIsModalVisible(true);
       });
       return () => sub.remove();
@@ -109,21 +112,11 @@ export const TasksScreen = () => {
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <TopBar title="Tasks" showSettingsAndRewards={true} />
           
-          <View style={{ paddingHorizontal: 12, marginTop: 16, marginBottom: 8, alignItems: 'center' }}>
-            <Button
-              title="+ Add Task"
-              onPress={openNewTaskModal}
-              style={styles.addButton}
-              variant="primary"
-              textStyle={{ color: '#0C4A6E', fontFamily: FONTS.semiBold, fontSize: 16 }}
-            />
-          </View>
-
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No tasks yet</Text>
               <Text style={{ textAlign: 'center', color: theme.colors.text, opacity: 0.7, marginTop: 8 }}>
-                Tap "+ Add Task" above or the + button in the tab bar below to add your first task!
+                Tap the + button in the tab bar below to add your first task!
               </Text>
             </View>
           ) : (
