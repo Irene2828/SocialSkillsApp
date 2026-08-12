@@ -26,41 +26,25 @@ interface PuzzleConfig {
   cols: number;
   rows: number;
   difficulty: string;
-  category?: 'animals' | 'cities';
+  category?: 'animals' | 'cities' | 'puzzles';
 }
 
 const PUZZLES: PuzzleConfig[] = [
-  { id: 'p_lion', name: 'Friendly Lion', image: require('../../assets/puzzles/lion.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
-  { id: 'p_panda', name: 'Happy Panda', image: require('../../assets/puzzles/panda.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
-  { id: 'p_koala', name: 'Sleepy Koala', image: require('../../assets/puzzles/koala.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
-  { id: 'p_rabbit', name: 'Fluffy Rabbit', image: require('../../assets/puzzles/rabbit.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_penguin', name: 'Waving Penguin', image: require('../../assets/puzzles/penguin.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
-  { id: 'p_turtle', name: 'Sea Turtle', image: require('../../assets/puzzles/turtle.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_tiger', name: 'Tiger Cub', image: require('../../assets/puzzles/tiger.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_owl', name: 'Wise Owl', image: require('../../assets/puzzles/owl.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
-  { id: 'p_zebra', name: 'Smiling Zebra', image: require('../../assets/puzzles/zebra.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
-  { id: 'p_astronaut', name: 'Little Astronaut', image: require('../../assets/puzzles/puzzle_astronaut.png'), icon: 'rocket-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
-  { id: 'p_dolphin2', name: 'Playful Dolphin', image: require('../../assets/puzzles/puzzle_dolphin.png'), icon: 'water-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_elephant2', name: 'Jungle Elephant', image: require('../../assets/puzzles/puzzle_elephant.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
-  { id: 'p_fish', name: 'Clownfish', image: require('../../assets/puzzles/puzzle_fish.png'), icon: 'water-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'animals' },
-  { id: 'p_koala2', name: 'Sleepy Koala 2', image: require('../../assets/puzzles/puzzle_koala.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_lion2', name: 'Brave Lion', image: require('../../assets/puzzles/puzzle_lion.png'), icon: 'paw-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
-  { id: 'p_octopus', name: 'Curious Octopus', image: require('../../assets/puzzles/puzzle_octopus.png'), icon: 'water-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'animals' },
-  { id: 'p_parrot', name: 'Colorful Parrot', image: require('../../assets/puzzles/puzzle_parrot.png'), icon: 'leaf-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
-  { id: 'p_turtle2', name: 'Sea Turtle 2', image: require('../../assets/puzzles/puzzle_turtle.png'), icon: 'water-outline', cols: 5, rows: 5, difficulty: '25 Pieces', category: 'animals' },
-  { id: 'p_unicorn', name: 'Magical Unicorn', image: require('../../assets/puzzles/puzzle_unicorn.png'), icon: 'star-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'animals' },
+  // 8 Animal Puzzles
+  { id: 'p_lion', name: 'Friendly Lion', image: require('../../assets/puzzles/lion.png'), icon: 'paw-outline', cols: 3, rows: 2, difficulty: '6 Pieces', category: 'puzzles' },
+  { id: 'p_panda', name: 'Happy Panda', image: require('../../assets/puzzles/panda.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'puzzles' },
+  { id: 'p_koala', name: 'Sleepy Koala', image: require('../../assets/puzzles/koala.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'puzzles' },
+  { id: 'p_rabbit', name: 'Fluffy Rabbit', image: require('../../assets/puzzles/rabbit.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_monkey', name: 'Cheeky Monkey', image: require('../../assets/puzzles/monkey.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_penguin', name: 'Waving Penguin', image: require('../../assets/puzzles/penguin.png'), icon: 'paw-outline', cols: 3, rows: 3, difficulty: '9 Pieces', category: 'puzzles' },
+  { id: 'p_turtle', name: 'Sea Turtle', image: require('../../assets/puzzles/turtle.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_tiger', name: 'Tiger Cub', image: require('../../assets/puzzles/tiger.png'), icon: 'paw-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
 
-  { id: 'p_kyiv', name: 'Kyiv', image: require('../../assets/puzzles/puzzle_kyiv.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_montreal', name: 'Montreal', image: require('../../assets/puzzles/puzzle_montreal.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_las_palmas', name: 'Las Palmas', image: require('../../assets/puzzles/puzzle_las_palmas.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_madrid', name: 'Madrid', image: require('../../assets/puzzles/puzzle_madrid.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_valencia', name: 'Valencia', image: require('../../assets/puzzles/puzzle_valencia.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_lisbon', name: 'Lisbon', image: require('../../assets/puzzles/puzzle_lisbon.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_berlin', name: 'Berlin', image: require('../../assets/puzzles/puzzle_berlin.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_paris', name: 'Paris', image: require('../../assets/puzzles/puzzle_paris.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_london', name: 'London', image: require('../../assets/puzzles/puzzle_london.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
-  { id: 'p_rome', name: 'Rome', image: require('../../assets/puzzles/puzzle_rome.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'cities' },
+  // 4 City Puzzles
+  { id: 'p_kyiv', name: 'Kyiv', image: require('../../assets/puzzles/puzzle_kyiv.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_montreal', name: 'Montreal', image: require('../../assets/puzzles/puzzle_montreal.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_las_palmas', name: 'Las Palmas', image: require('../../assets/puzzles/puzzle_las_palmas.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
+  { id: 'p_madrid', name: 'Madrid', image: require('../../assets/puzzles/puzzle_madrid.png'), icon: 'business-outline', cols: 4, rows: 4, difficulty: '16 Pieces', category: 'puzzles' },
 ];
 
 const DraggablePiece = ({
@@ -237,7 +221,7 @@ export const PuzzleScreen = () => {
     loadPuzzles();
   }, []);
 
-  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles].filter(p => activeFolderId ? (p.category === activeFolderId || p.id.startsWith('p_custom_')) : false);
+  const allPuzzles = [...PUZZLES.filter(p => !hiddenPuzzles.includes(p.id)), ...customPuzzles];
 
   const handleDeletePuzzle = (puzzle: PuzzleConfig) => {
     setActionMenuPuzzle(puzzle);
@@ -485,31 +469,22 @@ export const PuzzleScreen = () => {
               showSettingsAndRewards={true}
             />
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', marginBottom: theme.spacing.xl }}>
-                <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('animals')}>
-                <Card style={styles.folderCard}>
-                  <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
-                    <Text style={{ fontSize: 40 }}>🐼</Text>
-                  </View>
-                  <Text style={styles.cardName} numberOfLines={2}>Cute Animals</Text>
-                </Card>
-              </Pressable>
-
-              <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('cities')}>
-                <Card style={styles.folderCard}>
-                  <View style={[styles.cardIconContainer, { backgroundColor: '#FFEDD5' }]}>
-                    <Text style={{ fontSize: 40 }}>🏙️</Text>
-                  </View>
-                  <Text style={styles.cardName} numberOfLines={2}>Cities</Text>
-                </Card>
-              </Pressable>
-            </View>
-                        </ScrollView>
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
+                <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('puzzles')}>
+                  <Card style={styles.folderCard}>
+                    <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
+                      <Text style={{ fontSize: 40 }}>🧩</Text>
+                    </View>
+                    <Text style={styles.cardName} numberOfLines={2}>Puzzles</Text>
+                  </Card>
+                </Pressable>
+              </View>
+            </ScrollView>
           </>
         ) : (
           <>
             <TopBar
-              title={activeFolderId === 'animals' ? 'Cute Animals' : 'Cities'}
+              title="Puzzles"
               showSettingsAndRewards={true}
               onBack={() => setActiveFolderId(null)}
             />
