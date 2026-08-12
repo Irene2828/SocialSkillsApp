@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, Text, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Svg, { Path } from 'react-native-svg';
 import { GlobalBackground } from './GlobalBackground';
 import { SpaceTouchCanvas } from './SpaceTouchCanvas';
 import { AppTabBar } from './AppTabBar';
@@ -347,14 +348,32 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </Pressable>
 
-      {/* Frameless double-long navigation arrows right close under the letter */}
+      {/* Extra wide 2x (140px) and 2x thin (strokeWidth 1.8) custom SVG arrows right close under the letter */}
       <View style={styles.navControls}>
         <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
-          <Ionicons name="arrow-back-outline" size={38} color="#FFFFFF" />
+          <Svg width={120} height={20} viewBox="0 0 120 20">
+            <Path 
+              d="M 115 10 L 5 10 M 15 2 L 5 10 L 15 18" 
+              stroke="#FFFFFF" 
+              strokeWidth="1.8" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </Svg>
         </Pressable>
 
         <Pressable style={styles.navChipLong} onPress={handleNextItem} hitSlop={15}>
-          <Ionicons name="arrow-forward-outline" size={38} color="#FFFFFF" />
+          <Svg width={120} height={20} viewBox="0 0 120 20">
+            <Path 
+              d="M 5 10 L 115 10 M 105 2 L 115 10 L 105 18" 
+              stroke="#FFFFFF" 
+              strokeWidth="1.8" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              fill="none"
+            />
+          </Svg>
         </Pressable>
       </View>
 
