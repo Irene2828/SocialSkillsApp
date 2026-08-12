@@ -98,6 +98,52 @@ const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
   ];
 };
 
+class StarDustParticle {
+  x: number = 0;
+  y: number = 0;
+  vx: number = 0;
+  vy: number = 0;
+  size: number = 0;
+  color: string = '#BEF264';
+  life: number = 0;
+  maxLife: number = 0;
+  active: boolean = false;
+
+  spawn(x: number, y: number) {
+    this.x = x + (Math.random() - 0.5) * 10;
+    this.y = y + (Math.random() - 0.5) * 10;
+    this.vx = (Math.random() - 0.5) * 1.5;
+    this.vy = (Math.random() - 0.5) * 1.5 - 0.5;
+    this.size = Math.random() * 3 + 1.5;
+    this.color = ['#BEF264', '#F6C774', '#5C9EAD', '#FFFFFF'][Math.floor(Math.random() * 4)];
+    this.life = 0;
+    this.maxLife = Math.random() * 30 + 20;
+    this.active = true;
+  }
+
+  update() {
+    if (!this.active) return;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.life++;
+    if (this.life >= this.maxLife) {
+      this.active = false;
+    }
+  }
+
+  draw(ctx: CanvasRenderingContext2D) {
+    if (!this.active) return;
+    const alpha = 1 - (this.life / this.maxLife);
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', letterMode = 'print', letterLang = 'eng', onModeChange, onLangChange }: Props) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [itemIndex, setItemIndex] = useState(0);
@@ -108,6 +154,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
     pointerActive: false,
     userDrawnStrokes: [] as { x: number; y: number }[][],
     currentStroke: [] as { x: number; y: number }[],
+    particles: Array.from({ length: 150 }, () => new StarDustParticle()),
     completed: false,
   });
 
@@ -141,7 +188,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
     const draw = () => {
       const state = stateRef.current;
-      const { width, height, userDrawnStrokes, currentStroke } = state;
+      const { width, height, userDrawnStrokes, currentStroke, particles } = state;
       
       ctx.clearRect(0, 0, width | 0, height | 0);
 
@@ -151,7 +198,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       if (mode === 'abc') {
         const list = letterLang === 'ukr' ? ABC_UKR : ABC_ENG;
         charToDraw = list[itemIndex % list.length];
-        nameText = `Letter ${charToDraw} (${letterMode === 'cursive' ? 'Cursive 𝓐a' : 'Print Aa'})`;
+        nameText = `Letter ${charToDraw}`;
       } else if (mode === 'digits') {
         charToDraw = DIGITS_DATA[itemIndex % DIGITS_DATA.length];
         nameText = `Number ${charToDraw}`;
@@ -163,33 +210,30 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       ctx.fillStyle = '#FFFFFF';
       ctx.font = '500 20px system-ui, -apple-system, sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(nameText, width / 2, height - 90);
+      ctx.fillText(nameText, width / 2, height - 85);
 
-      // Render REAL preschool letter watermark for tracing
+      // Render FLAT clean preschool letter template for tracing
       if (mode === 'abc' || mode === 'digits') {
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
-        ctx.lineWidth = 5;
-        ctx.setLineDash([12, 10]);
+        ctx.fillStyle = 'transparent';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+        ctx.lineWidth = 4;
+        ctx.setLineDash([10, 10]);
         ctx.font = letterMode === 'cursive' 
-          ? 'italic bold 230px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
-          : 'bold 250px system-ui, -apple-system, "Nunito", sans-serif';
+          ? 'italic 500 240px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
+          : '500 250px system-ui, -apple-system, "Nunito", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText(charToDraw, width / 2, height / 2 - 20);
         ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
         ctx.restore();
       }
 
-      // Render user's smooth handwriting ink strokes
+      // Render user's smooth handwriting ink strokes with star dust trail
       ctx.save();
-      ctx.lineWidth = 10;
+      ctx.lineWidth = 8;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
       ctx.strokeStyle = '#5C9EAD';
-      ctx.shadowColor = '#5C9EAD';
-      ctx.shadowBlur = 10;
 
       for (const stroke of userDrawnStrokes) {
         if (stroke.length > 1) {
@@ -212,6 +256,14 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       }
       ctx.restore();
 
+      // Update and draw star dust particles
+      for (const p of particles) {
+        if (p.active) {
+          p.update();
+          p.draw(ctx);
+        }
+      }
+
       animationFrameId = requestAnimationFrame(draw);
     };
 
@@ -227,12 +279,27 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
     stateRef.current.pointerActive = true;
     const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
     stateRef.current.currentStroke = [pt];
+    spawnStarDust(pt.x, pt.y, 3);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (stateRef.current.pointerActive) {
       const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
       stateRef.current.currentStroke.push(pt);
+      if (Math.random() > 0.3) {
+        spawnStarDust(pt.x, pt.y, 2);
+      }
+    }
+  };
+
+  const spawnStarDust = (x: number, y: number, count: number) => {
+    let spawned = 0;
+    for (const p of stateRef.current.particles) {
+      if (!p.active) {
+        p.spawn(x, y);
+        spawned++;
+        if (spawned >= count) break;
+      }
     }
   };
 
@@ -280,13 +347,14 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </Pressable>
 
-      {/* Navigation Arrows for next/prev letter */}
+      {/* Frameless double-long navigation arrows right close under the letter */}
       <View style={styles.navControls}>
-        <Pressable style={styles.navChip} onPress={handlePrevItem}>
-          <Ionicons name="chevron-back" size={20} color="#FFFFFF" />
+        <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
+          <Ionicons name="arrow-back-outline" size={38} color="#FFFFFF" />
         </Pressable>
-        <Pressable style={styles.navChip} onPress={handleNextItem}>
-          <Ionicons name="chevron-forward" size={20} color="#FFFFFF" />
+
+        <Pressable style={styles.navChipLong} onPress={handleNextItem} hitSlop={15}>
+          <Ionicons name="arrow-forward-outline" size={38} color="#FFFFFF" />
         </Pressable>
       </View>
 
@@ -345,20 +413,20 @@ const styles = StyleSheet.create({
   },
   navControls: {
     position: 'absolute',
-    top: 16,
-    left: 74,
+    bottom: 122,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'center',
+    gap: 60,
     zIndex: 30,
   },
-  navChip: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+  navChipLong: {
+    width: 140,
+    height: 44,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },
