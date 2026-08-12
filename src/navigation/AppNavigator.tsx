@@ -55,7 +55,7 @@ const AppTabs = () => {
           navContext = isQuizSelection ? 'Default' : 'Immersive';
         } else if (activeRoute.name === 'Puzzles') {
           const isPuzzleActive = (puzzlesRoute?.params as any)?.isPuzzleActive === true;
-          navContext = isPuzzleActive ? 'Immersive' : 'Passive';
+          navContext = isPuzzleActive ? 'Immersive' : 'Default';
         } else if (activeRoute.name === 'Tasks') {
           navContext = 'Default';
         } else if (activeRoute.name === 'Drawing') {

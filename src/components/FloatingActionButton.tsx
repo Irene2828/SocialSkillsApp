@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   button: {
     width: 72,
     height: 72,
-    borderRadius: 32, // 32px squircle border-radius geometry
+    borderRadius: 36, // Fully circular button
     alignItems: 'center',
     justifyContent: 'center',
     position: 'absolute',
