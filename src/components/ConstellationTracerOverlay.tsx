@@ -869,11 +869,12 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(11, 15, 25, 0.35)',
+    backgroundColor: '#0b0f19',
     zIndex: 100,
   },
   canvas: {
-    flex: 1,
+    ...StyleSheet.absoluteFill,
+    zIndex: 10,
   },
   closeButton: {
     position: 'absolute',
@@ -887,5 +888,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
+    zIndex: 20,
   },
 });
