@@ -48,18 +48,18 @@ const AppTabs = () => {
         const newQuizRoute = props.state.routes.find(r => r.name === 'NewQuiz');
         const puzzlesRoute = props.state.routes.find(r => r.name === 'Puzzles');
         
-        let navContext: 'Default' | 'Immersive' | 'Passive' = 'Default';
+        let navContext: 'Default' | 'Immersive' | 'Passive' = 'Passive';
 
         if (activeRoute.name === 'NewQuiz') {
           const isQuizSelection = (newQuizRoute?.params as any)?.isFabActive !== false;
-          navContext = isQuizSelection ? 'Default' : 'Immersive';
+          navContext = isQuizSelection ? 'Passive' : 'Immersive';
         } else if (activeRoute.name === 'Puzzles') {
           const isPuzzleActive = (puzzlesRoute?.params as any)?.isPuzzleActive === true;
-          navContext = isPuzzleActive ? 'Immersive' : 'Default';
+          navContext = isPuzzleActive ? 'Immersive' : 'Passive';
         } else if (activeRoute.name === 'Tasks') {
-          navContext = 'Default';
+          navContext = 'Passive';
         } else if (activeRoute.name === 'MyRewards') {
-          navContext = 'Default';
+          navContext = 'Passive';
         }
 
         return (

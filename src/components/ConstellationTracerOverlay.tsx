@@ -207,11 +207,13 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         nameText = `Constellation ${itemIndex + 1}`;
       }
 
-      // Title at bottom above footer
-      ctx.fillStyle = '#FFFFFF';
-      ctx.font = '500 20px system-ui, -apple-system, sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(nameText, width / 2, height - 85);
+      // Draw constellation title at bottom only when in constellation mode
+      if (mode === 'constellations') {
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(nameText, width / 2, height - 85);
+      }
 
       // Render FLAT clean preschool letter template for tracing
       if (mode === 'abc' || mode === 'digits') {
@@ -348,14 +350,14 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </Pressable>
 
-      {/* Extra wide 2x (140px) and 2x thin (strokeWidth 1.8) custom SVG arrows right close under the letter */}
+      {/* Subtle, semi-transparent extra wide SVG arrows right close under the letter */}
       <View style={styles.navControls}>
         <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
           <Svg width={120} height={20} viewBox="0 0 120 20">
             <Path 
               d="M 115 10 L 5 10 M 15 2 L 5 10 L 15 18" 
-              stroke="#FFFFFF" 
-              strokeWidth="1.8" 
+              stroke="rgba(255, 255, 255, 0.35)" 
+              strokeWidth="1.6" 
               strokeLinecap="round" 
               strokeLinejoin="round"
               fill="none"
@@ -367,8 +369,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           <Svg width={120} height={20} viewBox="0 0 120 20">
             <Path 
               d="M 5 10 L 115 10 M 105 2 L 115 10 L 105 18" 
-              stroke="#FFFFFF" 
-              strokeWidth="1.8" 
+              stroke="rgba(255, 255, 255, 0.35)" 
+              strokeWidth="1.6" 
               strokeLinecap="round" 
               strokeLinejoin="round"
               fill="none"
@@ -432,7 +434,7 @@ const styles = StyleSheet.create({
   },
   navControls: {
     position: 'absolute',
-    bottom: 122,
+    bottom: 200,
     left: 0,
     right: 0,
     flexDirection: 'row',
