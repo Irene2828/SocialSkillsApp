@@ -203,6 +203,10 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
     width: 0,
     height: 0,
     pointerActive: false,
+    pointerX: -100,
+    pointerY: -100,
+    connectedStars: [0],
+    successState: false,
     userDrawnStrokes: [] as { x: number; y: number }[][],
     currentStroke: [] as { x: number; y: number }[],
     particles: Array.from({ length: 150 }, () => new StarDustParticle()),
@@ -212,6 +216,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
   useEffect(() => {
     stateRef.current.userDrawnStrokes = [];
     stateRef.current.currentStroke = [];
+    stateRef.current.connectedStars = [0];
+    stateRef.current.successState = false;
     stateRef.current.completed = false;
   }, [itemIndex, mode, letterMode, letterLang]);
 
@@ -239,7 +245,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
     const draw = () => {
       const state = stateRef.current;
-      const { width, height, userDrawnStrokes, currentStroke, particles } = state;
+      const { width, height, userDrawnStrokes, currentStroke, particles, connectedStars, pointerActive, pointerX, pointerY, successState } = state;
       
       ctx.clearRect(0, 0, width | 0, height | 0);
 
@@ -258,7 +264,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         nameText = constellation.name;
       }
 
-      // Draw constellation title & star guide lines when in constellation mode
+      // Constellations Mode: Golden magic star tracer with proximity snapping
       if (mode === 'constellations') {
         const constellation = CONSTELLATIONS[itemIndex % CONSTELLATIONS.length];
         const points = constellation.points.map(p => ({
@@ -272,9 +278,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.textAlign = 'center';
         ctx.fillText(nameText, width / 2, 80);
 
-        // Draw dashed guide lines between constellation stars
+        // 1. Dashed guide lines
         ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
         ctx.setLineDash([8, 12]);
         ctx.beginPath();
         for (let i = 0; i < points.length - 1; i++) {
@@ -284,26 +290,75 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Draw star nodes with glow
+        // 2. Golden solid line for connected stars
+        if (connectedStars.length > 1) {
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = successState ? '#FFD700' : '#5C9EAD';
+          ctx.beginPath();
+          ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
+          for (let i = 1; i < connectedStars.length; i++) {
+            ctx.lineTo(points[connectedStars[i]].x, points[connectedStars[i]].y);
+          }
+          ctx.stroke();
+        }
+
+        // 3. Live active golden beam line to finger/pointer
+        if (pointerActive && !successState && connectedStars.length > 0) {
+          const lastConnectedIndex = connectedStars[connectedStars.length - 1];
+          const startPoint = points[lastConnectedIndex];
+          
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = '#5C9EAD';
+          ctx.beginPath();
+          ctx.moveTo(startPoint.x, startPoint.y);
+          ctx.lineTo(pointerX, pointerY);
+          ctx.stroke();
+
+          if (Math.random() > 0.4) {
+            spawnStarDust(pointerX, pointerY, 1);
+          }
+        }
+
+        // 4. Star nodes with golden aura
         for (let i = 0; i < points.length; i++) {
           const p = points[i];
-          const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, 16);
-          gradient.addColorStop(0, '#F6C774');
+          const isConnected = connectedStars.includes(i);
+          const isNext = !successState && i === connectedStars.length;
+
+          const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 22 : 16);
+          gradient.addColorStop(0, isConnected || successState ? '#F6C774' : 'rgba(246, 199, 116, 0.45)');
           gradient.addColorStop(1, 'transparent');
           
           ctx.fillStyle = gradient;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, 16, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, isNext ? 22 : 16, 0, Math.PI * 2);
           ctx.fill();
 
           ctx.fillStyle = '#FFFFFF';
           ctx.beginPath();
-          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, isNext ? 5 : 3, 0, Math.PI * 2);
           ctx.fill();
+        }
+
+        // Proximity snapping logic for constellations
+        if (pointerActive && !successState) {
+          const nextIndex = connectedStars.length;
+          if (nextIndex < points.length) {
+            const target = points[nextIndex];
+            const dx = pointerX - target.x;
+            const dy = pointerY - target.y;
+            if (dx * dx + dy * dy < 55 * 55) {
+              connectedStars.push(nextIndex);
+              spawnStarDust(target.x, target.y, 12);
+              if (connectedStars.length === points.length) {
+                state.successState = true;
+              }
+            }
+          }
         }
       }
 
-      // Render FLAT clean preschool letter template for tracing
+      // ABC / Digits Handwriting Mode: Smooth freehand ink strokes
       if (mode === 'abc' || mode === 'digits') {
         ctx.save();
         ctx.fillStyle = 'transparent';
@@ -317,35 +372,34 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.textBaseline = 'middle';
         ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
         ctx.restore();
-      }
 
-      // Render user's smooth handwriting ink strokes with star dust trail
-      ctx.save();
-      ctx.lineWidth = 8;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#5C9EAD';
+        ctx.save();
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#5C9EAD';
 
-      for (const stroke of userDrawnStrokes) {
-        if (stroke.length > 1) {
+        for (const stroke of userDrawnStrokes) {
+          if (stroke.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(stroke[0].x, stroke[0].y);
+            for (let i = 1; i < stroke.length; i++) {
+              ctx.lineTo(stroke[i].x, stroke[i].y);
+            }
+            ctx.stroke();
+          }
+        }
+
+        if (currentStroke.length > 1) {
           ctx.beginPath();
-          ctx.moveTo(stroke[0].x, stroke[0].y);
-          for (let i = 1; i < stroke.length; i++) {
-            ctx.lineTo(stroke[i].x, stroke[i].y);
+          ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+          for (let i = 1; i < currentStroke.length; i++) {
+            ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
           }
           ctx.stroke();
         }
+        ctx.restore();
       }
-
-      if (currentStroke.length > 1) {
-        ctx.beginPath();
-        ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-        for (let i = 1; i < currentStroke.length; i++) {
-          ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
-        }
-        ctx.stroke();
-      }
-      ctx.restore();
 
       // Update and draw star dust particles
       for (const p of particles) {
@@ -369,14 +423,22 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
   const handlePointerDown = (e: React.PointerEvent) => {
     stateRef.current.pointerActive = true;
     const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
-    stateRef.current.currentStroke = [pt];
+    stateRef.current.pointerX = pt.x;
+    stateRef.current.pointerY = pt.y;
+    if (mode !== 'constellations') {
+      stateRef.current.currentStroke = [pt];
+    }
     spawnStarDust(pt.x, pt.y, 3);
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
     if (stateRef.current.pointerActive) {
       const pt = { x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY };
-      stateRef.current.currentStroke.push(pt);
+      stateRef.current.pointerX = pt.x;
+      stateRef.current.pointerY = pt.y;
+      if (mode !== 'constellations') {
+        stateRef.current.currentStroke.push(pt);
+      }
       if (Math.random() > 0.3) {
         spawnStarDust(pt.x, pt.y, 2);
       }
@@ -397,7 +459,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
   const handlePointerUp = () => {
     if (stateRef.current.pointerActive) {
       stateRef.current.pointerActive = false;
-      if (stateRef.current.currentStroke.length > 0) {
+      if (mode !== 'constellations' && stateRef.current.currentStroke.length > 0) {
         stateRef.current.userDrawnStrokes.push([...stateRef.current.currentStroke]);
         stateRef.current.currentStroke = [];
       }
