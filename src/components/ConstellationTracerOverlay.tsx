@@ -18,9 +18,55 @@ interface Props {
   onLangChange?: (lang: 'eng' | 'ukr') => void;
 }
 
-const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-const ABC_UKR = ['А','Б','В','Г','Ґ','Д','Е','Є','Ж','З','И','І','Ї','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Ь','Ю','Я'];
-const DIGITS_DATA = ['1','2','3','4','5','6','7','8','9','10'];
+// 50 Normalized constellations (0.0 to 1.0) to scale with screen size
+const CONSTELLATIONS = [
+  { name: 'Ursa Major (Big Dipper)', points: [{ x: 0.18, y: 0.32 }, { x: 0.35, y: 0.40 }, { x: 0.48, y: 0.48 }, { x: 0.65, y: 0.45 }, { x: 0.78, y: 0.60 }, { x: 0.55, y: 0.68 }] },
+  { name: 'Cassiopeia (Queen Crown)', points: [{ x: 0.18, y: 0.58 }, { x: 0.32, y: 0.35 }, { x: 0.50, y: 0.52 }, { x: 0.68, y: 0.33 }, { x: 0.82, y: 0.55 }] },
+  { name: 'Cygnus (The Swan)', points: [{ x: 0.50, y: 0.25 }, { x: 0.50, y: 0.45 }, { x: 0.22, y: 0.48 }, { x: 0.78, y: 0.48 }, { x: 0.50, y: 0.75 }] },
+  { name: "Orion's Belt", points: [{ x: 0.25, y: 0.50 }, { x: 0.50, y: 0.50 }, { x: 0.75, y: 0.50 }] },
+  { name: 'Leo (The Lion)', points: [{ x: 0.20, y: 0.60 }, { x: 0.35, y: 0.45 }, { x: 0.50, y: 0.30 }, { x: 0.68, y: 0.35 }, { x: 0.80, y: 0.55 }, { x: 0.55, y: 0.65 }] },
+  { name: 'Scorpius (The Scorpion)', points: [{ x: 0.20, y: 0.30 }, { x: 0.35, y: 0.25 }, { x: 0.45, y: 0.40 }, { x: 0.55, y: 0.60 }, { x: 0.70, y: 0.70 }, { x: 0.82, y: 0.58 }] },
+  { name: 'Pegasus (Winged Horse)', points: [{ x: 0.25, y: 0.30 }, { x: 0.75, y: 0.30 }, { x: 0.75, y: 0.70 }, { x: 0.25, y: 0.70 }, { x: 0.25, y: 0.30 }] },
+  { name: 'Taurus (The Bull)', points: [{ x: 0.20, y: 0.35 }, { x: 0.45, y: 0.45 }, { x: 0.70, y: 0.30 }, { x: 0.80, y: 0.60 }] },
+  { name: 'Canis Major (Great Dog)', points: [{ x: 0.30, y: 0.30 }, { x: 0.50, y: 0.45 }, { x: 0.70, y: 0.65 }, { x: 0.40, y: 0.70 }] },
+  { name: 'Aquarius (Water Bearer)', points: [{ x: 0.20, y: 0.40 }, { x: 0.40, y: 0.30 }, { x: 0.60, y: 0.50 }, { x: 0.80, y: 0.40 }] },
+  { name: 'Andromeda (Chained Maiden)', points: [{ x: 0.15, y: 0.65 }, { x: 0.35, y: 0.45 }, { x: 0.55, y: 0.35 }, { x: 0.80, y: 0.25 }] },
+  { name: 'Aquila (The Eagle)', points: [{ x: 0.50, y: 0.25 }, { x: 0.20, y: 0.50 }, { x: 0.50, y: 0.70 }, { x: 0.80, y: 0.50 }] },
+  { name: 'Ara (The Altar)', points: [{ x: 0.30, y: 0.30 }, { x: 0.70, y: 0.30 }, { x: 0.60, y: 0.70 }, { x: 0.40, y: 0.70 }] },
+  { name: 'Aries (The Ram)', points: [{ x: 0.20, y: 0.60 }, { x: 0.50, y: 0.40 }, { x: 0.80, y: 0.30 }] },
+  { name: 'Auriga (The Charioteer)', points: [{ x: 0.50, y: 0.20 }, { x: 0.75, y: 0.40 }, { x: 0.65, y: 0.70 }, { x: 0.35, y: 0.70 }, { x: 0.25, y: 0.40 }] },
+  { name: 'Boötes (The Herdsman)', points: [{ x: 0.50, y: 0.75 }, { x: 0.30, y: 0.45 }, { x: 0.50, y: 0.25 }, { x: 0.70, y: 0.45 }] },
+  { name: 'Cancer (The Crab)', points: [{ x: 0.50, y: 0.50 }, { x: 0.25, y: 0.30 }, { x: 0.75, y: 0.30 }, { x: 0.50, y: 0.75 }] },
+  { name: 'Canis Minor (Little Dog)', points: [{ x: 0.35, y: 0.50 }, { x: 0.65, y: 0.50 }] },
+  { name: 'Capricornus (Sea Goat)', points: [{ x: 0.20, y: 0.40 }, { x: 0.40, y: 0.65 }, { x: 0.65, y: 0.65 }, { x: 0.80, y: 0.35 }] },
+  { name: 'Centaurus (The Centaur)', points: [{ x: 0.25, y: 0.70 }, { x: 0.45, y: 0.50 }, { x: 0.55, y: 0.30 }, { x: 0.75, y: 0.45 }] },
+  { name: 'Cepheus (King House)', points: [{ x: 0.50, y: 0.25 }, { x: 0.75, y: 0.48 }, { x: 0.75, y: 0.75 }, { x: 0.25, y: 0.75 }, { x: 0.25, y: 0.48 }] },
+  { name: 'Cetus (Sea Monster)', points: [{ x: 0.20, y: 0.40 }, { x: 0.35, y: 0.30 }, { x: 0.55, y: 0.50 }, { x: 0.75, y: 0.40 }, { x: 0.85, y: 0.60 }] },
+  { name: 'Columba (Celestial Dove)', points: [{ x: 0.30, y: 0.40 }, { x: 0.50, y: 0.30 }, { x: 0.70, y: 0.45 }, { x: 0.50, y: 0.65 }] },
+  { name: 'Corvus (The Crow)', points: [{ x: 0.30, y: 0.35 }, { x: 0.70, y: 0.35 }, { x: 0.60, y: 0.68 }, { x: 0.25, y: 0.60 }] },
+  { name: 'Crater (Star Goblet)', points: [{ x: 0.30, y: 0.30 }, { x: 0.70, y: 0.30 }, { x: 0.60, y: 0.55 }, { x: 0.50, y: 0.75 }] },
+  { name: 'Draco (The Dragon)', points: [{ x: 0.20, y: 0.30 }, { x: 0.40, y: 0.25 }, { x: 0.65, y: 0.40 }, { x: 0.50, y: 0.60 }, { x: 0.75, y: 0.70 }] },
+  { name: 'Gemini (The Twins)', points: [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }, { x: 0.70, y: 0.25 }] },
+  { name: 'Hercules (Hero Shield)', points: [{ x: 0.35, y: 0.30 }, { x: 0.65, y: 0.30 }, { x: 0.75, y: 0.55 }, { x: 0.50, y: 0.75 }, { x: 0.25, y: 0.55 }] },
+  { name: 'Hydra (Water Snake)', points: [{ x: 0.15, y: 0.45 }, { x: 0.32, y: 0.35 }, { x: 0.50, y: 0.55 }, { x: 0.70, y: 0.40 }, { x: 0.88, y: 0.60 }] },
+  { name: 'Hydra Minor (Little Serpent)', points: [{ x: 0.25, y: 0.55 }, { x: 0.45, y: 0.38 }, { x: 0.75, y: 0.55 }] },
+  { name: 'Libra (The Scales)', points: [{ x: 0.50, y: 0.30 }, { x: 0.25, y: 0.50 }, { x: 0.75, y: 0.50 }, { x: 0.50, y: 0.72 }] },
+  { name: 'Lupus (Star Wolf)', points: [{ x: 0.25, y: 0.40 }, { x: 0.45, y: 0.30 }, { x: 0.65, y: 0.50 }, { x: 0.55, y: 0.75 }] },
+  { name: 'Lynx (The Lynx)', points: [{ x: 0.18, y: 0.65 }, { x: 0.40, y: 0.50 }, { x: 0.62, y: 0.40 }, { x: 0.82, y: 0.30 }] },
+  { name: 'Monoceros (The Unicorn)', points: [{ x: 0.50, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.65, y: 0.65 }, { x: 0.75, y: 0.45 }] },
+  { name: 'Ophiuchus (Serpent Bearer)', points: [{ x: 0.50, y: 0.25 }, { x: 0.25, y: 0.45 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }] },
+  { name: 'Orion (Great Hunter)', points: [{ x: 0.30, y: 0.25 }, { x: 0.70, y: 0.25 }, { x: 0.50, y: 0.50 }, { x: 0.25, y: 0.75 }, { x: 0.75, y: 0.75 }] },
+  { name: 'Pisces (The Fishes)', points: [{ x: 0.20, y: 0.30 }, { x: 0.40, y: 0.65 }, { x: 0.60, y: 0.65 }, { x: 0.80, y: 0.30 }] },
+  { name: 'Piscis Austrinus (Fish)', points: [{ x: 0.25, y: 0.50 }, { x: 0.50, y: 0.32 }, { x: 0.75, y: 0.50 }, { x: 0.50, y: 0.68 }] },
+  { name: 'Sagitta (The Arrow)', points: [{ x: 0.20, y: 0.50 }, { x: 0.70, y: 0.50 }, { x: 0.85, y: 0.35 }] },
+  { name: 'Sagittarius (The Archer)', points: [{ x: 0.25, y: 0.60 }, { x: 0.45, y: 0.40 }, { x: 0.70, y: 0.30 }, { x: 0.75, y: 0.55 }] },
+  { name: 'Serpens (The Snake)', points: [{ x: 0.20, y: 0.65 }, { x: 0.35, y: 0.40 }, { x: 0.55, y: 0.60 }, { x: 0.75, y: 0.35 }] },
+  { name: 'Ursa Minor (Little Dipper)', points: [{ x: 0.80, y: 0.25 }, { x: 0.65, y: 0.35 }, { x: 0.50, y: 0.42 }, { x: 0.35, y: 0.50 }, { x: 0.20, y: 0.65 }] },
+  { name: 'Vela (The Sails)', points: [{ x: 0.30, y: 0.70 }, { x: 0.50, y: 0.25 }, { x: 0.75, y: 0.60 }] },
+  { name: 'Virgo (The Maiden)', points: [{ x: 0.25, y: 0.30 }, { x: 0.45, y: 0.45 }, { x: 0.65, y: 0.35 }, { x: 0.75, y: 0.65 }] },
+  { name: 'Volans (Flying Fish)', points: [{ x: 0.50, y: 0.30 }, { x: 0.25, y: 0.55 }, { x: 0.50, y: 0.75 }, { x: 0.75, y: 0.55 }] },
+  { name: 'Vulpecula (The Fox)', points: [{ x: 0.20, y: 0.45 }, { x: 0.50, y: 0.45 }, { x: 0.80, y: 0.55 }] }
+];
 
 // Comprehensive stroke guides for smooth handwriting flow
 const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
@@ -204,15 +250,53 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         charToDraw = DIGITS_DATA[itemIndex % DIGITS_DATA.length];
         nameText = `Number ${charToDraw}`;
       } else {
-        nameText = `Constellation ${itemIndex + 1}`;
+        const constellation = CONSTELLATIONS[itemIndex % CONSTELLATIONS.length];
+        nameText = constellation.name;
       }
 
-      // Draw constellation title at bottom only when in constellation mode
+      // Draw constellation title & star guide lines when in constellation mode
       if (mode === 'constellations') {
+        const constellation = CONSTELLATIONS[itemIndex % CONSTELLATIONS.length];
+        const points = constellation.points.map(p => ({
+          x: (p.x * width) | 0,
+          y: (p.y * height) | 0
+        }));
+
+        // Draw constellation title at bottom above footer
         ctx.fillStyle = '#FFFFFF';
-        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+        ctx.font = '500 22px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
         ctx.fillText(nameText, width / 2, height - 85);
+
+        // Draw dashed guide lines between constellation stars
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.setLineDash([8, 12]);
+        ctx.beginPath();
+        for (let i = 0; i < points.length - 1; i++) {
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[i+1].x, points[i+1].y);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Draw star nodes with glow
+        for (let i = 0; i < points.length; i++) {
+          const p = points[i];
+          const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, 16);
+          gradient.addColorStop(0, '#F6C774');
+          gradient.addColorStop(1, 'transparent');
+          
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 16, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
       // Render FLAT clean preschool letter template for tracing
