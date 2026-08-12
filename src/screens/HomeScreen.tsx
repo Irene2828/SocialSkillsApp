@@ -289,7 +289,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: theme.spacing.xxl,
-    marginTop: '-30%',
+    marginTop: '-10%',
   },
   startTitle: {
     ...theme.typography.display,

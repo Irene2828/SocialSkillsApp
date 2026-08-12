@@ -503,12 +503,12 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         onBack={onClose}
       />
 
-      {/* Subtle, semi-transparent extra wide SVG arrows right close under the letter */}
+      {/* 30% shorter SVG arrows; right arrow is brighter white than left */}
       <View style={styles.navControls}>
         <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
-          <Svg width={120} height={20} viewBox="0 0 120 20">
+          <Svg width={84} height={20} viewBox="0 0 84 20">
             <Path 
-              d="M 115 10 L 5 10 M 15 2 L 5 10 L 15 18" 
+              d="M 79 10 L 5 10 M 15 2 L 5 10 L 15 18" 
               stroke="rgba(255, 255, 255, 0.35)" 
               strokeWidth="1.6" 
               strokeLinecap="round" 
@@ -519,10 +519,10 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         </Pressable>
 
         <Pressable style={styles.navChipLong} onPress={handleNextItem} hitSlop={15}>
-          <Svg width={120} height={20} viewBox="0 0 120 20">
+          <Svg width={84} height={20} viewBox="0 0 84 20">
             <Path 
-              d="M 5 10 L 115 10 M 105 2 L 115 10 L 105 18" 
-              stroke="rgba(255, 255, 255, 0.35)" 
+              d="M 5 10 L 79 10 M 69 2 L 79 10 L 69 18" 
+              stroke="rgba(255, 255, 255, 0.85)" 
               strokeWidth="1.6" 
               strokeLinecap="round" 
               strokeLinejoin="round"
@@ -596,7 +596,7 @@ const styles = StyleSheet.create({
     zIndex: 30,
   },
   navChipLong: {
-    width: 140,
+    width: 98,
     height: 44,
     backgroundColor: 'transparent',
     borderWidth: 0,
