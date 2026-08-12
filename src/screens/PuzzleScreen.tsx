@@ -154,12 +154,14 @@ export const PuzzleScreen = () => {
   const isRocket = mood === 'rocket';
 
   const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleConfig | null>(null);
+  const [activeTab, setActiveTab] = useState<'none' | 'tracing' | 'drawing'>('none');
   const [showAiMenu, setShowAiMenu] = useState(false);
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
 
   useEffect(() => {
-    (navigation as any).setParams({ isPuzzleActive: selectedPuzzle !== null });
-  }, [selectedPuzzle, navigation]);
+    const isImmersiveMode = selectedPuzzle !== null || activeTab !== 'none';
+    (navigation as any).setParams({ isPuzzleActive: isImmersiveMode });
+  }, [selectedPuzzle, activeTab, navigation]);
 
   const [showActionMenu, setShowActionMenu] = useState(false);
   const [actionMenuPuzzle, setActionMenuPuzzle] = useState<PuzzleConfig | null>(null);
@@ -190,7 +192,6 @@ export const PuzzleScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'none' | 'tracing' | 'drawing'>('none');
 
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;

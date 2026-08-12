@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Pressable, Text, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { GlobalBackground } from './GlobalBackground';
+import { SpaceTouchCanvas } from './SpaceTouchCanvas';
 
 const isWeb = Platform.OS === 'web';
 
@@ -847,6 +849,8 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
 
   return (
     <View style={styles.container}>
+      <GlobalBackground showClouds dimmed={false} />
+      <SpaceTouchCanvas />
       <canvas
         ref={canvasRef}
         style={{ ...styles.canvas, touchAction: 'none' } as any}

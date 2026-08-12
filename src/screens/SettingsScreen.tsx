@@ -6,6 +6,8 @@ import { Button } from '../components/Button';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { GlobalBackground } from '../components/GlobalBackground';
 
+import { TopBar } from '../components/TopBar';
+
 export const SettingsScreen = () => {
   const { isRewardsModeOn, setIsRewardsModeOn, parentsPin, setParentsPin } = useRewards();
   const [localPin, setLocalPin] = useState(parentsPin);
@@ -18,9 +20,9 @@ export const SettingsScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-      {/* Header removed as requested */}
+        <TopBar title="Settings" showSettingsAndRewards={true} />
 
-      <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
+        <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
         
         {/* Rewards Mode Toggle */}
         <View style={styles.settingRow}>
