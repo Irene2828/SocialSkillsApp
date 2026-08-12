@@ -17,6 +17,8 @@ import { SettingsModal } from '../components/SettingsModal';
 import { TopBar } from '../components/TopBar';
 import { SilverDust } from '../components/SilverDust';
 import { useMood, getMoodColors } from '../context/MoodContext';
+import { ConstellationTracerOverlay } from '../components/ConstellationTracerOverlay';
+import { DrawingBoardScreenWeb } from './DrawingBoardScreenWeb';
 
 interface PuzzleConfig {
   id: string;
@@ -188,6 +190,7 @@ export const PuzzleScreen = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [customPuzzles, setCustomPuzzles] = useState<PuzzleConfig[]>([]);
   const [activeFolderId, setActiveFolderId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'none' | 'tracing' | 'drawing'>('none');
 
   const [hiddenPuzzles, setHiddenPuzzles] = useState<string[]>([]);
   const shakeNextAnim = useRef(new Animated.Value(0)).current;
@@ -458,6 +461,23 @@ export const PuzzleScreen = () => {
     );
   };
 
+  if (activeTab === 'tracing') {
+    return <ConstellationTracerOverlay onClose={() => setActiveTab('none')} />;
+  }
+
+  if (activeTab === 'drawing') {
+    return (
+      <View style={{ flex: 1 }}>
+        <TopBar
+          title="Drawing"
+          showSettingsAndRewards={true}
+          onBack={() => setActiveTab('none')}
+        />
+        <DrawingBoardScreenWeb />
+      </View>
+    );
+  }
+
   return (
     <View style={{ flex: 1 }}>
       <GlobalBackground />
@@ -465,17 +485,39 @@ export const PuzzleScreen = () => {
         {!activeFolderId ? (
           <>
             <TopBar
-              title="Puzzles"
+              title="Games"
               showSettingsAndRewards={true}
             />
             <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
-                <Pressable style={{ width: cardWidth, marginBottom: theme.spacing.md }} onPress={() => setActiveFolderId('puzzles')}>
+              {/* Row 1: Puzzles & Tracing */}
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: theme.spacing.md }}>
+                <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolderId('puzzles')}>
                   <Card style={styles.folderCard}>
                     <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
                       <Text style={{ fontSize: 40 }}>🧩</Text>
                     </View>
                     <Text style={styles.cardName} numberOfLines={2}>Puzzles</Text>
+                  </Card>
+                </Pressable>
+
+                <Pressable style={{ width: cardWidth }} onPress={() => setActiveTab('tracing')}>
+                  <Card style={styles.folderCard}>
+                    <View style={[styles.cardIconContainer, { backgroundColor: '#FEF08A' }]}>
+                      <Text style={{ fontSize: 40 }}>✨</Text>
+                    </View>
+                    <Text style={styles.cardName} numberOfLines={2}>Tracing</Text>
+                  </Card>
+                </Pressable>
+              </View>
+
+              {/* Row 2: Drawing */}
+              <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
+                <Pressable style={{ width: cardWidth }} onPress={() => setActiveTab('drawing')}>
+                  <Card style={styles.folderCard}>
+                    <View style={[styles.cardIconContainer, { backgroundColor: '#FBCFE8' }]}>
+                      <Text style={{ fontSize: 40 }}>🎨</Text>
+                    </View>
+                    <Text style={styles.cardName} numberOfLines={2}>Drawing</Text>
                   </Card>
                 </Pressable>
               </View>

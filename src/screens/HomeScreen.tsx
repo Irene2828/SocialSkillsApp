@@ -210,43 +210,6 @@ export const HomeScreen = () => {
           hideTitle 
           hideBorder
           noEdgeToEdge
-          leftComponent={
-            <Pressable 
-              onPress={() => setShowSettings(true)} 
-              style={{ 
-                width: 36,
-                height: 36,
-                borderRadius: 18,
-                backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                borderWidth: 1.2,
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                alignItems: 'center', 
-                justifyContent: 'center',
-                marginLeft: 4
-              }}
-            >
-              <Ionicons name="options-outline" size={20} color="#FFFFFF" />
-            </Pressable>
-          }
-          rightComponent={
-            <Pressable 
-              onPress={() => setShowZenMode(true)} 
-              style={{ 
-                height: 36,
-                paddingHorizontal: 16,
-                borderRadius: 10,
-                backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                borderWidth: 1.2,
-                borderColor: 'rgba(255, 255, 255, 0.4)',
-                alignItems: 'center', 
-                justifyContent: 'center',
-                marginRight: 4
-              }}
-            >
-              <Ionicons name="play" size={18} color="#FFFFFF" />
-              <Ionicons name="sparkles" size={10} color="#F6C774" style={{ position: 'absolute', top: 4, right: 4 }} />
-            </Pressable>
-          }
         />
 
         <View style={styles.startContainer} pointerEvents="box-none">

@@ -74,12 +74,13 @@ export const AppTabBar = ({
     screen: string,
     label: string,
     iconName: keyof typeof Ionicons.glyphMap,
-    isActive: boolean
+    isActive: boolean,
+    onPressOverride?: () => void
   ) => {
     return (
       <Pressable 
         style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column' }]} 
-        onPress={() => navigateTo(screen)}
+        onPress={() => onPressOverride ? onPressOverride() : navigateTo(screen)}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
           {isActive && (
@@ -140,8 +141,8 @@ export const AppTabBar = ({
         />
       </Animated.View>
 
-      {renderTab('Puzzles', 'Puzzles', 'extension-puzzle-outline', activeRoute === 'Puzzles')}
-      {renderTab('Drawing', 'Draw', 'color-palette-outline', activeRoute === 'Drawing')}
+      {renderTab('Puzzles', 'Games', 'extension-puzzle-outline', activeRoute === 'Puzzles')}
+      {renderTab('Settings', 'Settings', 'options-outline', activeRoute === 'Settings', () => navigation.navigate('Settings'))}
     </Animated.View>
   );
 };
