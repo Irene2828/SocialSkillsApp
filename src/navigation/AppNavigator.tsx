@@ -58,8 +58,8 @@ const AppTabs = () => {
           navContext = isPuzzleActive ? 'Immersive' : 'Default';
         } else if (activeRoute.name === 'Tasks') {
           navContext = 'Default';
-        } else if (activeRoute.name === 'Drawing') {
-          navContext = 'Passive';
+        } else if (activeRoute.name === 'MyRewards') {
+          navContext = 'Default';
         }
 
         return (
@@ -87,8 +87,8 @@ const AppTabs = () => {
         component={PuzzleScreen} 
       />
       <Tab.Screen 
-        name="Drawing" 
-        component={DrawingBoardScreen} 
+        name="MyRewards" 
+        component={MyRewardsScreen} 
       />
     </Tab.Navigator>
   );

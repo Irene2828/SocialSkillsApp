@@ -111,48 +111,23 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, l
           ) : null}
         </View>
         
-        {/* Right Side: rightComponent OR Coins button */}
+        {/* Right Side: rightComponent OR Settings button */}
         <View style={[styles.side, { alignItems: 'center', justifyContent: 'center' }]}>
           {rightComponent ? rightComponent : showSettingsAndRewards ? (
             <Pressable 
-              onPress={() => navigation.navigate('MyRewards' as never)} 
+              onPress={() => navigation.navigate('Settings' as never)} 
               style={{ 
-                alignItems: 'center', 
-                justifyContent: 'center',
+                width: 36,
+                height: 36,
+                borderRadius: 18,
                 backgroundColor: 'rgba(255, 255, 255, 0.18)',
                 borderWidth: 1.2,
                 borderColor: 'rgba(255, 255, 255, 0.4)',
-                borderRadius: 20,
-                paddingHorizontal: 12,
-                paddingVertical: 4,
+                alignItems: 'center', 
+                justifyContent: 'center' 
               }}
             >
-              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 2 }}>
-                <Ionicons name="gift-outline" size={isTablet ? 14 : 12} color="#FFFFFF" style={{ marginRight: 4 }} />
-                <Text 
-                  style={{ 
-                    fontFamily: FONTS.medium,
-                    fontSize: isTablet ? 14 : 12,
-                    color: '#FFFFFF',
-                    letterSpacing: 0.8,
-                  }}
-                >
-                  My
-                </Text>
-              </View>
-              <Text 
-                style={{ 
-                  fontFamily: FONTS.medium,
-                  fontSize: isTablet ? 14 : 12,
-                  lineHeight: isTablet ? 18 : 15,
-                  color: '#FFFFFF',
-                  marginTop: -2,
-                  textAlign: 'center',
-                  letterSpacing: 0.8,
-                }}
-              >
-                Rewards
-              </Text>
+              <Ionicons name="options-outline" size={20} color="#FFFFFF" />
             </Pressable>
           ) : null}
         </View>
