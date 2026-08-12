@@ -14,6 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import MaskedView from '@react-native-masked-view/masked-view';
 import { ScalePressable } from '../components/ScalePressable';
 import { SpaceTouchCanvas } from '../components/SpaceTouchCanvas';
+import { ConstellationTracerOverlay } from '../components/ConstellationTracerOverlay';
 import { LogBox } from 'react-native';
 
 // Suppress WebGL warnings globally (LogBox for native, window handler for web)
@@ -183,6 +184,7 @@ export const HomeScreen = () => {
   const titleColor = '#FFFFFF';
   const subtitleColor = '#FFFFFF';
   const [showSettings, setShowSettings] = useState(false);
+  const [showZenMode, setShowZenMode] = useState(false);
 
   const [isShattered, setIsShattered] = useState(false);
   const [webGLFailed, setWebGLFailed] = useState(false);
@@ -200,6 +202,7 @@ export const HomeScreen = () => {
       <GlobalBackground showClouds dimmed={false} />
       <SpaceTouchCanvas />
 
+      { !showZenMode && (
       <ScreenWrapper transparent>
         <TopBar 
           title="" 
@@ -223,6 +226,25 @@ export const HomeScreen = () => {
               }}
             >
               <Ionicons name="options-outline" size={20} color="#FFFFFF" />
+            </Pressable>
+          }
+          rightComponent={
+            <Pressable 
+              onPress={() => setShowZenMode(true)} 
+              style={{ 
+                height: 36,
+                paddingHorizontal: 16,
+                borderRadius: 10,
+                backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                borderWidth: 1.2,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                alignItems: 'center', 
+                justifyContent: 'center',
+                marginRight: 4
+              }}
+            >
+              <Ionicons name="play" size={18} color="#FFFFFF" />
+              <Ionicons name="sparkles" size={10} color="#F6C774" style={{ position: 'absolute', top: 4, right: 4 }} />
             </Pressable>
           }
         />
@@ -285,8 +307,10 @@ export const HomeScreen = () => {
           </View>
         </View>
       </ScreenWrapper>
+      )}
 
       <SettingsModal visible={showSettings} onClose={() => setShowSettings(false)} />
+      {showZenMode && <ConstellationTracerOverlay onClose={() => setShowZenMode(false)} />}
     </View>
   );
 };
