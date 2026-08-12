@@ -7,6 +7,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { GlobalBackground } from '../components/GlobalBackground';
 
 import { TopBar } from '../components/TopBar';
+import { AppTabBar } from '../components/AppTabBar';
 
 export const SettingsScreen = () => {
   const { isRewardsModeOn, setIsRewardsModeOn, parentsPin, setParentsPin } = useRewards();
@@ -22,7 +23,7 @@ export const SettingsScreen = () => {
       <ScreenWrapper transparent>
         <TopBar title="Settings" showSettingsAndRewards={true} />
 
-        <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl }}>
+        <ScrollView style={styles.scrollContent} contentContainerStyle={{ paddingBottom: theme.spacing.xxl + 90 }}>
         
         {/* Rewards Mode Toggle */}
         <View style={styles.settingRow}>
@@ -63,6 +64,7 @@ export const SettingsScreen = () => {
 
       </ScrollView>
       </ScreenWrapper>
+      <AppTabBar activeRoute="Settings" isFabActive={false} navContext="Default" />
     </View>
   );
 };
