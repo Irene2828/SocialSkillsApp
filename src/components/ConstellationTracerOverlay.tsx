@@ -472,7 +472,7 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
     <View style={styles.container}>
       <canvas
         ref={canvasRef}
-        style={styles.canvas}
+        style={[styles.canvas, { touchAction: 'none' } as any]}
         onPointerDown={handlePointerDown as any}
         onPointerMove={handlePointerMove as any}
         onPointerUp={handlePointerUp as any}
@@ -487,13 +487,12 @@ export const ConstellationTracerOverlay = ({ onClose }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(11, 15, 25, 0.65)',
+    ...StyleSheet.absoluteFill,
+    backgroundColor: 'rgba(11, 15, 25, 0.35)',
     zIndex: 100,
   },
   canvas: {
     flex: 1,
-    touchAction: 'none', // Prevent scrolling on drag
   },
   closeButton: {
     position: 'absolute',

@@ -94,6 +94,13 @@ export const TasksScreen = () => {
     );
   };
 
+  const openNewTaskModal = () => {
+    setEditingTaskId(null);
+    setNewTaskTitle('');
+    setNewTaskCoins('10');
+    setIsModalVisible(true);
+  };
+
   return (
     <View style={styles.container}>
       <GlobalBackground />
@@ -102,11 +109,21 @@ export const TasksScreen = () => {
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
           <TopBar title="Tasks" showSettingsAndRewards={true} />
           
+          <View style={{ paddingHorizontal: 12, marginTop: 16, marginBottom: 8, alignItems: 'center' }}>
+            <Button
+              title="+ Add Task"
+              onPress={openNewTaskModal}
+              style={styles.addButton}
+              variant="primary"
+              textStyle={{ color: '#0C4A6E', fontFamily: FONTS.semiBold, fontSize: 16 }}
+            />
+          </View>
+
           {tasks.length === 0 ? (
             <View style={styles.emptyState}>
               <Text style={styles.emptyTitle}>No tasks yet</Text>
               <Text style={{ textAlign: 'center', color: theme.colors.text, opacity: 0.7, marginTop: 8 }}>
-                Tap the + button in the tab bar below to add your first task!
+                Tap "+ Add Task" above or the + button in the tab bar below to add your first task!
               </Text>
             </View>
           ) : (
@@ -123,8 +140,9 @@ export const TasksScreen = () => {
         transparent={true}
         onRequestClose={() => setIsModalVisible(false)}
       >
-        <Pressable style={styles.modalOverlay} onPress={() => setIsModalVisible(false)}>
-          <Pressable style={styles.modalContent} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+        <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setIsModalVisible(false)} />
+          <View style={styles.modalContent}>
             <Pressable onPress={() => setIsModalVisible(false)} style={{ alignSelf: 'flex-end', padding: 4, marginBottom: 4 }}>
               <Ionicons name="close" size={28} color="#0C4A6E" />
             </Pressable>
@@ -170,8 +188,8 @@ export const TasksScreen = () => {
                 variant="secondary"
               />
             </View>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     </View>
   );
@@ -302,7 +320,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(224, 251, 252, 0.96)',
+    backgroundColor: 'rgba(11, 15, 25, 0.65)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.lg,
@@ -311,6 +329,10 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 400,
     padding: theme.spacing.lg,
+    backgroundColor: 'rgba(224, 251, 252, 0.98)',
+    borderRadius: theme.borderRadius.lg,
+    zIndex: 10,
+    elevation: 10,
   },
   modalTitle: {
     fontFamily: FONTS.semiBold,

@@ -342,11 +342,11 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   actionButton: {
-    width: '100%',
-    maxWidth: 510,
+    width: '80%',
+    maxWidth: 408,
     alignSelf: 'center',
-    paddingHorizontal: 80,
-    minWidth: 260,
+    paddingHorizontal: 64,
+    minWidth: 208,
     paddingVertical: 13, // 20% shorter than default 16
     minHeight: 0,        // allow paddingVertical to control height
   },

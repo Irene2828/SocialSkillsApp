@@ -72,8 +72,9 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
 
     return (
       <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <Pressable style={styles.modalOverlay} onPress={closeModal}>
-          <Pressable style={styles.modalContainer} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+        <View style={styles.modalOverlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={closeModal} />
+          <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>{modalOptions.title}</Text>
             <Text style={styles.modalMessage}>{modalOptions.message}</Text>
             <Pressable 
@@ -87,8 +88,8 @@ export const FeedbackProvider = ({ children }: { children: ReactNode }) => {
                 {modalOptions.confirmText || 'OK'}
               </Text>
             </Pressable>
-          </Pressable>
-        </Pressable>
+          </View>
+        </View>
       </Modal>
     );
   };
