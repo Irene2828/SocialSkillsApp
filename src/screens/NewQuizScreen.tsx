@@ -1010,10 +1010,11 @@ export const NewQuizScreen = () => {
           </View>
           <Text style={{
             ...theme.typography.body,
-            color: 'rgba(255, 255, 255, 0.75)',
+            fontFamily: FONTS.medium,
+            fontWeight: '500',
+            color: theme.colors.secondaryText,
             textAlign: 'center',
-            fontSize: 14,
-            lineHeight: 20,
+            letterSpacing: 0,
             marginTop: theme.spacing.xl,
             marginBottom: theme.spacing.lg,
             paddingHorizontal: theme.spacing.xl,
