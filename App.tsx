@@ -39,6 +39,8 @@ import {
 } from '@expo-google-fonts/nunito';
 import { View, ActivityIndicator } from 'react-native';
 
+import { NavigationProvider } from './src/context/NavigationContext';
+
 const RootNavigator = () => {
   return <AppNavigator />;
 };
@@ -93,22 +95,24 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <FeedbackProvider>
-        <MoodProvider>
-          <ProgressProvider>
-            <RewardsProvider>
-              <TasksProvider>
-                <QuizProvider>
-                  <NavigationContainer>
-                    <RootNavigator />
-                    <StatusBar style="auto" />
-                  </NavigationContainer>
-                </QuizProvider>
-              </TasksProvider>
-            </RewardsProvider>
-          </ProgressProvider>
-        </MoodProvider>
-      </FeedbackProvider>
+      <NavigationProvider>
+        <FeedbackProvider>
+          <MoodProvider>
+            <ProgressProvider>
+              <RewardsProvider>
+                <TasksProvider>
+                  <QuizProvider>
+                    <NavigationContainer>
+                      <RootNavigator />
+                      <StatusBar style="auto" />
+                    </NavigationContainer>
+                  </QuizProvider>
+                </TasksProvider>
+              </RewardsProvider>
+            </ProgressProvider>
+          </MoodProvider>
+        </FeedbackProvider>
+      </NavigationProvider>
     </SafeAreaProvider>
   );
 }

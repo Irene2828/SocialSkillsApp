@@ -48,18 +48,24 @@ const AppTabs = () => {
         const newQuizRoute = props.state.routes.find(r => r.name === 'NewQuiz');
         const puzzlesRoute = props.state.routes.find(r => r.name === 'Puzzles');
         
-        let isFabActive = true;
+        let navContext: 'Default' | 'Immersive' | 'Passive' = 'Default';
+
         if (activeRoute.name === 'NewQuiz') {
-          isFabActive = (newQuizRoute?.params as any)?.isFabActive !== false;
+          const isQuizSelection = (newQuizRoute?.params as any)?.isFabActive !== false;
+          navContext = isQuizSelection ? 'Default' : 'Immersive';
         } else if (activeRoute.name === 'Puzzles') {
           const isPuzzleActive = (puzzlesRoute?.params as any)?.isPuzzleActive === true;
-          isFabActive = !isPuzzleActive;
+          navContext = isPuzzleActive ? 'Immersive' : 'Passive';
+        } else if (activeRoute.name === 'Tasks') {
+          navContext = 'Default';
+        } else if (activeRoute.name === 'Drawing') {
+          navContext = 'Passive';
         }
-        
+
         return (
           <AppTabBar 
             activeRoute={activeRoute.name} 
-            isFabActive={isFabActive} 
+            navContext={navContext} 
             onFabPress={() => {
               DeviceEventEmitter.emit('FAB_PRESSED');
             }}
