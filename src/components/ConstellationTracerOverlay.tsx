@@ -165,43 +165,20 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       ctx.textAlign = 'center';
       ctx.fillText(nameText, width / 2, height - 90);
 
-      // Render REAL preschool letter watermark with handwriting stroke direction guides
+      // Render REAL preschool letter watermark for tracing
       if (mode === 'abc' || mode === 'digits') {
         ctx.save();
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
-        ctx.lineWidth = 4;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.lineWidth = 5;
+        ctx.setLineDash([12, 10]);
         ctx.font = letterMode === 'cursive' 
-          ? 'italic bold 210px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
-          : 'bold 230px system-ui, -apple-system, "Nunito", sans-serif';
+          ? 'italic bold 230px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
+          : 'bold 250px system-ui, -apple-system, "Nunito", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(charToDraw, width / 2, height / 2 - 20);
         ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
-        ctx.restore();
-
-        // Draw dotted stroke guidelines with arrow direction dots
-        const strokes = GET_HANDWRITING_STROKES(charToDraw, letterMode === 'cursive');
-        ctx.save();
-        ctx.lineWidth = 6;
-        ctx.strokeStyle = 'rgba(190, 242, 100, 0.45)';
-        ctx.setLineDash([8, 12]);
-        for (const stroke of strokes) {
-          if (stroke.length > 1) {
-            ctx.beginPath();
-            ctx.moveTo(stroke[0].x * width, stroke[0].y * height - 20);
-            for (let i = 1; i < stroke.length; i++) {
-              ctx.lineTo(stroke[i].x * width, stroke[i].y * height - 20);
-            }
-            ctx.stroke();
-
-            // Draw start direction dot
-            ctx.fillStyle = '#BEF264';
-            ctx.beginPath();
-            ctx.arc(stroke[0].x * width, stroke[0].y * height - 20, 8, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
         ctx.restore();
       }
 
@@ -337,7 +314,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       )}
 
       {/* Footer bar present on folder opening */}
-      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Default" />
+      <AppTabBar activeRoute="Games" isFabActive={false} navContext="Passive" />
     </View>
   );
 };
