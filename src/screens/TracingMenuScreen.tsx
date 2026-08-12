@@ -32,6 +32,8 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
         mode={activeFolder}
         letterMode={letterMode}
         letterLang={letterLang}
+        onModeChange={(newMode) => setLetterMode(newMode)}
+        onLangChange={(newLang) => setLetterLang(newLang)}
         onClose={() => setActiveFolder('none')} 
       />
     );
@@ -45,29 +47,6 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
           title="Tracing"
           showSettingsAndRewards={true}
           onBack={onBackToGames}
-          rightComponent={
-            <View style={styles.topRightToggles}>
-              {/* Language Toggle: ENG / UKR */}
-              <Pressable 
-                onPress={() => setLetterLang(prev => prev === 'eng' ? 'ukr' : 'eng')}
-                style={styles.toggleChip}
-              >
-                <Text style={styles.toggleText}>
-                  {letterLang === 'eng' ? '🇬🇧 ENG' : '🇺🇦 UKR'}
-                </Text>
-              </Pressable>
-
-              {/* Font Style Toggle: Print / Cursive */}
-              <Pressable 
-                onPress={() => setLetterMode(prev => prev === 'print' ? 'cursive' : 'print')}
-                style={[styles.toggleChip, styles.toggleChipActive]}
-              >
-                <Text style={[styles.toggleText, { fontFamily: letterMode === 'cursive' ? FONTS.regularItalic : FONTS.medium }]}>
-                  {letterMode === 'print' ? 'Print Aa' : 'Cursive 𝓐𝓪'}
-                </Text>
-              </Pressable>
-            </View>
-          }
         />
 
         <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>

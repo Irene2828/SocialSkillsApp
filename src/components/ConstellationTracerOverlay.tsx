@@ -3,6 +3,7 @@ import { View, StyleSheet, Pressable, Text, Dimensions, Platform } from 'react-n
 import { Ionicons } from '@expo/vector-icons';
 import { GlobalBackground } from './GlobalBackground';
 import { SpaceTouchCanvas } from './SpaceTouchCanvas';
+import { FONTS } from '../theme';
 
 const isWeb = Platform.OS === 'web';
 
@@ -633,6 +634,8 @@ interface Props {
   mode?: 'constellations' | 'abc' | 'digits';
   letterMode?: 'print' | 'cursive';
   letterLang?: 'eng' | 'ukr';
+  onModeChange?: (mode: 'print' | 'cursive') => void;
+  onLangChange?: (lang: 'eng' | 'ukr') => void;
 }
 
 const ABC_ENG = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
@@ -774,10 +777,30 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       ctx.textAlign = 'center';
       ctx.fillText(nameText, width / 2, height - 40);
 
+      // Render clear real letter/digit font watermark in the center for preschool tracing
+      if (mode === 'abc' || mode === 'digits') {
+        const char = mode === 'abc' 
+          ? (letterLang === 'ukr' ? ABC_UKR : ABC_ENG)[constellationIndex % (letterLang === 'ukr' ? ABC_UKR : ABC_ENG).length]
+          : DIGITS_DATA[constellationIndex % DIGITS_DATA.length];
+        
+        ctx.save();
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
+        ctx.lineWidth = 3;
+        ctx.font = letterMode === 'cursive' 
+          ? 'italic bold 200px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
+          : 'bold 220px system-ui, -apple-system, "Nunito", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(char, width / 2, height / 2);
+        ctx.strokeText(char, width / 2, height / 2);
+        ctx.restore();
+      }
+
       // Draw dashed guide lines
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.strokeStyle = COLORS.guide;
-      ctx.setLineDash([10, 15]);
+      ctx.setLineDash([10, 12]);
       ctx.beginPath();
       for (let i = 0; i < points.length - 1; i++) {
         ctx.moveTo(points[i].x, points[i].y);
@@ -934,6 +957,29 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       <Pressable style={styles.closeButton} onPress={onClose}>
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </Pressable>
+
+      {/* Top-Right Toggles strictly for ABC Letters tracing screen */}
+      {mode === 'abc' && (
+        <View style={styles.topRightControls}>
+          <Pressable 
+            onPress={() => onLangChange && onLangChange(letterLang === 'eng' ? 'ukr' : 'eng')}
+            style={styles.controlChip}
+          >
+            <Text style={styles.controlText}>
+              {letterLang === 'eng' ? '🇬🇧 ENG' : '🇺🇦 UKR'}
+            </Text>
+          </Pressable>
+
+          <Pressable 
+            onPress={() => onModeChange && onModeChange(letterMode === 'print' ? 'cursive' : 'print')}
+            style={[styles.controlChip, styles.controlChipActive]}
+          >
+            <Text style={styles.controlText}>
+              {letterMode === 'print' ? 'Print Aa' : 'Cursive 𝓐a'}
+            </Text>
+          </Pressable>
+        </View>
+      )}
     </View>
   );
 };
@@ -961,5 +1007,31 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
     zIndex: 20,
+  },
+  topRightControls: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    zIndex: 30,
+  },
+  controlChip: {
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderRadius: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+  },
+  controlChipActive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.28)',
+    borderColor: '#FFFFFF',
+  },
+  controlText: {
+    color: '#FFFFFF',
+    fontWeight: '500',
+    fontSize: 13,
   },
 });
