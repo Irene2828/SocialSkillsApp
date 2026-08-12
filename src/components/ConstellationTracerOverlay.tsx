@@ -182,6 +182,383 @@ const CONSTELLATIONS: Constellation[] = [
       { x: 0.72, y: 0.72 },
       { x: 0.78, y: 0.60 },
     ]
+  },
+  // 16. Andromeda (Chained Maiden)
+  {
+    name: 'Andromeda (Chained Maiden)',
+    points: [
+      { x: 0.20, y: 0.30 },
+      { x: 0.40, y: 0.42 },
+      { x: 0.60, y: 0.48 },
+      { x: 0.80, y: 0.65 },
+    ]
+  },
+  // 17. Aries (The Ram)
+  {
+    name: 'Aries (The Ram)',
+    points: [
+      { x: 0.25, y: 0.50 },
+      { x: 0.50, y: 0.40 },
+      { x: 0.75, y: 0.45 },
+    ]
+  },
+  // 18. Auriga (The Charioteer)
+  {
+    name: 'Auriga (The Charioteer)',
+    points: [
+      { x: 0.50, y: 0.25 },
+      { x: 0.75, y: 0.40 },
+      { x: 0.65, y: 0.70 },
+      { x: 0.35, y: 0.70 },
+      { x: 0.25, y: 0.40 },
+      { x: 0.50, y: 0.25 },
+    ]
+  },
+  // 19. Boötes (The Kite)
+  {
+    name: 'Boötes (The Kite)',
+    points: [
+      { x: 0.50, y: 0.25 },
+      { x: 0.70, y: 0.45 },
+      { x: 0.50, y: 0.75 },
+      { x: 0.30, y: 0.45 },
+      { x: 0.50, y: 0.25 },
+    ]
+  },
+  // 20. Cancer (The Crab)
+  {
+    name: 'Cancer (The Crab)',
+    points: [
+      { x: 0.25, y: 0.35 },
+      { x: 0.50, y: 0.50 },
+      { x: 0.75, y: 0.35 },
+      { x: 0.50, y: 0.50 },
+      { x: 0.50, y: 0.72 },
+    ]
+  },
+  // 21. Canis Major (Great Dog)
+  {
+    name: 'Canis Major (Great Dog)',
+    points: [
+      { x: 0.30, y: 0.30 },
+      { x: 0.50, y: 0.45 },
+      { x: 0.70, y: 0.60 },
+      { x: 0.60, y: 0.75 },
+      { x: 0.40, y: 0.65 },
+    ]
+  },
+  // 22. Canis Minor (Little Dog)
+  {
+    name: 'Canis Minor (Little Dog)',
+    points: [
+      { x: 0.35, y: 0.50 },
+      { x: 0.65, y: 0.50 },
+    ]
+  },
+  // 23. Capricornus (Sea Goat)
+  {
+    name: 'Capricornus (Sea Goat)',
+    points: [
+      { x: 0.20, y: 0.40 },
+      { x: 0.40, y: 0.65 },
+      { x: 0.65, y: 0.65 },
+      { x: 0.80, y: 0.35 },
+      { x: 0.50, y: 0.45 },
+    ]
+  },
+  // 24. Centaurus (The Centaur)
+  {
+    name: 'Centaurus (The Centaur)',
+    points: [
+      { x: 0.25, y: 0.70 },
+      { x: 0.45, y: 0.50 },
+      { x: 0.55, y: 0.30 },
+      { x: 0.75, y: 0.45 },
+      { x: 0.60, y: 0.65 },
+    ]
+  },
+  // 25. Cepheus (King House)
+  {
+    name: 'Cepheus (King House)',
+    points: [
+      { x: 0.50, y: 0.25 },
+      { x: 0.75, y: 0.48 },
+      { x: 0.75, y: 0.75 },
+      { x: 0.25, y: 0.75 },
+      { x: 0.25, y: 0.48 },
+      { x: 0.50, y: 0.25 },
+    ]
+  },
+  // 26. Cetus (Sea Monster)
+  {
+    name: 'Cetus (Sea Monster)',
+    points: [
+      { x: 0.20, y: 0.40 },
+      { x: 0.35, y: 0.30 },
+      { x: 0.55, y: 0.50 },
+      { x: 0.75, y: 0.40 },
+      { x: 0.85, y: 0.60 },
+      { x: 0.65, y: 0.70 },
+    ]
+  },
+  // 27. Columba (Celestial Dove)
+  {
+    name: 'Columba (Celestial Dove)',
+    points: [
+      { x: 0.30, y: 0.40 },
+      { x: 0.50, y: 0.30 },
+      { x: 0.70, y: 0.45 },
+      { x: 0.50, y: 0.65 },
+    ]
+  },
+  // 28. Corvus (The Crow)
+  {
+    name: 'Corvus (The Crow)',
+    points: [
+      { x: 0.30, y: 0.35 },
+      { x: 0.70, y: 0.35 },
+      { x: 0.60, y: 0.68 },
+      { x: 0.25, y: 0.60 },
+      { x: 0.30, y: 0.35 },
+    ]
+  },
+  // 29. Crater (Star Goblet)
+  {
+    name: 'Crater (Star Goblet)',
+    points: [
+      { x: 0.30, y: 0.30 },
+      { x: 0.70, y: 0.30 },
+      { x: 0.60, y: 0.55 },
+      { x: 0.50, y: 0.75 },
+      { x: 0.40, y: 0.55 },
+      { x: 0.30, y: 0.30 },
+    ]
+  },
+  // 30. Draco (The Dragon)
+  {
+    name: 'Draco (The Dragon)',
+    points: [
+      { x: 0.20, y: 0.30 },
+      { x: 0.40, y: 0.25 },
+      { x: 0.65, y: 0.40 },
+      { x: 0.50, y: 0.60 },
+      { x: 0.75, y: 0.70 },
+      { x: 0.85, y: 0.55 },
+    ]
+  },
+  // 31. Gemini (The Twins)
+  {
+    name: 'Gemini (The Twins)',
+    points: [
+      { x: 0.30, y: 0.25 },
+      { x: 0.30, y: 0.75 },
+      { x: 0.70, y: 0.75 },
+      { x: 0.70, y: 0.25 },
+    ]
+  },
+  // 32. Hercules (Hero Shield)
+  {
+    name: 'Hercules (Hero Shield)',
+    points: [
+      { x: 0.35, y: 0.30 },
+      { x: 0.65, y: 0.30 },
+      { x: 0.75, y: 0.55 },
+      { x: 0.50, y: 0.75 },
+      { x: 0.25, y: 0.55 },
+      { x: 0.35, y: 0.30 },
+    ]
+  },
+  // 33. Hydra (Water Snake)
+  {
+    name: 'Hydra (Water Snake)',
+    points: [
+      { x: 0.15, y: 0.45 },
+      { x: 0.32, y: 0.35 },
+      { x: 0.50, y: 0.55 },
+      { x: 0.70, y: 0.40 },
+      { x: 0.88, y: 0.60 },
+    ]
+  },
+  // 34. Hydra Minor (Little Serpent)
+  {
+    name: 'Hydra Minor (Little Serpent)',
+    points: [
+      { x: 0.25, y: 0.55 },
+      { x: 0.45, y: 0.38 },
+      { x: 0.75, y: 0.55 },
+    ]
+  },
+  // 35. Libra (The Scales)
+  {
+    name: 'Libra (The Scales)',
+    points: [
+      { x: 0.50, y: 0.30 },
+      { x: 0.25, y: 0.50 },
+      { x: 0.75, y: 0.50 },
+      { x: 0.50, y: 0.72 },
+      { x: 0.50, y: 0.30 },
+    ]
+  },
+  // 36. Lupus (Star Wolf)
+  {
+    name: 'Lupus (Star Wolf)',
+    points: [
+      { x: 0.25, y: 0.40 },
+      { x: 0.45, y: 0.30 },
+      { x: 0.65, y: 0.50 },
+      { x: 0.55, y: 0.75 },
+      { x: 0.35, y: 0.65 },
+    ]
+  },
+  // 37. Lynx (The Lynx)
+  {
+    name: 'Lynx (The Lynx)',
+    points: [
+      { x: 0.18, y: 0.65 },
+      { x: 0.40, y: 0.50 },
+      { x: 0.62, y: 0.40 },
+      { x: 0.82, y: 0.30 },
+    ]
+  },
+  // 38. Monoceros (The Unicorn)
+  {
+    name: 'Monoceros (The Unicorn)',
+    points: [
+      { x: 0.50, y: 0.25 },
+      { x: 0.35, y: 0.50 },
+      { x: 0.65, y: 0.65 },
+      { x: 0.75, y: 0.45 },
+    ]
+  },
+  // 39. Ophiuchus (Serpent Bearer)
+  {
+    name: 'Ophiuchus (Serpent Bearer)',
+    points: [
+      { x: 0.50, y: 0.25 },
+      { x: 0.25, y: 0.45 },
+      { x: 0.35, y: 0.75 },
+      { x: 0.65, y: 0.75 },
+      { x: 0.75, y: 0.45 },
+      { x: 0.50, y: 0.25 },
+    ]
+  },
+  // 40. Orion (Great Hunter)
+  {
+    name: 'Orion (Great Hunter)',
+    points: [
+      { x: 0.30, y: 0.25 },
+      { x: 0.70, y: 0.25 },
+      { x: 0.50, y: 0.50 },
+      { x: 0.25, y: 0.75 },
+      { x: 0.75, y: 0.75 },
+    ]
+  },
+  // 41. Pisces (The Fishes)
+  {
+    name: 'Pisces (The Fishes)',
+    points: [
+      { x: 0.20, y: 0.30 },
+      { x: 0.40, y: 0.65 },
+      { x: 0.60, y: 0.65 },
+      { x: 0.80, y: 0.30 },
+    ]
+  },
+  // 42. Piscis Austrinus (Fish)
+  {
+    name: 'Piscis Austrinus (Fish)',
+    points: [
+      { x: 0.25, y: 0.50 },
+      { x: 0.50, y: 0.32 },
+      { x: 0.75, y: 0.50 },
+      { x: 0.50, y: 0.68 },
+      { x: 0.25, y: 0.50 },
+    ]
+  },
+  // 43. Sagitta (The Arrow)
+  {
+    name: 'Sagitta (The Arrow)',
+    points: [
+      { x: 0.20, y: 0.50 },
+      { x: 0.70, y: 0.50 },
+      { x: 0.85, y: 0.35 },
+      { x: 0.70, y: 0.50 },
+      { x: 0.85, y: 0.65 },
+    ]
+  },
+  // 44. Sagittarius (The Archer)
+  {
+    name: 'Sagittarius (The Archer)',
+    points: [
+      { x: 0.25, y: 0.60 },
+      { x: 0.45, y: 0.40 },
+      { x: 0.70, y: 0.30 },
+      { x: 0.75, y: 0.55 },
+      { x: 0.55, y: 0.70 },
+      { x: 0.45, y: 0.40 },
+    ]
+  },
+  // 45. Serpens (The Snake)
+  {
+    name: 'Serpens (The Snake)',
+    points: [
+      { x: 0.20, y: 0.65 },
+      { x: 0.35, y: 0.40 },
+      { x: 0.55, y: 0.60 },
+      { x: 0.75, y: 0.35 },
+    ]
+  },
+  // 46. Ursa Minor (Little Dipper)
+  {
+    name: 'Ursa Minor (Little Dipper)',
+    points: [
+      { x: 0.80, y: 0.25 },
+      { x: 0.65, y: 0.35 },
+      { x: 0.50, y: 0.42 },
+      { x: 0.35, y: 0.50 },
+      { x: 0.20, y: 0.65 },
+      { x: 0.40, y: 0.75 },
+    ]
+  },
+  // 47. Vela (The Sails)
+  {
+    name: 'Vela (The Sails)',
+    points: [
+      { x: 0.30, y: 0.70 },
+      { x: 0.50, y: 0.25 },
+      { x: 0.75, y: 0.60 },
+      { x: 0.30, y: 0.70 },
+    ]
+  },
+  // 48. Virgo (The Maiden)
+  {
+    name: 'Virgo (The Maiden)',
+    points: [
+      { x: 0.25, y: 0.30 },
+      { x: 0.45, y: 0.45 },
+      { x: 0.65, y: 0.35 },
+      { x: 0.75, y: 0.65 },
+      { x: 0.50, y: 0.70 },
+    ]
+  },
+  // 49. Volans (Flying Fish)
+  {
+    name: 'Volans (Flying Fish)',
+    points: [
+      { x: 0.50, y: 0.30 },
+      { x: 0.25, y: 0.55 },
+      { x: 0.50, y: 0.75 },
+      { x: 0.75, y: 0.55 },
+      { x: 0.50, y: 0.30 },
+    ]
+  },
+  // 50. Vulpecula (The Fox)
+  {
+    name: 'Vulpecula (The Fox)',
+    points: [
+      { x: 0.20, y: 0.45 },
+      { x: 0.50, y: 0.45 },
+      { x: 0.80, y: 0.55 },
+    ]
   }
 ];
 
