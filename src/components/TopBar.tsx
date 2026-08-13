@@ -56,7 +56,7 @@ export const TopBar: React.FC<TopBarProps> = ({ title, onBack, rightComponent, l
           {!hideTitle && (
             <View style={{ alignItems: 'center', width: '100%' }}>
               <Text 
-                style={[styles.title, { fontSize: headerFontSize }, isRocket && { color: '#FFFFFF' }]} 
+                style={[styles.title, { fontSize: headerFontSize }]} 
                 numberOfLines={1}
                 adjustsFontSizeToFit
                 minimumFontScale={0.75}
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.medium,
     fontSize: 20,
     fontWeight: '500',
-    color: '#FFFFFF',
+    color: '#BEF264',
     textAlign: 'center',
     letterSpacing: 0.4,
   },

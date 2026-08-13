@@ -77,27 +77,18 @@ export const AppTabBar = ({
     isActive: boolean,
     onPressOverride?: () => void
   ) => {
+    const tabColor = isActive ? '#BEF264' : '#FFFFFF';
     return (
       <Pressable 
         style={[styles.footerTab, { paddingTop: footerPaddingTop, flexDirection: 'column' }]} 
         onPress={() => onPressOverride ? onPressOverride() : navigateTo(screen)}
       >
         <View style={{ alignItems: 'center', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-          {isActive && (
-            <View style={{
-              position: 'absolute',
-              top: isTablet ? -11 : -10,
-              height: 3,
-              width: 36,
-              backgroundColor: '#FFFFFF',
-              borderRadius: 1.5,
-            }} />
-          )}
-          <Ionicons name={iconName} size={isTablet ? 28 : 24} color="#FFFFFF" />
+          <Ionicons name={iconName} size={isTablet ? 28 : 24} color={tabColor} />
         </View>
         <View style={{ backgroundColor: 'transparent' }}>
           <Text style={{ 
-            color: '#FFFFFF', 
+            color: tabColor, 
             fontSize: isTablet ? 14 : 12, 
             fontFamily: FONTS.medium,
             lineHeight: isTablet ? 18 : 15,
