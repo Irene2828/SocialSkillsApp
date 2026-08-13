@@ -283,7 +283,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '500 20px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(nameText, width / 2, startY + boxSize + 30);
+        ctx.fillText(nameText, width / 2, startY - 30);
 
         // 1. Dashed guide lines
         // 1. Dashed guide lines (more white)
