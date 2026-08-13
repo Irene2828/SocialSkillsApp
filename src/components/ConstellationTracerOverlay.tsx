@@ -534,10 +534,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               <Ionicons name="calculator-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
             )}
             <Text style={{
-              fontFamily: FONTS.semiBold,
+              fontFamily: FONTS.regular,
               fontSize: 14,
               fontWeight: '600',
               color: '#0C4A6E',
+              letterSpacing: 0,
             }} numberOfLines={1}>
               {mode === 'constellations' ? (CONSTELLATIONS[itemIndex % CONSTELLATIONS.length].name) : mode === 'abc' ? `Letter ${letterLang === 'ukr' ? ABC_UKR[itemIndex % ABC_UKR.length] : ABC_ENG[itemIndex % ABC_ENG.length]}` : `Number ${DIGITS_DATA[itemIndex % DIGITS_DATA.length]}`}
             </Text>
@@ -585,10 +586,10 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <View style={styles.centeredControls}>
           <Pressable 
             onPress={() => onLangChange && onLangChange(letterLang === 'eng' ? 'ukr' : 'eng')}
-            style={styles.controlChip}
+            style={[styles.controlChip, styles.controlChipActive]}
           >
-            <Text style={styles.controlText}>
-              {letterLang === 'eng' ? '🇬🇧' : '🇺🇦'}
+            <Text style={[styles.controlText, { fontSize: 16 }]}>
+              {letterLang === 'eng' ? '🇨🇦' : '🇺🇦'}
             </Text>
           </Pressable>
 
