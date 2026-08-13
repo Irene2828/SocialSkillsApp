@@ -172,6 +172,49 @@ const ElectrifiedText = ({ text, style, startIndex = 0, totalLetters = 13 }: { t
     </View>
   );
 };
+const SUBTITLE_ROTATION_LIST = [
+  "Reward your knowledge, skills and actions",
+  "Redeem earned coins for real things",
+  "New toy? New book? More playtime?",
+  "You can have it all!"
+];
+
+const RotatingSubtitle = ({ subtitleColor, isSmallScreen }: { subtitleColor: string; isSmallScreen: boolean }) => {
+  const [index, setIndex] = useState(0);
+  const opacityAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      // Fade out
+      Animated.timing(opacityAnim, {
+        toValue: 0,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => {
+        // Increment index
+        setIndex((prev) => (prev + 1) % SUBTITLE_ROTATION_LIST.length);
+        // Fade in
+        Animated.timing(opacityAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 4000); // Rotate every 4 seconds
+
+    return () => clearInterval(timer);
+  }, [opacityAnim]);
+
+  return (
+    <Animated.View style={{ opacity: opacityAnim, width: '100%', alignItems: 'center' }}>
+      <Text 
+        style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: 12 }]}
+      >
+        {SUBTITLE_ROTATION_LIST[index]}
+      </Text>
+    </Animated.View>
+  );
+};
 
 export const HomeScreen = () => {
   const navigation = useNavigation<any>();
@@ -254,11 +297,9 @@ export const HomeScreen = () => {
           </View>
 
           <View style={{ transform: [{ translateY: isTablet ? 30 : 20 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
-            <Text 
-              style={[styles.startSubtitle, { color: subtitleColor, textAlign: 'center', fontFamily: FONTS.medium, fontWeight: '500' }, isSmallScreen && { paddingHorizontal: 12 }]}
-            >
-              Turn your knowledge{'\n'}into cool rewards!
-            </Text>
+            <View style={{ height: 80, justifyContent: 'center', alignItems: 'center', width: '100%' }} pointerEvents="none">
+              <RotatingSubtitle subtitleColor={subtitleColor} isSmallScreen={isSmallScreen} />
+            </View>
 
             <Button
               title="START"
