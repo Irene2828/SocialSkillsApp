@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.md,
   },
   actionButton: {
-    width: '80%',
-    maxWidth: 408,
+    width: '64%',
+    maxWidth: 326,
     alignSelf: 'center',
     paddingHorizontal: 64,
     minWidth: 208,
