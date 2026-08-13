@@ -128,9 +128,16 @@ const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
     ];
   } else if (char === 'B' || char === 'Б') {
     return [
-      [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }],
-      [{ x: 0.30, y: 0.25 }, { x: 0.65, y: 0.36 }, { x: 0.30, y: 0.48 }],
-      [{ x: 0.30, y: 0.48 }, { x: 0.70, y: 0.62 }, { x: 0.30, y: 0.75 }],
+      [
+        { x: 0.30, y: 0.25 }, // Top-left start
+        { x: 0.60, y: 0.25 }, // Top bar right
+        { x: 0.30, y: 0.25 }, // Back to top-left
+        { x: 0.30, y: 0.50 }, // Middle-left
+        { x: 0.55, y: 0.50 }, // Middle center belly start
+        { x: 0.65, y: 0.62 }, // Middle curve right
+        { x: 0.50, y: 0.75 }, // Bottom belly curve
+        { x: 0.30, y: 0.75 }  // Bottom-left end
+      ]
     ];
   } else if (char === 'C' || char === 'С') {
     return [
@@ -380,17 +387,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
         ctx.restore();
 
-        // 1. Whiter dashed guide lines connecting the helper guide dots
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
-        ctx.setLineDash([8, 12]);
-        ctx.beginPath();
-        for (let i = 0; i < points.length - 1; i++) {
-          ctx.moveTo(points[i].x, points[i].y);
-          ctx.lineTo(points[i+1].x, points[i+1].y);
-        }
-        ctx.stroke();
-        ctx.setLineDash([]);
+        // 1. Skip rendering straight dashed connector lines for letters/digits so kids follow the natural curves of the letter template instead of sharp edges
 
         // 2. White solid line for connected dot points
         if (connectedStars.length > 1) {
