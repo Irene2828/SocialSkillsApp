@@ -512,12 +512,12 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         onPointerCancel={handlePointerUp as any}
       />
       {/* Custom back button and green folder name tag centered under header exactly matching Puzzle screen style */}
-      <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 24, marginBottom: theme.spacing.md, zIndex: 30, paddingHorizontal: theme.spacing.md, position: 'absolute', top: 0, left: 0, right: 0 }}>
+      <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 12, marginBottom: theme.spacing.md, zIndex: 30, paddingHorizontal: theme.spacing.md, position: 'absolute', top: 0, left: 0, right: 0 }}>
         <View style={{ flex: 1, alignItems: 'flex-start' }}>
           <Pressable 
             onPress={onClose}
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -12 }}
           >
             <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
           </Pressable>

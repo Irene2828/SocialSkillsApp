@@ -757,12 +757,12 @@ export const PuzzleScreen = () => {
           <ScreenWrapper transparent>
             {!isSolved ? (
               <>
-                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 24, marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
+                <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 12, marginBottom: theme.spacing.md, zIndex: 2, paddingHorizontal: theme.spacing.md }}>
                   <View style={{ flex: 1, alignItems: 'flex-start' }}>
                     <Pressable 
                       onPress={() => setSelectedPuzzle(null)}
                       hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                      style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+                      style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -12 }}
                     >
                       <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
                     </Pressable>
