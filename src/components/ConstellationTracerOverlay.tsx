@@ -274,7 +274,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // Name title is now displayed in the green TopBar tag above, not on the canvas
+        // Draw current constellation name centered under top header in clean white text
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(nameText, width / 2, 110);
 
         // 1. Dashed guide lines
         // 1. Dashed guide lines (more white)
@@ -359,6 +363,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
       // ABC / Digits Handwriting Mode: Smooth freehand ink strokes
       if (mode === 'abc' || mode === 'digits') {
+        // No title text rendered inside letters and digits tracing screens
         ctx.save();
         ctx.fillStyle = 'transparent';
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)'; // More white dashes
@@ -527,7 +532,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               end={{ x: 0, y: 1 }}
             />
             {mode === 'constellations' ? (
-              <Ionicons name="star" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
+              <Ionicons name="star-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
             ) : mode === 'abc' ? (
               <Ionicons name="text-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
             ) : (
@@ -540,7 +545,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               color: '#0C4A6E',
               letterSpacing: 0,
             }} numberOfLines={1}>
-              {mode === 'constellations' ? (CONSTELLATIONS[itemIndex % CONSTELLATIONS.length].name) : mode === 'abc' ? `Letter ${letterLang === 'ukr' ? ABC_UKR[itemIndex % ABC_UKR.length] : ABC_ENG[itemIndex % ABC_ENG.length]}` : `Number ${DIGITS_DATA[itemIndex % DIGITS_DATA.length]}`}
+              {mode === 'constellations' ? 'Constellations' : mode === 'abc' ? 'ABC Letters' : 'Numbers'}
             </Text>
           </View>
         </View>
@@ -586,29 +591,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <View style={styles.centeredControls}>
           <Pressable 
             onPress={() => onLangChange && onLangChange(letterLang === 'eng' ? 'ukr' : 'eng')}
-            style={[
-              styles.controlChipCircular,
-              letterLang === 'eng' 
-                ? { backgroundColor: '#FF0000', borderColor: '#FFFFFF' } 
-                : { backgroundColor: '#0057B7', borderColor: '#FFD700' }
-            ]}
+            style={[styles.controlChipCircular, styles.controlChipActive]}
           >
-            {letterLang === 'eng' ? (
-              // Custom Canada maple leaf style representation with white center and red leaf
-              <View style={{ flexDirection: 'row', width: 34, height: 34, borderRadius: 17, overflow: 'hidden', borderWidth: 1, borderColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ width: 10, height: 34, backgroundColor: '#FF0000' }} />
-                <View style={{ flex: 1, height: 34, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text style={{ fontSize: 13, color: '#FF0000', lineHeight: 15, fontWeight: 'bold' }}>🍁</Text>
-                </View>
-                <View style={{ width: 10, height: 34, backgroundColor: '#FF0000' }} />
-              </View>
-            ) : (
-              // Ukraine blue/yellow half-fill
-              <View style={{ width: 34, height: 34, borderRadius: 17, overflow: 'hidden', borderWidth: 1, borderColor: '#FFD700', flexDirection: 'column' }}>
-                <View style={{ flex: 1, backgroundColor: '#0057B7' }} />
-                <View style={{ flex: 1, backgroundColor: '#FFD700' }} />
-              </View>
-            )}
+            <Text style={[styles.controlText, { fontSize: 13, fontWeight: '700', lineHeight: 18 }]}>
+              {letterLang === 'eng' ? 'EN' : 'UA'}
+            </Text>
           </Pressable>
 
           <Pressable 
