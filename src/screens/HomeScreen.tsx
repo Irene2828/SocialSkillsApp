@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   startSubtitle: {
     ...theme.typography.body,
     color: theme.colors.secondaryText,
-    letterSpacing: 0,
+    letterSpacing: 0.4,
     marginBottom: theme.spacing.md,
   },
   actionButton: {

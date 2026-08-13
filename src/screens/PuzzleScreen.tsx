@@ -593,7 +593,7 @@ export const PuzzleScreen = () => {
                   fontWeight: '500',
                   color: theme.colors.secondaryText,
                   textAlign: 'center',
-                  letterSpacing: 0,
+                  letterSpacing: 0.6,
                   marginBottom: theme.spacing.md,
                 }}>
                   Add a new puzzle by clicking button below.

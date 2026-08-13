@@ -274,11 +274,13 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // Draw current constellation name centered under top header in clean white text
+        // Draw current constellation name centered under top header in clean white text (with letterSpacing emulation)
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '500 20px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        ctx.fillText(nameText, width / 2, 110);
+        // Add tiny letter spacing by drawing with custom tracking spaces
+        const spacedName = nameText.split('').join('\u200A');
+        ctx.fillText(spacedName, width / 2, 110);
 
         // 1. Dashed guide lines
         // 1. Dashed guide lines (more white)

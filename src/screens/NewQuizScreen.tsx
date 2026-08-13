@@ -1015,7 +1015,7 @@ export const NewQuizScreen = () => {
               fontWeight: '500',
               color: theme.colors.secondaryText,
               textAlign: 'center',
-              letterSpacing: 0,
+              letterSpacing: 0.6,
               marginBottom: theme.spacing.md,
             }}>
               Add a new quiz to the list by clicking button below.
