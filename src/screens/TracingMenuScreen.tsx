@@ -11,13 +11,14 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface TracingScreenProps {
   onBackToGames: () => void;
+  embed?: boolean;
 }
 
 export type LetterMode = 'print' | 'cursive';
 export type LetterLang = 'eng' | 'ukr';
 export type TracingActiveFolder = 'none' | 'constellations' | 'abc' | 'digits';
 
-export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames }) => {
+export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames, embed = false }) => {
   const [activeFolder, setActiveFolder] = useState<TracingActiveFolder>('none');
   const [letterMode, setLetterMode] = useState<LetterMode>('print');
   const [letterLang, setLetterLang] = useState<LetterLang>('eng');
@@ -28,51 +29,48 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
   const numColumns = 2;
   const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
 
-  return (
-    <View style={{ flex: 1 }}>
-      <GlobalBackground />
-      <ScreenWrapper transparent>
-        <TopBar
-          title="Tracing"
-          showSettingsAndRewards={true}
-          onBack={onBackToGames}
-        />
+  const content = (
+    <>
+      <TopBar
+        title="Tracing"
+        showSettingsAndRewards={true}
+        onBack={onBackToGames}
+      />
 
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>
-          {/* Row 1: Constellations & ABC Letters */}
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: theme.spacing.md }}>
-            <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('constellations')}>
-              <Card style={styles.folderCard}>
-                <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
-                  <Text style={{ fontSize: 40 }}>✨</Text>
-                </View>
-                <Text style={styles.cardName} numberOfLines={2}>Constellations</Text>
-              </Card>
-            </Pressable>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[styles.scrollContent, { paddingHorizontal: 12 }]}>
+        {/* Row 1: Constellations & ABC Letters */}
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: theme.spacing.md }}>
+          <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('constellations')}>
+            <Card style={styles.folderCard}>
+              <View style={[styles.cardIconContainer, { backgroundColor: '#E0F2FE' }]}>
+                <Text style={{ fontSize: 40 }}>✨</Text>
+              </View>
+              <Text style={styles.cardName} numberOfLines={2}>Constellations</Text>
+            </Card>
+          </Pressable>
 
-            <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('abc')}>
-              <Card style={styles.folderCard}>
-                <View style={[styles.cardIconContainer, { backgroundColor: '#FEF08A' }]}>
-                  <Text style={{ fontSize: 40 }}>🔤</Text>
-                </View>
-                <Text style={styles.cardName} numberOfLines={2}>ABC Letters</Text>
-              </Card>
-            </Pressable>
-          </View>
+          <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('abc')}>
+            <Card style={styles.folderCard}>
+              <View style={[styles.cardIconContainer, { backgroundColor: '#FEF08A' }]}>
+                <Text style={{ fontSize: 40 }}>🔤</Text>
+              </View>
+              <Text style={styles.cardName} numberOfLines={2}>ABC Letters</Text>
+            </Card>
+          </Pressable>
+        </View>
 
-          {/* Row 2: Digits */}
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
-            <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('digits')}>
-              <Card style={styles.folderCard}>
-                <View style={[styles.cardIconContainer, { backgroundColor: '#FBCFE8' }]}>
-                  <Text style={{ fontSize: 40 }}>🔢</Text>
-                </View>
-                <Text style={styles.cardName} numberOfLines={2}>Digits 1 to 10</Text>
-              </Card>
-            </Pressable>
-          </View>
-        </ScrollView>
-      </ScreenWrapper>
+        {/* Row 2: Digits */}
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
+          <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('digits')}>
+            <Card style={styles.folderCard}>
+              <View style={[styles.cardIconContainer, { backgroundColor: '#FBCFE8' }]}>
+                <Text style={{ fontSize: 40 }}>🔢</Text>
+              </View>
+              <Text style={styles.cardName} numberOfLines={2}>Digits 1 to 10</Text>
+            </Card>
+          </Pressable>
+        </View>
+      </ScrollView>
 
       <Modal
         visible={activeFolder !== 'none'}
@@ -89,7 +87,19 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
           onClose={() => setActiveFolder('none')} 
         />
       </Modal>
+    </>
+  );
 
+  if (embed) {
+    return content;
+  }
+
+  return (
+    <View style={{ flex: 1 }}>
+      <GlobalBackground />
+      <ScreenWrapper transparent>
+        {content}
+      </ScreenWrapper>
       <AppTabBar activeRoute="Games" isFabActive={false} navContext="Passive" />
     </View>
   );

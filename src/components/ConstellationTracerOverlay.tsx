@@ -251,6 +251,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       
       ctx.clearRect(0, 0, width | 0, height | 0);
 
+      // Define a bounding box centered in the canvas to center content on all screens
+      const boxSize = Math.min(width, height - 260, 500);
+      const startX = (width - boxSize) / 2;
+      const startY = (height - boxSize) / 2;
+
       let nameText = '';
       let charToDraw = '';
 
@@ -270,8 +275,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
       if (mode === 'constellations') {
         const constellation = CONSTELLATIONS[itemIndex % CONSTELLATIONS.length];
         const points = constellation.points.map(p => ({
-          x: (p.x * width) | 0,
-          y: (p.y * height) | 0
+          x: (startX + p.x * boxSize) | 0,
+          y: (startY + p.y * boxSize) | 0
         }));
 
         // Draw current constellation name centered under top header in clean white text (with letterSpacing emulation)
@@ -372,12 +377,13 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.lineWidth = 4;
         ctx.setLineDash([10, 10]);
         // Restrained standard letter slant: Nunito / system fonts (removed extreme italic right incline for cursive)
+        const fontSize = Math.min(boxSize * 0.65, 250);
         ctx.font = (letterMode === 'cursive' && mode !== 'digits')
-          ? 'italic 500 240px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
-          : '500 250px system-ui, -apple-system, "Nunito", sans-serif';
+          ? `italic 500 ${fontSize}px "Dancing Script", "Comic Sans MS", "Caveat", cursive` 
+          : `500 ${fontSize}px system-ui, -apple-system, "Nunito", sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
+        ctx.strokeText(charToDraw, startX + boxSize / 2, startY + boxSize / 2);
         ctx.restore();
 
         ctx.save();
@@ -644,13 +650,12 @@ const styles = StyleSheet.create({
   },
   navControls: {
     position: 'absolute',
-    bottom: 95,
-    left: 0,
-    right: 0,
+    bottom: 24,
+    left: 24,
+    right: 24,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 60,
+    justifyContent: 'space-between',
     zIndex: 30,
   },
   navChipLong: {

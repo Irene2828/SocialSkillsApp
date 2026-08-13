@@ -463,10 +463,6 @@ export const PuzzleScreen = () => {
     );
   };
 
-  if (activeTab === 'tracing') {
-    return <TracingMenuScreen onBackToGames={() => setActiveTab('none')} />;
-  }
-
   if (activeTab === 'drawing') {
     return (
       <View style={{ flex: 1 }}>
@@ -484,7 +480,9 @@ export const PuzzleScreen = () => {
     <View style={{ flex: 1 }}>
       <GlobalBackground />
       <ScreenWrapper transparent>
-        {!activeFolderId ? (
+        {activeTab === 'tracing' ? (
+          <TracingMenuScreen onBackToGames={() => setActiveTab('none')} embed={true} />
+        ) : !activeFolderId ? (
           <>
             <TopBar
               title="Games"
