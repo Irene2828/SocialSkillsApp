@@ -279,13 +279,11 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (startY + p.y * boxSize) | 0
         }));
 
-        // Draw current constellation name centered under the constellation in clean white text (with letterSpacing emulation)
+        // Draw current constellation name centered under top header in clean white text
         ctx.fillStyle = '#FFFFFF';
         ctx.font = '500 20px system-ui, -apple-system, sans-serif';
         ctx.textAlign = 'center';
-        // Add tiny letter spacing by drawing with custom tracking spaces
-        const spacedName = nameText.split('').join('\u200A');
-        ctx.fillText(spacedName, width / 2, startY + boxSize + 30);
+        ctx.fillText(nameText, width / 2, startY + boxSize + 30);
 
         // 1. Dashed guide lines
         // 1. Dashed guide lines (more white)
@@ -523,42 +521,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           </Pressable>
         </View>
 
-        <View style={{ flex: 2, alignItems: 'center' }}>
-          <View style={{
-            minWidth: 120,
-            backgroundColor: '#BEF264',
-            paddingHorizontal: 12,
-            paddingVertical: 4,
-            borderWidth: 0,
-            borderRadius: 0,
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
-              style={StyleSheet.absoluteFill}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-            />
-            {mode === 'constellations' ? (
-              <Ionicons name="star-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
-            ) : mode === 'abc' ? (
-              <Ionicons name="text-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
-            ) : (
-              <Ionicons name="calculator-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
-            )}
-            <Text style={{
-              fontFamily: FONTS.regular,
-              fontSize: 14,
-              fontWeight: '600',
-              color: '#0C4A6E',
-              letterSpacing: 0,
-            }} numberOfLines={1}>
-              {mode === 'constellations' ? 'Constellations' : mode === 'abc' ? 'ABC Letters' : 'Numbers'}
-            </Text>
-          </View>
-        </View>
+        <View style={{ flex: 2, alignItems: 'center' }} />
 
         <View style={{ flex: 1, alignItems: 'flex-end' }} />
       </View>
