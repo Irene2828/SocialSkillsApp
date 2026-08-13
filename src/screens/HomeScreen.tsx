@@ -296,7 +296,7 @@ export const HomeScreen = () => {
             </View>
           </View>
 
-          <View style={{ transform: [{ translateY: isTablet ? 30 : 20 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
+          <View style={{ transform: [{ translateY: isTablet ? 50 : 35 }], width: '100%', alignItems: 'center' }} pointerEvents="box-none">
             <View style={{ height: 80, justifyContent: 'center', alignItems: 'center', width: '100%' }} pointerEvents="none">
               <RotatingSubtitle subtitleColor={subtitleColor} isSmallScreen={isSmallScreen} />
             </View>
