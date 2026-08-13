@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, useWindowDimensions, Modal } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
@@ -27,23 +27,16 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
   const numColumns = 2;
   const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
 
-  if ((activeFolder as string) !== 'none') {
+  if (activeFolder !== 'none') {
     return (
-      <Modal
-        visible={(activeFolder as string) !== 'none'}
-        transparent={false}
-        animationType="slide"
-        onRequestClose={() => setActiveFolder('none')}
-      >
-        <ConstellationTracerOverlay 
-          mode={activeFolder as any}
-          letterMode={letterMode}
-          letterLang={letterLang}
-          onModeChange={(newMode) => setLetterMode(newMode)}
-          onLangChange={(newLang) => setLetterLang(newLang)}
-          onClose={() => setActiveFolder('none')} 
-        />
-      </Modal>
+      <ConstellationTracerOverlay 
+        mode={activeFolder}
+        letterMode={letterMode}
+        letterLang={letterLang}
+        onModeChange={(newMode) => setLetterMode(newMode)}
+        onLangChange={(newLang) => setLetterLang(newLang)}
+        onClose={() => setActiveFolder('none')} 
+      />
     );
   }
 

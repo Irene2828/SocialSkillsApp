@@ -74,93 +74,74 @@ const CONSTELLATIONS = [
   { name: 'Vulpecula (The Fox)', points: [{ x: 0.20, y: 0.45 }, { x: 0.50, y: 0.45 }, { x: 0.80, y: 0.55 }] }
 ];
 
-// Helper maps of standard letter outlines for clean classic tracing
-const STANDARD_SHAPES: Record<string, { x: number; y: number }[]> = {
-  '1': [{ x: 0.40, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
-  '2': [{ x: 0.35, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.65, y: 0.35 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  '3': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.48, y: 0.48 }, { x: 0.65, y: 0.60 }, { x: 0.35, y: 0.75 }],
-  '4': [{ x: 0.55, y: 0.25 }, { x: 0.32, y: 0.55 }, { x: 0.68, y: 0.55 }, { x: 0.55, y: 0.55 }, { x: 0.55, y: 0.75 }],
-  '5': [{ x: 0.65, y: 0.25 }, { x: 0.38, y: 0.25 }, { x: 0.38, y: 0.48 }, { x: 0.62, y: 0.48 }, { x: 0.62, y: 0.75 }, { x: 0.35, y: 0.75 }],
-  '6': [{ x: 0.60, y: 0.25 }, { x: 0.38, y: 0.48 }, { x: 0.38, y: 0.75 }, { x: 0.62, y: 0.75 }, { x: 0.62, y: 0.50 }, { x: 0.38, y: 0.50 }],
-  '7': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.45, y: 0.75 }],
-  '8': [{ x: 0.50, y: 0.25 }, { x: 0.65, y: 0.38 }, { x: 0.50, y: 0.50 }, { x: 0.35, y: 0.62 }, { x: 0.50, y: 0.75 }, { x: 0.65, y: 0.62 }, { x: 0.50, y: 0.50 }, { x: 0.35, y: 0.38 }, { x: 0.50, y: 0.25 }],
-  '9': [{ x: 0.50, y: 0.75 }, { x: 0.62, y: 0.50 }, { x: 0.62, y: 0.25 }, { x: 0.38, y: 0.25 }, { x: 0.38, y: 0.50 }, { x: 0.62, y: 0.50 }],
-  '10': [{ x: 0.20, y: 0.40 }, { x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.55, y: 0.25 }, { x: 0.75, y: 0.25 }, { x: 0.75, y: 0.75 }, { x: 0.55, y: 0.75 }, { x: 0.55, y: 0.25 }],
-  
-  // English Letters
-  'A': [{ x: 0.28, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.60, y: 0.52 }, { x: 0.40, y: 0.52 }],
-  'B': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.58, y: 0.48 }, { x: 0.32, y: 0.48 }, { x: 0.62, y: 0.48 }, { x: 0.62, y: 0.75 }, { x: 0.32, y: 0.75 }],
-  'C': [{ x: 0.68, y: 0.32 }, { x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.68 }],
-  'D': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.68, y: 0.50 }, { x: 0.58, y: 0.75 }, { x: 0.32, y: 0.75 }],
-  'E': [{ x: 0.65, y: 0.25 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.60, y: 0.50 }, { x: 0.35, y: 0.50 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  'F': [{ x: 0.65, y: 0.25 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.60, y: 0.50 }, { x: 0.35, y: 0.50 }, { x: 0.35, y: 0.75 }],
-  'G': [{ x: 0.65, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.65, y: 0.52 }, { x: 0.50, y: 0.52 }],
-  'H': [{ x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }, { x: 0.32, y: 0.50 }, { x: 0.68, y: 0.50 }, { x: 0.68, y: 0.25 }, { x: 0.68, y: 0.75 }],
-  'I': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  'J': [{ x: 0.60, y: 0.25 }, { x: 0.60, y: 0.68 }, { x: 0.45, y: 0.75 }, { x: 0.32, y: 0.62 }],
-  'K': [{ x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }, { x: 0.32, y: 0.50 }, { x: 0.65, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.65, y: 0.75 }],
-  'L': [{ x: 0.35, y: 0.25 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  'M': [{ x: 0.28, y: 0.75 }, { x: 0.28, y: 0.25 }, { x: 0.50, y: 0.52 }, { x: 0.72, y: 0.25 }, { x: 0.72, y: 0.75 }],
-  'N': [{ x: 0.28, y: 0.75 }, { x: 0.28, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.72, y: 0.25 }],
-  'O': [{ x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.50 }, { x: 0.50, y: 0.25 }],
-  'P': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.58, y: 0.50 }, { x: 0.32, y: 0.50 }],
-  'Q': [{ x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.50 }, { x: 0.50, y: 0.25 }, { x: 0.58, y: 0.62 }, { x: 0.72, y: 0.75 }],
-  'R': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.58, y: 0.50 }, { x: 0.32, y: 0.50 }, { x: 0.65, y: 0.75 }],
-  'S': [{ x: 0.65, y: 0.35 }, { x: 0.50, y: 0.25 }, { x: 0.35, y: 0.38 }, { x: 0.50, y: 0.50 }, { x: 0.65, y: 0.62 }, { x: 0.50, y: 0.75 }, { x: 0.35, y: 0.65 }],
-  'T': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
-  'U': [{ x: 0.32, y: 0.25 }, { x: 0.32, y: 0.62 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.62 }, { x: 0.68, y: 0.25 }],
-  'V': [{ x: 0.28, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.72, y: 0.25 }],
-  'W': [{ x: 0.25, y: 0.25 }, { x: 0.38, y: 0.75 }, { x: 0.50, y: 0.45 }, { x: 0.62, y: 0.75 }, { x: 0.75, y: 0.25 }],
-  'X': [{ x: 0.28, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.50, y: 0.50 }, { x: 0.72, y: 0.25 }, { x: 0.28, y: 0.75 }],
-  'Y': [{ x: 0.28, y: 0.25 }, { x: 0.50, y: 0.48 }, { x: 0.72, y: 0.25 }, { x: 0.50, y: 0.48 }, { x: 0.50, y: 0.75 }],
-  'Z': [{ x: 0.30, y: 0.25 }, { x: 0.70, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }],
-
-  // Ukrainian letters
-  'А': [{ x: 0.28, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.60, y: 0.52 }, { x: 0.40, y: 0.52 }],
-  'Б': [{ x: 0.65, y: 0.25 }, { x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }, { x: 0.62, y: 0.75 }, { x: 0.62, y: 0.50 }, { x: 0.32, y: 0.50 }],
-  'В': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.58, y: 0.48 }, { x: 0.32, y: 0.48 }, { x: 0.62, y: 0.48 }, { x: 0.62, y: 0.75 }, { x: 0.32, y: 0.75 }],
-  'Г': [{ x: 0.65, y: 0.25 }, { x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }],
-  'Ґ': [{ x: 0.65, y: 0.20 }, { x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }],
-  'Д': [{ x: 0.25, y: 0.65 }, { x: 0.38, y: 0.25 }, { x: 0.62, y: 0.25 }, { x: 0.75, y: 0.65 }, { x: 0.20, y: 0.65 }, { x: 0.20, y: 0.75 }, { x: 0.80, y: 0.75 }],
-  'Е': [{ x: 0.65, y: 0.25 }, { x: 0.35, y: 0.25 }, { x: 0.35, y: 0.50 }, { x: 0.60, y: 0.50 }, { x: 0.35, y: 0.50 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  'Є': [{ x: 0.65, y: 0.32 }, { x: 0.48, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.60, y: 0.50 }, { x: 0.32, y: 0.50 }, { x: 0.48, y: 0.75 }, { x: 0.65, y: 0.68 }],
-  'Ж': [{ x: 0.25, y: 0.25 }, { x: 0.75, y: 0.75 }, { x: 0.50, y: 0.50 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.50, y: 0.50 }, { x: 0.75, y: 0.25 }, { x: 0.25, y: 0.75 }],
-  'З': [{ x: 0.35, y: 0.32 }, { x: 0.55, y: 0.25 }, { x: 0.55, y: 0.48 }, { x: 0.35, y: 0.48 }, { x: 0.55, y: 0.48 }, { x: 0.60, y: 0.75 }, { x: 0.35, y: 0.70 }],
-  'И': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }],
-  'І': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }],
-  'Ї': [{ x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.42, y: 0.15 }, { x: 0.58, y: 0.15 }],
-  'Й': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }, { x: 0.45, y: 0.16 }, { x: 0.55, y: 0.16 }],
-  'К': [{ x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }, { x: 0.32, y: 0.50 }, { x: 0.65, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.65, y: 0.75 }],
-  'Л': [{ x: 0.32, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.68, y: 0.75 }],
-  'М': [{ x: 0.28, y: 0.75 }, { x: 0.28, y: 0.25 }, { x: 0.50, y: 0.52 }, { x: 0.72, y: 0.25 }, { x: 0.72, y: 0.75 }],
-  'Н': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.30, y: 0.50 }, { x: 0.70, y: 0.50 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }],
-  'О': [{ x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.50 }, { x: 0.50, y: 0.25 }],
-  'П': [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }],
-  'Р': [{ x: 0.32, y: 0.75 }, { x: 0.32, y: 0.25 }, { x: 0.58, y: 0.25 }, { x: 0.58, y: 0.50 }, { x: 0.32, y: 0.50 }],
-  'С': [{ x: 0.68, y: 0.32 }, { x: 0.50, y: 0.25 }, { x: 0.32, y: 0.50 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.68 }],
-  'Т': [{ x: 0.32, y: 0.25 }, { x: 0.68, y: 0.25 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
-  'У': [{ x: 0.28, y: 0.25 }, { x: 0.50, y: 0.50 }, { x: 0.72, y: 0.25 }, { x: 0.50, y: 0.50 }, { x: 0.35, y: 0.75 }],
-  'Ф': [{ x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.50, y: 0.32 }, { x: 0.32, y: 0.32 }, { x: 0.32, y: 0.58 }, { x: 0.50, y: 0.58 }, { x: 0.50, y: 0.40 }, { x: 0.68, y: 0.40 }, { x: 0.68, y: 0.60 }, { x: 0.50, y: 0.60 }],
-  'Х': [{ x: 0.28, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.50, y: 0.50 }, { x: 0.72, y: 0.25 }, { x: 0.28, y: 0.75 }],
-  'Ц': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.70, y: 0.75 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }, { x: 0.75, y: 0.85 }],
-  'Ч': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.50 }, { x: 0.70, y: 0.50 }, { x: 0.70, y: 0.25 }, { x: 0.70, y: 0.75 }],
-  'Ш': [{ x: 0.28, y: 0.25 }, { x: 0.28, y: 0.75 }, { x: 0.50, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.72, y: 0.75 }, { x: 0.72, y: 0.25 }],
-  'Щ': [{ x: 0.28, y: 0.25 }, { x: 0.28, y: 0.75 }, { x: 0.50, y: 0.75 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }, { x: 0.72, y: 0.75 }, { x: 0.72, y: 0.25 }, { x: 0.72, y: 0.75 }, { x: 0.77, y: 0.85 }],
-  'Ь': [{ x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }, { x: 0.58, y: 0.75 }, { x: 0.58, y: 0.50 }, { x: 0.32, y: 0.50 }],
-  'Ю': [{ x: 0.30, y: 0.25 }, { x: 0.30, y: 0.75 }, { x: 0.30, y: 0.50 }, { x: 0.52, y: 0.50 }, { x: 0.65, y: 0.32 }, { x: 0.80, y: 0.50 }, { x: 0.65, y: 0.68 }, { x: 0.52, y: 0.50 }],
-  'Я': [{ x: 0.65, y: 0.75 }, { x: 0.65, y: 0.25 }, { x: 0.45, y: 0.25 }, { x: 0.45, y: 0.50 }, { x: 0.65, y: 0.50 }, { x: 0.45, y: 0.75 }]
-};
-
+// Comprehensive stroke guides for smooth handwriting flow
 const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
-  const shape = STANDARD_SHAPES[char];
-  if (shape) {
-    return [shape];
+  if (char === '1') {
+    return [
+      [{ x: 0.38, y: 0.38 }, { x: 0.50, y: 0.25 }, { x: 0.50, y: 0.75 }],
+      [{ x: 0.38, y: 0.75 }, { x: 0.62, y: 0.75 }],
+    ];
+  } else if (char === '2') {
+    return [
+      [{ x: 0.32, y: 0.35 }, { x: 0.50, y: 0.24 }, { x: 0.68, y: 0.35 }, { x: 0.32, y: 0.75 }, { x: 0.68, y: 0.75 }]
+    ];
+  } else if (char === '3') {
+    return [
+      [{ x: 0.32, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.46, y: 0.48 }, { x: 0.65, y: 0.60 }, { x: 0.32, y: 0.75 }]
+    ];
+  } else if (char === '4') {
+    return [
+      [{ x: 0.58, y: 0.25 }, { x: 0.30, y: 0.55 }, { x: 0.72, y: 0.55 }],
+      [{ x: 0.58, y: 0.45 }, { x: 0.58, y: 0.75 }],
+    ];
+  } else if (char === '5') {
+    return [
+      [{ x: 0.65, y: 0.25 }, { x: 0.38, y: 0.25 }],
+      [{ x: 0.38, y: 0.25 }, { x: 0.38, y: 0.48 }, { x: 0.65, y: 0.58 }, { x: 0.35, y: 0.75 }],
+    ];
+  } else if (char === '6') {
+    return [
+      [{ x: 0.62, y: 0.25 }, { x: 0.35, y: 0.48 }, { x: 0.35, y: 0.75 }, { x: 0.65, y: 0.75 }, { x: 0.35, y: 0.50 }]
+    ];
+  } else if (char === '7') {
+    return [
+      [{ x: 0.32, y: 0.25 }, { x: 0.68, y: 0.25 }, { x: 0.42, y: 0.75 }]
+    ];
+  } else if (char === '8') {
+    return [
+      [{ x: 0.50, y: 0.25 }, { x: 0.68, y: 0.37 }, { x: 0.50, y: 0.50 }, { x: 0.32, y: 0.63 }, { x: 0.50, y: 0.75 }, { x: 0.68, y: 0.63 }, { x: 0.50, y: 0.50 }, { x: 0.32, y: 0.37 }, { x: 0.50, y: 0.25 }]
+    ];
+  } else if (char === '9') {
+    return [
+      [{ x: 0.65, y: 0.48 }, { x: 0.35, y: 0.48 }, { x: 0.35, y: 0.25 }, { x: 0.65, y: 0.25 }, { x: 0.65, y: 0.75 }]
+    ];
+  } else if (char === '10') {
+    return [
+      [{ x: 0.22, y: 0.40 }, { x: 0.32, y: 0.25 }, { x: 0.32, y: 0.75 }],
+      [{ x: 0.55, y: 0.25 }, { x: 0.78, y: 0.25 }, { x: 0.78, y: 0.75 }, { x: 0.55, y: 0.75 }, { x: 0.55, y: 0.25 }],
+    ];
+  } else if (char === 'A' || char === 'А') {
+    return [
+      [{ x: 0.25, y: 0.75 }, { x: 0.50, y: 0.25 }],
+      [{ x: 0.50, y: 0.25 }, { x: 0.75, y: 0.75 }],
+      [{ x: 0.36, y: 0.52 }, { x: 0.64, y: 0.52 }],
+    ];
+  } else if (char === 'B' || char === 'Б') {
+    return [
+      [{ x: 0.30, y: 0.75 }, { x: 0.30, y: 0.25 }],
+      [{ x: 0.30, y: 0.25 }, { x: 0.65, y: 0.36 }, { x: 0.30, y: 0.48 }],
+      [{ x: 0.30, y: 0.48 }, { x: 0.70, y: 0.62 }, { x: 0.30, y: 0.75 }],
+    ];
+  } else if (char === 'C' || char === 'С') {
+    return [
+      [{ x: 0.70, y: 0.33 }, { x: 0.42, y: 0.25 }, { x: 0.30, y: 0.50 }, { x: 0.42, y: 0.75 }, { x: 0.70, y: 0.67 }]
+    ];
   }
-  
-  // Generic natural fallback points
+
+  // Generic natural multi-stroke preschool handwriting pattern
   if (isCursive) {
     return [
-      [{ x: 0.35, y: 0.70 }, { x: 0.35, y: 0.30 }, { x: 0.65, y: 0.30 }, { x: 0.65, y: 0.70 }]
+      [{ x: 0.22, y: 0.68 }, { x: 0.38, y: 0.28 }, { x: 0.62, y: 0.72 }, { x: 0.78, y: 0.32 }]
     ];
   }
   return [
@@ -295,7 +276,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
         // Name title is now displayed in the green TopBar tag above, not on the canvas
 
-        // 1. Whiter dashed guide lines
+        // 1. Dashed guide lines
+        // 1. Dashed guide lines (more white)
         ctx.lineWidth = 2.2;
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
         ctx.setLineDash([8, 12]);
@@ -307,7 +289,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. White solid line for connected stars (instead of yellow)
+        // 2. White solid line for connected stars
         if (connectedStars.length > 1) {
           ctx.lineWidth = 4;
           ctx.strokeStyle = '#FFFFFF';
@@ -319,13 +301,13 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           ctx.stroke();
         }
 
-        // 3. Live active white/cyan beam line to finger/pointer
+        // 3. Live active golden beam line to finger/pointer
         if (pointerActive && !successState && connectedStars.length > 0) {
           const lastConnectedIndex = connectedStars[connectedStars.length - 1];
           const startPoint = points[lastConnectedIndex];
           
           ctx.lineWidth = 3;
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.strokeStyle = '#FFFFFF';
           ctx.beginPath();
           ctx.moveTo(startPoint.x, startPoint.y);
           ctx.lineTo(pointerX, pointerY);
@@ -343,7 +325,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           const isNext = !successState && i === connectedStars.length;
 
           const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 22 : 16);
-          gradient.addColorStop(0, isConnected || successState ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)');
+          gradient.addColorStop(0, isConnected || successState ? '#F6C774' : 'rgba(246, 199, 116, 0.45)');
           gradient.addColorStop(1, 'transparent');
           
           ctx.fillStyle = gradient;
@@ -375,102 +357,48 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         }
       }
 
-      // ABC / Digits Handwriting Mode: Flat, non-2D/3D shapes, dot-to-dot tracing logic
+      // ABC / Digits Handwriting Mode: Smooth freehand ink strokes
       if (mode === 'abc' || mode === 'digits') {
-        const strokes = GET_HANDWRITING_STROKES(charToDraw, letterMode === 'cursive');
-        // Flatten strokes into single list of dot-to-dot points for children to connect one by one
-        const points = strokes.flat().map(p => ({
-          x: (p.x * width) | 0,
-          y: (p.y * height) | 0
-        }));
-
-        // Render standard classic, clean rounded letters/digits template in background as high-contrast whiter dashes
         ctx.save();
         ctx.fillStyle = 'transparent';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
-        ctx.lineWidth = 14;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.setLineDash([12, 16]); // Whiter dashes mapping the curves of standard background letters
-        ctx.font = letterMode === 'cursive' 
-          ? '500 240px system-ui, -apple-system, sans-serif'
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)'; // More white dashes
+        ctx.lineWidth = 4;
+        ctx.setLineDash([10, 10]);
+        // Restrained standard letter slant: Nunito / system fonts (removed extreme italic right incline for cursive)
+        ctx.font = (letterMode === 'cursive' && mode !== 'digits')
+          ? 'italic 500 240px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
           : '500 250px system-ui, -apple-system, "Nunito", sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
         ctx.restore();
 
-        // 1. Skip rendering straight dashed connector lines for letters/digits so kids follow the natural curves of the letter template instead of sharp edges
+        ctx.save();
+        ctx.lineWidth = 8;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = '#5C9EAD';
 
-        // 2. White solid line for connected dot points
-        if (connectedStars.length > 1) {
-          ctx.lineWidth = 8;
-          ctx.lineCap = 'round';
-          ctx.lineJoin = 'round';
-          ctx.strokeStyle = '#FFFFFF';
-          ctx.beginPath();
-          ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
-          for (let i = 1; i < connectedStars.length; i++) {
-            ctx.lineTo(points[connectedStars[i]].x, points[connectedStars[i]].y);
-          }
-          ctx.stroke();
-        }
-
-        // 3. Live active white/cyan beam line to finger/pointer
-        if (pointerActive && !successState && connectedStars.length > 0) {
-          const lastConnectedIndex = connectedStars[connectedStars.length - 1];
-          const startPoint = points[lastConnectedIndex];
-          
-          ctx.lineWidth = 5;
-          ctx.lineCap = 'round';
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-          ctx.beginPath();
-          ctx.moveTo(startPoint.x, startPoint.y);
-          ctx.lineTo(pointerX, pointerY);
-          ctx.stroke();
-
-          if (Math.random() > 0.4) {
-            spawnStarDust(pointerX, pointerY, 1);
-          }
-        }
-
-        // 4. Trace nodes (dots)
-        for (let i = 0; i < points.length; i++) {
-          const p = points[i];
-          const isConnected = connectedStars.includes(i);
-          const isNext = !successState && i === connectedStars.length;
-
-          const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 22 : 16);
-          gradient.addColorStop(0, isConnected || successState ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)');
-          gradient.addColorStop(1, 'transparent');
-          
-          ctx.fillStyle = gradient;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, isNext ? 22 : 16, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = '#FFFFFF';
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, isNext ? 5 : 3, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        // Proximity snapping logic for dot-to-dot letters/digits
-        if (pointerActive && !successState) {
-          const nextIndex = connectedStars.length;
-          if (nextIndex < points.length) {
-            const target = points[nextIndex];
-            const dx = pointerX - target.x;
-            const dy = pointerY - target.y;
-            if (dx * dx + dy * dy < 55 * 55) {
-              connectedStars.push(nextIndex);
-              spawnStarDust(target.x, target.y, 12);
-              if (connectedStars.length === points.length) {
-                state.successState = true;
-              }
+        for (const stroke of userDrawnStrokes) {
+          if (stroke.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(stroke[0].x, stroke[0].y);
+            for (let i = 1; i < stroke.length; i++) {
+              ctx.lineTo(stroke[i].x, stroke[i].y);
             }
+            ctx.stroke();
           }
         }
+
+        if (currentStroke.length > 1) {
+          ctx.beginPath();
+          ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
+          for (let i = 1; i < currentStroke.length; i++) {
+            ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
       }
 
       // Update and draw star dust particles
@@ -576,21 +504,20 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
           >
-            <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
+            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
           </Pressable>
         </View>
 
         <View style={{ flex: 2, alignItems: 'center' }}>
           <View style={{
             minWidth: 120,
-            alignItems: 'center',
-            backgroundColor: theme.colors.primary,
+            backgroundColor: '#BEF264',
             paddingHorizontal: 12,
-            paddingVertical: theme.spacing.xs,
+            paddingVertical: 4,
             borderWidth: 0,
             borderRadius: 0,
-            overflow: 'hidden',
             flexDirection: 'row',
+            alignItems: 'center',
             justifyContent: 'center',
           }}>
             <LinearGradient
@@ -607,10 +534,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               <Ionicons name="calculator-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
             )}
             <Text style={{
-              ...theme.typography.body,
+              fontFamily: FONTS.semiBold,
               fontSize: 14,
               fontWeight: '600',
-              letterSpacing: 0,
               color: '#0C4A6E',
             }} numberOfLines={1}>
               {mode === 'constellations' ? (CONSTELLATIONS[itemIndex % CONSTELLATIONS.length].name) : mode === 'abc' ? `Letter ${letterLang === 'ukr' ? ABC_UKR[itemIndex % ABC_UKR.length] : ABC_ENG[itemIndex % ABC_ENG.length]}` : `Number ${DIGITS_DATA[itemIndex % DIGITS_DATA.length]}`}
@@ -621,7 +547,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <View style={{ flex: 1, alignItems: 'flex-end' }} />
       </View>
 
-      {/* 20% shorter navigation arrows (67px) under the constellations, hiding left arrow on first item */}
+      {/* 20% shorter navigation arrows (67px) in tag green color (#BEF264), hiding left arrow on first item */}
       <View style={styles.navControls}>
         <View style={{ width: 80, height: 44, opacity: itemIndex === 0 ? 0 : 1 }} pointerEvents={itemIndex === 0 ? 'none' : 'auto'}>
           <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
@@ -629,7 +555,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               <Path 
                 d="M 62 10 L 5 10 M 15 2 L 5 10 L 15 18" 
                 stroke="#BEF264" 
-                strokeWidth="1.6" 
+                strokeOpacity={0.45}
+                strokeWidth="1.8" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
                 fill="none"
@@ -643,7 +570,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             <Path 
               d="M 5 10 L 62 10 M 52 2 L 62 10 L 52 18" 
               stroke="#BEF264" 
-              strokeWidth="1.6" 
+              strokeOpacity={0.95}
+              strokeWidth="1.8" 
               strokeLinecap="round" 
               strokeLinejoin="round"
               fill="none"
@@ -660,7 +588,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             style={styles.controlChip}
           >
             <Text style={styles.controlText}>
-              {letterLang === 'eng' ? '🇬🇧 ENG' : '🇺🇦 UKR'}
+              {letterLang === 'eng' ? '🇬🇧' : '🇺🇦'}
             </Text>
           </Pressable>
 
@@ -668,8 +596,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             onPress={() => onModeChange && onModeChange(letterMode === 'print' ? 'cursive' : 'print')}
             style={[styles.controlChip, styles.controlChipActive]}
           >
-            <Text style={styles.controlText}>
-              {letterMode === 'print' ? 'Print Aa' : 'Cursive 𝓐a'}
+            <Text style={[styles.controlText, { fontSize: 15 }]}>
+              {letterMode === 'print' ? 'A' : '𝓐'}
             </Text>
           </Pressable>
         </View>

@@ -75,16 +75,16 @@ const AppTabs = () => {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen 
+        name="Puzzles" 
+        component={PuzzleScreen} 
+      />
+      <Tab.Screen 
         name="NewQuiz" 
         component={NewQuizScreen} 
       />
       <Tab.Screen
         name="Tasks"
         component={TasksScreen}
-      />
-      <Tab.Screen 
-        name="Puzzles" 
-        component={PuzzleScreen} 
       />
       <Tab.Screen 
         name="MyRewards" 
