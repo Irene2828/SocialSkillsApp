@@ -141,7 +141,7 @@ const GET_HANDWRITING_STROKES = (char: string, isCursive: boolean) => {
   // Generic natural multi-stroke preschool handwriting pattern
   if (isCursive) {
     return [
-      [{ x: 0.22, y: 0.68 }, { x: 0.38, y: 0.28 }, { x: 0.62, y: 0.72 }, { x: 0.78, y: 0.32 }]
+      [{ x: 0.35, y: 0.70 }, { x: 0.35, y: 0.30 }, { x: 0.65, y: 0.30 }, { x: 0.65, y: 0.70 }]
     ];
   }
   return [
@@ -276,9 +276,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
         // Name title is now displayed in the green TopBar tag above, not on the canvas
 
-        // 1. Dashed guide lines
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+        // 1. Whiter dashed guide lines
+        ctx.lineWidth = 2.2;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
         ctx.setLineDash([8, 12]);
         ctx.beginPath();
         for (let i = 0; i < points.length - 1; i++) {
@@ -288,10 +288,10 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. Golden solid line for connected stars
+        // 2. White solid line for connected stars (instead of yellow)
         if (connectedStars.length > 1) {
           ctx.lineWidth = 4;
-          ctx.strokeStyle = successState ? '#FFD700' : '#5C9EAD';
+          ctx.strokeStyle = '#FFFFFF';
           ctx.beginPath();
           ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
           for (let i = 1; i < connectedStars.length; i++) {
@@ -300,13 +300,13 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           ctx.stroke();
         }
 
-        // 3. Live active golden beam line to finger/pointer
+        // 3. Live active white/cyan beam line to finger/pointer
         if (pointerActive && !successState && connectedStars.length > 0) {
           const lastConnectedIndex = connectedStars[connectedStars.length - 1];
           const startPoint = points[lastConnectedIndex];
           
           ctx.lineWidth = 3;
-          ctx.strokeStyle = '#5C9EAD';
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
           ctx.beginPath();
           ctx.moveTo(startPoint.x, startPoint.y);
           ctx.lineTo(pointerX, pointerY);
@@ -324,7 +324,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           const isNext = !successState && i === connectedStars.length;
 
           const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 22 : 16);
-          gradient.addColorStop(0, isConnected || successState ? '#F6C774' : 'rgba(246, 199, 116, 0.45)');
+          gradient.addColorStop(0, isConnected || successState ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)');
           gradient.addColorStop(1, 'transparent');
           
           ctx.fillStyle = gradient;
@@ -356,47 +356,93 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         }
       }
 
-      // ABC / Digits Handwriting Mode: Smooth freehand ink strokes
+      // ABC / Digits Handwriting Mode: Flat, non-2D/3D shapes, dot-to-dot tracing logic
       if (mode === 'abc' || mode === 'digits') {
-        ctx.save();
-        ctx.fillStyle = 'transparent';
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
-        ctx.lineWidth = 4;
-        ctx.setLineDash([10, 10]);
-        ctx.font = letterMode === 'cursive' 
-          ? 'italic 500 240px "Dancing Script", "Comic Sans MS", "Caveat", cursive' 
-          : '500 250px system-ui, -apple-system, "Nunito", sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
-        ctx.restore();
+        const strokes = GET_HANDWRITING_STROKES(charToDraw, letterMode === 'cursive');
+        // Flatten strokes into single list of dot-to-dot points for children to connect one by one
+        const points = strokes.flat().map(p => ({
+          x: (p.x * width) | 0,
+          y: (p.y * height) | 0
+        }));
 
-        ctx.save();
-        ctx.lineWidth = 8;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
-        ctx.strokeStyle = '#5C9EAD';
-
-        for (const stroke of userDrawnStrokes) {
-          if (stroke.length > 1) {
-            ctx.beginPath();
-            ctx.moveTo(stroke[0].x, stroke[0].y);
-            for (let i = 1; i < stroke.length; i++) {
-              ctx.lineTo(stroke[i].x, stroke[i].y);
-            }
-            ctx.stroke();
-          }
+        // 1. Whiter dashed guide lines for the letters/digits shape
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.setLineDash([8, 12]);
+        ctx.beginPath();
+        for (let i = 0; i < points.length - 1; i++) {
+          ctx.moveTo(points[i].x, points[i].y);
+          ctx.lineTo(points[i+1].x, points[i+1].y);
         }
+        ctx.stroke();
+        ctx.setLineDash([]);
 
-        if (currentStroke.length > 1) {
+        // 2. White solid line for connected dot points
+        if (connectedStars.length > 1) {
+          ctx.lineWidth = 5;
+          ctx.strokeStyle = '#FFFFFF';
           ctx.beginPath();
-          ctx.moveTo(currentStroke[0].x, currentStroke[0].y);
-          for (let i = 1; i < currentStroke.length; i++) {
-            ctx.lineTo(currentStroke[i].x, currentStroke[i].y);
+          ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
+          for (let i = 1; i < connectedStars.length; i++) {
+            ctx.lineTo(points[connectedStars[i]].x, points[connectedStars[i]].y);
           }
           ctx.stroke();
         }
-        ctx.restore();
+
+        // 3. Live active white/cyan beam line to finger/pointer
+        if (pointerActive && !successState && connectedStars.length > 0) {
+          const lastConnectedIndex = connectedStars[connectedStars.length - 1];
+          const startPoint = points[lastConnectedIndex];
+          
+          ctx.lineWidth = 3.5;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+          ctx.beginPath();
+          ctx.moveTo(startPoint.x, startPoint.y);
+          ctx.lineTo(pointerX, pointerY);
+          ctx.stroke();
+
+          if (Math.random() > 0.4) {
+            spawnStarDust(pointerX, pointerY, 1);
+          }
+        }
+
+        // 4. Trace nodes (dots)
+        for (let i = 0; i < points.length; i++) {
+          const p = points[i];
+          const isConnected = connectedStars.includes(i);
+          const isNext = !successState && i === connectedStars.length;
+
+          const gradient = ctx.createRadialGradient(p.x, p.y, 2, p.x, p.y, isNext ? 22 : 16);
+          gradient.addColorStop(0, isConnected || successState ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)');
+          gradient.addColorStop(1, 'transparent');
+          
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, isNext ? 22 : 16, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = '#FFFFFF';
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, isNext ? 5 : 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Proximity snapping logic for dot-to-dot letters/digits
+        if (pointerActive && !successState) {
+          const nextIndex = connectedStars.length;
+          if (nextIndex < points.length) {
+            const target = points[nextIndex];
+            const dx = pointerX - target.x;
+            const dy = pointerY - target.y;
+            if (dx * dx + dy * dy < 55 * 55) {
+              connectedStars.push(nextIndex);
+              spawnStarDust(target.x, target.y, 12);
+              if (connectedStars.length === points.length) {
+                state.successState = true;
+              }
+            }
+          }
+        }
       }
 
       // Update and draw star dust particles
@@ -502,20 +548,21 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
           >
-            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+            <Ionicons name="chevron-back" size={24} color={theme.colors.text} />
           </Pressable>
         </View>
 
         <View style={{ flex: 2, alignItems: 'center' }}>
           <View style={{
             minWidth: 120,
-            backgroundColor: '#BEF264',
+            alignItems: 'center',
+            backgroundColor: theme.colors.primary,
             paddingHorizontal: 12,
-            paddingVertical: 4,
+            paddingVertical: theme.spacing.xs,
             borderWidth: 0,
             borderRadius: 0,
+            overflow: 'hidden',
             flexDirection: 'row',
-            alignItems: 'center',
             justifyContent: 'center',
           }}>
             <LinearGradient
@@ -532,9 +579,10 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
               <Ionicons name="calculator-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
             )}
             <Text style={{
-              fontFamily: FONTS.semiBold,
+              ...theme.typography.body,
               fontSize: 14,
               fontWeight: '600',
+              letterSpacing: 0,
               color: '#0C4A6E',
             }} numberOfLines={1}>
               {mode === 'constellations' ? (CONSTELLATIONS[itemIndex % CONSTELLATIONS.length].name) : mode === 'abc' ? `Letter ${letterLang === 'ukr' ? ABC_UKR[itemIndex % ABC_UKR.length] : ABC_ENG[itemIndex % ABC_ENG.length]}` : `Number ${DIGITS_DATA[itemIndex % DIGITS_DATA.length]}`}
@@ -552,7 +600,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
             <Svg width={67} height={20} viewBox="0 0 67 20">
               <Path 
                 d="M 62 10 L 5 10 M 15 2 L 5 10 L 15 18" 
-                stroke="rgba(255, 255, 255, 0.35)" 
+                stroke="#BEF264" 
                 strokeWidth="1.6" 
                 strokeLinecap="round" 
                 strokeLinejoin="round"
@@ -566,7 +614,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           <Svg width={67} height={20} viewBox="0 0 67 20">
             <Path 
               d="M 5 10 L 62 10 M 52 2 L 62 10 L 52 18" 
-              stroke="rgba(255, 255, 255, 0.85)" 
+              stroke="#BEF264" 
               strokeWidth="1.6" 
               strokeLinecap="round" 
               strokeLinejoin="round"
