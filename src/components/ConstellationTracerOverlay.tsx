@@ -586,18 +586,36 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         <View style={styles.centeredControls}>
           <Pressable 
             onPress={() => onLangChange && onLangChange(letterLang === 'eng' ? 'ukr' : 'eng')}
-            style={[styles.controlChip, styles.controlChipActive]}
+            style={[
+              styles.controlChipCircular,
+              letterLang === 'eng' 
+                ? { backgroundColor: '#FF0000', borderColor: '#FFFFFF' } 
+                : { backgroundColor: '#0057B7', borderColor: '#FFD700' }
+            ]}
           >
-            <Text style={[styles.controlText, { fontSize: 16 }]}>
-              {letterLang === 'eng' ? '🇨🇦' : '🇺🇦'}
-            </Text>
+            {letterLang === 'eng' ? (
+              // Custom Canada maple leaf style representation with white center and red leaf
+              <View style={{ flexDirection: 'row', width: 34, height: 34, borderRadius: 17, overflow: 'hidden', borderWidth: 1, borderColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ width: 10, height: 34, backgroundColor: '#FF0000' }} />
+                <View style={{ flex: 1, height: 34, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ fontSize: 13, color: '#FF0000', lineHeight: 15, fontWeight: 'bold' }}>🍁</Text>
+                </View>
+                <View style={{ width: 10, height: 34, backgroundColor: '#FF0000' }} />
+              </View>
+            ) : (
+              // Ukraine blue/yellow half-fill
+              <View style={{ width: 34, height: 34, borderRadius: 17, overflow: 'hidden', borderWidth: 1, borderColor: '#FFD700', flexDirection: 'column' }}>
+                <View style={{ flex: 1, backgroundColor: '#0057B7' }} />
+                <View style={{ flex: 1, backgroundColor: '#FFD700' }} />
+              </View>
+            )}
           </Pressable>
 
           <Pressable 
             onPress={() => onModeChange && onModeChange(letterMode === 'print' ? 'cursive' : 'print')}
-            style={[styles.controlChip, styles.controlChipActive]}
+            style={[styles.controlChipCircular, styles.controlChipActive]}
           >
-            <Text style={[styles.controlText, { fontSize: 15 }]}>
+            <Text style={[styles.controlText, { fontSize: 17, fontWeight: '700', lineHeight: 20 }]}>
               {letterMode === 'print' ? 'A' : '𝓐'}
             </Text>
           </Pressable>
@@ -670,6 +688,16 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 6,
+  },
+  controlChipCircular: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   controlChipActive: {
     backgroundColor: 'rgba(255, 255, 255, 0.28)',
