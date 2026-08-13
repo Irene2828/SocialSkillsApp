@@ -160,7 +160,7 @@ export const PuzzleScreen = () => {
   const [pieces, setPieces] = useState<{ id: number; correctIndex: number; currentIndex: number }[]>([]);
 
   useEffect(() => {
-    const isImmersiveMode = selectedPuzzle !== null || activeTab !== 'none';
+    const isImmersiveMode = selectedPuzzle !== null || activeTab === 'drawing';
     (navigation as any).setParams({ isPuzzleActive: isImmersiveMode });
   }, [selectedPuzzle, activeTab, navigation]);
 
