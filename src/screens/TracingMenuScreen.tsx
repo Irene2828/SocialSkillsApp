@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ScrollView, useWindowDimensions } from 'react-native';
+import { View, Text, StyleSheet, Pressable, ScrollView, useWindowDimensions, Modal } from 'react-native';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { GlobalBackground } from '../components/GlobalBackground';
 import { TopBar } from '../components/TopBar';
@@ -15,9 +15,10 @@ interface TracingScreenProps {
 
 export type LetterMode = 'print' | 'cursive';
 export type LetterLang = 'eng' | 'ukr';
+export type TracingActiveFolder = 'none' | 'constellations' | 'abc' | 'digits';
 
 export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames }) => {
-  const [activeFolder, setActiveFolder] = useState<'none' | 'constellations' | 'abc' | 'digits'>('none');
+  const [activeFolder, setActiveFolder] = useState<TracingActiveFolder>('none');
   const [letterMode, setLetterMode] = useState<LetterMode>('print');
   const [letterLang, setLetterLang] = useState<LetterLang>('eng');
 
@@ -26,19 +27,6 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
   const paddingH = 12;
   const numColumns = 2;
   const cardWidth = Math.floor((contentWidth - (paddingH * 2) - (16 * (numColumns - 1))) / numColumns);
-
-  if (activeFolder !== 'none') {
-    return (
-      <ConstellationTracerOverlay 
-        mode={activeFolder}
-        letterMode={letterMode}
-        letterLang={letterLang}
-        onModeChange={(newMode) => setLetterMode(newMode)}
-        onLangChange={(newLang) => setLetterLang(newLang)}
-        onClose={() => setActiveFolder('none')} 
-      />
-    );
-  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -72,7 +60,7 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
             </Pressable>
           </View>
 
-          {/* Row 2: Digits 1 to 10 */}
+          {/* Row 2: Digits */}
           <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: theme.spacing.xl }}>
             <Pressable style={{ width: cardWidth }} onPress={() => setActiveFolder('digits')}>
               <Card style={styles.folderCard}>
@@ -85,6 +73,23 @@ export const TracingMenuScreen: React.FC<TracingScreenProps> = ({ onBackToGames 
           </View>
         </ScrollView>
       </ScreenWrapper>
+
+      <Modal
+        visible={activeFolder !== 'none'}
+        transparent={false}
+        animationType="slide"
+        onRequestClose={() => setActiveFolder('none')}
+      >
+        <ConstellationTracerOverlay 
+          mode={activeFolder === 'none' ? undefined : activeFolder}
+          letterMode={letterMode}
+          letterLang={letterLang}
+          onModeChange={(newMode) => setLetterMode(newMode)}
+          onLangChange={(newLang) => setLetterLang(newLang)}
+          onClose={() => setActiveFolder('none')} 
+        />
+      </Modal>
+
       <AppTabBar activeRoute="Games" isFabActive={false} navContext="Passive" />
     </View>
   );

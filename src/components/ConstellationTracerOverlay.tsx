@@ -495,6 +495,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
     <View style={styles.container}>
       <GlobalBackground showClouds dimmed={false} />
       <SpaceTouchCanvas />
+      {/* Dark overlay to match puzzle screen darkness and boost tracing lines legibility */}
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: 'rgba(11, 15, 25, 0.45)', zIndex: 2 }]} pointerEvents="none" />
       <canvas
         ref={canvasRef}
         style={{ ...styles.canvas, touchAction: 'none' } as any}
