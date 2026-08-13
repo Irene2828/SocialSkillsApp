@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, Text, Dimensions, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Svg, { Path } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
 import { GlobalBackground } from './GlobalBackground';
 import { SpaceTouchCanvas } from './SpaceTouchCanvas';
 import { AppTabBar } from './AppTabBar';
@@ -273,11 +274,7 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // Draw constellation title centered under TopBar header
-        ctx.fillStyle = '#FFFFFF';
-        ctx.font = '500 20px system-ui, -apple-system, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText(nameText, width / 2, 110);
+        // Name title is now displayed in the green TopBar tag above, not on the canvas
 
         // 1. Dashed guide lines
         ctx.lineWidth = 2;
@@ -497,31 +494,78 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
         onPointerUp={handlePointerUp as any}
         onPointerCancel={handlePointerUp as any}
       />
-      <TopBar
-        title={mode === 'constellations' ? 'Constellations' : mode === 'abc' ? 'ABC Letters' : 'Digits 1 to 10'}
-        showSettingsAndRewards={true}
-        onBack={onClose}
-      />
+      {/* Custom back button and green folder name tag centered under header exactly matching Puzzle screen style */}
+      <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', paddingTop: 24, marginBottom: theme.spacing.md, zIndex: 30, paddingHorizontal: theme.spacing.md, position: 'absolute', top: 0, left: 0, right: 0 }}>
+        <View style={{ flex: 1, alignItems: 'flex-start' }}>
+          <Pressable 
+            onPress={onClose}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 8, marginLeft: -4 }}
+          >
+            <Ionicons name="chevron-back" size={24} color="#FFFFFF" />
+          </Pressable>
+        </View>
 
-      {/* 30% shorter SVG arrows; right arrow is brighter white than left */}
-      <View style={styles.navControls}>
-        <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
-          <Svg width={84} height={20} viewBox="0 0 84 20">
-            <Path 
-              d="M 79 10 L 5 10 M 15 2 L 5 10 L 15 18" 
-              stroke="rgba(255, 255, 255, 0.35)" 
-              strokeWidth="1.6" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-              fill="none"
+        <View style={{ flex: 2, alignItems: 'center' }}>
+          <View style={{
+            minWidth: 120,
+            backgroundColor: '#BEF264',
+            paddingHorizontal: 12,
+            paddingVertical: 4,
+            borderWidth: 0,
+            borderRadius: 0,
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+            <LinearGradient
+              colors={['rgba(255, 255, 255, 0.4)', 'rgba(255, 255, 255, 0)']}
+              style={StyleSheet.absoluteFill}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
             />
-          </Svg>
-        </Pressable>
+            {mode === 'constellations' ? (
+              <Ionicons name="star" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
+            ) : mode === 'abc' ? (
+              <Ionicons name="text-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
+            ) : (
+              <Ionicons name="calculator-outline" size={16} color="#0C4A6E" style={{ marginRight: 4 }} />
+            )}
+            <Text style={{
+              fontFamily: FONTS.semiBold,
+              fontSize: 14,
+              fontWeight: '600',
+              color: '#0C4A6E',
+            }} numberOfLines={1}>
+              {mode === 'constellations' ? (CONSTELLATIONS[itemIndex % CONSTELLATIONS.length].name) : mode === 'abc' ? `Letter ${letterLang === 'ukr' ? ABC_UKR[itemIndex % ABC_UKR.length] : ABC_ENG[itemIndex % ABC_ENG.length]}` : `Number ${DIGITS_DATA[itemIndex % DIGITS_DATA.length]}`}
+            </Text>
+          </View>
+        </View>
+
+        <View style={{ flex: 1, alignItems: 'flex-end' }} />
+      </View>
+
+      {/* 20% shorter navigation arrows (67px) under the constellations, hiding left arrow on first item */}
+      <View style={styles.navControls}>
+        <View style={{ width: 80, height: 44, opacity: itemIndex === 0 ? 0 : 1 }} pointerEvents={itemIndex === 0 ? 'none' : 'auto'}>
+          <Pressable style={styles.navChipLong} onPress={handlePrevItem} hitSlop={15}>
+            <Svg width={67} height={20} viewBox="0 0 67 20">
+              <Path 
+                d="M 62 10 L 5 10 M 15 2 L 5 10 L 15 18" 
+                stroke="rgba(255, 255, 255, 0.35)" 
+                strokeWidth="1.6" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                fill="none"
+              />
+            </Svg>
+          </Pressable>
+        </View>
 
         <Pressable style={styles.navChipLong} onPress={handleNextItem} hitSlop={15}>
-          <Svg width={84} height={20} viewBox="0 0 84 20">
+          <Svg width={67} height={20} viewBox="0 0 67 20">
             <Path 
-              d="M 5 10 L 79 10 M 69 2 L 79 10 L 69 18" 
+              d="M 5 10 L 62 10 M 52 2 L 62 10 L 52 18" 
               stroke="rgba(255, 255, 255, 0.85)" 
               strokeWidth="1.6" 
               strokeLinecap="round" 
@@ -596,7 +640,7 @@ const styles = StyleSheet.create({
     zIndex: 30,
   },
   navChipLong: {
-    width: 98,
+    width: 80,
     height: 44,
     backgroundColor: 'transparent',
     borderWidth: 0,
