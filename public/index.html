@@ -40,12 +40,16 @@
       html {
         height: 100vh;   /* fallback: iOS 12.5, older WebKit */
         height: 100dvh;  /* progressive: modern Safari/Chrome (iOS 15.4+) */
+        overscroll-behavior: none;
+        background-color: #0b0f19; /* Default to dark theme background to avoid bright white flash/borders */
       }
       body {
         height: 100vh;   /* fallback */
         height: 100dvh;
         /* Prevent body scroll — ScrollView components handle their own scroll */
         overflow: hidden;
+        overscroll-behavior: none;
+        background-color: #0b0f19;
       }
 
       /* These styles make the root element full-height */

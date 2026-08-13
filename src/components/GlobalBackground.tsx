@@ -35,7 +35,7 @@ export const GlobalBackground: React.FC<GlobalBackgroundProps> = ({ showClouds =
     <View style={[styles.container, { backgroundColor: shouldUseDark ? '#0b0f19' : '#e0f2fe' }]} pointerEvents="none">
       <Image
         source={getBgSource()}
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, { width: '100%', height: '100%' }]}
         resizeMode="cover"
       />
       {dimmed && (
