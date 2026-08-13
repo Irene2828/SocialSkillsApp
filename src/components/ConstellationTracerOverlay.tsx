@@ -365,9 +365,24 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           y: (p.y * height) | 0
         }));
 
-        // 1. Whiter dashed guide lines for the letters/digits shape
+        // Render standard classic, clean rounded letters/digits template in background
+        ctx.save();
+        ctx.fillStyle = 'transparent';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+        ctx.lineWidth = 35;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.font = letterMode === 'cursive' 
+          ? '500 240px system-ui, -apple-system, sans-serif'
+          : '500 250px system-ui, -apple-system, "Nunito", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.strokeText(charToDraw, width / 2, height / 2 - 20);
+        ctx.restore();
+
+        // 1. Whiter dashed guide lines connecting the helper guide dots
         ctx.lineWidth = 3;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.55)';
         ctx.setLineDash([8, 12]);
         ctx.beginPath();
         for (let i = 0; i < points.length - 1; i++) {
@@ -379,7 +394,9 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
 
         // 2. White solid line for connected dot points
         if (connectedStars.length > 1) {
-          ctx.lineWidth = 5;
+          ctx.lineWidth = 8;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
           ctx.strokeStyle = '#FFFFFF';
           ctx.beginPath();
           ctx.moveTo(points[connectedStars[0]].x, points[connectedStars[0]].y);
@@ -394,7 +411,8 @@ export const ConstellationTracerOverlay = ({ onClose, mode = 'constellations', l
           const lastConnectedIndex = connectedStars[connectedStars.length - 1];
           const startPoint = points[lastConnectedIndex];
           
-          ctx.lineWidth = 3.5;
+          ctx.lineWidth = 5;
+          ctx.lineCap = 'round';
           ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
           ctx.beginPath();
           ctx.moveTo(startPoint.x, startPoint.y);
