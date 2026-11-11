@@ -45,3 +45,8 @@ yarn-error.*
 dist
 build
 .vercel
+
+# Sub-apps dependencies and build artifacts
+**/node_modules/
+**/dist/
+**/.expo/

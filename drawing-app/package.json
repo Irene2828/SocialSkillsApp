@@ -1,0 +1,45 @@
+{
+  "name": "drawing-app",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@expo-google-fonts/dm-sans": "^0.4.2",
+    "@expo-google-fonts/fredoka": "^0.4.1",
+    "@expo-google-fonts/nunito": "^0.4.2",
+    "@expo/metro-runtime": "~56.0.15",
+    "@expo/vector-icons": "^15.0.2",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@shopify/react-native-skia": "2.6.2",
+    "core-js": "3.49.0",
+    "expo": "~56.0.12",
+    "expo-asset": "^57.0.9",
+    "expo-file-system": "~56.0.9",
+    "expo-font": "~56.0.7",
+    "expo-media-library": "~56.0.10",
+    "expo-status-bar": "~56.0.4",
+    "intersection-observer": "^0.12.2",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-gesture-handler": "~2.31.1",
+    "react-native-safe-area-context": "^5.8.0",
+    "react-native-screens": "^4.25.2",
+    "react-native-web": "^0.21.2",
+    "react-native-wheel-color-picker": "^1.3.1",
+    "regenerator-runtime": "^0.14.1",
+    "resize-observer-polyfill": "^1.5.1"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "esbuild": "^0.28.1",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build": "expo export -p web && esbuild dist/_expo/static/js/web/*.js --target=es2018 --allow-overwrite --outdir=dist/_expo/static/js/web/ --minify"
+  },
+  "private": true
+}
