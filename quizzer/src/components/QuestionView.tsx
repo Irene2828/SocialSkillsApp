@@ -1,0 +1,691 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, Animated, Platform, Modal, Image, useWindowDimensions, Pressable, ScrollView } from 'react-native';
+import { Question } from '../data/types';
+import { AnswerButton } from './AnswerButton';
+import { Button } from './Button';
+import { theme, FONTS } from '../theme';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { SilverDust } from './AstronautBackground';
+import { useMood, getMoodColors } from '../context/MoodContext';
+import { WrongAnswerSpaceman } from './SpiderMascot';
+import { CorrectAnswerSpaceman } from './SpiderMascot';
+import { useRewards } from '../context/RewardsContext';
+
+interface QuestionViewProps {
+  question: Question;
+  onContinue: (isCorrect: boolean) => void;
+  disabled?: boolean;
+  topicName?: string;
+  showCoinReward?: boolean;
+  showExplanation?: boolean;
+  partLabel?: string;
+  /** The Part 2 (why) question to show inline below Part 1 */
+  whyQuestion?: Question | null;
+  /** Whether Part 2 should be visible (Part 1 was completed) */
+  showPart2?: boolean;
+  /** Called when Part 1 is answered correctly and has a Part 2 */
+  onPart1Complete?: () => void;
+  /** Ref to parent ScrollView for auto-scrolling to Part 2 */
+  scrollViewRef?: React.RefObject<ScrollView | null>;
+  questionNum?: number;
+  totalQuestions?: number;
+}
+
+export const QuestionView: React.FC<QuestionViewProps> = ({
+  question,
+  onContinue,
+  disabled,
+  topicName,
+  showCoinReward = true,
+  showExplanation = true,
+  partLabel,
+  whyQuestion,
+  showPart2 = false,
+  onPart1Complete,
+  scrollViewRef,
+  questionNum,
+  totalQuestions,
+}) => {
+  const { mood } = useMood();
+  const { isRewardsModeOn } = useRewards();
+  const isRocket = mood === 'rocket';
+  const moodColors = getMoodColors(mood);
+  const shouldUseDark = moodColors.isDark;
+  const gradientColors = [
+    '#38BDF8', '#0EA5E9', '#0284C7', '#0369A1', '#075985',
+    '#0C4A6E', '#1E3A8A', '#1E40AF', '#1D4ED8', '#2563EB',
+    '#3B82F6', '#60A5FA', '#93C5FD'
+  ];
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [hasFailed, setHasFailed] = useState(false);
+  const [currentQuestionId, setCurrentQuestionId] = useState(question.id);
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < 380;
+
+  // Part 2 state
+  const [part2SelectedIndex, setPart2SelectedIndex] = useState<number | null>(null);
+  const [part2Y, setPart2Y] = useState<number | null>(null);
+  const [part2HasFailed, setPart2HasFailed] = useState(false);
+  const part2FadeAnim = useRef(new Animated.Value(0)).current;
+
+  const glassTextShadow = isRocket ? {
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
+  } : {};
+
+  if (question.id !== currentQuestionId) {
+    setSelectedIndex(null);
+    setHasFailed(false);
+    setPart2SelectedIndex(null);
+    setPart2HasFailed(false);
+    setCurrentQuestionId(question.id);
+  }
+
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(10)).current;
+
+  // Reset state and trigger animation when question changes
+  useEffect(() => {
+    fadeAnim.setValue(0);
+    slideAnim.setValue(10);
+
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      })
+    ]).start();
+  }, [question.id]);
+
+  // Animate Part 2 in when showPart2 becomes true
+  useEffect(() => {
+    if (showPart2) {
+      part2FadeAnim.setValue(0);
+      Animated.timing(part2FadeAnim, {
+        toValue: 1,
+        duration: 400,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [showPart2]);
+
+  // Auto-scroll to eye-level when Part 2 layout is known
+  useEffect(() => {
+    if (showPart2 && part2Y !== null) {
+      setTimeout(() => {
+        scrollViewRef?.current?.scrollTo?.({ y: part2Y - 80, animated: true });
+      }, 50);
+    }
+  }, [showPart2, part2Y]);
+
+  const handleSelect = (index: number) => {
+    if (selectedIndex === null) {
+      setSelectedIndex(index);
+      if (index !== question.correctAnswerIndex) {
+        setHasFailed(true);
+      }
+    }
+  };
+
+  const handlePart2Select = (index: number) => {
+    if (whyQuestion && part2SelectedIndex === null) {
+      setPart2SelectedIndex(index);
+      if (index !== whyQuestion.correctAnswerIndex) {
+        setPart2HasFailed(true);
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    if (displayIsCorrect) {
+      // If this question has a Part 2 and we're on Part 1
+      if (whyQuestion && !showPart2 && onPart1Complete) {
+        setSelectedIndex(null); // Reset modal state but keep Part 1 locked via showPart2
+        onPart1Complete();
+        return;
+      }
+      setSelectedIndex(null);
+      setHasFailed(false);
+      onContinue(!hasFailed);
+    } else {
+      setSelectedIndex(null);
+    }
+  };
+
+  const handleClosePart2Modal = () => {
+    if (whyQuestion && part2DisplayIsCorrect) {
+      setPart2SelectedIndex(null);
+      setPart2HasFailed(false);
+      onContinue(!part2HasFailed);
+    } else {
+      setPart2SelectedIndex(null);
+    }
+  };
+
+  const isIdChanged = question.id !== currentQuestionId;
+  const isAnswered = selectedIndex !== null && !isIdChanged;
+  const isCorrect = isAnswered && selectedIndex === question.correctAnswerIndex;
+
+  const displayIsCorrectRef = useRef(isCorrect);
+  if (isAnswered) {
+    displayIsCorrectRef.current = isCorrect;
+  }
+  const displayIsCorrect = isAnswered ? isCorrect : displayIsCorrectRef.current;
+
+  // Part 2 answered state
+  const part2IsAnswered = part2SelectedIndex !== null && !isIdChanged;
+  const part2IsCorrect = whyQuestion && part2IsAnswered ? part2SelectedIndex === whyQuestion.correctAnswerIndex : false;
+
+  const part2DisplayIsCorrectRef = useRef(part2IsCorrect);
+  if (part2IsAnswered) {
+    part2DisplayIsCorrectRef.current = part2IsCorrect;
+  }
+  const part2DisplayIsCorrect = part2IsAnswered ? part2IsCorrect : part2DisplayIsCorrectRef.current;
+
+  // Should Part 1 answers show as locked (completed)?
+  const part1Locked = showPart2;
+
+  // For Part 1 modal: if has why data, suppress coin reward (it comes on Part 2)
+  const part1ShowCoin = !whyQuestion;
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.unifiedCard}>
+        {questionNum && totalQuestions && (
+          <>
+            <View style={[styles.progressBarContainer, !shouldUseDark && { backgroundColor: 'rgba(12, 74, 110, 0.15)' }]}>
+              <View
+                style={[
+                  styles.progressBarFill,
+                  { width: `${(questionNum / totalQuestions) * 100}%` },
+                  !shouldUseDark && { backgroundColor: '#0C4A6E' }
+                ]}
+              />
+            </View>
+            <Text style={[styles.floatingQuestionLabel, !shouldUseDark && { color: '#0C4A6E' }]}>
+              Question {questionNum}/{totalQuestions}
+            </Text>
+          </>
+        )}
+        {/* ===== PART 1 ===== */}
+      <Animated.View style={[styles.animatedContainer, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+        <View style={styles.cardWrapper}>
+          <View style={styles.scenarioCallout}>
+            {whyQuestion && null}
+            <Text style={styles.calloutLabel}>
+              Social Situation:
+            </Text>
+            <Text style={styles.scenarioText}>{question.scenario}</Text>
+          {question.prompt && (
+            <Text style={styles.promptText}>{question.prompt}</Text>
+          )}
+          </View>
+        </View>
+
+        <View style={styles.optionsContainer}>
+        {question.options.map((option, index) => {
+          let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
+
+          if (part1Locked) {
+            // Part 1 is completed — show correct answer locked
+            state = index === question.correctAnswerIndex ? 'selected-correct' : 'default';
+          } else if (isAnswered) {
+            if (isCorrect) {
+              state = index === question.correctAnswerIndex ? 'selected-correct' : 'default';
+            } else {
+              if (index === selectedIndex) {
+                state = 'selected-incorrect';
+              }
+            }
+          }
+
+          return (
+            <AnswerButton
+              key={index}
+              text={option}
+              onPress={() => handleSelect(index)}
+              state={state}
+              disabled={isAnswered || part1Locked}
+            />
+          );
+        })}
+      </View>
+    </Animated.View>
+
+      {/* ===== PART 1 MODAL (only when Part 2 is NOT yet showing) ===== */}
+      {!showPart2 && (
+        <Modal
+          visible={isAnswered}
+          transparent={true}
+          animationType="fade"
+        >
+          <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleCloseModal}>
+            {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && <SilverDust />}
+            <Pressable style={[
+              styles.feedbackContainerBackground
+            ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+              <View style={styles.feedbackContainer}>
+                {/* {!displayIsCorrect && <WrongAnswerSpaceman />} */}
+                {/* {displayIsCorrect && <CorrectAnswerSpaceman />} */}
+
+                <View style={styles.feedbackTitleContainer}>
+                  <Text style={[styles.feedbackTitle, isRocket && { color: '#0C4A6E' }]}>
+                    {displayIsCorrect
+                      ? (whyQuestion ? "That's correct!" : (showCoinReward ? 'Correct!' : "That's correct!"))
+                      : "Not quite, try again!"}
+                  </Text>
+                </View>
+
+                {displayIsCorrect && part1ShowCoin && showCoinReward && isRewardsModeOn && !hasFailed && (
+                  <View style={styles.coinRewardContainer}>
+                    <FontAwesome5
+                      name="coins"
+                      size={20}
+                      color="#FFFFFF"
+                      style={{ marginRight: 8 }}
+                    />
+                    <View style={{ flexDirection: 'row' }}>
+                      {'+1'.split('').map((char, index) => (
+                        <Text
+                          key={`earn-part1-${index}`}
+                          style={[
+                            styles.coinRewardText,
+                            { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
+                            { color: '#FFFFFF' }
+                          ]}
+                        >
+                          {char}
+                        </Text>
+                      ))}
+                      <Text style={[
+                        styles.coinRewardText,
+                        { fontFamily: FONTS.semiBold, fontSize: 20, color: '#FFFFFF' }
+                      ]}> Coin Earned!</Text>
+                    </View>
+                  </View>
+                )}
+
+                {displayIsCorrect ? (
+                  <>
+                    {showExplanation && part1ShowCoin && (
+                      <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
+                        <Text style={[styles.explanationText, isRocket && { color: '#0C4A6E' }]}>{question.explanation}</Text>
+                      </View>
+                    )}
+                    <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }], width: '100%' }}>
+                      <Button
+                        title="Continue"
+                        onPress={handleCloseModal}
+                        style={styles.continueButton}
+                        disabled={disabled}
+                      />
+                    </Animated.View>
+                  </>
+                ) : (
+                  <Button
+                    title="Try Again"
+                    onPress={() => setSelectedIndex(null)}
+                    style={styles.continueButton}
+                  />
+                )}
+              </View>
+            </Pressable>
+          </Pressable>
+        </Modal>
+      )}
+
+      {/* ===== PART 2 (inline, appears below Part 1 when showPart2 is true) ===== */}
+      {showPart2 && whyQuestion && (
+        <Animated.View
+          onLayout={(e) => setPart2Y(e.nativeEvent.layout.y)}
+          style={[styles.animatedContainer, { opacity: part2FadeAnim, marginTop: theme.spacing.md }]}
+        >
+
+          <View style={styles.cardWrapper}>
+            <View style={styles.scenarioCallout}>
+
+              <Text style={[styles.calloutLabel, isRocket && glassTextShadow]}>Think</Text>
+              <Text style={[styles.scenarioText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.scenario}</Text>
+              {whyQuestion.prompt && (
+                <Text style={[styles.promptText, isRocket && { color: '#FFFFFF' }, isRocket && glassTextShadow]}>{whyQuestion.prompt}</Text>
+              )}
+            </View>
+          </View>
+
+          <View style={styles.optionsContainer}>
+            {whyQuestion.options.map((option, index) => {
+              let state: 'default' | 'selected-correct' | 'selected-incorrect' | 'unselected-correct' = 'default';
+
+              if (part2IsAnswered) {
+                if (part2IsCorrect) {
+                  state = index === whyQuestion.correctAnswerIndex ? 'selected-correct' : 'default';
+                } else {
+                  if (index === part2SelectedIndex) {
+                    state = 'selected-incorrect';
+                  }
+                }
+              }
+
+              return (
+                <AnswerButton
+                  key={`part2-${index}`}
+                  text={option}
+                  onPress={() => handlePart2Select(index)}
+                  state={state}
+                  disabled={part2IsAnswered}
+                />
+              );
+            })}
+          </View>
+
+          {/* Part 2 Modal */}
+          <Modal
+            visible={part2IsAnswered}
+            transparent={true}
+            animationType="fade"
+          >
+            <Pressable style={[styles.modalOverlay, isRocket && { backgroundColor: 'rgba(224, 251, 252, 0.96)' }]} onPress={handleClosePart2Modal}>
+              {part2DisplayIsCorrect && isRewardsModeOn && <SilverDust />}
+              <Pressable style={[
+                styles.feedbackContainerBackground
+              ]} onPress={(e: any) => { if (e && e.stopPropagation) e.stopPropagation(); }}>
+                <View style={styles.feedbackContainer}>
+                  {/* {!part2DisplayIsCorrect && <WrongAnswerSpaceman />} */}
+                  {/* {part2DisplayIsCorrect && <CorrectAnswerSpaceman />} */}
+                  <View style={styles.feedbackTitleContainer}>
+                    <Text style={[styles.feedbackTitle, isRocket && { color: '#0C4A6E' }]}>
+                      {part2DisplayIsCorrect
+                        ? 'Correct!'
+                        : "Not quite, try again!"}
+                    </Text>
+                  </View>
+
+                  {part2DisplayIsCorrect && !part2HasFailed && isRewardsModeOn && (
+                    <View style={styles.coinRewardContainer}>
+                      <FontAwesome5
+                        name="coins"
+                        size={20}
+                        color="#FFFFFF"
+                        style={{ marginRight: 8 }}
+                      />
+                      <View style={{ flexDirection: 'row' }}>
+                        {'+1'.split('').map((char, index) => (
+                          <Text
+                            key={`earn-part2-${index}`}
+                            style={[
+                              styles.coinRewardText,
+                              { fontFamily: FONTS.semiBold, fontSize: 20, marginLeft: 0 },
+                              { color: '#FFFFFF' }
+                            ]}
+                          >
+                            {char}
+                          </Text>
+                        ))}
+                        <Text style={[
+                          styles.coinRewardText,
+                          { fontFamily: FONTS.semiBold, fontSize: 20, color: '#FFFFFF' }
+                        ]}> Coin Earned!</Text>
+                      </View>
+                    </View>
+                  )}
+
+                  {part2DisplayIsCorrect && (
+                    <View style={[styles.dashedExplanationContainer, isRocket && { borderColor: 'rgba(255, 255, 255, 0.5)', backgroundColor: 'rgba(224, 251, 252, 0.85)' }]}>
+                      <Text style={[styles.explanationText, isRocket && { color: '#0C4A6E' }]}>{whyQuestion.explanation}</Text>
+                    </View>
+                  )}
+
+                  {part2DisplayIsCorrect ? (
+                    <Animated.View style={{ width: '100%' }}>
+                      <Button
+                        title="Continue"
+                        onPress={handleClosePart2Modal}
+                        style={styles.continueButton}
+                        disabled={disabled}
+                      />
+                    </Animated.View>
+                  ) : (
+                    <Button
+                      title="Try Again"
+                      onPress={() => setPart2SelectedIndex(null)}
+                      style={styles.continueButton}
+                    />
+                  )}
+                </View>
+              </Pressable>
+            </Pressable>
+          </Modal>
+        </Animated.View>
+      )}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
+  unifiedCard: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    paddingHorizontal: 12, // theme.spacing.lg
+    paddingVertical: 0,
+    borderRadius: 0,
+    borderWidth: 0,
+    borderColor: 'transparent',
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  cardWrapper: {
+    position: 'relative',
+    marginTop: 0,
+  },
+  folderTab: {
+    position: 'absolute',
+    top: -30,
+    right: 20,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.xs,
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    borderWidth: 0,
+    borderColor: 'transparent',
+    borderBottomWidth: 0,
+    zIndex: -1, // Keep it visually attached behind the rounded edge if needed, or zIndex 1
+  },
+  folderTabText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    fontSize: 14,
+    color: theme.colors.text,
+    letterSpacing: 0,
+  },
+  animatedContainer: {
+    width: '100%',
+  },
+  scenarioCard: {
+    marginBottom: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+  },
+  scenarioCallout: {
+    backgroundColor: 'rgba(224, 251, 252, 0.85)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    marginBottom: theme.spacing.lg,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.04,
+    shadowRadius: 10,
+    elevation: 1,
+  },
+  calloutLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.semiBold,
+    fontSize: 16,
+    lineHeight: 22,
+    letterSpacing: 0.8,
+    color: 'rgba(42, 30, 92, 0.72)',
+    marginBottom: 8,
+  },
+  partLabelText: {
+    ...theme.typography.caption,
+    fontSize: 16,
+    color: theme.colors.secondaryText,
+    textAlign: 'center',
+    marginBottom: theme.spacing.md,
+    fontWeight: '600',
+  },
+  scenarioText: {
+    ...theme.typography.body,
+    fontFamily: FONTS.regular,
+    fontSize: 16,
+    lineHeight: 22,
+    letterSpacing: 0.15,
+    color: '#334155',
+  },
+  promptText: {
+    ...theme.typography.body,
+    fontFamily: FONTS.medium,
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 22,
+    letterSpacing: 0.18,
+    textAlign: 'left',
+    color: '#0C4A6E',
+    marginTop: theme.spacing.sm,
+  },
+  dashedExplanationContainer: {
+    width: '100%',
+    padding: theme.spacing.lg,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderStyle: 'dashed',
+    borderRadius: 16,
+    backgroundColor: 'transparent',
+    marginBottom: theme.spacing.xl,
+    marginTop: theme.spacing.md,
+  },
+  explanationText: {
+    ...theme.typography.body,
+    fontSize: 18,
+    textAlign: 'center',
+    color: 'rgba(255, 255, 255, 0.95)',
+  },
+  optionsContainer: {
+    marginBottom: theme.spacing.lg,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(15, 23, 42, 0.92)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing.xl,
+  },
+  feedbackContainerBackground: {
+    width: '100%',
+    maxWidth: 500,
+    borderRadius: 24,
+    overflow: 'hidden',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
+  },
+  feedbackContainer: {
+    padding: theme.spacing.xl,
+    paddingTop: theme.spacing.xxl,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.22)',
+    borderRadius: 24,
+    alignItems: 'center',
+    width: '100%',
+  },
+  feedbackTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  feedbackTitle: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    fontSize: 20,
+    letterSpacing: 0,
+    textAlign: 'center',
+    color: '#FFFFFF',
+  },
+  coinRewardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing.lg,
+  },
+  coinRewardText: {
+    ...theme.typography.body,
+    fontWeight: '600',
+    fontSize: 20,
+    letterSpacing: 0,
+    textAlign: 'center',
+    color: '#FFFFFF',
+    marginLeft: theme.spacing.xs,
+  },
+  continueButton: {
+    marginTop: theme.spacing.sm,
+    width: '100%',
+  },
+  part2Divider: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.md,
+  },
+  part2DividerLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: 'rgba(42, 30, 92, 0.15)',
+  },
+  part2DividerText: {
+    ...theme.typography.caption,
+    fontSize: 14,
+    fontWeight: '600',
+    color: 'rgba(42, 30, 92, 0.7)',
+    paddingHorizontal: theme.spacing.md,
+  },
+  progressBarContainer: {
+    width: '75%',
+    height: 6,
+    borderRadius: 999,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    alignSelf: 'center',
+    marginBottom: 0,
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%',
+    backgroundColor: '#00CED1',
+    borderRadius: 999,
+  },
+  floatingQuestionLabel: {
+    ...theme.typography.label,
+    fontFamily: FONTS.medium,
+    fontSize: 14,
+    lineHeight: 18,
+    letterSpacing: 0.8,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    textTransform: 'none',
+    marginTop: 8,
+    marginBottom: 16,
+  },
+});

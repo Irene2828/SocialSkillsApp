@@ -1,0 +1,300 @@
+import React from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { Card } from './Card';
+import { theme } from '../theme';
+import { QuizCategory } from '../data/types';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import { ScalePressable } from './ScalePressable';
+
+interface QuizCardProps {
+  category: QuizCategory;
+  onPressStart: () => void;
+  onOptionsPress?: () => void;
+  isFeatured?: boolean;
+  isDeleted?: boolean;
+  onUndo?: () => void;
+}
+
+const getCategoryIcon = (category: QuizCategory): { name: string; family: 'Ionicons' | 'FontAwesome5' } => {
+  if (category.icon) {
+    return { name: category.icon, family: 'Ionicons' };
+  }
+  switch (category.id) {
+    case 'Friendship': return { name: 'people-outline', family: 'Ionicons' };
+    case 'Manners': return { name: 'hand-left-outline', family: 'Ionicons' };
+    case 'Feelings': return { name: 'heart-outline', family: 'Ionicons' };
+    case 'Playground': return { name: 'basketball-outline', family: 'Ionicons' };
+    case 'Safety': return { name: 'shield-checkmark-outline', family: 'Ionicons' };
+    case 'create_ai': return { name: 'color-wand-outline', family: 'Ionicons' };
+    default: return { name: 'book-outline', family: 'Ionicons' };
+  }
+};
+
+
+export const QuizCard: React.FC<QuizCardProps> = ({ category, onPressStart, onOptionsPress, isFeatured, isDeleted, onUndo }) => {
+  const { name: iconName, family: iconFamily } = getCategoryIcon(category);
+  const cardBorderColor = category.color || theme.colors.stroke;
+
+  if (isDeleted) {
+    return (
+      <View style={[styles.container, isFeatured && styles.featuredContainer]}>
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: cardBorderColor, opacity: 0.5, alignItems: 'center', justifyContent: 'center' }]}>
+          <Text style={styles.title}>Deleted</Text>
+          <Pressable onPress={onUndo} style={{ marginTop: 8, padding: 8, backgroundColor: theme.colors.primarySoft, borderRadius: 8 }}>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Undo</Text>
+          </Pressable>
+        </Card>
+      </View>
+    );
+  }
+
+  return (
+    <View style={[styles.container, isFeatured && styles.featuredContainer]}>
+      <ScalePressable
+        onPress={onPressStart}
+        style={{ flex: 1 }}
+      >
+        <Card style={[styles.card, isFeatured && styles.featuredCard, { borderColor: 'rgba(255, 255, 255, 0.4)' }]}>
+        {category.isNew && (
+          <View style={styles.newBadge}>
+            <Text style={styles.newBadgeText}>NEW</Text>
+          </View>
+        )}
+
+        <View style={[styles.cardContent, isFeatured && styles.featuredCardContent]}>
+          <View style={[
+            styles.iconContainer,
+            isFeatured && styles.featuredIconContainer,
+          ]}>
+            {iconFamily === 'FontAwesome5' ? (
+              <FontAwesome5 name={iconName as any} size={isFeatured ? 24 : 32} color="#0C4A6E" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+            ) : (
+              <Ionicons name={iconName as any} size={isFeatured ? 24 : 32} color="#0C4A6E" style={[styles.icon, isFeatured && { marginBottom: 2 }]} />
+            )}
+          </View>
+
+          <View style={[styles.textContainer, isFeatured && styles.featuredTextContainer]}>
+            <Text
+              style={[styles.title, isFeatured && styles.featuredTitle, { color: '#0C4A6E' }]}
+              numberOfLines={2}
+            >
+              {category.title}
+            </Text>
+            {isFeatured && category.description && (
+              <Text style={[styles.descriptionText, { color: 'rgba(42, 30, 92, 0.7)' }]}>
+                {category.description}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        </Card>
+      </ScalePressable>
+
+      {onOptionsPress && (
+        <View style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
+          <Pressable
+            hitSlop={{ top: 15, bottom: 15, left: 15, right: 15 }}
+            onPress={(e) => {
+              if (e && e.stopPropagation) e.stopPropagation();
+              onOptionsPress();
+            }}
+            style={({ pressed }) => [
+              {
+                width: 32,
+                height: 32,
+                borderRadius: 16,
+                backgroundColor: pressed ? 'rgba(42, 30, 92,0.1)' : 'rgba(42, 30, 92,0.05)',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }
+            ]}
+          >
+            <Ionicons name="ellipsis-vertical" size={20} color="rgba(42, 30, 92, 0.7)" />
+          </Pressable>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+  },
+  featuredContainer: {
+    width: '100%',
+  },
+  card: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: theme.spacing.md,
+    paddingBottom: theme.spacing.md / 4,
+    height: 158,
+    position: 'relative',
+    borderWidth: 2,
+    ...theme.shadows.soft,
+  },
+  featuredCard: {
+    minHeight: 110,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+    padding: theme.spacing.md,
+    paddingBottom: theme.spacing.md / 4,
+  },
+  cardContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  featuredCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  textContainer: {
+    alignItems: 'center',
+    width: '100%',
+    minHeight: 56,
+    justifyContent: 'flex-start',
+  },
+  featuredTextContainer: {
+    alignItems: 'flex-start',
+    flex: 1,
+    marginLeft: theme.spacing.md,
+  },
+  newBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: theme.colors.primary,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    zIndex: 1,
+  },
+  newBadgeText: {
+    ...theme.typography.body,
+    fontSize: 10,
+    fontWeight: '600',
+    color: theme.colors.text,
+  },
+  recommendedBadge: {
+    backgroundColor: theme.colors.primarySoft,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginBottom: 4,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  recommendedBadgeText: {
+    ...theme.typography.label,
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#3F6212', // Darker green for readability
+  },
+  iconContainer: {
+    marginTop: 12,
+    marginBottom: 4,
+    width: 44,
+    height: 44,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  featuredIconContainer: {
+    marginBottom: 0,
+    width: 68,
+    height: 68,
+    borderRadius: theme.borderRadius.sm,
+  },
+  icon: {
+    opacity: 0.9,
+  },
+  title: {
+    ...theme.typography.body,
+    fontWeight: '400',
+    color: theme.colors.text,
+    textAlign: 'center',
+  },
+  featuredTitle: {
+    textAlign: 'left',
+    fontSize: 18,
+    fontWeight: '400',
+  },
+  descriptionText: {
+    ...theme.typography.caption,
+    color: theme.colors.secondaryText,
+    marginTop: 2,
+    textAlign: 'left',
+  },
+  dotsButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    padding: 8,
+    zIndex: 10,
+  },
+});
+
+import { Modal, TextInput, DimensionValue } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { Button } from "./Button";
+
+export const FolderCard: React.FC<any> = ({ name, onPress }) => (
+  <Pressable onPress={onPress} style={{ padding: 16, backgroundColor: "rgba(224, 251, 252, 0.85)", borderRadius: 16, alignItems: "center", justifyContent: "center", height: 158 }}>
+    <Ionicons name="folder-outline" size={32} color="#0C4A6E" />
+    <Text style={{ marginTop: 8, color: "#0C4A6E", textAlign: "center" }}>{name}</Text>
+  </Pressable>
+);
+
+export const DraggableFolderCard: React.FC<any> = (props) => <FolderCard {...props} />;
+
+export const ElectrifiedText: React.FC<any> = ({ children, style }) => <Text style={style}>{children}</Text>;
+
+export const GradientIcon: React.FC<any> = ({ name, size = 24, colors }) => (
+  <Ionicons name={name} size={size} color={colors ? colors[0] : "#4F46E5"} />
+);
+
+export const ProgressBar: React.FC<{ progress: number; color?: string; style?: any }> = ({ progress, color = theme.colors.primary, style }) => {
+  const widthPercent: DimensionValue = `${Math.min(Math.max(progress * 100, 0), 100)}%`;
+  return (
+    <View style={[{ height: 8, backgroundColor: "rgba(0,0,0,0.1)", borderRadius: 4, overflow: "hidden" }, style]}>
+      <View style={{ width: widthPercent, height: "100%", backgroundColor: color }} />
+    </View>
+  );
+};
+
+export const QuickStartButton: React.FC<any> = ({ title, onPress }) => (
+  <Button title={title} onPress={onPress} variant="primary" />
+);
+
+export const SettingsModal: React.FC<any> = ({ visible, onClose }) => (
+  <Modal visible={visible} transparent animationType="slide">
+    <View style={{ flex: 1, backgroundColor: "rgba(255,255,255,0.85)", justifyContent: "center", alignItems: "center" }}>
+      <View style={{ backgroundColor: "#FFFFFF", padding: 24, borderRadius: 16, width: "80%" }}>
+        <Text style={[theme.typography.heading, { marginBottom: 16 }]}>Settings</Text>
+        <Button title="Close" onPress={onClose} />
+      </View>
+    </View>
+  </Modal>
+);
+
+export const SimpleLockScreen: React.FC<any> = ({ onUnlock, onCancel }) => {
+  const [pin, setPin] = React.useState("");
+  return (
+    <View style={{ padding: 20, alignItems: "center" }}>
+      <Text style={[theme.typography.heading, { marginBottom: 12 }]}>Parental Gate</Text>
+      <TextInput
+        secureTextEntry
+        keyboardType="numeric"
+        value={pin}
+        onChangeText={setPin}
+        style={{ borderWidth: 1, borderColor: "#ccc", width: 120, padding: 8, marginVertical: 12, textAlign: "center" }}
+      />
+      <Button title="Unlock" onPress={() => onUnlock(pin)} />
+      {onCancel && <Button title="Cancel" variant="outline" onPress={onCancel} style={{ marginTop: 8 }} />}
+    </View>
+  );
+};

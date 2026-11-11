@@ -1,0 +1,436 @@
+import React, { useState } from 'react';
+import { View, StyleSheet, Pressable, Text, Dimensions, ScrollView, Image, Alert } from 'react-native';
+import { Canvas, Path, useCanvasRef } from '@shopify/react-native-skia';
+import * as FileSystem from 'expo-file-system';
+import * as MediaLibrary from 'expo-media-library';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { theme } from '../theme';
+import { useMood, getMoodColors } from '../context/MoodContext';
+import ColorPicker from 'react-native-wheel-color-picker';
+
+type Stroke = {
+  path: string;
+  color: string;
+  strokeWidth: number;
+};
+
+const COLORS = [
+  '#EF8B8B',
+  '#FFC857',
+  '#BEF264',
+  '#60A5FA',
+  '#A78BFA',
+  '#FFD700',
+  '#111827',
+];
+
+const STROKE_WIDTHS = [
+  { id: 'thin', value: 4, icon: 'ellipse-outline' as const, size: 8 },
+  { id: 'medium', value: 8, icon: 'ellipse-outline' as const, size: 14 },
+  { id: 'thick', value: 16, icon: 'ellipse-outline' as const, size: 22 },
+];
+
+export const DrawingBoardScreen = () => {
+  const insets = useSafeAreaInsets();
+  const { mood } = useMood();
+  const moodColors = getMoodColors(mood);
+  const isDark = moodColors.isDark;
+  const isMobile = Dimensions.get('window').width < 768;
+
+  const [paths, setPaths] = useState<Stroke[]>([]);
+  const [redoPaths, setRedoPaths] = useState<Stroke[]>([]);
+  const [activeColor, setActiveColor] = useState(COLORS[5]);
+  const [activeStrokeWidth, setActiveStrokeWidth] = useState(8);
+  const [isToolbarVisible, setIsToolbarVisible] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const canvasRef = useCanvasRef();
+
+  const handleSaveToCameraRoll = async () => {
+    if (isSaving) return;
+    try {
+      setIsSaving(true);
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permission Denied', 'We need access to your camera roll to save your drawing.');
+        return;
+      }
+
+      const image = canvasRef.current?.makeImageSnapshot();
+      if (!image) {
+        Alert.alert('Error', 'Could not capture the drawing.');
+        return;
+      }
+
+      const base64 = image.encodeToBase64();
+      const filename = `${(FileSystem as any).documentDirectory || ''}drawing-${Date.now()}.png`;
+      await FileSystem.writeAsStringAsync(filename, base64, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+
+      await MediaLibrary.saveToLibraryAsync(filename);
+      Alert.alert('Saved!', 'Your drawing has been saved to your camera roll!');
+    } catch (error: any) {
+      console.error('Failed to save image:', error);
+      Alert.alert('Error', error.message || 'Failed to save drawing.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [currentPath, setCurrentPath] = useState<string>('');
+
+  const getCoordinates = (e: any) => {
+    let x = e.nativeEvent.locationX;
+    let y = e.nativeEvent.locationY;
+    if (x === undefined || isNaN(x)) x = e.nativeEvent.offsetX;
+    if (y === undefined || isNaN(y)) y = e.nativeEvent.offsetY;
+    if (x === undefined || isNaN(x)) x = e.nativeEvent.pageX;
+    if (y === undefined || isNaN(y)) y = e.nativeEvent.pageY;
+
+    return {
+      x: typeof x === 'number' && !isNaN(x) ? x : 0,
+      y: typeof y === 'number' && !isNaN(y) ? y : 0
+    };
+  };
+
+  const handleTouchStart = (e: any) => {
+    const { x, y } = getCoordinates(e);
+    setCurrentPath(`M ${x} ${y}`);
+  };
+
+  const handleTouchMove = (e: any) => {
+    const { x, y } = getCoordinates(e);
+    setCurrentPath(prev => prev ? `${prev} L ${x} ${y}` : `M ${x} ${y}`);
+  };
+
+  const handleTouchEnd = () => {
+    setCurrentPath(prevPath => {
+      if (prevPath) {
+        setPaths(prev => [
+          ...prev,
+          {
+            path: prevPath,
+            color: activeColor,
+            strokeWidth: activeStrokeWidth
+          }
+        ]);
+        setRedoPaths([]);
+      }
+      return '';
+    });
+  };
+
+  const undo = () => {
+    if (paths.length === 0) return;
+    const lastPath = paths[paths.length - 1];
+    setRedoPaths(prev => [...prev, lastPath]);
+    setPaths(prev => prev.slice(0, -1));
+  };
+
+  const redo = () => {
+    if (redoPaths.length === 0) return;
+    const pathToRestore = redoPaths[redoPaths.length - 1];
+    setPaths(prev => [...prev, pathToRestore]);
+    setRedoPaths(prev => prev.slice(0, -1));
+  };
+
+  const clearCanvas = () => {
+    setPaths([]);
+    setRedoPaths([]);
+  };
+
+  return (
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF' }}>
+      <GestureHandlerRootView style={styles.container}>
+        <View style={[styles.canvasContainer, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#FFFFFF' }]}>
+        <View
+          collapsable={false}
+          style={[StyleSheet.absoluteFill, { backgroundColor: 'transparent' }]}
+          onStartShouldSetResponder={() => true}
+          onMoveShouldSetResponder={() => true}
+          onResponderGrant={handleTouchStart}
+          onResponderMove={handleTouchMove}
+          onResponderRelease={handleTouchEnd}
+          onResponderTerminate={handleTouchEnd}
+        >
+          <Canvas ref={canvasRef} style={StyleSheet.absoluteFill} pointerEvents="none">
+            {paths.map((stroke, index) => (
+              <Path
+                key={index}
+                path={stroke.path}
+                color={stroke.color}
+                style="stroke"
+                strokeWidth={stroke.strokeWidth}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            ))}
+            {currentPath ? (
+              <Path
+                path={currentPath}
+                color={activeColor}
+                style="stroke"
+                strokeWidth={activeStrokeWidth}
+                strokeCap="round"
+                strokeJoin="round"
+              />
+            ) : null}
+          </Canvas>
+        </View>
+      </View>
+
+      {isToolbarVisible ? (
+        <View style={[
+          styles.rightToolbar,
+          {
+            paddingTop: insets.top + 16,
+            paddingBottom: insets.bottom + 16,
+            backgroundColor: 'rgba(255, 255, 255, 0.85)'
+          },
+          isMobile && { width: 56 }
+        ]}>
+          <Pressable style={styles.toolBtn} onPress={() => setIsToolbarVisible(false)}>
+            <Ionicons name="chevron-forward" size={26} color="#7E8C9F" />
+          </Pressable>
+          <View style={styles.dividerHorizontal} />
+
+          <ScrollView contentContainerStyle={[styles.toolbarContent, isMobile && { paddingHorizontal: 4 }]} showsVerticalScrollIndicator={false}>
+          <Pressable style={styles.toolBtn} onPress={handleSaveToCameraRoll} disabled={isSaving}>
+            <Ionicons name="save-outline" size={26} color="#00CED1" />
+          </Pressable>
+
+          <Pressable style={styles.toolBtn} onPress={undo} disabled={paths.length === 0}>
+            <Ionicons name="arrow-undo-outline" size={26} color={paths.length === 0 ? 'rgba(0,0,0,0.15)' : '#7E8C9F'} />
+          </Pressable>
+
+          <Pressable style={styles.toolBtn} onPress={redo} disabled={redoPaths.length === 0}>
+            <Ionicons name="arrow-redo-outline" size={26} color={redoPaths.length === 0 ? 'rgba(0,0,0,0.15)' : '#7E8C9F'} />
+          </Pressable>
+
+          <Pressable style={styles.toolBtn} onPress={clearCanvas}>
+            <Ionicons name="trash-outline" size={26} color="#7E8C9F" />
+          </Pressable>
+
+          <View style={styles.dividerHorizontal} />
+
+          {STROKE_WIDTHS.map((sw) => (
+            <Pressable
+              key={sw.id}
+              style={[
+                styles.toolBtn,
+                activeStrokeWidth === sw.value && styles.activeToolBtn
+              ]}
+              onPress={() => setActiveStrokeWidth(sw.value)}
+            >
+              <Ionicons
+                name={sw.icon}
+                size={sw.size}
+                color={activeStrokeWidth === sw.value ? '#00CED1' : '#7E8C9F'}
+              />
+            </Pressable>
+          ))}
+
+          <View style={styles.dividerHorizontal} />
+
+          {COLORS.map((color) => (
+            <Pressable
+              key={color}
+              style={[
+                styles.colorBtn,
+                activeColor === color && styles.activeColorBtn
+              ]}
+              onPress={() => setActiveColor(color)}
+            >
+              <View style={[styles.colorInner, { backgroundColor: color }]} />
+            </Pressable>
+          ))}
+
+          <Pressable
+            style={[styles.colorBtn, styles.customColorBtn]}
+            onPress={() => setShowColorPicker(true)}
+          >
+            <Image source={require('../../assets/color-wheel.png')} style={{ width: 24, height: 24, borderRadius: 12 }} />
+          </Pressable>
+        </ScrollView>
+      </View>
+      ) : (
+        <Pressable
+          style={[
+            styles.absoluteBackButton,
+            {
+              top: insets.top + 16,
+              left: 'auto',
+              right: 16,
+              shadowOpacity: 0,
+              shadowOffset: { width: 0, height: 0 },
+              shadowRadius: 0,
+              elevation: 0,
+              borderWidth: 0.8,
+              borderColor: '#00CED1',
+            },
+            isDark && { backgroundColor: 'rgba(255,255,255,0.1)' }
+          ]}
+          onPress={() => setIsToolbarVisible(true)}
+        >
+          <Ionicons name="brush-outline" size={24} color="#00CED1" />
+        </Pressable>
+      )}
+      </GestureHandlerRootView>
+
+      {showColorPicker && (
+        <View style={styles.colorPickerModal}>
+          <Pressable style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }} onPress={() => setShowColorPicker(false)} />
+          <View style={[styles.colorPickerContainer, isDark && { backgroundColor: moodColors.bg }]}>
+            <View style={{ flex: 1, padding: 20 }}>
+              <ColorPicker
+                color={activeColor}
+                onColorChange={(color: string) => setActiveColor(color)}
+                onColorChangeComplete={(color: string) => setActiveColor(color)}
+                thumbSize={30}
+                sliderSize={30}
+                noSnap={true}
+                row={false}
+              />
+            </View>
+            <Pressable style={[styles.closePickerBtn, { backgroundColor: theme.colors.primary }]} onPress={() => setShowColorPicker(false)}>
+              <Text style={[styles.closePickerText, { color: '#0C4A6E' }]}>Select Color</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+  },
+  canvasContainer: {
+    flex: 1,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  absoluteBackButton: {
+    position: 'absolute',
+    left: 16,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    ...theme.shadows.soft,
+    zIndex: 100,
+  },
+  rightToolbar: {
+    width: 76,
+    alignItems: 'center',
+    ...theme.shadows.glow,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(0,0,0,0.05)',
+  },
+  toolbarContent: {
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingBottom: 40,
+  },
+  dividerHorizontal: {
+    width: 32,
+    height: 2,
+    backgroundColor: theme.colors.neutralGrey,
+    opacity: 0.3,
+    marginVertical: 10,
+    borderRadius: 1,
+  },
+  toolBtn: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    marginVertical: 6,
+  },
+  strokeBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: 'transparent',
+    marginVertical: 6,
+  },
+  activeStrokeBtn: {
+    backgroundColor: theme.colors.neutralGrey,
+    borderColor: 'rgba(0,0,0,0.08)',
+  },
+  colorBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 3,
+    borderColor: 'transparent',
+    marginVertical: 6,
+  },
+  activeColorBtn: {
+    borderColor: 'rgba(0,0,0,0.2)',
+    transform: [{ scale: 1.15 }],
+  },
+  colorPickerModal: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 9999,
+  },
+  colorPickerContainer: {
+    width: '85%',
+    height: 400,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  closePickerBtn: {
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  closePickerText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  activeToolBtn: {
+    backgroundColor: 'rgba(0,0,0,0.08)',
+  },
+  colorInner: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 15,
+  },
+  customColorBtn: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0,
+  }
+});
+
+export default DrawingBoardScreen;
